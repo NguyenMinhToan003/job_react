@@ -2,30 +2,30 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { ChevronDown, Menu } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const navItems = [
-  { label: 'Nhà Tuyển Dụng', path: "/", icon: null},
-  { label: "Tài khoản", path: "/", icon:<Avatar className='p-[0.5px] bg-[#3d1419] border border-[#f5f3f4]'>
+  { label: 'Nhà Tuyển Dụng', path: "/danh-cho-nha-tuyen-dung", icon: null},
+  { label: "Tài khoản", path: "/tong-quat-ho-so", icon:<Avatar className='p-[0.5px] bg-[#3d1419] border border-[#f5f3f4]'>
     <AvatarImage src="https://lh3.googleusercontent.com/a/ACg8ocJ1La7mSP1N6T-yDRY285A40n24K3eJWQtEQYZudRq1UQ=s96-c" />
   </Avatar>}
-  // Thêm các mục khác nếu cần
 ];
 
-export default function Navigate({ title = "Trang quản trị" }: { title: string }) {
+
+export default function UserNavbar() {
   const navigate = useNavigate();
 
   const handleClick = (path: string) => navigate(path);
 
   return (
-    <div className="fixed top-0 z-50 w-full border-b border-[#502c30] shadow-sm bg-gradient-to-r from-[#121212] to-[#53151c]">
+    <div className="sticky top-0 z-50 w-full border-b border-[#502c30] shadow-sm bg-gradient-to-r from-[#121212] to-[#53151c]">
       <div className="flex h-16 items-center justify-between px-4">
-        <div className="hidden md:flex items-center gap-1 ">
+        <div className="flex items-center gap-1 ">
           <Avatar className='p-[0.5px] border border-[#f5f3f4]'>
             <AvatarImage src="https://lh3.googleusercontent.com/a/ACg8ocJ1La7mSP1N6T-yDRY285A40n24K3eJWQtEQYZudRq1UQ=s96-c" />
           </Avatar>
           <Button className="text-[#959595]" variant="link">
-            <span>Tìm việc</span>
+            <span><NavLink to='/'>Tìm việc</NavLink></span>
             <ChevronDown className="h-5 w-5" />
           </Button>
           <Button className="text-[#959595]" variant="link">
@@ -38,7 +38,7 @@ export default function Navigate({ title = "Trang quản trị" }: { title: stri
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="outline" size="icon" >
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>

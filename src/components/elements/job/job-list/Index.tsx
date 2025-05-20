@@ -1,0 +1,33 @@
+import JobListDetail from "./JobListDisplay";
+import { JobResponse } from "@/types/JobType";
+import JobList from "./JobList";
+import { useEffect, useState } from "react";
+
+export default function Index({jobs}: { jobs: JobResponse[] }) {
+  const [selectedJob, setSelectedJob] = useState<JobResponse>({} as JobResponse);
+  useEffect(() => {
+   if(jobs.length > 0) {
+      setSelectedJob(jobs[0]);
+    }
+    else setSelectedJob({} as JobResponse);
+  },[jobs])
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4 w-7xl mx-auto">
+      <div className="col-span-2 space-y-4">
+        {jobs.map((job) => (
+          <JobList
+            key={job.id}
+            job={job}
+            selectedJob={selectedJob}
+            setSelectedJob={setSelectedJob}
+          />
+        ))}
+      </div>
+      <div className="col-span-3">
+        <div className="sticky top-20">
+          {jobs.length>0 && selectedJob?.id && <JobListDetail jobDetailId={selectedJob.id} />}
+        </div>
+      </div>
+    </div>
+  );
+}

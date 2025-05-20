@@ -1,0 +1,61 @@
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Benefit } from "@/types/benefitType";
+import { Checkbox } from "@/components/ui/checkbox";
+import { iconMap } from "@/utils/SetListIcon";
+import { Gift } from "lucide-react";
+
+export default function BenefitJobPopup({
+  benefitList,
+  benefitIds,
+  setBenefitIds
+}: {
+  benefitList: Benefit[];
+  benefitIds: Benefit[];
+  setBenefitIds: (benefitIds: Benefit[]) => void;
+}) {
+
+
+  return (
+    <Card className="rounded-sm border-none shadow-md mb-4">
+      <CardHeader>
+        <CardTitle className="text-lg font-bold text-start">
+          <div className="flex items-center gap-2">
+            <div className="flex-1">PHÚC LỢI</div>
+          </div>
+          <div className="w-full h-[1px] bg-gray-200 mt-4" />
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="grid grid-cols-3 gap-4 p-6">
+        {
+          benefitList.map((benefit) => (
+            <div key={benefit.id} className="flex items-center gap-2">
+              <Checkbox
+                id={`benefit-${benefit.id}`}
+                className='checked:bg-red-500'
+                checked={benefitIds.some(item => item.id.toString() === benefit.id)}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setBenefitIds([...benefitIds, { id: benefit.id }]);
+                  } else {
+                    setBenefitIds(benefitIds.filter(item => item.id !== benefit.id));
+                  }
+                }}
+              />
+              <label htmlFor={`benefit-${benefit.id}`} className="flex items-center gap-2 cursor-pointer">
+                <div className="text-primary text-xl">
+                  {iconMap[benefit.icon] ?? <Gift />}
+                </div>
+                <span className="text text-gray-700">{benefit.name}</span>
+              </label>
+            </div>
+          ))
+        }
+      </CardContent>
+    </Card>
+  );
+}
