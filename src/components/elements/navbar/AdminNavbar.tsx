@@ -36,7 +36,7 @@ export default function AdminNavbar() {
     navigate(path);
   };
   return (
-    <Card className="w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-0">
+    <Card className="w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-0 z-9999">
       <CardHeader>
         <p className="text-sm text-muted-foreground">👋 Xin chào</p>
         <CardTitle className="text-2xl font-semibold">Toan</CardTitle>

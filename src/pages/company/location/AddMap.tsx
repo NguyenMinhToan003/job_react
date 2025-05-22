@@ -38,9 +38,6 @@ export default function AddMap() {
 
   const [selectedFromSuggestion, setSelectedFromSuggestion] = useState(false);
 
-  const user = JSON.parse(
-    localStorage.getItem('user') || '{}'
-  )
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -139,10 +136,11 @@ export default function AddMap() {
     try {
       await createLocationAPI({
         name: map?.name || '',
-        plandId: map?.placeId || '',
+        placeId: map?.placeId || '',
         city: { id: selectedCityId } as City,
         district: { id: selectedDistrictId } as District,
-        company: { id: user?.company?.id },
+        lat: map?.location.lat || 0,
+        lng: map?.location.lng || 0,
       })
     } catch (error) {
       console.error('Failed to add location', error);
@@ -220,10 +218,10 @@ export default function AddMap() {
               )}
 
               {address && showSuggestions && suggestions.length > 0 && (
-                <div className='absolute w-full mt-1 z-50 rounded-md border bg-white shadow-lg max-h-60 overflow-auto'>
+                <div className='absolute w-full mt-1 z-50 rounded-md border bg-white shadow-lg overflow-auto'>
                   {suggestions.map((s) => (
                     <div
-                      key={s.plandId}
+                      key={s.placeId}
                       className='cursor-pointer select-none px-4 py-2 text-sm hover:bg-gray-100'
                       onClick={() => handleSelectSuggestion(s)}
                     >

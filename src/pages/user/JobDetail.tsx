@@ -48,7 +48,6 @@ export default function JobDetail() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-12">
-      {/* Phần 1: Job Detail */}
       <Card className="bg-white shadow-md rounded-md">
         <CardContent className="py-6">
           <h1 className="text-3xl font-extrabold mb-3">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllJob } from "@/apis/jobAPI";
+import { getAllJob, updateJobAdmin } from "@/apis/jobAPI";
 import {
   Card,
   CardHeader,
@@ -16,10 +16,11 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { JobResponse } from "@/types/JobType";
+import { JobResponse } from "@/types/jobType";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Dot } from "lucide-react";
+import { toast } from "sonner";
 
 export default function JobListPage() {
   const [jobs, setJobs] = useState<JobResponse[]>([]);
@@ -36,14 +37,25 @@ export default function JobListPage() {
     fetchJobs();
   }, []);
 
-  const toggleStatus = (id: number) => {
-    setJobs(prev =>
-      prev.map(job =>
-        job.id === id
-          ? { ...job, status: job.status === 1 ? 0 : 1 }
-          : job
-      )
-    );
+
+  const toggleStatus = async(id: number) => {
+    try {
+      await updateJobAdmin(id, {
+        status: jobs.find(job => job.id === id)?.status === 1 ? 0 : 1,
+      })
+      toast.success("Thay đổi trạng thái công việc thành công");
+      setJobs(prev =>
+        prev.map(job =>
+          job.id === id
+            ? { ...job, status: job.status === 1 ? 0 : 1 }
+            : job
+        )
+      );
+    }
+    catch (error) {
+      toast.error(error.response.data.message);
+    }
+
   };
 
   return (
@@ -80,7 +92,7 @@ export default function JobListPage() {
                   </TableCell>
                   <TableCell>
                     <Button 
-                      className="text-left w-fit justify-start text-lg"
+                      className="text-left w-fit justify-start text-sm "
                       variant="link"
                       onClick={() => {
                       }}

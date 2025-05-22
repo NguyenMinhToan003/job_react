@@ -1,6 +1,6 @@
 import { getSkillList } from "@/apis/skillAPI";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skill } from "@/types/SkillType";
+import { Skill } from "@/types/skillType";
 import { useEffect, useState } from "react";
 import {
   Table,

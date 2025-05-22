@@ -24,7 +24,7 @@ export default function IndexCompany() {
   , [])
   return (
     <>
-      <div className='sticky flex justify-between top-0 bg-gradient-to-r from-[#121212] to-[#53151c] text-white'>
+      <div className='sticky flex justify-between top-0 bg-gradient-to-r from-[#121212] to-[#53151c] text-white z-100'>
         <div className='flex justify-center items-center gap-2 px-4 '>
           <div className='bg-white rounded-sm w-12 h-12 flex items-center justify-center  border border-[#f5f3f4]'>
               <img src={account?.logo} className='w-full h-full rounded-sm' />

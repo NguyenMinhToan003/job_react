@@ -1,4 +1,4 @@
-import { JobResponse } from "./JobType";
+import { JobResponse } from "./jobType";
 import { LocationResponse } from "./location";
 
 export interface Company {

@@ -1,4 +1,4 @@
-import { TypeJob } from '@/types/TypeJobType'
+import { TypeJob } from '@/types/typeJobType'
 import { axiosInstance } from './index'
 
 export const getTypeJobList = async () => {

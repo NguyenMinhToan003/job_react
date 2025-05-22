@@ -1,14 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { ROLE_LIST } from "@/types/LoginType";
+import { ROLE_LIST } from "@/types/loginType";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/apis/authAPI";
+import { toast } from "sonner";
+import { useAccount } from "@/providers/UserProvider";
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const { updateDataUser } = useAccount()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -29,9 +33,10 @@ export default function LoginPage() {
       else if (response.role === ROLE_LIST.USER) {
         navigate('/')
       }
+      updateDataUser()
     }
     catch (error) {
-      console.error("Error logging in:", error);
+      toast.error("Đăng nhập thất bại, vui lòng kiểm tra lại tài khoản hoặc mật khẩu")
     }
   }
 

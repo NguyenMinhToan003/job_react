@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Skill } from '@/types/SkillType';
+import { Skill } from '@/types/skillType';
 import { Button } from '@/components/ui/button';
 
 export default function SkillJobPopup({

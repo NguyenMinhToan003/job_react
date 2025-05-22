@@ -26,7 +26,7 @@ export default function CompanyNavbar() {
   };
 
   return (
-    <Card className="w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-18">
+    <Card className="min-w-[300px] max-w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-18 ">
       <CardHeader>
         <p className="text-sm text-muted-foreground">👋 Xin chào</p>
         <CardTitle className="text-2xl font-semibold">Toan</CardTitle>

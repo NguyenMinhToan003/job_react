@@ -1,9 +1,25 @@
-import { Company } from "./companyType";
+import { CvResponse } from "./cvType";
 
 export interface Account {
   id: number;
   email: string;
-  status: number;
   role: string;
-  company: Company;
+  status: number;
+}
+export interface UserResponse {
+  id: number;
+  name: string;
+  avatar: string;
+  gender: number;
+  account: Account;
+  phone: string;
+  cv: CvResponse[];
+}
+
+export interface User {
+  id: number;
+  name: string;
+  avatar: string;
+  gender: number;
+  phone: string;
 }

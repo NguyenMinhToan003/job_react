@@ -3,9 +3,9 @@ import { axiosInstance } from "./index"
 
 export const locationGetMapAPI = async (suggestion: {
   name: string;
-  plandId: string;
+  placeId: string;
 }) => {
-  const response =await axiosInstance.get<LocationMapResponse>(`/location/map/detail/${suggestion.plandId}`);
+  const response =await axiosInstance.get<LocationMapResponse>(`/location/map/detail/${suggestion.placeId}`);
   return response.data;
 }
 export const locationAutoCompleteAPI = async (address: string) => {
@@ -19,5 +19,13 @@ export const createLocationAPI = async (body: CreateLocationRequest) => {
 }
 export const getLocationByCompanyAPI = async () => {
   const response = await axiosInstance.get<LocationResponse[]>('/location/company');
+  return response.data;
+}
+export const updateLocationAPI = async (locationId: number, body: CreateLocationRequest) => {
+  const response = await axiosInstance.patch(`/location/${locationId}`, body);
+  return response.data;
+}
+export const toggleEnableLocationAPI = async (locationId: number) => {
+  const response = await axiosInstance.patch(`/location/toggle-enable/${locationId}`);
   return response.data;
 }

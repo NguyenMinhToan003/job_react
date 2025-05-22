@@ -1,0 +1,223 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { ArrowUpFromLine, ChevronLeft, Eye } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { JobFilterResponse } from '@/types/jobType';
+import { filterJob } from '@/apis/jobAPI';
+import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import { Cv } from '@/types/cvType';
+import { getCvMe } from '@/apis/cvAPI';
+import { applyJob } from '@/apis/applyJobAPI';
+import dayjs from 'dayjs';
+import { useAccount } from '@/providers/UserProvider';
+
+export default function JobApplicationForm() {
+  const { jobId } = useParams();
+  const { dataUser } = useAccount()
+  const [cvOption, setCvOption] = useState('current');
+  const [job, setJob] = useState<JobFilterResponse>();
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [note, setNote] = useState('');
+  const [cv, setCv] = useState<Cv>();
+
+  const fetchJob = async () => {
+    try {
+      const response = await filterJob({ id: Number(jobId) });
+      setJob(response.data[0]);
+    } catch (error) {
+      toast.error('Có lỗi xảy ra khi tải thông tin công việc');
+    }
+  };
+
+  const fetchCv = async () => {
+    try {
+      const response = await getCvMe();
+      if (response.length > 0) {
+        setCv(response[0]);
+      }
+    } catch (error) {
+      toast.error('Có lỗi xảy ra khi tải thông tin CV');
+      setCvOption('new');
+    }
+  };
+
+  useEffect(() => {
+    if (dataUser) {
+      setName(dataUser.name);
+      setPhone(dataUser.phone);
+    }
+  }, [dataUser]);
+
+  useEffect(() => {
+    fetchJob();
+  }, [jobId]);
+
+  useEffect(() => {
+    fetchCv();
+  }, []);
+
+  const handleChangeOptionCv = (value: string) => {
+    if (!cv && value === 'current') {
+      toast.error('Bạn chưa có CV nào, vui lòng tải lên CV mới');
+      setCvOption('new');
+      return;
+    }
+    setCvOption(value);
+  };
+
+  const handleApplyJob = async () => {
+
+
+    if (cvOption === 'current' && !cv) {
+      toast.error('Không tìm thấy CV hiện tại');
+      return;
+    }
+
+    try {
+      await applyJob(Number(jobId), {
+        cv: cv as Cv,
+        note,
+        username: name,
+        phone
+      });
+      toast.success('Ứng tuyển thành công');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi khi ứng tuyển');
+    }
+  };
+
+  return (
+    <div className='max-w-4xl mx-auto p-8'>
+      <div
+        className='my-4 flex items-center text-sm gap-1 w-fit cursor-pointer'
+        onClick={() => window.history.back()}
+      >
+        <ChevronLeft className='w-4 h-4' />
+        <span className='font-bold'>Quay lại</span>
+      </div>
+
+      <Card className='border-none shadow-none'>
+        <CardHeader>
+          <CardTitle className='text-xl font-semibold'>
+            <span className='text-red-800 font-bold'>{job?.name}</span> tại{' '}
+            <span className='text-red-800 font-bold'>{job?.company.name}</span>
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className='space-y-6'>
+          <div>
+            <Label className='text-lg font-bold text-red-600 '>CV ứng tuyển *</Label>
+            <RadioGroup value={cvOption} onValueChange={handleChangeOptionCv} className='mt-3 space-y-3'>
+              <Label htmlFor='current' className='block'>
+                <Card
+                  className={`rounded-sm cursor-pointer border transition shadow-none ${
+                    cvOption === 'current' ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                  }`}
+                >
+                  <CardContent className='flex items-start justify-between'>
+                    <div className='flex items-start'>
+                      <RadioGroupItem value='current' id='current' className='mr-3' />
+                      <div>
+                        {cv ? (
+                          <>
+                            <p className='text-sm font-semibold'>Sử dụng CV hiện tại</p>
+                            <div
+                              className='flex items-center gap-1 hover:underline w-fit text-sm p-1 text-blue-600'
+                              onClick={() => window.open(cv.url)}
+                            >
+                              <span>{cv.name}</span>
+                              <Eye className='w-4 h-4 ml-1' />
+                            </div>
+                            <p className='text-sx text-gray-400 font-normal px-1'>
+                              Cập nhật vào ngày {dayjs(cv.updatedAt).format('DD/MM/YYYY')}
+                            </p>
+                          </>
+                        ) : (
+                          <p className='text-sm font-semibold'>Chưa có CV nào</p>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Label>
+
+              <Label htmlFor='new' className='block'>
+                <Card
+                  className={`rounded-sm cursor-pointer border transition shadow-none ${
+                    cvOption === 'new' ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                  }`}
+                >
+                  <CardContent className='flex items-start justify-between'>
+                    <div className='flex items-start'>
+                      <RadioGroupItem value='new' id='new' className='mr-3' />
+                      <div>
+                        <p className='text-sm font-semibold'>Tải lên CV mới</p>
+                        <p className='text-xs text-gray-500'>Tạo mới từ mẫu</p>
+                      </div>
+                    </div>
+                    <Button variant='secondary' size='sm' className='border border-red-600 text-red-600'>
+                      <ArrowUpFromLine className='w-4 h-4 mr-1' />
+                      <span>Tải lên CV</span>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Label>
+            </RadioGroup>
+          </div>
+
+          <Card className='border-none shadow-none p-0'>
+            <CardHeader className='p-0'>
+              <CardTitle className='text-lg font-bold text-red-600 '>Thông tin cơ bản</CardTitle>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <Label className='text-sm font-semibold'>Họ và tên</Label>
+              <Input
+                type='text'
+                placeholder='Họ và tên'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className='px-3 py-6 rounded-1'
+              />
+
+              <Label className='text-sm font-semibold'>Số điện thoại</Label>
+              <Input
+                type='text'
+                placeholder='Số điện thoại'
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className='px-3 py-6 rounded-1'
+              />
+
+              <Label className='text-sm font-semibold'>Thư xin việc</Label>
+              <Input
+                type='text'
+                placeholder='Hãy viết thư xin việc để đạt hiệu quả hơn'
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className='px-3 py-6 rounded-1'
+              />
+            </CardContent>
+          </Card>
+
+          <div className='pt-4'>
+            <Button
+              variant={'destructive'}
+              className='w-full text-lg font-semibold h-14 rounded-none bg-red-500'
+              onClick={handleApplyJob}
+            >
+              Gửi hồ sơ
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

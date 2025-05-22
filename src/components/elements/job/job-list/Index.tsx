@@ -1,10 +1,10 @@
 import JobListDetail from "./JobListDisplay";
-import { JobResponse } from "@/types/JobType";
+import { JobFilterResponse, JobResponse } from "@/types/jobType";
 import JobList from "./JobList";
 import { useEffect, useState } from "react";
 
-export default function Index({jobs}: { jobs: JobResponse[] }) {
-  const [selectedJob, setSelectedJob] = useState<JobResponse>({} as JobResponse);
+export default function Index({jobs}: { jobs: JobFilterResponse[] }) {
+  const [selectedJob, setSelectedJob] = useState<JobFilterResponse>({} as JobResponse);
   useEffect(() => {
    if(jobs.length > 0) {
       setSelectedJob(jobs[0]);

@@ -1,27 +1,29 @@
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Level } from "@/types/levelType"
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Level } from "@/types/levelType";
 
-export default function LevelJobSelect({
-  levelId,
-  setLevelId,
+export default function LevelJobPopup({
+  levelIds = [],
+  setLevelIds,
   levelList,
 }: {
-  levelId?: number;
-  setLevelId: (levelId: number) => void;
+  levelIds?: Level[];
+  setLevelIds: (levelIds: Level[]) => void;
   levelList: Level[];
 }) {
+  const handleCheckboxChange = (level: Level, checked: boolean) => {
+    if (checked) {
+      setLevelIds([...levelIds, level]);
+    } else {
+      setLevelIds(levelIds.filter((l) => l.id !== level.id));
+    }
+  };
+
   return (
     <Card className="rounded-sm border-none shadow-md mb-4">
       <CardHeader>
@@ -33,21 +35,25 @@ export default function LevelJobSelect({
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        <Select
-          value={levelId?.toString() || ""}
-          onValueChange={(value) => setLevelId(Number(value))}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="-- Chọn cấp bậc --" />
-          </SelectTrigger>
-          <SelectContent>
-            {levelList.map((level) => (
-              <SelectItem key={level.id} value={level.id.toString()}>
-                {level.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="grid grid-cols-2 gap-4">
+          {levelList.map((level) => {
+            const isChecked = levelIds.some((l) => l.id === level.id);
+            return (
+              <div key={level.id} className="flex items-center gap-2">
+                <Checkbox
+                  id={`level-job-${level.id}`}
+                  checked={isChecked}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange(level, Boolean(checked))
+                  }
+                />
+                <label htmlFor={`level-job-${level.id}`} className="cursor-pointer">
+                  {level.name}
+                </label>
+              </div>
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
   );

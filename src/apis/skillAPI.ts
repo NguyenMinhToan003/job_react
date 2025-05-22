@@ -1,4 +1,4 @@
-import { Skill } from "@/types/SkillType"
+import { Skill } from "@/types/skillType"
 import { axiosInstance } from "./index"
 
 export const getSkillList = async () => {

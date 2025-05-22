@@ -70,13 +70,10 @@ export default function RequirementPopup({
           <div className="space-y-1">
             {requirement.split("\n").map((line, index) => (
               line.trim() && (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 justify-start"
-                >
-                  <CircleCheckBig className="w-4 h-4 text-red-600" />
-                  <div className="text text-gray-700">{line}</div>
-                </div>
+                <div key={index} className='flex items-start gap-3 justify-start'>
+                <CircleCheckBig className='min-w-4 min-h-4 max-w-4 max-h-4 text-red-600' />
+                <div className='text text-gray-700'>{line}</div>
+              </div>
               )
             ))}
           </div>
