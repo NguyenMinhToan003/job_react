@@ -28,13 +28,19 @@ export interface CreateLocationRequest {
   placeId: string;
   city: City;
   district: District;
+  lat: number;
+  lng: number;
+  enabled: number;
 }
 
 export interface LocationResponse {
   id: number;
   name: string;
-  plandId: string;
+  placeId: string;
   district: DistrictResponse;
+  lat: number;
+  lng: number;
+  enabled: number;
 }
 export interface DistrictResponse {
   id: string;

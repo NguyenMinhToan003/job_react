@@ -1,5 +1,5 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,16 +9,13 @@ import { useEffect, useState } from 'react';
 import { getCompanyDetailAPI } from '@/apis/companyAPI';
 import { useParams } from 'react-router-dom';
 import JobList from '@/components/elements/job/job-list/JobList';
-import { JobResponse } from '@/types/JobType';
-import { LocationMapResponse, LocationResponse } from '@/types/location';
-import { locationGetMapAPI } from '@/apis/locationAPI';
-import { Line } from '@/components/ui/line';
+import { JobResponse } from '@/types/jobType';
+import { LocationResponse } from '@/types/location';
 
 export default function CompanyPage() {
   const { id = -1 } = useParams();
   const [company, setCompany] = useState<CompanyDetailResponse>()
   const [selectLocation, setSelectLocation] = useState<LocationResponse>();
-  const [locationMap, setLocationMap] = useState<LocationMapResponse>();
   const fetchCompanyDetail = async () => {
     try {
       const response = await getCompanyDetailAPI(+id);
@@ -39,25 +36,6 @@ export default function CompanyPage() {
       setSelectLocation(company?.locations[0]);
     }
   }, [company])
-
-  const fetLocationMap = async () => {
-    console.log('check')
-    try {
-      if (selectLocation?.plandId) {
-        const response = await locationGetMapAPI({
-          name: selectLocation.name,
-          plandId: selectLocation.plandId,
-        })
-        console.log('locationMap', response);
-        setLocationMap(response);
-      }
-    } catch (error) {
-      console.error('Error fetching location map:', error);
-    }
-  }
-  useEffect(() => {
-    fetLocationMap()
-  }, [selectLocation])
   
   if (!company) {
     return <div className='text-center py-16 text-gray-500'>Loading...</div>;
@@ -96,8 +74,8 @@ export default function CompanyPage() {
       </div>
       <div className='max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-5 gap-8'>
         <div className='md:col-span-3 h-full'>
-          <Tabs defaultValue='gioi-thieu' className='mb-8 h-full '>
-            <TabsList className='border-b w-full justify-start rounded-sm h-auto p-0 mb-6  bg-white shadow-xl border-b-gray-300 sticky top-17 z-100'> 
+          <Tabs defaultValue='gioi-thieu' className='mb-8 h-full !shadow-none'>
+            <TabsList className='border-b w-full justify-start rounded-sm h-auto p-0 mb-6  bg-white shadow-md sticky top-17 z-100'> 
             <TabsTrigger
               value="gioi-thieu"
               className="max-w-fit px-7 py-4 h-16 mr-1.5 text-lg font-semibold rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none"
@@ -160,27 +138,7 @@ export default function CompanyPage() {
                     <span className='font-bold text-2xl'>Giới thiệu công ty</span>
                     <div className='w-full h-[1px] bg-gray-200 my-4'></div>
                       <p className='text-gray-700 mb-4 font-semibold space-x-1'>
-                      Tại sao bạn sẽ yêu thích làm việc tại đây?
-Professional software development training
-Long-Term Growth
-Fulfilling Career at an "interesting" company
-Why FUJIFILM Business Innovation Vietnam:
-
-At FUJIFILM Business Innovation, we aim to be a company with a good balance of all three attributes:
-
-We, FUJIFILM Business Innovation build a ‘strong’ company delivers excellent products and services that satisfy customers and are able to reward its shareholders continuously.
-FUJIFILM Business Innovation is a ‘kind’ company to contribute to local and global communities in terms of environmental conservation, ethical behavior, and social contribution.
-                        Working at FUJIFILM Business Innovation, you can find your life and work fulfilling at an ’ interesting’ company with professional training courses and working environment.
-                        FUJIFILM Business Innovation Việt Nam
-FUJIFILM Business Innovation Vietnam offers a holistic ecosystem of our high-end portfolio to enable Vietnam enterprises to achieve increasing productivity and efficiency while driving greater value from communications. This includes world-class office multi-function devices, business document management solutions, digital transformation in various platform (cloud, mobile, on-premise), and graphic communication services.  
-
-Our Mission
-Driving Business Innovation 
-This mission embodies our commitment to continuously innovate and extend new frontiers that help businesses grow. We do this by;
-
-Providing outstanding products, services and solutions 
-Optimizing customer’s business processes across all work environments
-Implementing workflows that enables effective sharing of information and knowledge, thus allowing customer to further leverage on their organizational strengths
+                      s
                       </p>
                     </CardContent>
                   </Card>
@@ -192,21 +150,24 @@ Implementing workflows that enables effective sharing of information and knowled
                         <div className='w-[300px]'>
                           {
                             company?.locations.length>0 && company?.locations.map((location, index) => (
-                              <div key={index} className='flex items-center gap-2 mb-4 p-2 border rounded-md cursor-pointer hover:bg-gray-100 font-semibold'
+                              <Card key={index} className={`mb-4 p-0 border rounded-sm cursor-pointer hover:bg-gray-100 font-semibold
+                                ${selectLocation?.id === location.id ? 'border-red-600' : ''}`}
                                 onClick={() => {
                                   setSelectLocation(location)
                                 }}
                               >
-                                <MapPin className='w-8 h-8' />
-                                <div className='text-gray-700'>{location.name}</div>
-                              </div>
+                                <CardContent className='flex items-start gap-4 p-2'>
+                                  <MapPin className={`w-8 h-8 ${selectLocation?.id === location.id ?'text-red-500': 'text-gray-300'}`} />
+                                  <div className='text-gray-700'>{location.name}</div>
+                                </CardContent>
+                              </Card>
                             ))
                           }
                         </div>
                         <div className='w-full'>
                         {
                           <iframe
-                          src={`https://maps.google.com/maps?q=${locationMap?.location.lat},${locationMap?.location.lng}&hl=vi&z=14&output=embed`}
+                          src={`https://maps.google.com/maps?q=${selectLocation?.lat},${selectLocation?.lng}&hl=vi&z=14&output=embed`}
                           width="100%"
                           height="400"
                           style={{ border: 0 }}

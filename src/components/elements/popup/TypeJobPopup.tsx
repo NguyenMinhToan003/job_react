@@ -5,7 +5,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TypeJob } from "@/types/TypeJobType";
+import { TypeJob } from "@/types/typeJobType";
 
 export default function TypeJobPopup({
   typeJobList,

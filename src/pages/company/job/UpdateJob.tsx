@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getBenefit } from '@/apis/benefitAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
-import { deleteJob, getJobById, updateJob } from '@/apis/jobAPI';
+import { deleteJob, getDetailJobById, updateJob } from '@/apis/jobAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
-import { getTypeJobList } from '@/apis/TypeJobAPI';
+import { getTypeJobList } from '@/apis/typeJobAPI';
 
 import BenefitJobPopup from '@/components/elements/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/popup/DetailJobPopup';
@@ -24,10 +25,11 @@ import { Experience } from '@/types/experienceType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
-import { Skill } from '@/types/SkillType';
-import { TypeJob } from '@/types/TypeJobType';
+import { Skill } from '@/types/skillType';
+import { TypeJob } from '@/types/typeJobType';
 import { RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function UpdateJob() {
   const url = window.location.href;
@@ -37,11 +39,10 @@ export default function UpdateJob() {
   const [description, setDescription] = useState('')
   const [requirement, setRequirement] = useState('')
   const [levelList, setLevelList] = useState<Level[]>([])
-  const [levelId, setLevelId] = useState<number>(1)
+  const [levelIds, setLevelIds] = useState<Level[]>([])
   const [experienceList, setExperienceList] = useState<Experience[]>()
   const [experienceId, setExperienceId] = useState<number>(1)
   const [benefitList, setBenefitList] = useState<Benefit[]>([])
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [benefitIds, setBenefitIds] = useState<Benefit[]>([])
   const [salaryMin, setSalaryMin] = useState<number>(0)
   const [salaryMax, setSalaryMax] = useState<number>(0)
@@ -57,11 +58,10 @@ export default function UpdateJob() {
     try {
       await updateJob(+id, {
         name: nameJob,
-        company: { id: user?.company?.id },
         locations: locationIds,
         skills: skillId,
         quantity: quantityJob,
-        level: { id: levelId },
+        levels: levelIds,
         types: typeJobId,
         requirement,
         description,
@@ -70,9 +70,10 @@ export default function UpdateJob() {
         benefits: benefitIds,
         experience: { id: experienceId }
       });
+      toast.success('Cập nhật bài đăng thành công');
     }
     catch (error) {
-      console.error('Error creating job:', error);
+      toast.error('Đã xảy ra lỗi khi cập nhật bài đăng')
     }
   }
 
@@ -127,13 +128,13 @@ export default function UpdateJob() {
 
   const fetchDataJob = async () => {
     try {
-      const response = await getJobById(+id);
+      const response = await getDetailJobById(+id);
       setNameJob(response.name);
       setDescription(response.description);
       setRequirement(response.requirement);
       setSalaryMin(response.minSalary);
       setSalaryMax(response.maxSalary);
-      setLevelId(response.level.id);
+      setLevelIds(response.levels);
       setLocationIds(response.locations.map((location) => ({ id: +location.id })));
       setExperienceId(response.experience?.id);
       setBenefitIds(response.benefits.map((benefit) => ({ id: benefit.id }) as Benefit));
@@ -153,6 +154,7 @@ export default function UpdateJob() {
     fetchLocationList();
     fetchDataJob();
     fetchSkillList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleDeleteJob = async () => {
@@ -170,7 +172,7 @@ export default function UpdateJob() {
       nameJob,
       description,
       requirement,
-      levelId,
+      levelIds,
       experienceId,
       benefitIds.length > 0,
       salaryMin,
@@ -179,7 +181,7 @@ export default function UpdateJob() {
 
     setCheckField(filledFields);
   }
-  , [nameJob, description, requirement, levelId, experienceId, benefitIds, salaryMin, salaryMax]);
+  , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax]);
   return <>
     <Card className='w-full bg-[#f7f7f7]'>
       <CardHeader>
@@ -226,8 +228,8 @@ export default function UpdateJob() {
             />
             <LevelJobPopup
               levelList={levelList}
-              levelId={levelId}
-              setLevelId={setLevelId}
+              levelIds={levelIds}
+              setLevelIds={setLevelIds}
             />
             <ExperienceJonPopup
               experienceId={experienceId}

@@ -1,24 +1,54 @@
-// import { Account } from "@/types/accountType";
-// import { createContext, useContext, useState } from "react";
+import { getDataUser } from "@/apis/userAPI";
+import { UserResponse } from "@/types/accountType";
+import { ROLE_LIST } from "@/types/loginType";
+import { createContext, useContext, useState, ReactNode } from "react";
 
+interface AccountContextType {
+  dataUser: UserResponse | null;
+  updateDataUser: () => void;
+}
 
-// const AccountContext = createContext({
-//   account: {} as Account,
-//   setAccount: (account: Account) => {},
-// } as {
-//   account: Account | null;
-//   setAccount: (account: Account) => void;
-// })
+const AccountContext = createContext<AccountContextType>({
+  dataUser: null,
+  updateDataUser: () => {},
+});
 
-// export const AccountProvider = ({ children }) => {
-//   const [account, setAccount] = useState<Account>({} as Account) 
-//   return (
-//     <AccountContext.Provider value={{
-//       account,
-//       setAccount,
-//     }}>
-//       {children}
-//     </AccountContext.Provider>
-//   )
-// }
-// export const useAccount = () => useContext(AccountContext)
+interface AccountProviderProps {
+  children: ReactNode;
+}
+
+export const AccountProvider = ({ children }: AccountProviderProps) => {
+  const [dataUser, setDataUser] = useState<UserResponse | null>(null);
+
+  const fetchDataUser = async () => {
+    try {
+      const response = await getDataUser();
+      setDataUser(response);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const updateDataUser = () => {
+    const role = localStorage.getItem("role");
+    if(!role) return;
+    else if (role === ROLE_LIST.USER) {
+      fetchDataUser();
+    } else {
+      console.log("role", role);
+    }
+  };
+
+  return (
+    <AccountContext.Provider
+      value={{
+        dataUser,
+        updateDataUser,
+      }}
+    >
+      {children}
+    </AccountContext.Provider>
+  );
+};
+
+export const useAccount = () => useContext(AccountContext);

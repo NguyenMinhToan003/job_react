@@ -4,7 +4,7 @@ import { createJob } from '@/apis/jobAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
-import { getTypeJobList } from '@/apis/TypeJobAPI';
+import { getTypeJobList } from '@/apis/typeJobAPI';
 
 import BenefitJobPopup from '@/components/elements/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/popup/DetailJobPopup';
@@ -24,22 +24,22 @@ import { Experience } from '@/types/experienceType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
-import { Skill } from '@/types/SkillType';
-import { TypeJob } from '@/types/TypeJobType';
+import { Skill } from '@/types/skillType';
+import { TypeJob } from '@/types/typeJobType';
 import { CirclePlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function CreateJob() {
   const [nameJob, setNameJob] = useState('')
   const [quantityJob, setQuantityJob] = useState(1)
   const [description, setDescription] = useState('')
   const [requirement, setRequirement] = useState('')
+  const [levelIds, setLevelIds] = useState<Level[]>([])
   const [levelList, setLevelList] = useState<Level[]>([])
-  const [levelId, setLevelId] = useState<number>(1)
   const [experienceList, setExperienceList] = useState<Experience[]>()
   const [experienceId, setExperienceId] = useState<number>(1)
   const [benefitList, setBenefitList] = useState<Benefit[]>([])
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [benefitIds, setBenefitIds] = useState<Benefit[]>([])
   const [salaryMin, setSalaryMin] = useState<number>(0)
   const [salaryMax, setSalaryMax] = useState<number>(0)
@@ -58,7 +58,7 @@ export default function CreateJob() {
         description: description,
         benefits: benefitIds,
         requirement: requirement,
-        level: { id: levelId },
+        levels: levelIds,
         experience: { id: experienceId },
         types: typeJobId,
         skills: skillId,
@@ -67,8 +67,10 @@ export default function CreateJob() {
         minSalary: salaryMin,
         maxSalary: salaryMax,
       })
+      toast.success('Tin tuyển dụng đã được tạo thành công');
     }
     catch (error) {
+      toast.error('Đã xảy ra lỗi khi tạo tin tuyển dụng');
       console.error('Error creating job:', error);
     }
   }
@@ -136,7 +138,7 @@ export default function CreateJob() {
       nameJob,
       description,
       requirement,
-      levelId,
+      levelIds,
       experienceId,
       benefitIds.length > 0,
       salaryMin,
@@ -145,7 +147,7 @@ export default function CreateJob() {
 
     setCheckField(filledFields);
   }
-  , [nameJob, description, requirement, levelId, experienceId, benefitIds, salaryMin, salaryMax]);
+  , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax]);
   return <>
     <Card className='w-full bg-[#f7f7f7] border-none shadow-none'>
       <CardHeader>
@@ -184,8 +186,8 @@ export default function CreateJob() {
             />
             <LevelJobPopup
               levelList={levelList}
-              levelId={levelId}
-              setLevelId={setLevelId}
+              levelIds={levelIds}
+              setLevelIds={setLevelIds}
             />
             <ExperienceJonPopup
               experienceId={experienceId}

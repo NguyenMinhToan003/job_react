@@ -1,6 +1,5 @@
 import Home from '@/pages/user/Home';
 import { Route, Routes } from 'react-router-dom';
-import PDFUploader from '@/pages/user/pdf-preview';
 import Index from '@/pages/user/Index';
 import UserDashboard from '@/pages/user/dashboard/Index';
 import Overview from '@/pages/user/dashboard/Overview';
@@ -22,17 +21,29 @@ import CityDistrictPage from '@/pages/admin/city/City';
 import CompanyListPage from '@/pages/admin/company/Company';
 import JobListPage from '@/pages/admin/job/Job';
 import LoginPage from '@/pages/auth/Login';
+import { useAccount } from '@/providers/UserProvider';
+import { useEffect } from 'react';
+import JobForMe from '@/pages/user/dashboard/jobforme/JobForMe';
+import JobDetailCompany from '@/pages/company/job/JobDetail';
+import JobApplicationForm from '@/pages/user/JobApplicationForm';
+import Map from '@/pages/user/Map';
 
 export default function AppRouter() {
+  const { updateDataUser } = useAccount()
+  useEffect(() => {
+    updateDataUser()
+  }, [])
   return (<>
     <Routes>
       <Route path='/auth/login' element={<LoginPage />} />
       <Route path='/' element={<Index />}>
         <Route index element={<Home />} />
+        <Route path='map/:lat/:lng' element={<Map />} />
+        <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />
         <Route path='/tong-quat-ho-so' element={<UserDashboard />} >
           <Route index element={<Overview />} />
           <Route path='ca-nhan' element={<Overview />} />
-          <Route path='cong-viec-luu' element={<Overview />} />
+          <Route path='viec-lam' element={<JobForMe />} />
           <Route path='tin-nhan' element={<Overview />} />
           <Route path='thong-bao' element={<Overview />} />
           <Route path='cai-dat' element={<Overview />} />
@@ -41,7 +52,6 @@ export default function AppRouter() {
         <Route path='/nha-tuyen-dung/:id'>
           <Route index element={<CompanyPage />} />
         </Route>
-        <Route path='pdf' element={<PDFUploader />} />
         <Route path='cong-viec' element={<JobDetail />} />
       </Route>
       // admin
@@ -63,6 +73,7 @@ export default function AppRouter() {
         <Route path='tuyen-dung' element={<CompanyJob />} />
         <Route path='dia-diem' element={<LocationCompany />} />
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
+        <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
         <Route path='*' element={<OverViewCompany />} />
       </Route>
     </Routes>

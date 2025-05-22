@@ -1,11 +1,12 @@
-import { applyJob } from '@/apis/applyJobAPI';
-import { getDetailJob } from '@/apis/jobAPI';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { getDetailJobById } from '@/apis/jobAPI';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Line } from '@/components/ui/line';
 import { Skeleton } from '@/components/ui/skeleton';
-import { JobResponse } from '@/types/JobType';
+
+import { JobResponse } from '@/types/jobType';
 import { HandCoins, MapPin, Book, Building2, ExternalLink, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,8 +18,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
   const fetchJob = async () => {
     try {
       setLoading(true);
-      const res = await getDetailJob(+jobDetailId);
-      console.log('res', res);
+      const res = await getDetailJobById(+jobDetailId);
       setJob(res);
     } catch (error) {
       console.error('Error fetching job details:', error);
@@ -45,24 +45,10 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
       </Card>
     );
   }
-
-  const handleApplyJob = async () => {
-    try {
-      const response = await applyJob(job.id, {
-        cvId: 1,
-        note: 'Tôi rất thích công việc này',
-      });
-      console.log('Apply job response:', response);
-    }
-    catch(error) {
-      console.error('Error applying for job:', error);
-    }
-  }
   
   return (
-    <Card className='bg-white border border-gray-200 shadow-sm rounded-md overflow-hidden'>
+    <Card className='overflow-hidden'>
       <CardContent className='p-6 space-y-6'>
-        {/* Header: Title + Company + Salary + Actions */}
         <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
           <div className='flex-1 space-y-2'>
             <div className='flex items-center gap-2 text-xl font-bold text-gray-800'>
@@ -74,7 +60,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
                 alt={job.company.name}
                 className='w-10 h-10 rounded-md object-cover'
               />
-              <span className='text-sm font-medium text-gray-700'>{job.company.name}</span>
+              <span className='text-sm font-semibold text-gray-700'>{job.company.name}</span>
               <ExternalLink className='w-4 h-4 text-blue-600'
                 onClick={() => navigate(`/nha-tuyen-dung/${job.company.id}`)} />
             </div>
@@ -92,8 +78,8 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
 
           {/* Apply + Heart */}
           <div className='flex items-center gap-2'>
-            <Button className='bg-[#ed1b2f] hover:bg-red-600 text-white font-bold px-6'
-              onClick={handleApplyJob}>
+            <Button className='bg-[#ed1b2f] hover:bg-red-600 text-white font-bold px-6 cursor-pointer'
+              onClick={()=>navigate(`/ung-tuyen-cong-viec/${job.id}`)}>
               Ứng tuyển
             </Button>
             <Heart className='text-red-500 cursor-pointer' size={24} />
@@ -102,28 +88,26 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
 
         <Line className='my-4' variant='secondary' />
 
-        {/* Job Description */}
         <div className='space-y-4 h-[50vh] overflow-y-auto'>
-          <h3 className='text-lg font-bold text-gray-800'>Mô tả công việc</h3>
+          <div className='text-lg font-bold text-gray-800 uppercase'>Thông tin</div>
 
-          
-
-        {/* Extra Info */}
         <div className='grid grid-cols-1  gap-4 mt-6'>
-          <div className='flex items-center gap-2 text-sm text-gray-600'>
+          <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
             <Building2 size={16} />
             {job.typeJobs.map((type) => type.name).join(', ')}
           </div>
             {
             job.locations.map((location) => (
-              <div key={location.id} className='flex items-center gap-2 text-sm text-gray-600'>
+              <div key={location.id} className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
                 <MapPin size={16} />
                 {location.name}
-                <ExternalLink className='w-4 h-4 text-blue-600' />
+                <ExternalLink className='w-4 h-4 text-blue-600'
+                  onClick={() => navigate(`/map/${location.lat}/${location.lng}`)}
+                />
               </div>
             ))
           }
-          <div className='flex items-center gap-2 text-sm text-gray-600'>
+          <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
             <Book size={16} />
             {job.experience.name} kinh nghiệm làm việc
           </div>
@@ -143,7 +127,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
           </div>
           <Line className='my-4' variant={'secondary'}/>
           <div className='space-y-2 text-sm text-gray-700'>
-            <p className='font-semibold'>Mô tả công việc:</p>
+            <p className='font-semibold text-xl'>Mô tả công việc:</p>
             <ul className='list-disc list-inside space-y-1'>
               {
                 job.description.split('\n').map((line, index) => (
@@ -155,7 +139,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
 
           <div className='space-y-2 text-sm text-gray-700'>
             <p className='font-semibold'>Yêu cầu công việc:</p>
-            <ul className='list-disc list-inside space-y-1'>
+            <ul className='list-disc list-inside space-y-1 font-semibold'>
               {
                 job.requirement.split('\n').map((line, index) => (
                   <li key={index}>{line}</li>

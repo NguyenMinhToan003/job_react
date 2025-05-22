@@ -20,7 +20,8 @@ import { TypeJob } from '@/types/TypeJobType';
 import { Experience } from '@/types/experienceType';
 import { getTypeJobList } from '@/apis/TypeJobAPI';
 import { filterJob } from '@/apis/jobAPI';
-import { Job } from '@/types/JobType';
+import { Job, JobFilterResponse } from '@/types/JobType';
+import { toast } from 'sonner';
 
 export default function Home() {
   const [countJobs, setCountJobs] = useState(0);
@@ -29,7 +30,7 @@ export default function Home() {
   const [selectType, setSelectType] = useState('');
   const [search, setSearch] = useState('');
   const [selectExperience, setSelectExperience] = useState('');
-  const [jobList, setJobList] = useState<Job[]>([]);
+  const [jobList, setJobList] = useState<JobFilterResponse[]>([]);
   const [cityOptions, setCityOptions] = useState<
     { label: string; value: string }[]
     >([]);
@@ -91,17 +92,17 @@ export default function Home() {
   const handleFilter = async () => {
     try {
       const response = await filterJob({
-        level: +selectLevel,
-        experience: +selectExperience,
-        typeJob: +selectType,
-        city: selectedCity,
+        levels: selectLevel,
+        experiences: selectExperience,
+        typeJobs: +selectType,
+        citys: selectedCity,
         search: search,
       })
       setJobList(response.data);
       setCountJobs(response.total);
     }
     catch (error) {
-      console.error('Error fetching cities:', error);
+      toast.error(error.response.data.message);
     }
   }
   useEffect(() => {

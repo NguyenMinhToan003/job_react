@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TypeJob } from "@/types/TypeJobType";
+import { TypeJob } from "@/types/typeJobType";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";

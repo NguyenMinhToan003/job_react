@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { JobResponse } from '@/types/JobType';
+import { JobFilterResponse } from '@/types/jobType';
 import { Book, Building2, HandCoins, MapPin } from 'lucide-react';
 
 export default function JobList({
@@ -9,9 +9,9 @@ export default function JobList({
   setSelectedJob,
   isPrev = false,
 }: {
-  job: JobResponse;
-  selectedJob: JobResponse;
-    setSelectedJob: (job: JobResponse) => void;
+  job: JobFilterResponse;
+  selectedJob: JobFilterResponse;
+    setSelectedJob: (job: JobFilterResponse) => void;
   isPrev?: boolean;
 }) {
   return (

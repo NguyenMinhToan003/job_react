@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { getJobByCompanyId } from "@/apis/jobAPI";
-import { Job } from "@/types/JobType";
-
+import { getJobByCompanyId, updateJob } from "@/apis/jobAPI";
+import { CreateJob, JobResponse } from "@/types/jobType";
 import {
   Table,
   TableBody,
@@ -14,11 +13,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { SquarePen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import dayjs from "dayjs";
+import { toast } from "sonner";
 
 export default function ListJob() {
-  const [jobList, setJobList] = useState<Job[]>([]);
+  
+  const [jobList, setJobList] = useState<JobResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
   const fetchJobList = async () => {
     try {
       const response = await getJobByCompanyId();
@@ -34,15 +39,28 @@ export default function ListJob() {
     fetchJobList();
   }, []);
 
-  const formatSalary = (min: number, max: number) => {
-    if (min < 0 || max < 0) return "Thỏa thuận";
-    return `${min.toLocaleString()} - ${max.toLocaleString()} VNĐ`;
+  const handleToggleJobStatus = async (jobId: number, isShow: number) => {
+    try {
+      
+      await updateJob(jobId, {
+        isShow: isShow === 1 ? 0 : 1,
+      } as CreateJob);
+      setJobList((prevJobList) =>
+        prevJobList.map((job) =>
+          job.id === jobId ? { ...job, isShow: isShow === 1 ? 0 : 1 } : job
+        )
+      );
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra');
+    }
   };
 
+
+
   return (
-    <Card className="max-w-7xl mx-auto mt-8 shadow-xl rounded-md">
+    <Card>
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-gray-800">
+        <CardTitle className="text-2xl font-bold text-gray-800 ">
           DANH SÁCH TUYỂN DỤNG
         </CardTitle>
       </CardHeader>
@@ -59,55 +77,59 @@ export default function ListJob() {
             <TableHeader>
               <TableRow>
                 <TableHead className="px-4 py-2 text-left">Tên công việc</TableHead>
-                <TableHead className="px-4 py-2 text-left">Mô tả</TableHead>
-                <TableHead className="px-4 py-2 text-center">Số lượng</TableHead>
-                <TableHead className="px-4 py-2 text-right">Mức lương</TableHead>
-
-
-                <TableHead className="px-4 py-2 text-center">Hạn nộp</TableHead>
+                <TableHead className="px-4 py-2 text-right">CV</TableHead>
+                <TableHead className="px-4 py-2 text-center">Hạn hạn</TableHead>
                 <TableHead className="px-4 py-2 text-center">Trạng thái</TableHead>
+                <TableHead className="px-4 py-2 text-center">Hoạt động</TableHead>
                 <TableHead className="px-4 py-2 text-center">Điều chỉnh</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="z-1">
               {jobList.map((job) => (
                 <TableRow
                   key={job.id}
-                  className="hover:bg-gray-100 transition-all"
+                  className="hover:bg-gray-100 transition-all cursor-pointer"
                 >
                   <TableCell className="px-4 py-2 font-medium text-gray-900">
-                    {job.name}
+                    <Button variant="link" className="p-0"
+                      onClick={() =>navigate(`/danh-cho-nha-tuyen-dung/danh-sach-ung-tuyen/${job.id}`)}
+                    >
+                      {job.name}
+                    </Button>
                   </TableCell>
-                  <TableCell
-                    className="px-4 py-2 max-w-sm truncate text-gray-700"
-                    title={job.description}
-                  >
-                    {job.description}
-                  </TableCell>
+                  <TableHead className="px-4 py-2 text-right font-bold">
+                    {job.applyJobs.length}
+                  </TableHead>
                   <TableCell className="px-4 py-2 text-center">
-                    {job.quantity}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 text-right text-gray-800">
-                    {formatSalary(job.minSalary, job.maxSalary)}
-                  </TableCell>
-                 
-
-                  <TableCell className="px-4 py-2 text-center">
-                    {new Date(job.expiredAt).toLocaleDateString()}
+                    {(() => {
+                      const now = dayjs();
+                      const expiredDate = dayjs(job.expiredAt);
+                      const daysLeft = expiredDate.diff(now, 'day');
+                      return daysLeft < 0 ? (
+                        <span className="text-green-500">Đã hết hạn</span>
+                      ) : (
+                        <span className="text-gray-600">{daysLeft} ngày</span>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell className="px-4 py-2 text-center">
                     <Badge
-                      variant={job.status === 1 ? "default" : "destructive"}
+                      variant={job.status === 1 ? "default" : "outline"}
                     >
-                      {job.status === 1 ? "Đang tuyển" : "Đã hết hạn"}
+                      {job.status === 1 ? "Đang tuyển" : "Chờ duyệt"}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="px-4 py-2 text-center">
+                    <Switch
+                      checked={job.isShow === 1 ? true : false}
+                      className="text-red-400"                      onClick={() => handleToggleJobStatus(job.id, job.isShow)}
+                    />
                   </TableCell>
                   <TableCell className="px-4 py-2 flex justify-center">
                     <SquarePen
                       className="w-6 h-6 text-gray-500 cursor-pointer hover:scale-110 transition-transform"
                       onClick={() => navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${job.id}`)}
                     />
-
                   </TableCell>
                 </TableRow>
               ))}
