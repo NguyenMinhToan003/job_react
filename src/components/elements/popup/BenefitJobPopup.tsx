@@ -15,8 +15,8 @@ export default function BenefitJobPopup({
   setBenefitIds
 }: {
   benefitList: Benefit[];
-  benefitIds: Benefit[];
-  setBenefitIds: (benefitIds: Benefit[]) => void;
+  benefitIds: string[];
+  setBenefitIds: (benefitIds: string[]) => void;
 }) {
 
 
@@ -37,12 +37,13 @@ export default function BenefitJobPopup({
               <Checkbox
                 id={`benefit-${benefit.id}`}
                 className='checked:bg-red-500'
-                checked={benefitIds.some(item => item.id.toString() === benefit.id)}
+                checked={benefitIds.some(item => item.toString() === benefit.id)}
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    setBenefitIds([...benefitIds, { id: benefit.id }]);
+                    setBenefitIds([
+                      ...benefitIds, benefit.id]);
                   } else {
-                    setBenefitIds(benefitIds.filter(item => item.id !== benefit.id));
+                    setBenefitIds(benefitIds.filter(item => item !== benefit.id));
                   }
                 }}
               />

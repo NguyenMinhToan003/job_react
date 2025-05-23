@@ -1,17 +1,17 @@
-import { CreateJob, JobFilterRequest, JobFilterResponse, JobResponse, UpdateJobAdminRequest } from "@/types/jobType";
+import { CompanyFilterJob, CreateJobRequest, JobFilterRequest, JobFilterResponse, JobResponse, UpdateJobAdminRequest } from "@/types/JobType";
 import { axiosInstance } from "./index";
 
-export const createJob = async (data: CreateJob) => {
+export const createJob = async (data: CreateJobRequest) => {
   const response = await axiosInstance.post("/job", data);
   return response.data;
 }
 
-export const getJobByCompanyId = async () => {
-  const response = await axiosInstance.post<JobResponse[]>('/job/company');
+export const getJobByCompanyId = async (data: CompanyFilterJob) => {
+  const response = await axiosInstance.post<JobResponse[]>('/job/company', data);
   return response.data;
 }
 
-export const updateJob = async (jobId: number, data: CreateJob) => {
+export const updateJob = async (jobId: number, data: CreateJobRequest) => {
   const response = await axiosInstance.patch<JobResponse>(`/job/${jobId}`, data);
   return response.data;
 }
@@ -41,5 +41,10 @@ export const getDetailJobById = async (jobId: number) => {
 
 export const updateJobAdmin = async (jobId: number, data: UpdateJobAdminRequest) => {
   const response = await axiosInstance.patch<JobResponse>(`/job/admin/${jobId}`, data);
+  return response.data;
+}
+
+export const toggleJobStatus = async (jobId: number) => {
+  const response = await axiosInstance.patch<JobResponse>(`/job/company/toggle-is-show/${jobId}`);
   return response.data;
 }

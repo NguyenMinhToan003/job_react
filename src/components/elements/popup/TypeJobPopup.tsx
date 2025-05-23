@@ -13,14 +13,14 @@ export default function TypeJobPopup({
   setTypeJobId,
 }: {
   typeJobList: TypeJob[];
-  typeJobId: { id: number }[];
-  setTypeJobId: (id: { id: number }[]) => void;
+  typeJobId: number[];
+  setTypeJobId: (id: number[]) => void;
 }) {
   const handleCheckboxChange = (id: number, checked: boolean) => {
     if (checked) {
-      setTypeJobId([...typeJobId, { id }]);
+      setTypeJobId([...typeJobId, id]);
     } else {
-      setTypeJobId(typeJobId.filter((item) => item.id !== id));
+      setTypeJobId(typeJobId.filter((item) => item !== id));
     }
   };
 
@@ -37,7 +37,7 @@ export default function TypeJobPopup({
       <CardContent className="p-6">
         <div className="grid grid-cols-2 gap-4">
           {typeJobList.map((typeJob) => {
-            const isChecked = typeJobId.some((item) => item.id === Number(typeJob.id));
+            const isChecked = typeJobId.some((item) => item === Number(typeJob.id));
             return (
               <div key={typeJob.id} className="flex items-center gap-2">
                 <Checkbox

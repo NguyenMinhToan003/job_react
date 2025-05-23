@@ -16,11 +16,11 @@ import { getExperienceList } from '@/apis/experienceAPI';
 
 import { getLevelList } from '@/apis/levelAPI';
 import { Level } from '@/types/levelType';
-import { TypeJob } from '@/types/TypeJobType';
+import { TypeJob } from '@/types/typeJobType';
 import { Experience } from '@/types/experienceType';
-import { getTypeJobList } from '@/apis/TypeJobAPI';
+import { getTypeJobList } from '@/apis/typeJobAPI';
 import { filterJob } from '@/apis/jobAPI';
-import { Job, JobFilterResponse } from '@/types/JobType';
+import { JobFilterResponse } from '@/types/jobType';
 import { toast } from 'sonner';
 
 export default function Home() {

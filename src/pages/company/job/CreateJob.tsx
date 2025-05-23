@@ -35,21 +35,21 @@ export default function CreateJob() {
   const [quantityJob, setQuantityJob] = useState(1)
   const [description, setDescription] = useState('')
   const [requirement, setRequirement] = useState('')
-  const [levelIds, setLevelIds] = useState<Level[]>([])
+  const [levelIds, setLevelIds] = useState<string[]>([])
   const [levelList, setLevelList] = useState<Level[]>([])
   const [experienceList, setExperienceList] = useState<Experience[]>()
   const [experienceId, setExperienceId] = useState<number>(1)
   const [benefitList, setBenefitList] = useState<Benefit[]>([])
-  const [benefitIds, setBenefitIds] = useState<Benefit[]>([])
+  const [benefitIds, setBenefitIds] = useState<string[]>([])
   const [salaryMin, setSalaryMin] = useState<number>(0)
   const [salaryMax, setSalaryMax] = useState<number>(0)
   const [checkField, setCheckField] = useState(0)
   const [typeJobList, setTypeJobList] = useState<TypeJob[]>([])
-  const [typeJobId, setTypeJobId] = useState<{ id: number }[]>([])
-  const [locationIds, setLocationIds] = useState<{ id: number }[]>([])
+  const [typeJobId, setTypeJobId] = useState<number[]>([])
+  const [locationIds, setLocationIds] = useState<number[]>([])
   const [locationList, setLocationList] = useState<LocationResponse[]>([]);
   const [skillList, setSkillList] = useState<Skill[]>([])
-  const [skillId, setSkillId] = useState<Skill[]>([])
+  const [skillId, setSkillId] = useState<number[]>([])
 
   const handleCreateJob = async () => {
     try {
@@ -59,7 +59,7 @@ export default function CreateJob() {
         benefits: benefitIds,
         requirement: requirement,
         levels: levelIds,
-        experience: { id: experienceId },
+        experience: experienceId,
         types: typeJobId,
         skills: skillId,
         quantity: quantityJob,
@@ -149,11 +149,11 @@ export default function CreateJob() {
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax]);
   return <>
-    <Card className='w-full bg-[#f7f7f7] border-none shadow-none'>
+    <Card className='w-full bg-[#f7f7f7] border-none shadow-none p-0'>
       <CardHeader>
-        <CardTitle className='font-bold text-2xl'>ĐĂNG TUYỂN DỤNG</CardTitle>
+        <CardTitle className='font-bold text-2xl text-red-600'>ĐĂNG TUYỂN DỤNG</CardTitle>
       </CardHeader>
-      <CardContent className='py-4'>
+      <CardContent>
         <div className='flex flex-col md:flex-row gap-6'>
           {/* Left side: Job List */}
           <div className='flex-1'>

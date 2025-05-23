@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getBenefit } from '@/apis/benefitAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
@@ -6,7 +7,6 @@ import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
-
 import BenefitJobPopup from '@/components/elements/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/popup/DetailJobPopup';
 import ExperienceJonPopup from '@/components/elements/popup/ExperienceJobPopup';
@@ -39,20 +39,20 @@ export default function UpdateJob() {
   const [description, setDescription] = useState('')
   const [requirement, setRequirement] = useState('')
   const [levelList, setLevelList] = useState<Level[]>([])
-  const [levelIds, setLevelIds] = useState<Level[]>([])
+  const [levelIds, setLevelIds] = useState<string[]>([])
   const [experienceList, setExperienceList] = useState<Experience[]>()
   const [experienceId, setExperienceId] = useState<number>(1)
   const [benefitList, setBenefitList] = useState<Benefit[]>([])
-  const [benefitIds, setBenefitIds] = useState<Benefit[]>([])
+  const [benefitIds, setBenefitIds] = useState<string[]>([])
   const [salaryMin, setSalaryMin] = useState<number>(0)
   const [salaryMax, setSalaryMax] = useState<number>(0)
   const [checkField, setCheckField] = useState(0)
   const [typeJobList, setTypeJobList] = useState<TypeJob[]>([])
-  const [typeJobId, setTypeJobId] = useState<{ id: number }[]>([])
-  const [locationIds, setLocationIds] = useState<{ id: number }[]>([])
+  const [typeJobId, setTypeJobId] = useState<number[]>([])
+  const [locationIds, setLocationIds] = useState<number[]>([])
   const [locationList, setLocationList] = useState<LocationResponse[]>([]);
   const [skillList, setSkillList] = useState<Skill[]>([])
-  const [skillId, setSkillId] = useState<Skill[]>([])
+  const [skillId, setSkillId] = useState<number[]>([])
 
   const handleUpdateJob = async () => {
     try {
@@ -68,12 +68,12 @@ export default function UpdateJob() {
         minSalary: salaryMin,
         maxSalary: salaryMax,
         benefits: benefitIds,
-        experience: { id: experienceId }
+        experience: experienceId,
       });
       toast.success('Cập nhật bài đăng thành công');
     }
-    catch (error) {
-      toast.error('Đã xảy ra lỗi khi cập nhật bài đăng')
+    catch (error : any) {
+      toast.error(error.response.data.message);
     }
   }
 
@@ -134,13 +134,13 @@ export default function UpdateJob() {
       setRequirement(response.requirement);
       setSalaryMin(response.minSalary);
       setSalaryMax(response.maxSalary);
-      setLevelIds(response.levels);
-      setLocationIds(response.locations.map((location) => ({ id: +location.id })));
+      setLevelIds(response.levels.map((level) => level.id));
+      setLocationIds(response.locations.map((location) => location.id));
       setExperienceId(response.experience?.id);
-      setBenefitIds(response.benefits.map((benefit) => ({ id: benefit.id }) as Benefit));
-      setTypeJobId(response.typeJobs.map((typeJob) => ({ id: +typeJob.id })));
+      setBenefitIds(response.benefits.map((benefit) => benefit.id));
+      setTypeJobId(response.typeJobs.map((typeJob) => typeJob.id));
       setQuantityJob(response.quantity);
-      setSkillId(response.skills.map((skill) => ({ id: skill.id })as Skill));
+      setSkillId(response.skills.map((skill) => skill.id));
     }
     catch(error) {
       console.error('Error fetching job data:', error);
@@ -162,8 +162,8 @@ export default function UpdateJob() {
       await deleteJob(+id);
       window.history.back();
     }
-    catch (error) {
-      console.error('Error deleting job:', error);
+    catch (error: any) {
+      toast.error(error.response.data.message);
     }
   }
   

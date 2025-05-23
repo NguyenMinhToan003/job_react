@@ -1,4 +1,4 @@
 export interface TypeJob {
-  id: string;
+  id: number;
   name: string;
 }

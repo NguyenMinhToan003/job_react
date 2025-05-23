@@ -15,9 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { City, District, LocationAutoComplate, LocationMapResponse } from '@/types/location';
+import { City, CreateLocationRequest, District, LocationAutoComplate, LocationMapResponse } from '@/types/location';
 import { Loader2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 
 export default function AddMap() {
@@ -132,7 +133,6 @@ export default function AddMap() {
   };
 
   const handleAddLocation = async () => {
-    console.log('Adding location:')
     try {
       await createLocationAPI({
         name: map?.name || '',
@@ -141,9 +141,10 @@ export default function AddMap() {
         district: { id: selectedDistrictId } as District,
         lat: map?.location.lat || 0,
         lng: map?.location.lng || 0,
-      })
+      } as CreateLocationRequest);
+      toast.success('Thêm địa điểm thành công');
     } catch (error) {
-      console.error('Failed to add location', error);
+      toast.error(error.response?.data?.message || 'Thêm địa điểm thất bại');
     }
   }
 

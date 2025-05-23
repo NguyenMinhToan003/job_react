@@ -15,8 +15,8 @@ export default function LocationJobPopup({
   setLocationIds
 }: {
   locationList: LocationResponse[];
-  locationIds: { id: number }[];
-  setLocationIds: (locationIds: { id: number }[]) => void;
+  locationIds: number[];
+  setLocationIds: (locationIds: number[]) => void;
   }) {
   const navigate = useNavigate();
 
@@ -52,12 +52,12 @@ export default function LocationJobPopup({
               <Checkbox
                 id={`location-${location.id}`}
                 className='checked:bg-red-500'
-                checked={locationIds.some(item => item.id === location.id)}
+                checked={locationIds.some(item => item === location.id)}
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    setLocationIds([...locationIds, { id: location.id }]);
+                    setLocationIds([...locationIds, location.id]);
                   } else {
-                    setLocationIds(locationIds.filter(item => item.id !== location.id));
+                    setLocationIds(locationIds.filter(item => item !== location.id));
                   }
                 }}
               />

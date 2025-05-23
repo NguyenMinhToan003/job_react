@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ApplyJob from "./ApplyJob";
+import SaveJob from "./SaveJob";
 
 export default function JobForMe() {
   return <>
@@ -22,9 +23,7 @@ export default function JobForMe() {
           <ApplyJob/>
         </TabsContent>
         <TabsContent className='pt-3' value='saved'>
-          <p className="text-sm text-muted-foreground">
-            Bạn chưa lưu công việc nào.
-          </p>
+          <SaveJob/>
         </TabsContent>
         </div>
       </Tabs>
