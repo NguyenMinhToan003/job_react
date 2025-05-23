@@ -41,13 +41,13 @@ export default function JobListPage() {
   const toggleStatus = async(id: number) => {
     try {
       await updateJobAdmin(id, {
-        status: jobs.find(job => job.id === id)?.status === 1 ? 0 : 1,
+        isActive: jobs.find(job => job.id === id)?.isActive === 1 ? 0 : 1,
       })
       toast.success("Thay đổi trạng thái công việc thành công");
       setJobs(prev =>
         prev.map(job =>
           job.id === id
-            ? { ...job, status: job.status === 1 ? 0 : 1 }
+            ? { ...job, isActive: job.isActive === 1 ? 0 : 1 }
             : job
         )
       );
@@ -126,12 +126,12 @@ export default function JobListPage() {
                     <span
                       className={cn(
                         "px-2 py-1 text-sm rounded",
-                        job.status === 1
+                        job.isActive === 1
                           ? "bg-green-100 text-green-600"
                           : "bg-red-100 text-red-600"
                       )}
                     >
-                      {job.status === 1 ? "Hoạt động" : "Tạm khóa"}
+                      {job.isActive === 1 ? "Hoạt động" : "Tạm khóa"}
                     </span>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
@@ -139,7 +139,7 @@ export default function JobListPage() {
                       variant="outline"
                       onClick={() => toggleStatus(job.id)}
                     >
-                      {job.status === 1 ? "Khóa" : "Kích hoạt"}
+                      {job.isActive === 1 ? "Khóa" : "Kích hoạt"}
                     </Button>
                     <Button>Sửa</Button>
                   </TableCell>

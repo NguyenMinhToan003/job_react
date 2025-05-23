@@ -25,7 +25,7 @@ export default function JobApplicationForm() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [note, setNote] = useState('');
-  const [cv, setCv] = useState<Cv>();
+  const [cv, setCv] = useState<Cv>({} as Cv);
 
   const fetchJob = async () => {
     try {
@@ -82,7 +82,7 @@ export default function JobApplicationForm() {
 
     try {
       await applyJob(Number(jobId), {
-        cv: cv as Cv,
+        cvId: cvOption === 'current' ? cv.id : 0,
         note,
         username: name,
         phone
@@ -165,7 +165,19 @@ export default function JobApplicationForm() {
                     </div>
                     <Button variant='secondary' size='sm' className='border border-red-600 text-red-600'>
                       <ArrowUpFromLine className='w-4 h-4 mr-1' />
-                      <span>Tải lên CV</span>
+                      <Label
+                        htmlFor='cv-upload'
+                        className='cursor-pointer text-sm font-semibold text-red-600'
+                      >Tải lên CV</Label>
+                        <input
+                          id='cv-upload'
+                          type='file'
+                          className='hidden'
+                          onChange={e => {
+                            const file = e.target.files?.[0];
+                            // if (file) onFileSelect(file);
+                          }}
+                        />
                     </Button>
                   </CardContent>
                 </Card>

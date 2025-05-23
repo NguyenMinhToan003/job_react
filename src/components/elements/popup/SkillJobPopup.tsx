@@ -13,15 +13,16 @@ export default function SkillJobPopup({
   setSelectedSkills,
 }: {
   skillList: Skill[];
-  selectedSkills: Skill[];
-  setSelectedSkills: (skills: Skill[]) => void;
+  selectedSkills: number[];
+  setSelectedSkills: (skills: number[]) => void;
 }) {
   const toggleSkill = (skill: Skill) => {
-    const isSelected = selectedSkills.some((s) => s.id === skill.id);
-    const updatedSkills = isSelected
-      ? selectedSkills.filter((s) => s.id !== skill.id)
-      : [...selectedSkills, skill];
-    setSelectedSkills(updatedSkills);
+    const isSelected = selectedSkills.some((s) => s === skill.id);
+    if (isSelected) {
+      setSelectedSkills(selectedSkills.filter((s) => s !== skill.id));
+    } else {
+      setSelectedSkills([...selectedSkills, skill.id]);
+    }
   };
 
   return (
@@ -36,7 +37,7 @@ export default function SkillJobPopup({
       </CardHeader>
       <CardContent className="p-6 space-y-2 grid grid-cols-4 gap-2">
         {skillList.map((skill) => {
-          const isSelected = selectedSkills.some((s) => s.id === skill.id);
+          const isSelected = selectedSkills.some((s) => s === skill.id);
           return (
             <Button
               key={skill.id}

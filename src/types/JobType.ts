@@ -3,7 +3,7 @@ import { Company } from "./companyType";
 import { Cv } from "./cvType";
 import { Experience } from "./experienceType";
 import { Level } from "./levelType";
-import { LocationMapResponse, LocationResponse } from "./location";
+import { LocationResponse } from "./location";
 import { Skill } from "./skillType";
 import { TypeJob } from "./typeJobType";
 
@@ -16,24 +16,23 @@ export interface Job {
   minSalary: number;
   maxSalary: number;
   createdAt: string;
-  status: number;
+  isActive: number;
   expiredAt: string;
   applyJobs: Cv[];
 }
-export interface CreateJob {
+export interface CreateJobRequest {
   name: string;
-  isShow: number | 1;
-  locations: LocationMapResponse[] | { id: number }[];
-  skills: Skill[] | { id: number }[];
-  levels: Level[] | [];
-  types: TypeJob[] | { id: number }[];
-  requirement: string;
-  description: string;
-  minSalary: number;
   quantity: number;
+  benefits: string[];
+  skills: number[];
+  locations: number[];
+  experience: number;
+  levels: string[];
+  types: number[];
+  requirement: string;
+  minSalary: number;
   maxSalary: number;
-  benefits: Benefit[] | { id: string }[];
-  experience: Experience | { id: number };
+  description: string;
 }
 
 export interface JobResponse {
@@ -46,7 +45,7 @@ export interface JobResponse {
   isShow: number;
   maxSalary: number;
   createdAt: string;
-  status: number;
+  isActive: number;
   expiredAt: string;
   benefits: Benefit[];
   locations: LocationResponse[];
@@ -77,7 +76,7 @@ export interface JobFilterResponse {
   minSalary: number;
   maxSalary: number;
   createdAt: string;
-  status: number;
+  isActive: number;
   expiredAt: string;
   benefits: Benefit[];
   locations: LocationResponse[];
@@ -89,5 +88,20 @@ export interface JobFilterResponse {
 }
 
 export interface UpdateJobAdminRequest {
-  status: number;
+  isActive: number;
+}
+
+export interface CompanyFilterJob {
+  id?: number;
+  search?: string;
+  levels?: string[];
+  experience?: string;
+  typeJobs?: number[];
+  minSalary?: number;
+  maxSalary?: number;
+  locations?: number[];
+  benefits?: string[];
+  skills?: string[];
+  isActive?: number;
+  isShow?: number;
 }

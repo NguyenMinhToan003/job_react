@@ -27,6 +27,7 @@ import JobForMe from '@/pages/user/dashboard/jobforme/JobForMe';
 import JobDetailCompany from '@/pages/company/job/JobDetail';
 import JobApplicationForm from '@/pages/user/JobApplicationForm';
 import Map from '@/pages/user/Map';
+import CreateJob from '@/pages/company/job/CreateJob';
 
 export default function AppRouter() {
   const { updateDataUser } = useAccount()
@@ -71,8 +72,10 @@ export default function AppRouter() {
       <Route path='/danh-cho-nha-tuyen-dung' element={<IndexCompany />} >
         <Route index element={<OverViewCompany />} />
         <Route path='tuyen-dung' element={<CompanyJob />} />
+        <Route path='tuyen-dung/:tab' element={<CompanyJob />} />
         <Route path='dia-diem' element={<LocationCompany />} />
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
+        <Route path='dang-tin-tuyen-dung' element={<CreateJob/>} />
         <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
         <Route path='*' element={<OverViewCompany />} />
       </Route>

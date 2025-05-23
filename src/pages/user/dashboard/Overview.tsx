@@ -7,6 +7,7 @@ import { useAccount } from '@/providers/UserProvider';
 import { Cv } from '@/types/cvType';
 import { ChevronRight, FileText, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 function FileInput({ onFileSelect, label }: { onFileSelect: (file: File) => void; label: string }) {
   return (
@@ -39,7 +40,7 @@ export default function Overview() {
       const response = await getCvMe();
       setCvs(response);
     } catch (error) {
-      console.error('Error fetching CVs:', error);
+      toast.error(error.response?.data?.message || 'Error fetching CVs');
     } finally {
       setLoading(false);
     }
@@ -52,7 +53,7 @@ export default function Overview() {
       await fetchCvs();
       updateDataUser();
     } catch (error) {
-      console.error('Error uploading CV:', error);
+      toast.error(error.response?.data?.message || 'Error uploading CV');
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,8 @@
-import { Cv, CvResponse } from "./cvType";
+import { CvResponse } from "./cvType";
 import { JobResponse } from "./jobType";
 
 export interface CreateApplyRequest {
-  cv: Cv;
+  cvId: number;
   note: string;
   username: string;
   phone: string;

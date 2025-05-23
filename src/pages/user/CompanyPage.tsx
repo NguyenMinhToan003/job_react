@@ -45,7 +45,7 @@ export default function CompanyPage() {
     <div className='flex flex-col bg-[#f7f7f7]'>
       <div className='bg-gradient-to-r from-[#121212] to-[#53151c] text-white'>
         <div className='max-w-7xl mx-auto py-4 px-6 flex items-center gap-6'>
-          <div className='bg-white rounded-md p-1 w-40 h-40 flex items-center justify-center'>
+          <div className='bg-white rounded-md p-1 min-w-40 min-h-40 max-w-40 max-h-40 flex items-center justify-center'>
             <img src={company?.logo} alt='CBTW Logo' className='w-full h-full' />
           </div>
           <div className='flex-1'>
@@ -75,7 +75,7 @@ export default function CompanyPage() {
       <div className='max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-5 gap-8'>
         <div className='md:col-span-3 h-full'>
           <Tabs defaultValue='gioi-thieu' className='mb-8 h-full !shadow-none'>
-            <TabsList className='border-b w-full justify-start rounded-sm h-auto p-0 mb-6  bg-white shadow-md sticky top-17 z-100'> 
+            <TabsList className=' w-full justify-start rounded-none h-auto p-0 mb-6  bg-white shadow-md sticky top-16 z-100'> 
             <TabsTrigger
               value="gioi-thieu"
               className="max-w-fit px-7 py-4 h-16 mr-1.5 text-lg font-semibold rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none"
