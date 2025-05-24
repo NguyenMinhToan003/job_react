@@ -1,4 +1,5 @@
-import { getLocationByCompanyAPI, toggleEnableLocationAPI } from "@/apis/locationAPI";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { deleteLocationAPI, getLocationByCompanyAPI, toggleEnableLocationAPI } from "@/apis/locationAPI";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -41,6 +42,16 @@ export default function ListLocation() {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteLocationAPI(id);
+      toast.success("Xóa địa điểm thành công");
+      fetchLocationList();
+    } catch (error : any) {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra');
+    }
+  }
+
   return (
     <Card className="flex-1">
       <CardHeader>
@@ -75,7 +86,10 @@ export default function ListLocation() {
                   <Button variant="outline" className="mr-2">
                     Sửa
                   </Button>
-                  <Button variant="destructive">Xóa</Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() =>handleDelete(item.id)}
+                  >Xóa</Button>
                 </TableCell>
               </TableRow>
             ))}

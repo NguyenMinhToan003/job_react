@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { Cv } from '@/types/cvType';
 import { getCvMe } from '@/apis/cvAPI';
-import { applyJob } from '@/apis/applyJobAPI';
+import { applyJob, applyJobWithNewCv } from '@/apis/applyJobAPI';
 import dayjs from 'dayjs';
 import { useAccount } from '@/providers/UserProvider';
 
@@ -26,6 +26,7 @@ export default function JobApplicationForm() {
   const [phone, setPhone] = useState('');
   const [note, setNote] = useState('');
   const [cv, setCv] = useState<Cv>({} as Cv);
+  const [fileCVnew, setFileCVnew] = useState<File | null>(null);
 
   const fetchJob = async () => {
     try {
@@ -73,16 +74,31 @@ export default function JobApplicationForm() {
   };
 
   const handleApplyJob = async () => {
-
-
     if (cvOption === 'current' && !cv) {
       toast.error('Không tìm thấy CV hiện tại');
       return;
     }
-
     try {
+      if (cvOption === 'new') {
+        if (!fileCVnew) {
+          toast.error('Vui lòng tải lên CV mới');
+          return;
+        }
+        await applyJobWithNewCv(
+          Number(jobId),
+          {
+            username: name,
+            phone,
+            note,
+            cvId: -1
+          },
+          fileCVnew
+        )
+        toast.success('Ứng tuyển thành công');
+        return;
+      }
       await applyJob(Number(jobId), {
-        cvId: cvOption === 'current' ? cv.id : 0,
+        cvId: cvOption === 'current' ? cv.id : cv.id,
         note,
         username: name,
         phone
@@ -104,11 +120,11 @@ export default function JobApplicationForm() {
         <span className='font-bold'>Quay lại</span>
       </div>
 
-      <Card className='border-none shadow-none'>
+      <Card className='border-none shadow-sm'>
         <CardHeader>
           <CardTitle className='text-xl font-semibold'>
             <span className='text-red-800 font-bold'>{job?.name}</span> tại{' '}
-            <span className='text-red-800 font-bold'>{job?.company.name}</span>
+            <span className='text-red-800 font-bold'>{job?.employer.name}</span>
           </CardTitle>
         </CardHeader>
 
@@ -175,7 +191,7 @@ export default function JobApplicationForm() {
                           className='hidden'
                           onChange={e => {
                             const file = e.target.files?.[0];
-                            // if (file) onFileSelect(file);
+                            if (file) setFileCVnew(file);
                           }}
                         />
                     </Button>

@@ -1,17 +1,17 @@
 
-import { getCompanyInfo } from "@/apis/companyAPI";
+import { getEmployerInfo } from "@/apis/companyAPI";
 import CompanyNavbar from "@/components/elements/navbar/CompanyNavbar";
 import { Button } from "@/components/ui/button";
-import { Company } from "@/types/companyType";
+import { Employer } from "@/types/companyType";
 import { House } from "lucide-react";
 import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 
-export default function IndexCompany() {
-  const [account, setAccount] = useState<Company>();
+export default function IndexEmployer() {
+  const [account, setAccount] = useState<Employer>();
   const fetchData = async () => {
     try {
-      const response = await getCompanyInfo();
+      const response = await getEmployerInfo();
       setAccount(response);
     }
     catch (error) {

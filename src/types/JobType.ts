@@ -1,5 +1,5 @@
 import { Benefit } from "./benefitType";
-import { Company } from "./companyType";
+import { Employer } from "./companyType";
 import { Cv } from "./cvType";
 import { Experience } from "./experienceType";
 import { Level } from "./levelType";
@@ -53,18 +53,20 @@ export interface JobResponse {
   skills: Skill[];
   levels: Level[];
   typeJobs: TypeJob[];
-  company: Company;
+  employer: Employer;
   applyJobs: Cv[];
 }
 export interface JobFilterRequest {
   id: number;
   search?: string;
-  levels?: string;
-  experiences?: string;
-  typeJobs?: number;
+  levels?: string[];
+  experience?: number[];
+  typeJobs?: number[];
   minSalary?: number;
   maxSalary?: number;
   citys?: string;
+  benefits?: string[];
+  skills?: number[];
 }
 
 export interface JobFilterResponse {
@@ -84,7 +86,7 @@ export interface JobFilterResponse {
   skills: Skill[];
   levels: Level[];
   typeJobs: TypeJob[];
-  company: Company;
+  employer: Employer;
 }
 
 export interface UpdateJobAdminRequest {
@@ -104,4 +106,5 @@ export interface CompanyFilterJob {
   skills?: string[];
   isActive?: number;
   isShow?: number;
+  isExpired?: number;
 }

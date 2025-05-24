@@ -2,9 +2,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import ListJob from './ListJob'
 import PendingJobsList from './PendingJobsList'
 import CreateJob from './CreateJob'
-import { InboxIcon } from 'lucide-react'
-import { Card } from '@/components/ui/card'
 import { useNavigate, useParams } from 'react-router-dom'
+import ExpiredJobs from './ExpiredJobs'
 
 export default function CompanyJob() {
   const { tab } = useParams();
@@ -40,11 +39,7 @@ export default function CompanyJob() {
         </TabsContent>
 
         <TabsContent value='3' className='p-0'>
-          <Card className='w-full h-full flex flex-col items-center justify-center py-16 text-gray-500'>
-            <InboxIcon className='w-16 h-16 mb-4 text-red-500' />
-            <h2 className='text-xl font-semibold'>Chưa có việc làm nào hết hạn</h2>
-            <p className='text-sm mt-2'>Các công việc đã đăng vẫn đang trong thời gian hoạt động.</p>
-          </Card>
+          <ExpiredJobs/>
         </TabsContent>
 
 

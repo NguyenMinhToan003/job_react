@@ -12,11 +12,13 @@ import { useNavigate } from "react-router-dom";
 export default function LocationJobPopup({
   locationList,
   locationIds,
-  setLocationIds
+  setLocationIds,
+  notEdit,
 }: {
   locationList: LocationResponse[];
   locationIds: number[];
   setLocationIds: (locationIds: number[]) => void;
+  notEdit?: boolean;
   }) {
   const navigate = useNavigate();
 
@@ -50,6 +52,7 @@ export default function LocationJobPopup({
           locationList.map((location) => (
             <div key={location.id} className="flex items-center gap-2">
               <Checkbox
+                disabled={notEdit}
                 id={`location-${location.id}`}
                 className='checked:bg-red-500'
                 checked={locationIds.some(item => item === location.id)}

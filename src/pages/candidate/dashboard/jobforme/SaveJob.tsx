@@ -28,11 +28,11 @@ export default function SaveJob() {
         <Card className="rounded-none shadow-none hover:shadow-2xl" key={applyJob.id}>
           <CardContent className="flex items-start justify-start gap-2">
           <div className='bg-white rounded-none w-18 h-18 flex items-center justify-center border border-gray-200'>
-            <img src={applyJob.job.company?.logo} alt='CBTW Logo' className='w-full h-full' />
+            <img src={applyJob.job.employer?.logo} alt='CBTW Logo' className='w-full h-full' />
             </div>
             <div className="flex-1 flex-col gap-1">
               <div className='font-bold text-gray-800 text-lg'>{applyJob.job.name}</div>
-              <div className='text-[12px] text-gray-500 font-semibold'>{applyJob.job.company?.name}</div>
+              <div className='text-[12px] text-gray-500 font-semibold'>{applyJob.job.employer?.name}</div>
               <div className='text-[12px] text-gray-500 font-semibold'>{applyJob?.job?.locations[0]?.district?.city?.name}</div>
               <div className="text-green-600 font-semibold text-sm">
                 {applyJob?.job?.maxSalary === applyJob?.job?.minSalary && applyJob?.job?.maxSalary === -9999 ? (

@@ -11,12 +11,15 @@ export default function TypeJobPopup({
   typeJobList,
   typeJobId,
   setTypeJobId,
+  notEdit,
 }: {
   typeJobList: TypeJob[];
   typeJobId: number[];
   setTypeJobId: (id: number[]) => void;
+  notEdit?: boolean;
 }) {
   const handleCheckboxChange = (id: number, checked: boolean) => {
+    if (notEdit) return;
     if (checked) {
       setTypeJobId([...typeJobId, id]);
     } else {
@@ -41,6 +44,7 @@ export default function TypeJobPopup({
             return (
               <div key={typeJob.id} className="flex items-center gap-2">
                 <Checkbox
+                  disabled={notEdit}
                   id={`type-job-${typeJob.id}`}
                   checked={isChecked}
                   onCheckedChange={(checked) =>

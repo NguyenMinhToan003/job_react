@@ -56,13 +56,13 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
             </div>
             <div className='flex items-center gap-3'>
               <img
-                src={job.company.logo}
-                alt={job.company.name}
+                src={job.employer.logo}
+                alt={job.employer.name}
                 className='w-10 h-10 rounded-md object-cover'
               />
-              <span className='text-sm font-semibold text-gray-700'>{job.company.name}</span>
+              <span className='text-sm font-semibold text-gray-700'>{job.employer.name}</span>
               <ExternalLink className='w-4 h-4 text-blue-600'
-                onClick={() => navigate(`/nha-tuyen-dung/${job.company.id}`)} />
+                onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)} />
             </div>
             <div className='flex items-center gap-2 text-green-600 font-semibold text-sm'>
               <HandCoins size={16} />

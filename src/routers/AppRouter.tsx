@@ -1,19 +1,19 @@
-import Home from '@/pages/user/Home';
+import Home from '@/pages/candidate/Home';
 import { Route, Routes } from 'react-router-dom';
-import Index from '@/pages/user/Index';
-import UserDashboard from '@/pages/user/dashboard/Index';
-import Overview from '@/pages/user/dashboard/Overview';
+import Index from '@/pages/candidate/Index';
+import UserDashboard from '@/pages/candidate/dashboard/Index';
+import Overview from '@/pages/candidate/dashboard/Overview';
 import IndexAdmin from '@/pages/admin/IndexAdmin';
 import OverViewAdmin from '@/pages/admin/Overview';
-import JobDetail from '@/pages/user/JobDetail';
-import CompanyPage from '@/pages/user/CompanyPage';
-import OverViewCompany from '@/pages/company/OverView';
-import IndexCompany from '@/pages/company/IndexCompany';
-import CompanyJob from '@/pages/company/job/Job';
-import LocationCompany from '@/pages/company/location/Location';
+import JobDetail from '@/pages/candidate/JobDetail';
+import CompanyPage from '@/pages/candidate/EmployerPage';
+import OverViewCompany from '@/pages/employer/OverView';
+import IndexCompany from '@/pages/employer/IndexEmployer';
+import CompanyJob from '@/pages/employer/job/Job';
+import LocationCompany from '@/pages/employer/location/Location';
 import Experience from '@/pages/admin/experience/experience';
 import SkillPage from '@/pages/admin/skill/skill';
-import UpdateJob from '@/pages/company/job/UpdateJob';
+import UpdateJob from '@/pages/employer/job/UpdateJob';
 import BenefitPage from '@/pages/admin/benefit/benefit';
 import LevelPage from '@/pages/admin/level/level';
 import TypeJobPage from '@/pages/admin/typeJob/TypeJob';
@@ -23,11 +23,12 @@ import JobListPage from '@/pages/admin/job/Job';
 import LoginPage from '@/pages/auth/Login';
 import { useAccount } from '@/providers/UserProvider';
 import { useEffect } from 'react';
-import JobForMe from '@/pages/user/dashboard/jobforme/JobForMe';
-import JobDetailCompany from '@/pages/company/job/JobDetail';
-import JobApplicationForm from '@/pages/user/JobApplicationForm';
-import Map from '@/pages/user/Map';
-import CreateJob from '@/pages/company/job/CreateJob';
+import JobForMe from '@/pages/candidate/dashboard/jobforme/JobForMe';
+import JobDetailCompany from '@/pages/employer/job/JobDetail';
+import JobApplicationForm from '@/pages/candidate/JobApplicationForm';
+import Map from '@/pages/candidate/Map';
+import CreateJob from '@/pages/employer/job/CreateJob';
+import ViewJob from '@/pages/employer/job/ViewJob.';
 
 export default function AppRouter() {
   const { updateDataUser } = useAccount()
@@ -68,14 +69,15 @@ export default function AppRouter() {
         <Route path='*' element={<OverViewAdmin />} />
         <Route path='tuyen-dung' element={<JobListPage />} />
       </Route>
-      // company
+      // employer
       <Route path='/danh-cho-nha-tuyen-dung' element={<IndexCompany />} >
         <Route index element={<OverViewCompany />} />
         <Route path='tuyen-dung' element={<CompanyJob />} />
         <Route path='tuyen-dung/:tab' element={<CompanyJob />} />
         <Route path='dia-diem' element={<LocationCompany />} />
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
-        <Route path='dang-tin-tuyen-dung' element={<CreateJob/>} />
+        <Route path='dang-tin-tuyen-dung' element={<CreateJob />} />
+        <Route path='thong-tin-tuyen-dung/:id' element={<ViewJob />} />
         <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
         <Route path='*' element={<OverViewCompany />} />
       </Route>

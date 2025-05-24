@@ -1,7 +1,7 @@
 import { JobResponse } from "./jobType";
 import { LocationResponse } from "./location";
 
-export interface Company {
+export interface Employer {
   id: number;
   name: string;
   description: string;
@@ -10,7 +10,7 @@ export interface Company {
   taxCode: string;
 }
 
-export interface CompanyDetailResponse {
+export interface EmployerDetailResponse {
   id: number;
   name: string;
   description: string;

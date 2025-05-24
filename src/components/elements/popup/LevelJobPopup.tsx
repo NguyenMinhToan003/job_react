@@ -11,12 +11,15 @@ export default function LevelJobPopup({
   levelIds = [],
   setLevelIds,
   levelList,
+  notEdit,
 }: {
   levelIds?: string[];
   setLevelIds: (levelIds: string[]) => void;
   levelList: Level[];
+  notEdit?: boolean;
 }) {
   const handleCheckboxChange = (level: Level, checked: boolean) => {
+    if (notEdit) return;
     if (checked) {
       setLevelIds([
         ...levelIds,level.id]);
@@ -42,6 +45,7 @@ export default function LevelJobPopup({
             return (
               <div key={level.id} className="flex items-center gap-2">
                 <Checkbox
+                  disabled={notEdit}
                   id={`level-job-${level.id}`}
                   checked={isChecked}
                   onCheckedChange={(checked) =>

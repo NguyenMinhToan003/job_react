@@ -8,9 +8,11 @@ import {
 export default function QuantityJobPopup({
   quantityJob,
   setQuantityJob,
+  notEdit,
 }: {
   quantityJob: number;
   setQuantityJob: (quantity: number) => void;
+  notEdit?: boolean;
 }) {
 
   return (
@@ -27,6 +29,7 @@ export default function QuantityJobPopup({
         </CardHeader>
         <CardContent className='p-6 space-y-2'>
           <input
+            disabled={notEdit}
             type='number'
             className='mt-4 w-full border-b-2 border-gray-300 bg-transparent text-gray-800 placeholder-gray-500 font-medium focus:border-gray-500 focus:outline-none'
             placeholder='Nhập số lượng tuyển dụng'

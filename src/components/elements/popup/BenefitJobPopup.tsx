@@ -12,11 +12,13 @@ import { Gift } from "lucide-react";
 export default function BenefitJobPopup({
   benefitList,
   benefitIds,
-  setBenefitIds
+  setBenefitIds,
+  notEdit,
 }: {
   benefitList: Benefit[];
   benefitIds: string[];
   setBenefitIds: (benefitIds: string[]) => void;
+  notEdit?: boolean;
 }) {
 
 
@@ -35,6 +37,7 @@ export default function BenefitJobPopup({
           benefitList.map((benefit) => (
             <div key={benefit.id} className="flex items-center gap-2">
               <Checkbox
+                disabled={notEdit}
                 id={`benefit-${benefit.id}`}
                 className='checked:bg-red-500'
                 checked={benefitIds.some(item => item.toString() === benefit.id)}

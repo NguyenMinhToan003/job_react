@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getAllCompany } from "@/apis/companyAPI";
-import { Company } from "@/types/companyType";
+import { getAllEmployers } from "@/apis/companyAPI";
+import { Employer } from "@/types/companyType";
 import {
   Card,
   CardHeader,
@@ -20,12 +20,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 export default function CompanyListPage() {
-  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companies, setCompanies] = useState<Employer[]>([]);
 
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const data = await getAllCompany();
+        const data = await getAllEmployers();
         setCompanies(data);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách công ty:", error);
@@ -36,9 +36,9 @@ export default function CompanyListPage() {
 
   const toggleStatus = async (companyId: number) => {
     try {
-      const company = companies.find((c) => c.id === companyId);
-      if (company) {
-        const newStatus = company.account.status === 1 ? 0 : 1;
+      const employer = companies.find((c) => c.id === companyId);
+      if (employer) {
+        const newStatus = employer.account.status === 1 ? 0 : 1;
         setCompanies((prev) =>
           prev.map((c) =>
             c.id === companyId ? { ...c, account: { ...c.account, status: newStatus } } : c
@@ -69,35 +69,35 @@ export default function CompanyListPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {companies.map((company) => (
-                <TableRow key={company.id}>
+              {companies.map((employer) => (
+                <TableRow key={employer.id}>
                   <TableCell>
                     <Avatar>
-                      <AvatarImage src={company.logo} />
-                      <AvatarFallback>{company.name.charAt(0)}</AvatarFallback>
+                      <AvatarImage src={employer.logo} />
+                      <AvatarFallback>{employer.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                   </TableCell>
-                  <TableCell>{company.name}</TableCell>
-                  <TableCell>{company.account.email}</TableCell>
-                  <TableCell>{company.description}</TableCell>
+                  <TableCell>{employer.name}</TableCell>
+                  <TableCell>{employer.account.email}</TableCell>
+                  <TableCell>{employer.description}</TableCell>
                   <TableCell>
                     <span
                       className={cn(
                         "px-2 py-1 text-sm rounded",
-                        company.account.status === 1
+                        employer.account.status === 1
                           ? "bg-green-100 text-green-600"
                           : "bg-red-100 text-red-600"
                       )}
                     >
-                      {company.account.status === 1 ? "Hoạt động" : "Tạm khóa"}
+                      {employer.account.status === 1 ? "Hoạt động" : "Tạm khóa"}
                     </span>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
                     <Button
                       variant="outline"
-                      onClick={() => toggleStatus(company.id)}
+                      onClick={() => toggleStatus(employer.id)}
                     >
-                      {company.account.status === 1 ? "Khóa" : "Kích hoạt"}
+                      {employer.account.status === 1 ? "Khóa" : "Kích hoạt"}
                     </Button>
                     <Button>Sửa</Button>
                   </TableCell>

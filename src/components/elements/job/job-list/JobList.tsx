@@ -30,17 +30,15 @@ export default function JobList({
         <div className="text-lg font-bold text-gray-800">
           [{job.experience?.name ?? 'Fresher/Experienced'}] {job.name}
         </div>
-
-        {/* Company logo and name */}
         {
-          job.company && (
+          job.employer && (
             <div className="flex items-center gap-3">
           <img
-            src={job.company.logo}
-            alt={job.company.name}
+            src={job.employer.logo}
+            alt={job.employer.name}
             className="w-10 h-10 rounded-full object-cover"
           />
-          <div className="font-semibold text-sm">{job.company.name}</div>
+          <div className="font-semibold text-sm">{job.employer.name}</div>
         </div>
           )
         }

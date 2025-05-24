@@ -18,7 +18,7 @@ export const createLocationAPI = async (body: CreateLocationRequest) => {
   return response.data;
 }
 export const getLocationByCompanyAPI = async () => {
-  const response = await axiosInstance.get<LocationResponse[]>('/location/company');
+  const response = await axiosInstance.get<LocationResponse[]>('/location/employer');
   return response.data;
 }
 export const updateLocationAPI = async (locationId: number, body: CreateLocationRequest) => {
@@ -27,5 +27,10 @@ export const updateLocationAPI = async (locationId: number, body: CreateLocation
 }
 export const toggleEnableLocationAPI = async (locationId: number) => {
   const response = await axiosInstance.patch(`/location/toggle-enable/${locationId}`);
+  return response.data;
+}
+
+export const deleteLocationAPI = async (locationId: number) => {
+  const response = await axiosInstance.delete(`/location/${locationId}`);
   return response.data;
 }

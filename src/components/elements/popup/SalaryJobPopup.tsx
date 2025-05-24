@@ -13,14 +13,17 @@ export default function SalaryJonPopup({
   setSalaryMin,
   salaryMax,
   setSalaryMax,
+  notEdit,
 }: {
   salaryMin?: number
   setSalaryMin: (salary: number) => void
   salaryMax?: number
   setSalaryMax: (salary: number) => void
+  notEdit?: boolean
 }) {
   const [isNegotiable, setIsNegotiable] = useState(false) 
   const handleNegotiableToggle = () => {
+    if (notEdit) return
     setIsNegotiable((prev) => {
       const newVal = !prev
       if (newVal) {
@@ -35,6 +38,7 @@ export default function SalaryJonPopup({
     })
   }
   useEffect(() => {
+    
     if (salaryMin === -9999) {
       setIsNegotiable(true)
     } else {

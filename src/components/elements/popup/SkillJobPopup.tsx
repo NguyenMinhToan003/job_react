@@ -11,12 +11,15 @@ export default function SkillJobPopup({
   skillList,
   selectedSkills,
   setSelectedSkills,
+  notEdit,
 }: {
   skillList: Skill[];
   selectedSkills: number[];
   setSelectedSkills: (skills: number[]) => void;
+  notEdit?: boolean;
 }) {
   const toggleSkill = (skill: Skill) => {
+    if (notEdit) return;
     const isSelected = selectedSkills.some((s) => s === skill.id);
     if (isSelected) {
       setSelectedSkills(selectedSkills.filter((s) => s !== skill.id));
@@ -40,6 +43,7 @@ export default function SkillJobPopup({
           const isSelected = selectedSkills.some((s) => s === skill.id);
           return (
             <Button
+              disabled={notEdit}
               key={skill.id}
               variant={isSelected ? 'default' : 'outline'}
               className="w-full text-start"

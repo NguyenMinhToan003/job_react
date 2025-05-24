@@ -1,4 +1,4 @@
-import { CompanyFilterJob, CreateJobRequest, JobFilterRequest, JobFilterResponse, JobResponse, UpdateJobAdminRequest } from "@/types/JobType";
+import { CompanyFilterJob, CreateJobRequest, JobFilterRequest, JobFilterResponse, JobResponse, UpdateJobAdminRequest } from "@/types/jobType";
 import { axiosInstance } from "./index";
 
 export const createJob = async (data: CreateJobRequest) => {
@@ -7,7 +7,7 @@ export const createJob = async (data: CreateJobRequest) => {
 }
 
 export const getJobByCompanyId = async (data: CompanyFilterJob) => {
-  const response = await axiosInstance.post<JobResponse[]>('/job/company', data);
+  const response = await axiosInstance.post<JobResponse[]>('/job/employer', data);
   return response.data;
 }
 
@@ -45,6 +45,6 @@ export const updateJobAdmin = async (jobId: number, data: UpdateJobAdminRequest)
 }
 
 export const toggleJobStatus = async (jobId: number) => {
-  const response = await axiosInstance.patch<JobResponse>(`/job/company/toggle-is-show/${jobId}`);
+  const response = await axiosInstance.patch<JobResponse>(`/job/employer/toggle-is-show/${jobId}`);
   return response.data;
 }

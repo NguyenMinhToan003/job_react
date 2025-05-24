@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { getJobByCompanyId, toggleJobStatus } from "@/apis/jobAPI";
-import { JobResponse } from "@/types/JobType";
+import { getJobByCompanyId } from "@/apis/jobAPI";
+import { JobResponse } from "@/types/jobType";
 import {
   Table,
   TableBody,
@@ -10,15 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent} from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { SquarePen } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import dayjs from "dayjs";
-import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
 
-export default function ListJob() {
+export default function PendingJobsList() {
   
   const [jobList, setJobList] = useState<JobResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +23,9 @@ export default function ListJob() {
 
   const fetchJobList = async () => {
     try {
-      const response = await getJobByCompanyId();
+      const response = await getJobByCompanyId({
+        isActive: 0,
+      });
       setJobList(response);
     } catch (error) {
       console.error("Error fetching job list:", error);
@@ -39,30 +38,10 @@ export default function ListJob() {
     fetchJobList();
   }, []);
 
-  const handleToggleJobStatus = async (jobId: number, isShow: number) => {
-    try {
-      
-      await toggleJobStatus(jobId);
-      setJobList((prevJobList) =>
-        prevJobList.map((job) =>
-          job.id === jobId ? { ...job, isShow: isShow === 1 ? 0 : 1 } : job
-        )
-      );
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra');
-    }
-  };
-
-
 
   return (
     <Card>
-      {/* <CardHeader>
-        <CardTitle className="text-2xl font-bold text-gray-800 ">
-          DANH SÁCH TUYỂN DỤNG
-        </CardTitle>
-      </CardHeader> */}
-
+      
       <CardContent className="overflow-x-auto">
         {loading ? (
           <p className="text-center text-gray-600 py-12">Đang tải dữ liệu...</p>
@@ -72,13 +51,11 @@ export default function ListJob() {
           </p>
         ) : (
           <Table className="min-w-[1000px] text-sm">
-            <TableHeader className=" bg-red-50">
+            <TableHeader className="z-1 bg-red-50">
               <TableRow>
                 <TableHead className="px-4 py-2 text-left">Tên công việc</TableHead>
-                <TableHead className="px-4 py-2 text-center">CV</TableHead>
                 <TableHead className="px-4 py-2 text-center">Ngày đăng</TableHead>
                 <TableHead className="px-4 py-2 text-center">Đến hạn</TableHead>
-                <TableHead className="px-4 py-2 text-center">Hoạt động</TableHead>
                 <TableHead className="px-4 py-2 text-center">Điều chỉnh</TableHead>
               </TableRow>
             </TableHeader>
@@ -89,26 +66,15 @@ export default function ListJob() {
                   className="hover:bg-gray-100 transition-all cursor-pointer"
                 >
                   <TableCell className="px-4 py-2 font-medium text-gray-900">
-                    <Button variant="link" className="p-0"
-                      onClick={() =>navigate(`/danh-cho-nha-tuyen-dung/danh-sach-ung-tuyen/${job.id}`)}
-                    >
+                    <Label>
                       {job.name}
-                    </Button>
+                    </Label>
                   </TableCell>
-                  <TableHead className="px-4 py-2 text-center font-bold">
-                    {job.applyJobs.length}
-                  </TableHead>
                   <TableCell className="px-4 py-2 text-center">
                     {dayjs(job.createdAt).format("DD/MM/YYYY")}
                   </TableCell>
                   <TableCell className="px-4 py-2 text-center">
                     {dayjs(job.expiredAt).format("DD/MM/YYYY")}
-                  </TableCell>
-                  <TableCell className="px-4 py-2 text-center">
-                    <Switch
-                      checked={job.isShow === 1 ? true : false}
-                      className="text-red-400"                      onClick={() => handleToggleJobStatus(job.id, job.isShow)}
-                    />
                   </TableCell>
                   <TableCell className="px-4 py-2 flex justify-center">
                     <SquarePen

@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { ROLE_LIST } from "@/types/loginType";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/apis/authAPI";
 import { toast } from "sonner";
 import { useAccount } from "@/providers/UserProvider";
+import { ROLE_LIST } from "@/types/type";
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -24,13 +24,13 @@ export default function LoginPage() {
       })
       localStorage.setItem('accessToken', response.accessToken)
       localStorage.setItem('role', response.role)
-      if (response.role === ROLE_LIST.COMPANY) {
+      if (response.role === ROLE_LIST.EMPLOYER) {
         navigate('/danh-cho-nha-tuyen-dung')
       }
       else if (response.role === ROLE_LIST.ADMIN) {
         navigate('/admin')
       }
-      else if (response.role === ROLE_LIST.USER) {
+      else if (response.role === ROLE_LIST.CANDIDATE) {
         navigate('/')
       }
       updateDataUser()

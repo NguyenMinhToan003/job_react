@@ -1,17 +1,17 @@
-import { Company, CompanyDetailResponse } from "@/types/companyType";
+import { Employer, EmployerDetailResponse } from "@/types/companyType";
 import { axiosInstance } from "./index";
 
 
-export const getAllCompany = async () => {
-  const response = await axiosInstance.get<Company[]>('/company');
+export const getAllEmployers = async () => {
+  const response = await axiosInstance.get<Employer[]>('/employer');
   return response.data;
 }
 
-export const getCompanyInfo = async () => {
-  const response = await axiosInstance.get<Company>('/company/info');
+export const getEmployerInfo = async () => {
+  const response = await axiosInstance.get<Employer>('/employer/info');
   return response.data;
 }
 export const getCompanyDetailAPI = async (companyId: number) => {
-  const response = await axiosInstance.get<CompanyDetailResponse>(`/company/detail/${companyId}`);
+  const response = await axiosInstance.get<EmployerDetailResponse>(`/employer/detail/${companyId}`);
   return response.data;
 }

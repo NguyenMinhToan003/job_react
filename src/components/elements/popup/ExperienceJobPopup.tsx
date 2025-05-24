@@ -17,10 +17,12 @@ export default function ExperienceJonPopup({
   experienceId,
   setExperienceId,
   experienceList,
+  notEdit,
 }: {
   experienceId?: number;
   setExperienceId: (id: number) => void;
   experienceList: Experience[];
+  notEdit?: boolean;
 }) {
   return (
     <Card className="rounded-sm border-none shadow-md mb-4">
@@ -34,6 +36,7 @@ export default function ExperienceJonPopup({
       </CardHeader>
       <CardContent className="p-6">
         <Select
+          disabled={notEdit}
           value={experienceId?.toString() || ""}
           onValueChange={(value) => setExperienceId(Number(value))}
         >

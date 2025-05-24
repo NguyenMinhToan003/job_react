@@ -82,11 +82,10 @@ export default function JobListPage() {
                    <TableCell>
                     <Avatar>
                       <AvatarImage
-                        src={job.company.logo}
-                        alt="Company Logo"
+                        src={job.employer.logo}
                       />
                       <AvatarFallback>
-                        {job.company.name.charAt(0)}
+                        {job.employer.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
                   </TableCell>
@@ -141,7 +140,6 @@ export default function JobListPage() {
                     >
                       {job.isActive === 1 ? "Khóa" : "Kích hoạt"}
                     </Button>
-                    <Button>Sửa</Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -8,9 +8,11 @@ import {
 export default function NameJobPopup({
   nameJob,
   setNameJob,
+  notEdit,
 }: {
   nameJob: string;
   setNameJob: (description: string) => void;
+  notEdit?: boolean;
 }) {
 
   return (
@@ -27,6 +29,7 @@ export default function NameJobPopup({
         </CardHeader>
         <CardContent className="p-6 space-y-2">
           <input
+            disabled={notEdit}
             type="text"
             className="w-full bg-transparent text-gray-800 placeholder-gray-500 text font-medium focus:outline-none border-b border-gray-300 focus:border-gray-500"
             placeholder="VD: Lập trình viên React, Trưởng phòng Marketing..."

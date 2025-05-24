@@ -29,9 +29,11 @@ import {
 export default function RequirementPopup({
   requirement,
   setRequirement,
+  notEdit,
 }: {
   requirement: string;
   setRequirement: (description: string) => void;
+  notEdit?: boolean;
 }) {
   const [text, setText] = useState("");
   const [openPopup, setOpenPopup] = useState(false);
@@ -49,7 +51,7 @@ export default function RequirementPopup({
           <CardTitle className="text-lg font-bold text-start">
             <div className="flex items-center gap-2">
               <div className="flex-1">YÊU CẦU CÔNG VIỆC</div>
-              {
+              {!notEdit && (
                 requirement.trim() === "" ? (
                   <CirclePlus
                     className="w-6 h-6 text-red-600 cursor-pointer"
@@ -61,21 +63,24 @@ export default function RequirementPopup({
                     onClick={() => setOpenPopup(true)}
                   />
                 )
-              }
+              )}
             </div>
             <div className="w-full h-[1px] bg-gray-200 mt-4" />
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 space-y-2">
           <div className="space-y-1">
-            {requirement.split("\n").map((line, index) => (
-              line.trim() && (
-                <div key={index} className='flex items-start gap-3 justify-start'>
-                <CircleCheckBig className='min-w-4 min-h-4 max-w-4 max-h-4 text-red-600' />
-                <div className='text text-gray-700'>{line}</div>
-              </div>
-              )
-            ))}
+            {requirement.split("\n").map((line, index) =>
+              line.trim() ? (
+                <div
+                  key={index}
+                  className="flex items-start gap-3 justify-start"
+                >
+                  <CircleCheckBig className="min-w-4 min-h-4 max-w-4 max-h-4 text-red-600" />
+                  <div className="text text-gray-700">{line}</div>
+                </div>
+              ) : null
+            )}
           </div>
         </CardContent>
       </Card>
@@ -110,22 +115,24 @@ export default function RequirementPopup({
             <textarea
               className="w-full flex-1 resize-none bg-transparent text-gray-700 placeholder-gray-500 border-none text-sm font-medium focus-visible:ring-0 focus-visible:outline-none p-2"
               placeholder="Nhập mô tả công việc..."
+              value={text}
               onChange={(e) => setText(e.target.value)}
               maxLength={2500}
-              value={text}
             />
           </div>
-
 
           <div className="text-right text-xs text-muted-foreground mt-2">
             {text.length}/2500 characters
           </div>
 
           <DialogFooter className="mt-4">
-            <Button variant="outline" onClick={() => {
-              setOpenPopup(false);
-              setText(requirement);
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setOpenPopup(false);
+                setText(requirement);
+              }}
+            >
               Cancel
             </Button>
             <Button

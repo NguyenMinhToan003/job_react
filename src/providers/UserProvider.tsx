@@ -1,6 +1,7 @@
 import { getDataUser } from "@/apis/userAPI";
 import { UserResponse } from "@/types/accountType";
-import { ROLE_LIST } from "@/types/loginType";
+import { ROLE_LIST } from "@/types/type";
+
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface AccountContextType {
@@ -32,7 +33,7 @@ export const AccountProvider = ({ children }: AccountProviderProps) => {
   const updateDataUser = () => {
     const role = localStorage.getItem("role");
     if(!role) return;
-    else if (role === ROLE_LIST.USER) {
+    else if (role === ROLE_LIST.CANDIDATE) {
       fetchDataUser();
     } else {
       console.log("role", role);
