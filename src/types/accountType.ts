@@ -6,7 +6,7 @@ export interface Account {
   role: string;
   status: number;
 }
-export interface UserResponse {
+export interface CandidateResponse {
   id: number;
   name: string;
   avatar: string;
@@ -16,7 +16,7 @@ export interface UserResponse {
   cv: CvResponse[];
 }
 
-export interface User {
+export interface Candidate {
   id: number;
   name: string;
   avatar: string;

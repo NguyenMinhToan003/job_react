@@ -16,10 +16,11 @@ import { getCvMe } from '@/apis/cvAPI';
 import { applyJob, applyJobWithNewCv } from '@/apis/applyJobAPI';
 import dayjs from 'dayjs';
 import { useAccount } from '@/providers/UserProvider';
+import { updateInfoCandidate } from '@/apis/userAPI';
 
 export default function JobApplicationForm() {
   const { jobId } = useParams();
-  const { dataUser } = useAccount()
+  const { dataUser, updateDataUser } = useAccount()
   const [cvOption, setCvOption] = useState('current');
   const [job, setJob] = useState<JobFilterResponse>();
   const [name, setName] = useState('');
@@ -79,6 +80,11 @@ export default function JobApplicationForm() {
       return;
     }
     try {
+      await updateInfoCandidate({
+        name,
+        phone
+      })
+      updateDataUser()
       if (cvOption === 'new') {
         if (!fileCVnew) {
           toast.error('Vui lòng tải lên CV mới');

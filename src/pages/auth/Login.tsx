@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/apis/authAPI";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ export default function LoginPage() {
         email: email,
         password: password,
       })
-      localStorage.setItem('accessToken', response.accessToken)
+      // localStorage.setItem('accessToken', response.accessToken)
       localStorage.setItem('role', response.role)
       if (response.role === ROLE_LIST.EMPLOYER) {
         navigate('/danh-cho-nha-tuyen-dung')
@@ -36,7 +36,7 @@ export default function LoginPage() {
       updateDataUser()
     }
     catch (error) {
-      toast.error("Đăng nhập thất bại, vui lòng kiểm tra lại tài khoản hoặc mật khẩu")
+      toast.error(error?.response?.data?.message || "Đăng nhập thất bại");
     }
   }
 
@@ -93,6 +93,18 @@ export default function LoginPage() {
             </div>
             <Button className="w-full h-12 bg-[#ed1b2f] rounded-sm" variant="destructive" onClick={handleLogin}>
               <span className="text-white p-10 font-bold ">SIGN IN</span>
+            </Button>
+            {/* Nút đăng nhập bằng Google */}
+            <Button
+              className="w-full h-12 border border-gray-300 rounded-sm flex items-center justify-center space-x-2"
+              variant="outline"
+              onClick={() => {
+                window.location.href = `${import.meta.env.VITE_SERVER_HOST}/api/v1/auth/google`;
+                }
+              }
+            >
+              <Globe size={18} className="text-gray-600" />
+              <span className="text-gray-700 font-semibold">Sign in with Google</span>
             </Button>
           </div>
         </div>

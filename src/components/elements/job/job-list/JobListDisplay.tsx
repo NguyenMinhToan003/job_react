@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getDetailJobById } from '@/apis/jobAPI';
+import { saveJob } from '@/apis/saveJobAPI';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import { JobResponse } from '@/types/jobType';
 import { HandCoins, MapPin, Book, Building2, ExternalLink, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) {
   const navigate = useNavigate();
@@ -32,6 +34,17 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
       fetchJob();
     }
   }, [jobDetailId]);
+
+  const handleSaveJob = async (jobId: number) => {
+    try {
+      await saveJob(jobId);
+      toast.success('Lưu công việc thành công!');
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Lỗi khi lưu công việc');
+    }
+  }
   
   if (loading || !job) {
     return (
@@ -82,7 +95,11 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
               onClick={()=>navigate(`/ung-tuyen-cong-viec/${job.id}`)}>
               Ứng tuyển
             </Button>
-            <Heart className='text-red-500 cursor-pointer' size={24} />
+            <Heart
+              onClick={() => handleSaveJob(job.id)}
+              className='text-red-500 cursor-pointer'
+              size={24}
+            />
           </div>
         </div>
 

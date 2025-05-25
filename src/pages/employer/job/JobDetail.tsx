@@ -90,11 +90,11 @@ export default function JobDetailCompany() {
                   <TableCell className="flex items-center gap-2">
                     <Avatar>
                       <AvatarImage
-                        src={item.cv.user.avatar}
-                        alt={item.cv.user.name}
+                        src={item.cv.candidate.avatar}
+                        alt={item.cv.candidate.name}
                       />
                     </Avatar>
-                    <span className="font-medium">{item.cv.user.name}</span>
+                    <span className="font-medium">{item.cv.candidate.name}</span>
                   </TableCell>
                   <TableCell>
                     <Button

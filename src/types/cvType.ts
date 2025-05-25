@@ -1,4 +1,4 @@
-import { User } from "./accountType";
+import { Candidate } from "./accountType";
 
 export interface Cv {
   id: number;
@@ -16,5 +16,5 @@ export interface CvResponse {
   url: string;
   typeFile: string;
   updatedAt: Date;
-  user: User
+  candidate: Candidate;
 }

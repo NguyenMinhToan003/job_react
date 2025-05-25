@@ -29,6 +29,7 @@ import JobApplicationForm from '@/pages/candidate/JobApplicationForm';
 import Map from '@/pages/candidate/Map';
 import CreateJob from '@/pages/employer/job/CreateJob';
 import ViewJob from '@/pages/employer/job/ViewJob.';
+import LoginSuccess from '@/pages/auth/LoginSusscess';
 
 export default function AppRouter() {
   const { updateDataUser } = useAccount()
@@ -39,6 +40,7 @@ export default function AppRouter() {
     <Routes>
       <Route path='/auth/login' element={<LoginPage />} />
       <Route path='/' element={<Index />}>
+        <Route path='login-success' element={<LoginSuccess />} />
         <Route index element={<Home />} />
         <Route path='map/:lat/:lng' element={<Map />} />
         <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />

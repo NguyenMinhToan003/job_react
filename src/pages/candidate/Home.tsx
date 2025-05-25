@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ import { getExperienceList } from '@/apis/experienceAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import { filterJob } from '@/apis/jobAPI';
+import { iconMap } from "@/utils/SetListIcon";
 
 import JobList from '@/components/elements/job/job-list/Index';
 import { Button } from '@/components/ui/button';
@@ -39,6 +41,7 @@ import { Benefit } from '@/types/benefitType';
 import { getBenefit } from '@/apis/benefitAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { Skill } from '@/types/skillType';
+import { Slider } from '@/components/ui/slider';
 
 export default function Home() {
   const [countJobs, setCountJobs] = useState(0);
@@ -70,7 +73,7 @@ export default function Home() {
 
   useEffect(() => {
     handleFilter();
-  }, [search, citySelected, selectLevels, selectExperience, selectType, selectBenefits, selectSkills]);
+  }, [ citySelected, selectLevels, selectExperience, selectType, selectBenefits, selectSkills]);
 
 
   const fetchInitialData = async () => {
@@ -180,11 +183,11 @@ export default function Home() {
           </SelectContent>
         </Select>
 
-        <div className='bg-white rounded-sm p-2 flex-1 max-w-[600px]'>
+        <div className='bg-white rounded-sm p-1.5 flex-1 max-w-[600px] border-2 border-orange-800 shadow-sm'>
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className='w-full bg-transparent border-none text-xl font-medium placeholder-gray-500 focus:outline-none'
+            className='w-full bg-transparent border-none text-xl font-medium text-orange-900 p-3'
             placeholder='Nhập từ khóa tìm kiếm...'
           />
         </div>
@@ -195,20 +198,20 @@ export default function Home() {
           onClick={handleFilter}
         >
           <Search />
-          <span>Tìm kiếm</span>
+          <span className='text-green-900'>Tìm kiếm</span>
         </Button>
       </div>
 
       {/* Header kết quả */}
-      <div className='bg-white rounded-md p-4 mt-4 border border-gray-300 flex justify-between items-center shadow-sm w-7xl mx-auto'>
+      <div className=' rounded-md p-4 mt-4 border border-gray-300 flex justify-between items-center shadow-sm w-7xl mx-auto'>
         <h3 className='font-semibold text-lg text-gray-800'>
           Tìm thấy {countJobs} việc làm
         </h3>
       </div>
 
       {/* Bộ lọc */}
-      <div className='bg-white rounded-md p-4 mt-4 border border-gray-300 flex justify-between items-center shadow-sm w-7xl mx-auto'>
-        <NavigationMenu>
+      <div className=' rounded-md p-4 mt-4 border border-gray-300 flex justify-between items-center shadow-sm w-7xl mx-auto'>
+        <NavigationMenu >
           <NavigationMenuList>
             {/* Cấp bậc */}
             <NavigationMenuItem>
@@ -227,7 +230,7 @@ export default function Home() {
                 {levelOptions.map(level => (
                   <Label
                     key={level.id}
-                    className='flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer'
+                    className='p-1'
                   >
                     <Checkbox
                       checked={selectLevels.includes(level.id)}
@@ -235,7 +238,7 @@ export default function Home() {
                         toggleLevel(level.id)
                       }
                     />
-                    <span>{level.name}</span>
+                    <span className='text-green-900'>{level.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -266,7 +269,7 @@ export default function Home() {
                         toggleExperience(exp.id)
                       }
                     />
-                    <span>{exp.name}</span>
+                    <span className='text-green-900'>{exp.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -297,7 +300,7 @@ export default function Home() {
                         toggleType(type.id)
                       }
                     />
-                    <span>{type.name}</span>
+                    <span className='text-green-900'>{type.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -332,7 +335,10 @@ export default function Home() {
                         )
                       }
                     />
-                    <span>{benefit.name}</span>
+                    <div className='flex items-center gap-2 p-1'>
+                      {iconMap[benefit.icon]} 
+                      <span className='text-green-900'>{benefit.name}</span>
+                    </div>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -366,7 +372,7 @@ export default function Home() {
                         )
                       }
                     />
-                    <span>{skill.name}</span>
+                    <span className='text-green-900'>{skill.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -379,7 +385,7 @@ export default function Home() {
           className='text-base bg-[#ed1b2f] px-7 py-1 rounded-4xl hover:bg-gray-100 hover:text-black text-white font-semibold border border-gray-300'
           onClick={handleResetFilter}
         >
-          <span>Đặt lại bộ lọc</span>
+          <span className='text-green-900'>Đặt lại bộ lọc</span>
         </Button>
       </div>
 
