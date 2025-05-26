@@ -45,6 +45,7 @@ export interface JobResponse {
   isShow: number;
   maxSalary: number;
   createdAt: string;
+  updatedAt: string;
   isActive: number;
   expiredAt: string;
   benefits: Benefit[];
@@ -67,6 +68,20 @@ export interface JobFilterRequest {
   citys?: string;
   benefits?: string[];
   skills?: number[];
+}
+export interface JobFilterAdminRequest {
+  search?: string;
+  levels?: string[];
+  experience?: number[];
+  typeJobs?: number[];
+  minSalary?: number;
+  maxSalary?: number;
+  locations?: number[];
+  benefits?: string[];
+  skills?: number[];
+  isActive?: number;
+  isShow?: number;
+  isExpired?: number;
 }
 
 export interface JobFilterResponse {

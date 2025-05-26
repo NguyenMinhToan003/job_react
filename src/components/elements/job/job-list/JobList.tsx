@@ -1,6 +1,9 @@
+import { AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobFilterResponse } from '@/types/jobType';
+import { convertDateToDiffTime } from '@/utils/dateTime';
+import { Avatar } from '@radix-ui/react-avatar';
 import { Book, Building2, HandCoins, MapPin } from 'lucide-react';
 
 export default function JobList({
@@ -24,21 +27,25 @@ export default function JobList({
       } p-4`}
       onClick={() => setSelectedJob(job)}
     >
-
+      <CardHeader className="p-0">
+        <CardTitle className='flex p-0 items-center justify-between text-orange-800 text-[12px] font-bold '>
+          {convertDateToDiffTime(job.createdAt)}
+        </CardTitle>
+      </CardHeader>
       <CardContent className="space-y-4 p-0">
         {/* Job Title */}
-        <div className="text-lg font-bold text-gray-800">
-          [{job.experience?.name ?? 'Fresher/Experienced'}] {job.name}
+        <div className="text-lg font-bold text-gray-900 ">
+          {job.name}
         </div>
         {
           job.employer && (
             <div className="flex items-center gap-3">
-          <img
-            src={job.employer.logo}
-            alt={job.employer.name}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-          <div className="font-semibold text-sm">{job.employer.name}</div>
+            <Avatar className='w-15 h-15 shadow-2xl border border-gray-400 rounded-sm'>
+                <AvatarImage
+                  src={job.employer.logo}
+                />
+            </Avatar>
+          <div className="font-semibold text-xs">{job.employer.name}</div>
         </div>
           )
         }

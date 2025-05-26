@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { getDetailJobById } from '@/apis/jobAPI';
 import { saveJob } from '@/apis/saveJobAPI';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { JobResponse } from '@/types/jobType';
 import { HandCoins, MapPin, Book, Building2, ExternalLink, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) {
@@ -63,21 +64,27 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
     <Card className='overflow-hidden'>
       <CardContent className='p-6 space-y-6'>
         <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
-          <div className='flex-1 space-y-2'>
-            <div className='flex items-center gap-2 text-xl font-bold text-gray-800'>
-              {job.name}
-            </div>
+          <div className='flex-1 space-y-4'>
             <div className='flex items-center gap-3'>
-              <img
-                src={job.employer.logo}
-                alt={job.employer.name}
-                className='w-10 h-10 rounded-md object-cover'
-              />
-              <span className='text-sm font-semibold text-gray-700'>{job.employer.name}</span>
-              <ExternalLink className='w-4 h-4 text-blue-600'
-                onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)} />
+              <Avatar className='w-20 h-20 shadow-xl border border-gray-400 rounded-sm'>
+                <AvatarImage
+                  src={job.employer.logo}
+                />
+              </Avatar>
+              <div className='flex flex-col gap-2'>
+                <div className='text-2xl font-semibold text-gray-700'>
+                  <NavLink to={`/cong-viec/${job.id}`} className='hover:underline cursor-pointer'>
+                    {job.name}
+                  </NavLink>
+                </div>
+                <span
+                  onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)} 
+                  className='text-sm font-semibold text-gray-700 cursor-pointer hover:underline'
+                >{job.employer.name}</span>
+                
+              </div>
             </div>
-            <div className='flex items-center gap-2 text-green-600 font-semibold text-sm'>
+            <div className='flex items-center gap-2 text-green-600 font-bold text-xl'>
               <HandCoins size={16} />
               {job.maxSalary === job.minSalary && job.maxSalary === -9999 ? (
                 <span>Thỏa thuận</span>

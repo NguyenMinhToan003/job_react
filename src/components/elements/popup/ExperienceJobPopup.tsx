@@ -4,14 +4,14 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Experience } from "@/types/experienceType"
+} from '@/components/ui/card'
+import { Experience } from '@/types/experienceType'
 
 export default function ExperienceJonPopup({
   experienceId,
@@ -25,23 +25,23 @@ export default function ExperienceJonPopup({
   notEdit?: boolean;
 }) {
   return (
-    <Card className="rounded-sm border-none shadow-md mb-4">
+    <Card className='rounded-sm border-none shadow-md mb-4'>
       <CardHeader>
-        <CardTitle className="text-lg font-bold text-start">
-          <div className="flex items-center gap-2">
-            <div className="flex-1">KINH NGHIỆM</div>
+        <CardTitle className='text-lg font-bold text-start'>
+          <div className='flex items-center gap-2'>
+            <div className='flex-1'>KINH NGHIỆM</div>
           </div>
-          <div className="w-full h-[1px] bg-gray-200 mt-4" />
+          <div className='w-full h-[1px] bg-gray-200 mt-4' />
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className='p-6'>
         <Select
           disabled={notEdit}
-          value={experienceId?.toString() || ""}
+          value={experienceId?.toString() || ''}
           onValueChange={(value) => setExperienceId(Number(value))}
         >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="-- Chọn kinh nghiệm --" />
+          <SelectTrigger className='w-full'>
+            <SelectValue placeholder='-- Chọn kinh nghiệm --' />
           </SelectTrigger>
           <SelectContent>
             {experienceList.map((exp) => (

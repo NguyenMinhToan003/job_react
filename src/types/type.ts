@@ -12,3 +12,13 @@ export enum ROLE_LIST {
   EMPLOYER = 'NHA_TUYEN_DUNG',
   CANDIDATE = 'UNG_VIEN',
 }
+export enum JOB_STATUS {
+  PENDING = 0, // Chờ duyệt
+  ACTIVE = 1, // Đã duyệt
+  BLOCK = -1, // Bị khóa
+}
+export enum NOTI_TYPE {
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  DEFAULT = 'DEFAULT',
+}

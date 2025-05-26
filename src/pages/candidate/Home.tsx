@@ -148,6 +148,10 @@ export default function Home() {
     setSelectLevel([]);
     setSelectExperience([]);
     setSelectType([]);
+    setSelectBenefits([]);
+    setSelectSkills([]);
+    setCountJobs(0);
+    setJobList([]);
     fetchJobList({} as JobFilterRequest);
   };
 
@@ -382,10 +386,10 @@ export default function Home() {
 
         <Button
           variant='destructive'
-          className='text-base bg-[#ed1b2f] px-7 py-1 rounded-4xl hover:bg-gray-100 hover:text-black text-white font-semibold border border-gray-300'
+          className='bg-[#ed1b2f] px-7 py-1 rounded-4xl hover:bg-gray-100  font-semibold border border-gray-300 hover:text-black text-white'
           onClick={handleResetFilter}
         >
-          <span className='text-green-900'>Đặt lại bộ lọc</span>
+          <span>Đặt lại bộ lọc</span>
         </Button>
       </div>
 

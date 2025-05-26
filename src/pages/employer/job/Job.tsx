@@ -4,6 +4,7 @@ import PendingJobsList from './PendingJobsList'
 import CreateJob from './CreateJob'
 import { useNavigate, useParams } from 'react-router-dom'
 import ExpiredJobs from './ExpiredJobs'
+import BlockJobsList from './BlockJob'
 
 export default function CompanyJob() {
   const { tab } = useParams();
@@ -21,6 +22,9 @@ export default function CompanyJob() {
           </TabsTrigger>
           <TabsTrigger className='max-w-fit px-7 py-4 h-16 mr-1.5 text-lg font-semibold rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none' value='2'>
             Chờ xét duyệt
+          </TabsTrigger>
+          <TabsTrigger className='max-w-fit px-7 py-4 h-16 mr-1.5 text-lg font-semibold rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none' value='5'>
+            Bị từ chối
           </TabsTrigger>
           <TabsTrigger className='max-w-fit px-7 py-4 h-16 mr-1.5 text-lg font-semibold rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none' value='3'>
             Hết hạn
@@ -41,10 +45,11 @@ export default function CompanyJob() {
         <TabsContent value='3' className='p-0'>
           <ExpiredJobs/>
         </TabsContent>
-
-
         <TabsContent value='4' className='p-0'>
           <CreateJob/>
+        </TabsContent> 
+        <TabsContent value='5' className='p-0'>
+          <BlockJobsList />
         </TabsContent>
         </Tabs>
     </>

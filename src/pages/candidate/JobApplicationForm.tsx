@@ -17,6 +17,8 @@ import { applyJob, applyJobWithNewCv } from '@/apis/applyJobAPI';
 import dayjs from 'dayjs';
 import { useAccount } from '@/providers/UserProvider';
 import { updateInfoCandidate } from '@/apis/userAPI';
+import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';
+import { NOTI_TYPE } from '@/types/type';
 
 export default function JobApplicationForm() {
   const { jobId } = useParams();
@@ -109,6 +111,13 @@ export default function JobApplicationForm() {
         username: name,
         phone
       });
+      await createEmployerNotiAPI({
+        content: `Đơn ứng tuyển công việc "${job?.name}" của ${name}.`,
+        title: 'Có đơn ứng tuyển mới',
+        receiverAccountId: job?.employer.id || -1,
+        link: `/danh-cho-nha-tuyen-dung/danh-sach-ung-tuyen/${jobId}`,
+        type: NOTI_TYPE.DEFAULT
+      })
       toast.success('Ứng tuyển thành công');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

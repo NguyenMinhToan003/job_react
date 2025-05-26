@@ -4,8 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ApplyJobResponse } from "@/types/applyJobType";
 import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ApplyJob() {
+  const navigate = useNavigate();
   const [applyJobs, setApplyJobs] = useState<ApplyJobResponse[]>([])
   const fetchApplyJobs = async () => {
     try {
@@ -28,9 +30,11 @@ export default function ApplyJob() {
             <img src={applyJob.job.employer?.logo} alt='CBTW Logo' className='w-full h-full' />
             </div>
             <div className="flex-1 flex-col gap-1">
-              <div className='font-bold text-gray-800 text-lg'>{applyJob.job.name}</div>
-              <div className='text-[12px] text-gray-500 font-semibold'>{applyJob.job.employer?.name}</div>
-              <div className='text-[12px] text-gray-500 font-semibold'>{applyJob?.job?.locations[0]?.district?.city?.name}</div>
+              <div
+                onClick={() => navigate(`/cong-viec/${applyJob.job.id}`)}
+                className='font-bold text-gray-800 text-lg hover:underline cursor-pointer'>{applyJob.job.name}</div>
+              <div className='text-[12px] text-gray-500 font-semibold hover:underline'>{applyJob.job.employer?.name}</div>
+              <div className='text-[12px] text-gray-500 font-semibold hover:underline'>{applyJob?.job?.locations[0]?.district?.city?.name}</div>
               <div className="text-green-600 font-semibold text-sm">
                 {applyJob?.job?.maxSalary === applyJob?.job?.minSalary && applyJob?.job?.maxSalary === -9999 ? (
                   <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>

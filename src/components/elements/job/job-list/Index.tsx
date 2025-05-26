@@ -12,7 +12,7 @@ export default function Index({jobs}: { jobs: JobFilterResponse[] }) {
     else setSelectedJob({} as JobResponse);
   },[jobs])
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4 w-7xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4 w-7xl mx-auto min-h-[70vh]">
       <div className="col-span-2 space-y-4">
         {jobs.map((job) => (
           <JobList

@@ -1,8 +1,8 @@
-import { CompanyFilterJob, CreateJobRequest, JobFilterRequest, JobFilterResponse, JobResponse, UpdateJobAdminRequest } from "@/types/jobType";
-import { axiosInstance } from "./index";
+import { CompanyFilterJob, CreateJobRequest, JobFilterAdminRequest, JobFilterRequest, JobFilterResponse, JobResponse, UpdateJobAdminRequest } from '@/types/jobType';
+import { axiosInstance } from './index';
 
 export const createJob = async (data: CreateJobRequest) => {
-  const response = await axiosInstance.post("/job", data);
+  const response = await axiosInstance.post('/job', data);
   return response.data;
 }
 
@@ -16,8 +16,8 @@ export const updateJob = async (jobId: number, data: CreateJobRequest) => {
   return response.data;
 }
 
-export const getAllJob = async () => {
-  const response = await axiosInstance.get<JobResponse[]>("/job");
+export const filterJobAdmin = async (filter: JobFilterAdminRequest) => {
+  const response = await axiosInstance.post<JobResponse[]>('/job/admin/filter', filter);
   return response.data;
 }
 
@@ -30,7 +30,7 @@ export const filterJob = async (data: JobFilterRequest) => {
   const response = await axiosInstance.post<{
     total: number;
     data: JobFilterResponse[];
-  }>("/job/filter", data);
+  }>('/job/filter', data);
   return response.data;
 }
 

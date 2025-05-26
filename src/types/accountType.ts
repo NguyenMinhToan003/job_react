@@ -1,3 +1,4 @@
+import { Employer } from "./companyType";
 import { CvResponse } from "./cvType";
 
 export interface Account {
@@ -5,6 +6,8 @@ export interface Account {
   email: string;
   role: string;
   status: number;
+  candidate?: Candidate;
+  employer?: Employer;
 }
 export interface CandidateResponse {
   id: number;

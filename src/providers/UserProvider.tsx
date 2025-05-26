@@ -30,10 +30,11 @@ export const AccountProvider = ({ children }: AccountProviderProps) => {
       console.log('login', response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      role === ROLE_LIST.CANDIDATE
-        && toast.error(
-        error?.response?.data?.message || 'Lấy thông tin người dùng thất bại'
-      );
+      if (role === ROLE_LIST.CANDIDATE) {
+        toast.error(
+          error?.response?.data?.message || 'Lấy thông tin người dùng thất bại'
+        );
+      }
     }
   };
 
