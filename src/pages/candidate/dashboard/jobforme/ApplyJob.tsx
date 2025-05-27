@@ -1,7 +1,8 @@
-import { getApplyJobs } from "@/apis/applyJobAPI";
+import { getApplyByStatus, getApplyJobs } from "@/apis/applyJobAPI";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ApplyJobResponse } from "@/types/applyJobType";
+import { APPLY_JOB_STATUS } from "@/types/type";
 import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,7 @@ export default function ApplyJob() {
   const [applyJobs, setApplyJobs] = useState<ApplyJobResponse[]>([])
   const fetchApplyJobs = async () => {
     try {
-      const response = await getApplyJobs()
+      const response = await getApplyByStatus(APPLY_JOB_STATUS.PENDING);
       setApplyJobs(response);
     }
     catch(error) {

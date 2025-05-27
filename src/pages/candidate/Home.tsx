@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -31,7 +32,6 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-
 import { City } from '@/types/location';
 import { Level } from '@/types/levelType';
 import { JobFilterRequest, JobFilterResponse } from '@/types/jobType';
@@ -41,12 +41,10 @@ import { Benefit } from '@/types/benefitType';
 import { getBenefit } from '@/apis/benefitAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { Skill } from '@/types/skillType';
-import { Slider } from '@/components/ui/slider';
 
 export default function Home() {
   const [countJobs, setCountJobs] = useState(0);
   const [jobList, setJobList] = useState<JobFilterResponse[]>([]);
-  const [search, setSearch] = useState('');
 
   const [cityOptions, setCityOptions] = useState<City[]>([]);
   const [citySelected, setSelectedCity] = useState<City>();
@@ -66,6 +64,8 @@ export default function Home() {
   const [skillOption, setSkillOptions] = useState<Skill[]>([]);
   const [selectSkills, setSelectSkills] = useState<number[]>([]);
 
+  const [search, setSearch] = useState<string>('');
+
   useEffect(() => {
     fetchInitialData();
     fetchJobList({} as JobFilterRequest);
@@ -73,7 +73,7 @@ export default function Home() {
 
   useEffect(() => {
     handleFilter();
-  }, [ citySelected, selectLevels, selectExperience, selectType, selectBenefits, selectSkills]);
+  }, [selectLevels,selectExperience, selectType, selectBenefits, selectSkills]);
 
 
   const fetchInitialData = async () => {
@@ -115,6 +115,7 @@ export default function Home() {
       typeJobs: selectType,
       skills: selectSkills,
       benefits: selectBenefits,
+      citys: citySelected ? [citySelected.id] : undefined,
     } as JobFilterRequest);
   };
 
@@ -179,6 +180,10 @@ export default function Home() {
             </SelectTrigger>
           </Button>
           <SelectContent>
+            <SelectItem value={'undefinded'}>
+            <span className='text-gray-600'>Tất cả thành phố</span>
+            </SelectItem>
+  
             {cityOptions.map(city => (
               <SelectItem key={city.id} value={city.name}>
                 {city.name}

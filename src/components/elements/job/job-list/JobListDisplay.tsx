@@ -14,7 +14,10 @@ import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) {
+export default function JobListDetail(
+  { jobDetailId, isApplying , isSaved}: { jobDetailId: number, isApplying?: boolean, isSaved?: boolean }
+)
+{
   const navigate = useNavigate();
   const [job, setJob] = useState<JobResponse>();
   const [loading, setLoading] = useState(false);
@@ -41,6 +44,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
       await saveJob(jobId);
       toast.success('Lưu công việc thành công!');
     }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     catch (error: any) {
       toast.error(error?.response?.data?.message || 'Lỗi khi lưu công việc');
@@ -98,15 +102,37 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
 
           {/* Apply + Heart */}
           <div className='flex items-center gap-2'>
-            <Button className='bg-[#ed1b2f] hover:bg-red-600 text-white font-bold px-6 cursor-pointer'
-              onClick={()=>navigate(`/ung-tuyen-cong-viec/${job.id}`)}>
-              Ứng tuyển
-            </Button>
-            <Heart
-              onClick={() => handleSaveJob(job.id)}
-              className='text-red-500 cursor-pointer'
-              size={24}
-            />
+            {
+              isApplying ? (
+                <Button
+                  className='bg-green-50 text-green-600 font-bold px-6 cursor-pointer'
+                  >
+                  Bạn đã ứng tuyển
+                </Button>
+              ) : (
+                  <Button
+                  className='bg-[#ed1b2f] hover:bg-red-600 text-white font-bold px-6    cursor-pointer'
+                   onClick={()=>navigate(`/ung-tuyen-cong-viec/${job.id}`)}
+                  variant='outline'
+                  disabled={loading}
+                >
+                  Ứng tuyển
+                </Button>
+              )
+            }
+            {
+              isSaved ? <>
+                <Button>
+                  Đã lưu
+                </Button>
+              </>
+                :
+              <Heart
+                onClick={() => handleSaveJob(job.id)}
+                className='text-red-500 cursor-pointer'
+                size={24}
+              />
+            }
           </div>
         </div>
 

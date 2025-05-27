@@ -7,11 +7,6 @@ export const applyJob = async (jobId: number, data: CreateApplyRequest) => {
   return response.data;
 }
 
-export const getApplyJobs = async () => {
-  const response = await axiosInstance.get<ApplyJobResponse[]>('/apply-job/me');
-  return response.data;
-}
-
 export const getApplyByStatus = async (status: string) => {
   const response = await axiosInstance.get<ApplyJobResponse[]>(`/apply-job/me/status/${status}`);
   return response.data;

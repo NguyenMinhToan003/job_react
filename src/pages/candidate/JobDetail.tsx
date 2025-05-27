@@ -23,15 +23,24 @@ import { JobResponse } from '@/types/jobType';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import { saveJob } from '@/apis/saveJobAPI';
+import { getApplyByStatus } from '@/apis/applyJobAPI';
+import { APPLY_JOB_STATUS } from '@/types/type';
 
 export default function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState<JobResponse>();
   const navigate = useNavigate();
+  const [isApplying, setIsApplying] = useState(false);
 
   const fetchJobDetail = async () => {
     try {
+      const applyJob = await getApplyByStatus(APPLY_JOB_STATUS.PENDING);
       const response = await getDetailJobById(Number(id));
+      if (applyJob.some((apply) => apply.job.id === response.id)) {
+        setIsApplying(true);
+      } else {
+        setIsApplying(false);
+      }
       setJob(response);
     } catch (error: any) {
       toast.error(
@@ -130,11 +139,24 @@ export default function JobDetail() {
               <span className='text-sm'>{job.locations[0].name}</span>
             </div>
 
-            <Button
-              onClick={() => navigate(`/ung-tuyen-cong-viec/${job.id}`)}
-              className='w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3'>
-              Ứng tuyển
-            </Button>
+            {
+              isApplying ? (
+                <Button
+                  variant='outline'
+                  className=' bg-green-50 rounded-sm w-fit border-green-700 text-green-700 font-bold py-3 border-2' 
+                >
+                  Đã ứng tuyển
+                </Button>
+              ) : (
+                <Button
+                onClick={() => navigate(`/ung-tuyen-cong-viec/${job.id}`)}
+                className='w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3'>
+                Ứng tuyển
+              </Button>
+              )
+              
+            
+            }
           </CardContent>
         </Card>
 
