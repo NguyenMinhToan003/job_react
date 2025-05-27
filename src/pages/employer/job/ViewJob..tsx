@@ -10,7 +10,6 @@ import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import RejectJobForm from '@/components/elements/job/RejectJobForm';
 import BenefitJobPopup from '@/components/elements/popup/BenefitJobPopup';
-import { DatePickerWithRange } from '@/components/elements/popup/DatePickerPopup';
 import DetailJobPopup from '@/components/elements/popup/DetailJobPopup';
 import ExperienceJonPopup from '@/components/elements/popup/ExperienceJobPopup';
 import LevelJobPopup from '@/components/elements/popup/LevelJobPopup';
@@ -194,7 +193,7 @@ export default function ViewJob() {
             <QuantityJobPopup quantityJob={quantityJob} setQuantityJob={setQuantityJob} notEdit={true} />
             <LocationJobPopup locationIds={locationIds} setLocationIds={setLocationIds} locationList={locationList} notEdit={true} />
             <DetailJobPopup description={description} setDescription={setDescription} notEdit={true} />
-            <DatePickerWithRange className="mb-4" />
+
             <RequirementPopup requirement={requirement} setRequirement={setRequirement} notEdit={true} />
             <LevelJobPopup levelList={levelList} levelIds={levelIds} setLevelIds={setLevelIds} notEdit={true} />
             <ExperienceJonPopup experienceId={experienceId} setExperienceId={setExperienceId} experienceList={experienceList || []} notEdit={true} />
