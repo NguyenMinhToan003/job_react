@@ -7,19 +7,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Line } from '@/components/ui/line';
 import { Skeleton } from '@/components/ui/skeleton';
-
-import { JobResponse } from '@/types/jobType';
+import { JobFilterResponse } from '@/types/jobType';
 import { HandCoins, MapPin, Book, Building2, ExternalLink, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function JobListDetail(
-  { jobDetailId, isApplying , isSaved}: { jobDetailId: number, isApplying?: boolean, isSaved?: boolean }
+  { jobDetailId}: { jobDetailId: number }
 )
 {
   const navigate = useNavigate();
-  const [job, setJob] = useState<JobResponse>();
+  const [job, setJob] = useState<JobFilterResponse>();
   const [loading, setLoading] = useState(false);
   const fetchJob = async () => {
     try {
@@ -103,7 +102,7 @@ export default function JobListDetail(
           {/* Apply + Heart */}
           <div className='flex items-center gap-2'>
             {
-              isApplying ? (
+              job.isApplied ? (
                 <Button
                   className='bg-green-50 text-green-600 font-bold px-6 cursor-pointer'
                   >
@@ -121,7 +120,7 @@ export default function JobListDetail(
               )
             }
             {
-              isSaved ? <>
+              job.isSaved ? <>
                 <Button>
                   Đã lưu
                 </Button>

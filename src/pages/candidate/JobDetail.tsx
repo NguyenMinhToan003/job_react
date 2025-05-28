@@ -19,28 +19,19 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { getDetailJobById } from '@/apis/jobAPI';
-import { JobResponse } from '@/types/jobType';
+import { JobFilterResponse } from '@/types/jobType';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import { saveJob } from '@/apis/saveJobAPI';
-import { getApplyByStatus } from '@/apis/applyJobAPI';
-import { APPLY_JOB_STATUS } from '@/types/type';
 
 export default function JobDetail() {
   const { id } = useParams();
-  const [job, setJob] = useState<JobResponse>();
+  const [job, setJob] = useState<JobFilterResponse>();
   const navigate = useNavigate();
-  const [isApplying, setIsApplying] = useState(false);
 
   const fetchJobDetail = async () => {
     try {
-      const applyJob = await getApplyByStatus(APPLY_JOB_STATUS.PENDING);
       const response = await getDetailJobById(Number(id));
-      if (applyJob.some((apply) => apply.job.id === response.id)) {
-        setIsApplying(true);
-      } else {
-        setIsApplying(false);
-      }
       setJob(response);
     } catch (error: any) {
       toast.error(
@@ -89,15 +80,24 @@ export default function JobDetail() {
                   <span className='font-medium'>{job.employer.name}</span>
                 </div>
               </div>
-              <Button
-                onClick={handleSaveJob}
-                variant='outline'
-                size='sm'
-                className='text-red-500 border-red-200 hover:bg-red-50'
-              >
-                <Heart size={16} className='mr-1'/>
-                Lưu
-              </Button>
+              {
+                job.isSaved === true ? (
+                  <Button
+                  onClick={handleSaveJob}
+                  variant='outline'
+                  size='sm'
+                  className='text-red-500 border-red-200 hover:bg-red-50'
+                >
+                  <Heart size={16} className='mr-1'/>
+                  Lưu
+                </Button>
+                )
+                : <>
+                  <Button>
+                    Đã lưu công việc
+                  </Button>
+                </>
+              }
             </div>
             <div className='flex items-center gap-2 text-green-600 font-semibold text-md'>
               <HandCoins size={16} />
@@ -140,7 +140,7 @@ export default function JobDetail() {
             </div>
 
             {
-              isApplying ? (
+              job.isApplied ? (
                 <Button
                   variant='outline'
                   className=' bg-green-50 rounded-sm w-fit border-green-700 text-green-700 font-bold py-3 border-2' 
@@ -163,15 +163,13 @@ export default function JobDetail() {
         {/* Company Info */}
         <Card>
           <CardHeader className='text-center pb-3'>
-            <div className='w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-3 overflow-hidden'>
-              <Avatar>
+          <Avatar className='w-24 h-24 mx-auto mb-2'>
                 <AvatarImage
-                  src={job.employer.logo || 'https://via.placeholder.com/150'}
+                  src={job.employer.logo}
                   alt={job.employer.name}
                   className='rounded-full'
                 />
               </Avatar>
-            </div>
             <CardTitle className='text-lg'>{job.employer.name}</CardTitle>
           </CardHeader>
         </Card>

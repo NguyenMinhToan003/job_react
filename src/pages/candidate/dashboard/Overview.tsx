@@ -7,6 +7,7 @@ import { useAccount } from '@/providers/UserProvider';
 import { Cv } from '@/types/cvType';
 import { ChevronRight, FileText, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function FileInput({ onFileSelect, label }: { onFileSelect: (file: File) => void; label: string }) {
@@ -70,6 +71,8 @@ export default function Overview() {
     }
   }, [cvChosen]);
 
+  const navigate = useNavigate()
+
   return (
     <>
       <Card>
@@ -83,7 +86,8 @@ export default function Overview() {
               <Mail />
               <p className='text-sm text-muted-foreground'>{dataUser?.account.email}</p>
             </Button>
-            <Button variant='ghost' className='mt-2 flex items-center gap-2'>
+            <Button variant='ghost' className='mt-2 flex items-center gap-2'
+              onClick={() => navigate('/tong-quat-ho-so/cap-nhat-thong-tin')}>s
               <ChevronRight className='text-blue-600' />
               <p className='text-sm text-blue-600'>Cập nhật hồ sơ</p>
             </Button>

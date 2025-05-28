@@ -35,7 +35,7 @@ export const filterJob = async (data: JobFilterRequest) => {
 }
 
 export const getDetailJobById = async (jobId: number) => {
-  const response = await axiosInstance.get<JobResponse>(`/job/${jobId}`);
+  const response = await axiosInstance.get<JobFilterResponse>(`/job/${jobId}`);
   return response.data;
 }
 
@@ -46,5 +46,10 @@ export const updateJobAdmin = async (jobId: number, data: UpdateJobAdminRequest)
 
 export const toggleJobStatus = async (jobId: number) => {
   const response = await axiosInstance.patch<JobResponse>(`/job/employer/toggle-is-show/${jobId}`);
+  return response.data;
+}
+
+export const viewJobAPI = async (jobId: number) => {
+  const response = await axiosInstance.get<JobResponse>(`/job/view/${jobId}`);
   return response.data;
 }

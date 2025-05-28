@@ -3,7 +3,7 @@
 import { getBenefit } from '@/apis/benefitAPI';
 import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
-import { getDetailJobById, updateJobAdmin } from '@/apis/jobAPI';
+import { updateJobAdmin, viewJobAPI } from '@/apis/jobAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
@@ -115,7 +115,7 @@ export default function ViewJob() {
 
   const fetchDataJob = async () => {
     try {
-      const response = await getDetailJobById(+id);
+      const response = await viewJobAPI(+id);
       if (locationList.length === 0) {
         setLocationList(response.locations);
       }

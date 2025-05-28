@@ -69,9 +69,9 @@ export default function CreateJob() {
       })
       toast.success('Tin tuyển dụng đã được tạo thành công');
     }
-    catch (error) {
-      toast.error('Đã xảy ra lỗi khi tạo tin tuyển dụng');
-      console.error('Error creating job:', error);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error: any) {
+      toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tạo tin tuyển dụng');
     }
   }
 

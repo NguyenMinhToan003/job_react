@@ -1,50 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import JobListDetail from './JobListDisplay';
-import { JobFilterResponse, JobResponse } from '@/types/jobType';
+import { JobFilterResponse } from '@/types/jobType';
 import JobList from './JobList';
 import { useEffect, useState } from 'react';
-import { ApplyJobResponse } from '@/types/applyJobType';
-import { getApplyByStatus } from '@/apis/applyJobAPI';
-import { APPLY_JOB_STATUS } from '@/types/type';
-import { useAccount } from '@/providers/UserProvider';
 
 export default function Index({jobs}: { jobs: JobFilterResponse[] }) {
-  const [selectedJob, setSelectedJob] = useState<JobFilterResponse>({} as JobResponse);
-  const [listApplyJob, setListApplyJob] = useState<ApplyJobResponse[]>([]);
-  const [isApplying, setIsApplying] = useState(true);
-  const { dataUser } = useAccount();
-  const [isSaved, setIsSaved] = useState(false);
-
-  const fetchApplyJobs = async () => {
-    try {
-      const response = await getApplyByStatus(APPLY_JOB_STATUS.PENDING);
-      setListApplyJob(response);
-    } catch (error) {
-      console.error('Error fetching apply jobs:', error);
-    }
-  };
-  useEffect(() => {
-    const isExits = listApplyJob.some((apply)=> apply.job.id === selectedJob.id);
-    if (isExits) {
-      setIsApplying(true);
-    }
-    else {
-      setIsApplying(false);
-    }
-    const isSavedJob = dataUser?.saveJobs?.some((job) => job.jobId === selectedJob.id);
-    setIsSaved(isSavedJob || false);
-  }, [selectedJob]);
-
-  useEffect(() => {
-    fetchApplyJobs();
-  }, []);
+  const [selectedJob, setSelectedJob] = useState<JobFilterResponse>({} as JobFilterResponse);
 
   useEffect(() => {
     
    if(jobs.length > 0) {
      setSelectedJob(jobs[0]);
    }
-    else setSelectedJob({} as JobResponse);
+    else setSelectedJob({} as JobFilterResponse);
 
   },[jobs])
   return (
@@ -61,7 +29,7 @@ export default function Index({jobs}: { jobs: JobFilterResponse[] }) {
       </div>
       <div className='col-span-3'>
         <div className='sticky top-20'>
-          {jobs.length>0 && selectedJob?.id && <JobListDetail jobDetailId={selectedJob.id} isApplying={isApplying} isSaved={isSaved} />}
+          {jobs.length>0 && selectedJob?.id && <JobListDetail jobDetailId={selectedJob.id} />}
         </div>
       </div>
     </div>

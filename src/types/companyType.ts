@@ -19,4 +19,5 @@ export interface EmployerDetailResponse {
   taxCode: string;
   jobs: JobResponse[];
   locations: LocationResponse[];
+  isFollowed?: boolean;
 }

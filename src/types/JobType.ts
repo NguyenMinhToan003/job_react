@@ -102,6 +102,8 @@ export interface JobFilterResponse {
   levels: Level[];
   typeJobs: TypeJob[];
   employer: Employer;
+  isApplied: boolean;
+  isSaved: boolean;
 }
 
 export interface UpdateJobAdminRequest {

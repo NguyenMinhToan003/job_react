@@ -31,6 +31,9 @@ import CreateJob from '@/pages/employer/job/CreateJob';
 import ViewJob from '@/pages/employer/job/ViewJob.';
 import LoginSuccess from '@/pages/auth/LoginSusscess';
 import EmployerNotification from '@/pages/employer/notification/Noti';
+import RegisterCandidate from '@/pages/auth/RegisterCandidate';
+import UpdateInfoCandidate from '@/pages/candidate/dashboard/UpdateInfo';
+import RegisterEmployer from '@/pages/auth/RegisterEmployer';
 
 export default function AppRouter() {
   const { updateDataUser } = useAccount()
@@ -41,12 +44,14 @@ export default function AppRouter() {
     <Routes>
       <Route path='/auth/login' element={<LoginPage />} />
       <Route path='/' element={<Index />}>
+        <Route path='dang-ky' element={<RegisterCandidate />} />
         <Route path='login-success' element={<LoginSuccess />} />
         <Route index element={<Home />} />
         <Route path='map/:lat/:lng' element={<Map />} />
         <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />
         <Route path='/tong-quat-ho-so' element={<UserDashboard />} >
           <Route index element={<Overview />} />
+          <Route path='cap-nhat-thong-tin' element={<UpdateInfoCandidate />} />
           <Route path='ca-nhan' element={<Overview />} />
           <Route path='viec-lam' element={<JobForMe />} />
           <Route path='tin-nhan' element={<Overview />} />
@@ -79,6 +84,7 @@ export default function AppRouter() {
       // employer
       <Route path='/danh-cho-nha-tuyen-dung' element={<IndexCompany />} >
         <Route index element={<OverViewCompany />} />
+        <Route path='dang-ky' element={<RegisterEmployer />} />
         <Route path='tuyen-dung' element={<CompanyJob />} />
         <Route path='tuyen-dung/:tab' element={<CompanyJob />} />
         <Route path='dia-diem' element={<LocationCompany />} />

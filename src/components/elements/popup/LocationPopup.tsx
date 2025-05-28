@@ -29,7 +29,7 @@ export default function LocationJobPopup({
           <div className="flex items-center gap-2">
             <div className="flex-1">ĐỊA ĐIỂM</div>
             {
-              locationList.length === 0 ? <>
+              locationList?.length === 0 ? <>
                 <CirclePlus
                   className="cursor-pointer text-red-500"
                   size={20}
@@ -49,7 +49,7 @@ export default function LocationJobPopup({
       </CardHeader>
       <CardContent className="p-6 flex flex-col gap-4">
         {
-          locationList.map((location) => (
+          locationList?.length>0 && locationList.map((location) => (
             <div key={location.id} className="flex items-center gap-2">
               <Checkbox
                 disabled={notEdit}

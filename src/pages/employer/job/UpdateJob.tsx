@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getBenefit } from '@/apis/benefitAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
-import { deleteJob, getDetailJobById, updateJob } from '@/apis/jobAPI';
+import { deleteJob, updateJob, viewJobAPI } from '@/apis/jobAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
@@ -128,7 +128,7 @@ export default function UpdateJob() {
 
   const fetchDataJob = async () => {
     try {
-      const response = await getDetailJobById(+id);
+      const response = await viewJobAPI(+id);
       setNameJob(response.name);
       setDescription(response.description);
       setRequirement(response.requirement);

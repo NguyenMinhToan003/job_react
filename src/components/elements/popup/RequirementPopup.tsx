@@ -25,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function RequirementPopup({
   requirement,
@@ -112,7 +113,7 @@ export default function RequirementPopup({
               </ToggleGroupItem>
             </ToggleGroup>
 
-            <textarea
+            <Textarea
               className="w-full flex-1 resize-none bg-transparent text-gray-700 placeholder-gray-500 border-none text-sm font-medium focus-visible:ring-0 focus-visible:outline-none p-2"
               placeholder="Nhập mô tả công việc..."
               value={text}

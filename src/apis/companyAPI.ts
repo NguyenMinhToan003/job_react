@@ -15,3 +15,7 @@ export const getCompanyDetailAPI = async (companyId: number) => {
   const response = await axiosInstance.get<EmployerDetailResponse>(`/employer/detail/${companyId}`);
   return response.data;
 }
+export const registerCompanyAPI = async (data: {name:string, password: string, email: string, logo: string }) => {
+  const response = await axiosInstance.post<Employer>('/auth/register/employer', data);
+  return response.data;
+}
