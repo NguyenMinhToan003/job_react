@@ -9,7 +9,7 @@ export const locationGetMapAPI = async (suggestion: {
   return response.data;
 }
 export const locationAutoCompleteAPI = async (address: string) => {
-  const response = await axiosInstance.get(`/location/map/${encodeURIComponent(address)}`);
+  const response = await axiosInstance.get(`/location/map/${address}`);
   const data = response.data.predictions as LocationAutoComplate[];
   return data;
 }

@@ -4,18 +4,17 @@ import { getMeNotificationAPI, markAllAsReadAPI } from '@/apis/employerNotiAPI';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
 import { Bell, LinkIcon, CheckCircle2, DotSquareIcon } from 'lucide-react';
 import { NOTI_TYPE } from '@/types/type';
-import { EmployerNoti } from '@/types/eployerNotiType';
 import { convertDateToString } from '@/utils/dateTime';
+import { NotiAccount } from '@/types/eployerNotiType';
 
 const NOTI_CONFIG = {
   [NOTI_TYPE.ACCEPTED]: { label: 'Đã chấp nhận', color: 'bg-green-100 text-green-600 border-green-200' },
   [NOTI_TYPE.REJECTED]: { label: 'Đã từ chối', color: 'bg-red-100 text-red-600 border-red-200' },
   [NOTI_TYPE.DEFAULT]: { label: 'Thông báo', color: 'bg-blue-100 text-blue-600 border-blue-200' },
 };
-function NotificationItem({ noti }: { noti: EmployerNoti }) {
+function NotificationItem({ noti }: { noti: NotiAccount }) {
   const { label, color } = NOTI_CONFIG[noti.type || NOTI_TYPE.DEFAULT];
   const isRead = noti.isRead === 1;
   return (
