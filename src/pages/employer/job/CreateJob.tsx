@@ -221,7 +221,7 @@ export default function CreateJob() {
               <Button
                 className='w-full h-16 bg-[#ed1b2f] text-base mt-4 cursor-pointer'
                 onClick={handleCreateJob}
-                disabled={checkField < 7}
+                disabled={checkField < 6}
               >
                 <CirclePlus className='mr-2' />
                 Thêm công việc

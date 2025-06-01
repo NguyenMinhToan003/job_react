@@ -13,8 +13,8 @@ export interface Job {
   description: string;
   quantity: number;
   requirement: string;
-  minSalary: number;
-  maxSalary: number;
+  minSalary: number | null;
+  maxSalary: number | null;
   createdAt: string;
   isActive: number;
   expiredAt: string;
@@ -30,8 +30,8 @@ export interface CreateJobRequest {
   levels: string[];
   types: number[];
   requirement: string;
-  minSalary: number;
-  maxSalary: number;
+  minSalary: number | null;
+  maxSalary: number | null;
   description: string;
 }
 
@@ -41,9 +41,9 @@ export interface JobResponse {
   description: string;
   quantity: number;
   requirement: string;
-  minSalary: number;
+  minSalary: number | null;
+  maxSalary: number | null;
   isShow: number;
-  maxSalary: number;
   createdAt: string;
   updatedAt: string;
   isActive: number;
@@ -63,8 +63,8 @@ export interface JobFilterRequest {
   levels?: string[];
   experience?: number[];
   typeJobs?: number[];
-  minSalary?: number;
-  maxSalary?: number;
+  minSalary?: number| null;
+  maxSalary?: number| null;
   citys?: string;
   benefits?: string[];
   skills?: number[];
@@ -74,8 +74,8 @@ export interface JobFilterAdminRequest {
   levels?: string[];
   experience?: number[];
   typeJobs?: number[];
-  minSalary?: number;
-  maxSalary?: number;
+  minSalary?: number | null;
+  maxSalary?: number | null;
   locations?: number[];
   benefits?: string[];
   skills?: number[];
@@ -90,8 +90,8 @@ export interface JobFilterResponse {
   description: string;
   quantity: number;
   requirement: string;
-  minSalary: number;
-  maxSalary: number;
+  minSalary: number | null;
+  maxSalary: number | null;
   createdAt: string;
   isActive: number;
   expiredAt: string;
@@ -116,8 +116,8 @@ export interface CompanyFilterJob {
   levels?: string[];
   experience?: string;
   typeJobs?: number[];
-  minSalary?: number;
-  maxSalary?: number;
+  minSalary?: number | null;
+  maxSalary?: number | null;
   locations?: number[];
   benefits?: string[];
   skills?: string[];

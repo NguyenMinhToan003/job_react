@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/toggle-group';
 import {
   Bold,
-  CircleCheckBig,
   CirclePlus,
   Italic,
   SquarePen,
@@ -72,20 +71,19 @@ export default function DetailJobPopup({
         </CardHeader>
 
         <CardContent className='px-6 space-y-2'>
-          <div className='space-y-1'>
+          <ul className='space-y-1 list-disc pl-4'>
             {description.split('\n').map(
               (line, index) =>
                 line.trim() && (
-                  <div
+                  <li
                     key={index}
-                    className='flex items-start gap-3 justify-start'
+                    className='text-sm text-gray-700 font-medium marker:text-red-500'
                   >
-                    <CircleCheckBig className='min-w-4 min-h-4 max-w-4 max-h-4 text-red-600' />
-                    <div className='text text-gray-700'>{line}</div>
-                  </div>
+                    {line.trim()}
+                  </li>
                 )
             )}
-          </div>
+          </ul>
         </CardContent>
       </Card>
 

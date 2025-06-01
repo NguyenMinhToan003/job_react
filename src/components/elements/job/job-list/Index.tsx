@@ -16,7 +16,7 @@ export default function Index({jobs}: { jobs: JobFilterResponse[] }) {
 
   },[jobs])
   return (
-    <div className='grid grid-cols-1 md:grid-cols-5 gap-4 mt-4 w-7xl mx-auto min-h-[70vh]'>
+    <div className='grid grid-cols-1 md:grid-cols-5 gap-4 mt-4 w-7xl mx-auto min-h-[70vh] p-2'>
       <div className='col-span-2 space-y-4'>
         {jobs.map((job) => (
           <JobList

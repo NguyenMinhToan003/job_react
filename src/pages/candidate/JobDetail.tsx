@@ -101,7 +101,7 @@ export default function JobDetail() {
             </div>
             <div className='flex items-center gap-2 text-green-600 font-semibold text-md'>
               <HandCoins size={16} />
-              {job.maxSalary === job.minSalary && job.maxSalary === -9999 ? (
+              {job.maxSalary === job.minSalary && job.maxSalary === null ? (
                 <span>Thỏa thuận</span>
               ) : (
                 <span>
@@ -185,6 +185,7 @@ export default function JobDetail() {
               </CardTitle>
             </CardHeader>
             <CardContent>
+           
               <ul className='space-y-2'>
                 {job.benefits.map((benefit) => (
                   <li key={benefit.id} className='flex items-start gap-2'>

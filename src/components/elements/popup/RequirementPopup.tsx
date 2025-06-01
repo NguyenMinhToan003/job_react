@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/toggle-group";
 import {
   Bold,
-  CircleCheckBig,
   CirclePlus,
   Italic,
   SquarePen,
@@ -70,19 +69,19 @@ export default function RequirementPopup({
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 space-y-2">
-          <div className="space-y-1">
-            {requirement.split("\n").map((line, index) =>
-              line.trim() ? (
-                <div
-                  key={index}
-                  className="flex items-start gap-3 justify-start"
-                >
-                  <CircleCheckBig className="min-w-4 min-h-4 max-w-4 max-h-4 text-red-600" />
-                  <div className="text text-gray-700">{line}</div>
-                </div>
-              ) : null
-            )}
-          </div>
+            <ul className='space-y-1 list-disc pl-4'>
+                {requirement.split('\n').map(
+                  (line, index) =>
+                    line.trim() && (
+                      <li
+                        key={index}
+                        className='text-sm text-gray-700 font-medium marker:text-red-500'
+                      >
+                        {line.trim()}
+                      </li>
+                    )
+                )}
+              </ul>
         </CardContent>
       </Card>
 
@@ -94,11 +93,6 @@ export default function RequirementPopup({
           <DialogHeader>
             <DialogTitle>YÊU CẦU CÔNG VIỆC</DialogTitle>
           </DialogHeader>
-
-          <div className="text-sm mb-2">
-            <span className="text-orange-600 font-semibold">Tips:</span>{" "}
-            Bạn có thể nhập nội dung mô tả về bản thân, kỹ năng, sở thích, hoặc bất kỳ thông tin nào bạn muốn chia sẻ với nhà tuyển dụng.
-          </div>
 
           <div className="border rounded-md p-2 min-h-[250px] h-[300px] flex flex-col">
             <ToggleGroup type="multiple" className="mb-2">

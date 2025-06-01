@@ -19,7 +19,7 @@ import { useAccount } from '@/providers/UserProvider';
 
 const userMenuItems = [
   { label: 'Tổng quan', icon: <LayoutDashboard className='w-6 h-6' />, path: '' },
-  { label: 'Hồ sơ', icon: <User className='w-6 h-6' />, path: 'ca-nhan' },
+  { label: 'Hồ sơ', icon: <User className='w-6 h-6' />, path: 'ho-so' },
   { label: 'Việc làm của tôi', icon: <Briefcase className='w-6 h-6' />, path: 'viec-lam' },
   { label: 'Tin nhắn', icon: <Inbox className='w-6 h-6' />, path: 'tin-nhan' },
   { label: 'Thông báo', icon: <Mail className='w-6 h-6' />, path: 'thong-bao' },

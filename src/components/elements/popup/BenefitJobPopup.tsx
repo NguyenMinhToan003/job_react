@@ -39,7 +39,6 @@ export default function BenefitJobPopup({
               <Checkbox
                 disabled={notEdit}
                 id={`benefit-${benefit.id}`}
-                className='checked:bg-red-500'
                 checked={benefitIds.some(item => item.toString() === benefit.id)}
                 onCheckedChange={(checked) => {
                   if (checked) {

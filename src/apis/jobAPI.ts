@@ -50,6 +50,6 @@ export const toggleJobStatus = async (jobId: number) => {
 }
 
 export const viewJobAPI = async (jobId: number) => {
-  const response = await axiosInstance.get<JobResponse>(`/job/view/${jobId}`);
+  const response = await axiosInstance.get<JobResponse>(`/job/view-all-job/${jobId}`);
   return response.data;
 }

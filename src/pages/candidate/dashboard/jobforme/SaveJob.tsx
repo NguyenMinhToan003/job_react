@@ -35,7 +35,7 @@ export default function SaveJob() {
               <div className='text-[12px] text-gray-500 font-semibold'>{applyJob.job.employer?.name}</div>
               <div className='text-[12px] text-gray-500 font-semibold'>{applyJob?.job?.locations[0]?.district?.city?.name}</div>
               <div className="text-green-600 font-semibold text-sm">
-                {applyJob?.job?.maxSalary === applyJob?.job?.minSalary && applyJob?.job?.maxSalary === -9999 ? (
+                {applyJob?.job?.maxSalary === applyJob?.job?.minSalary && applyJob?.job?.maxSalary === null ? (
                   <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
                 ) : (
                   <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/> <span>Từ {applyJob?.job?.minSalary} đến {applyJob?.job?.maxSalary}</span></div>
