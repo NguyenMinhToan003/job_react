@@ -1,5 +1,6 @@
 import { CvResponse } from "./cvType";
 import { JobResponse } from "./jobType";
+import { ResumeVersion } from "./resumeType";
 
 export interface CreateApplyRequest {
   cvId: number;
@@ -28,4 +29,5 @@ export interface ApplyJobResponse {
   job: JobResponse;
   cv: CvResponse;
   time: string;
+  resumeVer: ResumeVersion;
 }

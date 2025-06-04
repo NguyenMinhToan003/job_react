@@ -39,10 +39,9 @@ export default function LevelPage() {
   const [levels, setLevels] = useState<Level[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Level | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UpdateLevelRequest>({
     id: '',
     name: '',
-    description: '',
     status: 1,
   });
 
@@ -61,7 +60,6 @@ export default function LevelPage() {
       if (editing) {
         await updateLevel(editing.id, {
           name: formData.name,
-          description: formData.description,
           status: formData.status,
         } as UpdateLevelRequest);
       } else {
@@ -78,7 +76,7 @@ export default function LevelPage() {
 
   const resetForm = () => {
     setEditing(null);
-    setFormData({ id: '', name: '', description: '', status: 1 });
+    setFormData({ id: '', name: '', status: 1 });
   };
 
   const handleEdit = (level: Level) => {
@@ -86,8 +84,7 @@ export default function LevelPage() {
     setFormData({
       id: level.id,
       name: level.name,
-      description: level.description || '',
-      status: level.status || 1,
+      status: level.status,
     });
     setOpen(true);
   };
@@ -139,18 +136,6 @@ export default function LevelPage() {
                 <DialogTitle>{editing ? 'Cập nhật cấp độ' : 'Thêm cấp độ'}</DialogTitle>
               </DialogHeader>
               <div className='space-y-4 mt-4'>
-                {!editing && (
-                  <div>
-                    <Label htmlFor='id'>Mã cấp độ (ID)</Label>
-                    <Input
-                      id='id'
-                      value={formData.id}
-                      onChange={(e) =>
-                        setFormData({ ...formData, id: e.target.value })
-                      }
-                    />
-                  </div>
-                )}
                 <div>
                   <Label htmlFor='name'>Tên cấp độ</Label>
                   <Input
@@ -161,20 +146,10 @@ export default function LevelPage() {
                     }
                   />
                 </div>
-                <div>
-                  <Label htmlFor='desc'>Mô tả</Label>
-                  <Input
-                    id='desc'
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                  />
-                </div>
                 <div className='flex items-center gap-2'>
                   <Label>Trạng thái</Label>
                   <Switch
-                    checked={formData.status === 1}
+                    checked={formData.status === +1}
                     onCheckedChange={(checked) =>
                       setFormData({ ...formData, status: checked ? 1 : 0 })
                     }
@@ -194,7 +169,6 @@ export default function LevelPage() {
               <TableRow>
                 <TableHead className='w-[100px]'>ID</TableHead>
                 <TableHead>Tên cấp độ</TableHead>
-                <TableHead>Mô tả</TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead className='w-[150px] text-center'>Thao tác</TableHead>
               </TableRow>
@@ -204,7 +178,6 @@ export default function LevelPage() {
                 <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.description || '-'}</TableCell>
                   <TableCell>
                     <Switch
                       checked={item.status === 1}

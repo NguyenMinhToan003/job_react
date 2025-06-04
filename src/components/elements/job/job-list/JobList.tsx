@@ -20,9 +20,9 @@ export default function JobList({
   return (
     <Card
       key={job.id}
-      className={`rounded-lg cursor-pointer relative border-2 px-3 py-4 transition-all duration-200 gap-0 ${
+      className={`rounded-lg cursor-pointer relative border-2  px-3 py-4 transition-all duration-200 gap-0 ${
         selectedJob.id === job.id
-          ? 'border-[#ed1b2f] bg-white shadow-sm'
+          ? 'border-orange-900 bg-white shadow-sm'
           : 'bg-white border border-gray-200'
       }`}
       onClick={() => setSelectedJob(job)}

@@ -1,11 +1,13 @@
 import { Benefit } from "./benefitType";
 import { Employer } from "./companyType";
 import { Cv } from "./cvType";
+import { Education } from "./educationType";
 import { Experience } from "./experienceType";
+import { LanguageJob } from "./LanguageType";
 import { Level } from "./levelType";
 import { LocationResponse } from "./location";
-import { Skill } from "./skillType";
-import { TypeJob } from "./typeJobType";
+import { Skill } from "./SkillType";
+import { TypeJob } from "./TypeJobType";
 
 export interface Job {
   id: number;
@@ -33,6 +35,8 @@ export interface CreateJobRequest {
   minSalary: number | null;
   maxSalary: number | null;
   description: string;
+  education?: number;
+  languages?: LanguageJob[];
 }
 
 export interface JobResponse {
@@ -56,6 +60,8 @@ export interface JobResponse {
   typeJobs: TypeJob[];
   employer: Employer;
   applyJobs: Cv[];
+  education: Education;
+  languageJobs: LanguageJob[];
 }
 export interface JobFilterRequest {
   id: number;

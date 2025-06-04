@@ -8,6 +8,7 @@ import { Benefit } from "@/types/benefitType";
 import { Checkbox } from "@/components/ui/checkbox";
 import { iconMap } from "@/utils/SetListIcon";
 import { Gift } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 export default function BenefitJobPopup({
   benefitList,
@@ -49,12 +50,12 @@ export default function BenefitJobPopup({
                   }
                 }}
               />
-              <label htmlFor={`benefit-${benefit.id}`} className="flex items-center gap-2 cursor-pointer">
+              <Label htmlFor={`benefit-${benefit.id}`} className="flex items-center gap-2 cursor-pointer">
                 <div className="text-primary text-xl">
                   {iconMap[benefit.icon] ?? <Gift />}
                 </div>
                 <span className="text text-gray-700">{benefit.name}</span>
-              </label>
+              </Label>
             </div>
           ))
         }

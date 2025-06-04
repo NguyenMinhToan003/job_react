@@ -5,25 +5,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { TypeJob } from "@/types/typeJobType";
+import { Label } from "@/components/ui/label";
+import { Level } from "@/types/levelType";
 
-export default function TypeJobPopup({
-  typeJobList,
-  typeJobId,
-  setTypeJobId,
+export default function LevelJobPopup({
+  levelIds = [],
+  setLevelIds,
+  levelList,
   notEdit,
 }: {
-  typeJobList: TypeJob[];
-  typeJobId: number[];
-  setTypeJobId: (id: number[]) => void;
+  levelIds?: string[];
+  setLevelIds: (levelIds: string[]) => void;
+  levelList: Level[];
   notEdit?: boolean;
 }) {
-  const handleCheckboxChange = (id: number, checked: boolean) => {
+  const handleCheckboxChange = (level: Level, checked: boolean) => {
     if (notEdit) return;
     if (checked) {
-      setTypeJobId([...typeJobId, id]);
+      setLevelIds([
+        ...levelIds,level.id]);
     } else {
-      setTypeJobId(typeJobId.filter((item) => item !== id));
+      setLevelIds(levelIds.filter((l) => l !== level.id));
     }
   };
 
@@ -32,28 +34,28 @@ export default function TypeJobPopup({
       <CardHeader>
         <CardTitle className="text-lg font-bold text-start">
           <div className="flex items-center gap-2">
-            <div className="flex-1">HÌNH THỨC LÀM VIỆC</div>
+            <div className="flex-1">CẤP BẬC TUYỂN DỤNG</div>
           </div>
           <div className="w-full h-[1px] bg-gray-200 mt-4" />
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
         <div className="grid grid-cols-2 gap-4">
-          {typeJobList.map((typeJob) => {
-            const isChecked = typeJobId.some((item) => item === Number(typeJob.id));
+          {levelList.length >0 &&levelList.map((level) => {
+            const isChecked = levelIds.some((i)=> i === level.id);
             return (
-              <div key={typeJob.id} className="flex items-center gap-2">
+              <div key={level.id} className="flex items-center gap-2">
                 <Checkbox
                   disabled={notEdit}
-                  id={`type-job-${typeJob.id}`}
+                  id={`level-job-${level.id}`}
                   checked={isChecked}
                   onCheckedChange={(checked) =>
-                    handleCheckboxChange(Number(typeJob.id), Boolean(checked))
+                    handleCheckboxChange(level, Boolean(checked))
                   }
                 />
-                <label htmlFor={`type-job-${typeJob.id}`} className="cursor-pointer">
-                  {typeJob.name}
-                </label>
+                <Label htmlFor={`level-job-${level.id}`} className="cursor-pointer">
+                  {level.name}
+                </Label>
               </div>
             );
           })}

@@ -23,5 +23,5 @@ export const convertDateToDiffTime = (date: string): string => {
 };
 
 export const convertDateToString = (date: string): string => {
-  return dayjs(date).format('DD/MM/YYYY HH:mm');
+  return dayjs(date).format('DD/MM/YYYY');
 }

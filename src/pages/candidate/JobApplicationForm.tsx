@@ -19,6 +19,8 @@ import { useAccount } from '@/providers/UserProvider';
 import { updateInfoCandidate } from '@/apis/userAPI';
 import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';
 import { NOTI_TYPE } from '@/types/type';
+import { Resume } from '@/types/resumeType';
+import { getAllResumeAPI } from '@/apis/resumeAPI';
 
 export default function JobApplicationForm() {
   const { jobId } = useParams();
@@ -30,6 +32,7 @@ export default function JobApplicationForm() {
   const [note, setNote] = useState('');
   const [cv, setCv] = useState<Cv>({} as Cv);
   const [fileCVnew, setFileCVnew] = useState<File | null>(null);
+  const [resumes, setResumes] = useState<Resume[]>([]);
 
   const fetchJob = async () => {
     try {
@@ -63,8 +66,19 @@ export default function JobApplicationForm() {
     fetchJob();
   }, [jobId]);
 
+  const fetchResume = async () => {
+    try {
+      const response = await getAllResumeAPI()
+      setResumes(response);
+    }
+    catch (error){
+      toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi tải thông tin CV');
+    }
+  }
+  
   useEffect(() => {
     fetchCv();
+    fetchResume();
   }, []);
 
   const handleChangeOptionCv = (value: string) => {
@@ -81,12 +95,22 @@ export default function JobApplicationForm() {
       toast.error('Không tìm thấy CV hiện tại');
       return;
     }
+  
+    if (cvOption.startsWith('resume-')) {
+      const resumeId = Number(cvOption.split('-')[1]);
+      if (!resumeId) {
+        toast.error('CV không hợp lệ');
+        return;
+      }
+    }
+  
     try {
       await updateInfoCandidate({
         name,
         phone
-      })
-      updateDataUser()
+      });
+      updateDataUser();
+  
       if (cvOption === 'new') {
         if (!fileCVnew) {
           toast.error('Vui lòng tải lên CV mới');
@@ -101,29 +125,40 @@ export default function JobApplicationForm() {
             cvId: -1
           },
           fileCVnew
-        )
+        );
         toast.success('Ứng tuyển thành công');
         return;
       }
+  
+      // Trường hợp chọn current hoặc resume từ danh sách
+      let resumeIdToSend = -1;
+      if (cvOption === 'current') {
+        resumeIdToSend = cv.id;
+      } else if (cvOption.startsWith('resume-')) {
+        resumeIdToSend = Number(cvOption.split('-')[1]);
+      }
+  
       await applyJob(Number(jobId), {
-        cvId: cvOption === 'current' ? cv.id : cv.id,
+        resumeId: resumeIdToSend,
         note,
         username: name,
         phone
       });
+  
       await createEmployerNotiAPI({
         content: `Đơn ứng tuyển công việc "${job?.name}" của ${name}.`,
         title: 'Có đơn ứng tuyển mới',
         receiverAccountId: job?.employer.id || -1,
         link: `/danh-cho-nha-tuyen-dung/danh-sach-ung-tuyen/${jobId}`,
         type: NOTI_TYPE.DEFAULT
-      })
+      });
+  
       toast.success('Ứng tuyển thành công');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi khi ứng tuyển');
     }
   };
+  
 
   return (
     <div className='max-w-4xl mx-auto p-8'>
@@ -179,6 +214,27 @@ export default function JobApplicationForm() {
                   </CardContent>
                 </Card>
               </Label>
+              {
+                resumes.length > 0 && resumes.map((resume) => (
+                  <Label key={resume.id} htmlFor={`resume-${resume.id}`} className='block'>
+                    <Card
+                      className={`rounded-sm cursor-pointer border transition shadow-none ${
+                        cvOption === `resume-${resume.id}` ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                      }`}
+                    >
+                      <CardContent className='flex items-start justify-between'>
+                        <div className='flex items-start'>
+                          <RadioGroupItem value={`resume-${resume.id}`} id={`resume-${resume.id}`} className='mr-3'  />
+                          <div>
+                            <p className='text-sm font-semibold'>Sử dụng hồ sơ của trang web</p>
+                            <p className='text-sm font-semibold'>{resume.resumeName}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Label>
+                ))
+              }
 
               <Label htmlFor='new' className='block'>
                 <Card

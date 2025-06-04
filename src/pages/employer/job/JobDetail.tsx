@@ -20,6 +20,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Job } from "@/types/jobType";
 import { Button } from "@/components/ui/button";
+import { convertDateToString } from "@/utils/dateTime";
 
 export default function JobDetailCompany() {
   const { jobId } = useParams();
@@ -31,7 +32,6 @@ export default function JobDetailCompany() {
     if (!jobId) return;
     const fetchData = async () => {
       try {
-        console.log(job)
         const res = await getApplyJobByJobId(job);
         setList(res);
       } catch (error) {
@@ -41,7 +41,7 @@ export default function JobDetailCompany() {
       }
     };
     fetchData();
-  }, [job, jobId]);
+  }, [jobId]);
 
   const renderStatus = (status: string) => {
     switch (status) {
@@ -78,7 +78,7 @@ export default function JobDetailCompany() {
                   <TableRow>
                 <TableHead>Ứng viên</TableHead>
                     <TableHead>Ghi chú</TableHead>
-                    <TableHead>CV</TableHead>
+                    <TableHead>?.resumeVer</TableHead>
                 <TableHead>Thời gian nộp</TableHead>
                 <TableHead>Trạng thái</TableHead>
               </TableRow>
@@ -90,25 +90,26 @@ export default function JobDetailCompany() {
                   <TableCell className="flex items-center gap-2">
                     <Avatar>
                       <AvatarImage
-                        src={item.cv.candidate.avatar}
-                        alt={item.cv.candidate.name}
+                        src={item?.resumeVer?.imageResume}
                       />
                     </Avatar>
-                    <span className="font-medium">{item.cv.candidate.name}</span>
+                    <span className="font-medium">{item?.resumeVer?.userName}</span>
                   </TableCell>
                   <TableCell>
                     <Button
                       variant="link"
                       onClick={() => {
-                        window.open(item.cv.url, "_blank");
+                        window.open(item?.resumeVer?.url, "_blank");
                       }}
                     >
-                      Xem CV
+                      Xem Cv
                     </Button>
                   </TableCell>
                   <TableCell>{item.note || "Không có ghi chú"}</TableCell>
                   <TableCell>
-                    {new Date(item.time).toLocaleString("vi-VN")}
+                    {
+                      convertDateToString(item.time)
+                    }
                   </TableCell>
                   <TableCell>{renderStatus(item.status)}</TableCell>
                 </TableRow>

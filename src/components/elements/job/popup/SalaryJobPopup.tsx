@@ -17,7 +17,7 @@ export default function SalaryJonPopup({
 }: {
   salaryMin?: number| null
   setSalaryMin: (salary: number| null) => void
-  salaryMax?: number
+  salaryMax?: number| null
   setSalaryMax: (salary: number| null) => void
   notEdit?: boolean
 }) {
@@ -103,7 +103,7 @@ export default function SalaryJonPopup({
                 type='text'
                 className='mt-4 w-full border-b-2 border-gray-300 bg-transparent text-gray-800 placeholder-gray-500 font-medium focus:border-gray-500 focus:outline-none'
                 placeholder='Nhập mức lương tối đa'
-                value={salaryMax}
+                value={salaryMax === null ? '' : salaryMax}
                 onChange={(e) => {
                   const value = e.target.value
                   setSalaryMax(value === '' ? 0 : parseInt(value) || 0)

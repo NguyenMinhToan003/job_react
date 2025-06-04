@@ -1,31 +1,38 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getBenefit } from '@/apis/benefitAPI';
+import { getAllEducations } from '@/apis/educationAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
 import { createJob } from '@/apis/jobAPI';
+import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 
-import BenefitJobPopup from '@/components/elements/popup/BenefitJobPopup';
-import DetailJobPopup from '@/components/elements/popup/DetailJobPopup';
-import ExperienceJonPopup from '@/components/elements/popup/ExperienceJobPopup';
-import LevelJobPopup from '@/components/elements/popup/LevelJobPopup';
-import LocationJobPopup from '@/components/elements/popup/LocationPopup';
-import NameJobPopup from '@/components/elements/popup/NameJobPopup copy';
-import QuantityJobPopup from '@/components/elements/popup/QuantityJobPopup';
-import RequirementPopup from '@/components/elements/popup/RequirementPopup';
-import SalaryJonPopup from '@/components/elements/popup/SalaryJobPopup';
-import SkillJobPopup from '@/components/elements/popup/SkillJobPopup';
-import TypeJobPopup from '@/components/elements/popup/TypeJobPopup';
+import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
+import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
+import EducationJobPopup from '@/components/elements/job/popup/EducationJobPopup';
+import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
+import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
+import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
+import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
+import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
+import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
+import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
+import SalaryJonPopup from '@/components/elements/job/popup/SalaryJobPopup';
+import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
+import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Benefit } from '@/types/benefitType';
+import { Education } from '@/types/educationType';
 import { Experience } from '@/types/experienceType';
+import { Language, LanguageJob } from '@/types/LanguageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
-import { Skill } from '@/types/skillType';
-import { TypeJob } from '@/types/typeJobType';
+import { Skill } from '@/types/SkillType';
+import { TypeJob } from '@/types/TypeJobType';
 import { CirclePlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -41,8 +48,8 @@ export default function CreateJob() {
   const [experienceId, setExperienceId] = useState<number>(1)
   const [benefitList, setBenefitList] = useState<Benefit[]>([])
   const [benefitIds, setBenefitIds] = useState<string[]>([])
-  const [salaryMin, setSalaryMin] = useState<number>(0)
-  const [salaryMax, setSalaryMax] = useState<number>(0)
+  const [salaryMin, setSalaryMin] = useState<number | null>(null)
+  const [salaryMax, setSalaryMax] = useState<number | null>(null)
   const [checkField, setCheckField] = useState(0)
   const [typeJobList, setTypeJobList] = useState<TypeJob[]>([])
   const [typeJobId, setTypeJobId] = useState<number[]>([])
@@ -50,6 +57,11 @@ export default function CreateJob() {
   const [locationList, setLocationList] = useState<LocationResponse[]>([]);
   const [skillList, setSkillList] = useState<Skill[]>([])
   const [skillId, setSkillId] = useState<number[]>([])
+  const [educationList, setEducationList] = useState<Education[]>([]);
+  const [selectedEducation, setSelectedEducation] = useState<number>();
+
+  const [languageList, setLanguageList] = useState<Language[]>([]);
+  const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
 
   const handleCreateJob = async () => {
     try {
@@ -66,6 +78,8 @@ export default function CreateJob() {
         locations: locationIds,
         minSalary: salaryMin,
         maxSalary: salaryMax,
+        education: selectedEducation,
+        languages: languageIds,
       })
       toast.success('Tin tuyển dụng đã được tạo thành công');
     }
@@ -74,63 +88,34 @@ export default function CreateJob() {
       toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tạo tin tuyển dụng');
     }
   }
-
-  const fetchLevelList = async () => {
+  const fetchListElements = async () => {
     try {
-      const response = await getLevelList();
-      setLevelList(response);
-    } catch (error) {
-      console.error('Error fetching level list:', error);
+      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages] = await Promise.all([
+        getBenefit(),
+        getLevelList(),
+        getExperienceList(),
+        getTypeJobList(),
+        getLocationByCompanyAPI(),
+        getSkillList(),
+        getAllEducations(),
+        getAllLanguages(),
+      ]);
+      setBenefitList(benefits);
+      setLevelList(levels);
+      setExperienceList(experiences);
+      setTypeJobList(typeJobs);
+      setLocationList(locations);
+      setSkillList(skills);
+      setEducationList(educations);
+      setLanguageList(languages);
     }
-  }
-  const fetchExperienceList = async () => {
-    try {
-      const response = await getExperienceList();
-      setExperienceList(response);
-    } catch (error) {
-      console.error('Error fetching experience list:', error);
-    }
-  }
-  const fetchBenefitList = async () => {
-    try {
-      const response = await getBenefit();
-      setBenefitList(response);
-    } catch (error) {
-      console.error('Error fetching benefit list:', error);
-    }
-  }
-  const fetchTypeJobList = async () => {
-    try {
-      const response = await getTypeJobList();
-      setTypeJobList(response);
-    } catch (error) {
-      console.error('Error fetching type job list:', error);
-    }
-  }
-  const fetchLocationList = async () => {
-    try {
-      const response = await getLocationByCompanyAPI();
-      setLocationList(response);
-    } catch (error) {
-      console.error('Error fetching location list:', error);
-    }
-  }
-  const fetchSkillList = async () => {
-    try {
-      const response = await getSkillList()
-      setSkillList(response);
-    } catch (error) {
-      console.error('Error fetching skill list:', error);
+    catch (error : any) {
+      toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tải dữ liệu');
     }
   }
 
   useEffect(() => {
-    fetchLevelList();
-    fetchExperienceList();
-    fetchBenefitList();
-    fetchTypeJobList();
-    fetchLocationList();
-    fetchSkillList();
+    fetchListElements()
   }, [])
   
   useEffect(() => {
@@ -183,6 +168,16 @@ export default function CreateJob() {
             <RequirementPopup
               requirement={requirement}
               setRequirement={setRequirement}
+            />
+            <EducationJobPopup
+              educationList={educationList}
+              setEducationId={setSelectedEducation}
+              educationId={selectedEducation}
+            />
+            <LanguageJobPopup
+              languageList={languageList}
+              languageIds={languageIds}
+              setLanguageIds={setLanguageIds}
             />
             <LevelJobPopup
               levelList={levelList}

@@ -6,7 +6,7 @@ import {
   deleteSkill,
   getSkillByAdmin,
 } from '@/apis/skillAPI';
-import { Skill, SkillCreateRequest, SkillUpdateRequest } from '@/types/skillType';
+import { Skill, SkillCreateRequest, SkillUpdateRequest } from '@/types/SkillType';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -14,8 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';  // <-- import Switch
+import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 
 export default function SkillPage() {
@@ -24,8 +23,7 @@ export default function SkillPage() {
   const [isEdit, setIsEdit] = useState(false);
   const [form, setForm] = useState<SkillCreateRequest | SkillUpdateRequest>({
     name: '',
-    description: '',
-    status: 1,  // thêm default trạng thái bật (1)
+    status: 1,
   });
   const [editingId, setEditingId] = useState<number>(-1);
 
@@ -76,7 +74,6 @@ export default function SkillPage() {
     setIsEdit(true);
     setForm({
       name: skill.name,
-      description: skill.description,
       status: skill.status,
     });
     setEditingId(skill.id);
@@ -86,7 +83,7 @@ export default function SkillPage() {
   const resetForm = () => {
     setIsEdit(false);
     setEditingId(-1);
-    setForm({ name: '', description: '', status: 1 }); // reset trạng thái về 1
+    setForm({ name: '', status: 1 }); // reset trạng thái về 1
   };
 
   // Hàm cập nhật trạng thái nhanh khi bật/tắt Switch trong bảng
@@ -120,15 +117,11 @@ export default function SkillPage() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
-                <Textarea
-                  placeholder='Mô tả kỹ năng'
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                />
+
                 <div className="flex items-center gap-2">
                   <span>Trạng thái:</span>
                   <Switch
-                    checked={form.status === 1}
+                    checked={form?.status === 1}
                     onCheckedChange={(checked) => setForm({ ...form, status: checked ? 1 : 0 })}
                   />
                 </div>
@@ -146,7 +139,6 @@ export default function SkillPage() {
               <TableRow>
                 <TableHead className='w-[100px]'>ID</TableHead>
                 <TableHead>Tên kỹ năng</TableHead>
-                <TableHead>Mô tả</TableHead>
                 <TableHead className='w-[100px] text-center'>Trạng thái</TableHead>
                 <TableHead className='w-[160px]'>Thao tác</TableHead>
               </TableRow>
@@ -156,7 +148,6 @@ export default function SkillPage() {
                 <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.description}</TableCell>
                   <TableCell className='text-center'>
                     <Switch
                       checked={item.status === 1}

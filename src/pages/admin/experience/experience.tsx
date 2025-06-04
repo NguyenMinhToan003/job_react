@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch'; // <-- giả sử bạn có component Switch
 
@@ -24,7 +23,6 @@ export default function ExperiencePage() {
   const [isEdit, setIsEdit] = useState(false);
   const [form, setForm] = useState<CreateExperienceDto | UpdateExperienceDto>({
     name: '',
-    description: '',
     status: 1, // thêm trường trạng thái
   });
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -73,14 +71,14 @@ export default function ExperiencePage() {
   const handleEdit = (item: Experience) => {
     setIsEdit(true);
     setEditingId(item.id);
-    setForm({ name: item.name, description: item.description, status: item.status });
+    setForm({ name: item.name, status: item.status });
     setOpen(true);
   };
 
   const resetForm = () => {
     setIsEdit(false);
     setEditingId(null);
-    setForm({ name: '', description: '', status: 1 });
+    setForm({ name: '', status: 1 });
   };
   const toggleStatus = async (id: number, data: UpdateExperienceDto) => {
     try {
@@ -113,11 +111,6 @@ export default function ExperiencePage() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
-                <Textarea
-                  placeholder='Mô tả kinh nghiệm'
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                />
                 <div className='flex items-center space-x-2'>
                   <Switch
                     checked={form.status === 1}
@@ -139,7 +132,6 @@ export default function ExperiencePage() {
               <TableRow>
                 <TableHead className='w-[100px]'>ID</TableHead>
                 <TableHead>Tên kinh nghiệm</TableHead>
-                <TableHead>Mô tả</TableHead>
                 <TableHead>Trạng thái</TableHead> {/* Thêm cột trạng thái */}
                 <TableHead className='w-[160px]'>Thao tác</TableHead>
               </TableRow>
@@ -149,7 +141,6 @@ export default function ExperiencePage() {
                 <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.description}</TableCell>
                   <TableCell>
                     <Switch
                       checked={item.status === 1}

@@ -6,7 +6,7 @@ export interface Cv {
   name: string;
   url: string;
   typeFile: string;
-  updatedAt: Date;
+  updatedAt: string;
 }
 
 export interface CvResponse {
@@ -15,6 +15,6 @@ export interface CvResponse {
   name: string;
   url: string;
   typeFile: string;
-  updatedAt: Date;
+  updatedAt: string;
   candidate: Candidate;
 }

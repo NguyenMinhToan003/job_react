@@ -108,7 +108,7 @@ export default function Overview() {
           </CardContent>
         ) : (
           <CardContent className='flex items-center gap-4'>
-            <Card className='border border-red-500 shadow bg-red-50'>
+            <Card className=' border-red-500 shadow bg-red-50'>
               <CardContent className='flex items-center gap-4'>
                 <FileText className='text-red-600' size={24} />
                 <div className='flex flex-col gap-2 '>
