@@ -1,11 +1,13 @@
-import { getApplyByStatus, getApplyJobs } from "@/apis/applyJobAPI";
+import { getApplyByStatus, unApplyJob } from "@/apis/applyJobAPI";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ApplyJobResponse } from "@/types/applyJobType";
 import { APPLY_JOB_STATUS } from "@/types/type";
+import { convertDateToString } from "@/utils/dateTime";
 import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function ApplyJob() {
   const navigate = useNavigate();
@@ -22,13 +24,23 @@ export default function ApplyJob() {
   useEffect(() => {
     fetchApplyJobs();
   }, [])
+
+  const handleUnApplyJob = async (jobId: number) => {
+    try {
+      await unApplyJob(jobId);
+      toast.success("Hủy ứng tuyển thành công");
+    }
+    catch (error) {
+      toast.error(error.response?.data?.message || "Lỗi không xác định");
+    }
+  }
   return <>
     {
       applyJobs.map((applyJob) => (
         <Card className="rounded-none shadow-none hover:shadow-2xl" key={applyJob.id}>
           <CardContent className="flex items-start justify-start gap-2">
           <div className='bg-white rounded-none w-18 h-18 flex items-center justify-center border border-gray-200'>
-            <img src={applyJob.job.employer?.logo} alt='CBTW Logo' className='w-full h-full' />
+            <img src={applyJob.job.employer?.logo} className='w-full h-full' />
             </div>
             <div className="flex-1 flex-col gap-1">
               <div
@@ -38,22 +50,20 @@ export default function ApplyJob() {
               <div className='text-[12px] text-gray-500 font-semibold hover:underline'>{applyJob?.job?.locations[0]?.district?.city?.name}</div>
               <div className="text-green-600 font-semibold text-sm">
                 {applyJob?.job?.maxSalary === applyJob?.job?.minSalary && applyJob?.job?.maxSalary === null ? (
-                  <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
+                  <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
                 ) : (
-                  <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/> <span>Từ {applyJob?.job?.minSalary} đến {applyJob?.job?.maxSalary}</span></div>
+                  <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4"/> <span>Từ {applyJob?.job?.minSalary} đến {applyJob?.job?.maxSalary}</span></div>
                 )}
               </div>
               
             </div>
             <div className="flex flex-col items-end justify-start gap-2">
               <span className='text-[12px] text-gray-400 font-semibold'>Đã ứng tuyển vào {
-                new Date(applyJob.time).toLocaleDateString('vi-VN', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })
+                convertDateToString(applyJob.time)
               }</span>
-              <Button variant={'destructive'}>
+              <Button variant={'destructive'}
+                className="w-full"
+                onClick={() => handleUnApplyJob(applyJob.job.id)}>
                 {
                   applyJob.status
                 }

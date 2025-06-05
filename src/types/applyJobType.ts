@@ -3,7 +3,7 @@ import { JobResponse } from "./jobType";
 import { ResumeVersion } from "./resumeType";
 
 export interface CreateApplyRequest {
-  cvId: number;
+  resumeId : number;
   note: string;
   username: string;
   phone: string;
@@ -29,5 +29,6 @@ export interface ApplyJobResponse {
   job: JobResponse;
   cv: CvResponse;
   time: string;
-  resumeVer: ResumeVersion;
+  resumeVersion: ResumeVersion;
+  matchingScore: number;
 }

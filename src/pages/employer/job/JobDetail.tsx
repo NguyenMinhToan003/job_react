@@ -76,9 +76,10 @@ export default function JobDetailCompany() {
           <Table className="min-w-[1000px] text-sm">
             <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[200px]">Độ phù hợp</TableHead>
                 <TableHead>Ứng viên</TableHead>
                     <TableHead>Ghi chú</TableHead>
-                    <TableHead>?.resumeVer</TableHead>
+                    <TableHead>Hồ sơ</TableHead>
                 <TableHead>Thời gian nộp</TableHead>
                 <TableHead>Trạng thái</TableHead>
               </TableRow>
@@ -86,20 +87,24 @@ export default function JobDetailCompany() {
             <TableBody>
               {list.map((item) => (
                 <TableRow key={item.id}>
-                  
+                  <TableCell>
+                    <Badge >
+                      {item.matchingScore.toFixed(2)}%
+                    </Badge>
+                  </TableCell>
                   <TableCell className="flex items-center gap-2">
                     <Avatar>
                       <AvatarImage
-                        src={item?.resumeVer?.imageResume}
+                        src={item?.resumeVersion.avatar}
                       />
                     </Avatar>
-                    <span className="font-medium">{item?.resumeVer?.userName}</span>
+                    <span className="font-medium">{item?.resumeVersion.username}</span>
                   </TableCell>
                   <TableCell>
                     <Button
                       variant="link"
                       onClick={() => {
-                        window.open(item?.resumeVer?.url, "_blank");
+                        window.open(item?.resumeVersion.url, "_blank");
                       }}
                     >
                       Xem Cv

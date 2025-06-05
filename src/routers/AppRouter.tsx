@@ -34,7 +34,8 @@ import EmployerNotification from '@/pages/employer/notification/Noti';
 import RegisterCandidate from '@/pages/auth/RegisterCandidate';
 import UpdateInfoCandidate from '@/pages/candidate/dashboard/UpdateInfo';
 import RegisterEmployer from '@/pages/auth/RegisterEmployer';
-import Resume from '@/pages/candidate/dashboard/Resume';
+import ListResume from '@/pages/candidate/dashboard/resume/ListResume';
+import Resume from '@/pages/candidate/dashboard/resume/Resume';
 
 export default function AppRouter() {
   const { updateDataUser } = useAccount()
@@ -58,7 +59,8 @@ export default function AppRouter() {
           <Route path='tin-nhan' element={<Overview />} />
           <Route path='thong-bao' element={<Overview />} />
           <Route path='cai-dat' element={<Overview />} />
-          <Route path='ho-so' element={<Resume />} />
+          <Route path='ho-so' element={<ListResume />} />
+          <Route path='ho-so/:resumeId' element={<Resume />} />
         </Route>
         <Route path='/nha-tuyen-dung/:id'>
           <Route index element={<CompanyPage />} />

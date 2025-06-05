@@ -25,3 +25,8 @@ export const applyJobWithNewCv = async (jobId: number, data: CreateApplyRequest,
   const response = await axiosInstance.post(`/apply-job/apply-new-cv/${jobId}`, formData);
   return response.data;
 }
+
+export const unApplyJob = async (jobId: number) => {
+  const response = await axiosInstance.post(`/apply-job/un-apply/${jobId}`);
+  return response.data;
+}

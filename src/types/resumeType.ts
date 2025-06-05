@@ -7,19 +7,21 @@ import { TypeJob } from "./TypeJobType";
 
 export interface Resume {
   id: number;
-  resumeName: string;
-  candidateId: number;
   resumeVers: ResumeVersion[];
+  name: string;
+  updatedAt: string;
 }
 
 export interface ResumeVersion {
   id: number;
-  imageResume: string;
-  userName: string;
+  avatar: string;
+  username: string;
   dateOfBirth: string;
-  phoneNumber: string;
+  gender: string;
+  location: string;
+  phone: string;
   email: string;
-  career: string;
+  about: string;
   expectedSalaryMin: number;
   expectedSalaryMax: number;
   status: number;
@@ -32,5 +34,5 @@ export interface ResumeVersion {
   desiredLevel: Level;
   typeJob: TypeJob;
   district: DistrictResponse;
-  languages: Language[];
+  languageResumes: Language[];
 }

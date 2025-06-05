@@ -11,11 +11,11 @@ export default function InfoResume({resumeVer}: { resumeVer: ResumeVersion}) {
         <div className='flex items-start justify-between gap-4'>
           <div className='flex items-start gap-4'>
             <Avatar className='w-18 h-18'>
-              <AvatarImage src={resumeVer.imageResume} alt={resumeVer.userName} />
+              <AvatarImage src={resumeVer.avatar} alt={resumeVer.username} />
             </Avatar>
             <div>
               <h1 className='text-xl font-bold text-black mb-1'>
-                {resumeVer.userName}
+                {resumeVer.username}
               </h1>
               <p className='text-gray-600 text-sm'>it</p>
             </div>
@@ -41,7 +41,7 @@ export default function InfoResume({resumeVer}: { resumeVer: ResumeVersion}) {
           <div className='flex items-center gap-2'>
             <Phone className='w-4 h-4 text-gray-400' />
             <span className='text-gray-700'>
-              {resumeVer.phoneNumber || 'chua co so dien thoai'}
+              {resumeVer.phone || 'chua co so dien thoai'}
             </span>
           </div>
           <div className='flex items-center gap-2'>

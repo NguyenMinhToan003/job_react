@@ -1,37 +1,35 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { ArrowUpFromLine, ChevronLeft, Eye } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { JobFilterResponse } from '@/types/jobType';
 import { filterJob } from '@/apis/jobAPI';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Cv } from '@/types/cvType';
 import { getCvMe } from '@/apis/cvAPI';
-import { applyJob, applyJobWithNewCv } from '@/apis/applyJobAPI';
-import dayjs from 'dayjs';
 import { useAccount } from '@/providers/UserProvider';
 import { updateInfoCandidate } from '@/apis/userAPI';
 import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';
 import { NOTI_TYPE } from '@/types/type';
 import { Resume } from '@/types/resumeType';
 import { getAllResumeAPI } from '@/apis/resumeAPI';
+import { applyJob } from '@/apis/applyJobAPI';
+import { convertDateToString } from '@/utils/dateTime';
 
 export default function JobApplicationForm() {
   const { jobId } = useParams();
   const { dataUser, updateDataUser } = useAccount()
-  const [cvOption, setCvOption] = useState('current');
+  const [cvOption, setCvOption] = useState<string| null>(null);
   const [job, setJob] = useState<JobFilterResponse>();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [note, setNote] = useState('');
-  const [cv, setCv] = useState<Cv>({} as Cv);
-  const [fileCVnew, setFileCVnew] = useState<File | null>(null);
   const [resumes, setResumes] = useState<Resume[]>([]);
 
   const fetchJob = async () => {
@@ -40,18 +38,6 @@ export default function JobApplicationForm() {
       setJob(response.data[0]);
     } catch (error) {
       toast.error('Có lỗi xảy ra khi tải thông tin công việc');
-    }
-  };
-
-  const fetchCv = async () => {
-    try {
-      const response = await getCvMe();
-      if (response.length > 0) {
-        setCv(response[0]);
-      }
-    } catch (error) {
-      toast.error('Có lỗi xảy ra khi tải thông tin CV');
-      setCvOption('new');
     }
   };
 
@@ -71,81 +57,34 @@ export default function JobApplicationForm() {
       const response = await getAllResumeAPI()
       setResumes(response);
     }
-    catch (error){
+    catch (error: any){
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi tải thông tin CV');
     }
   }
   
   useEffect(() => {
-    fetchCv();
     fetchResume();
   }, []);
 
-  const handleChangeOptionCv = (value: string) => {
-    if (!cv && value === 'current') {
-      toast.error('Bạn chưa có CV nào, vui lòng tải lên CV mới');
-      setCvOption('new');
-      return;
-    }
-    setCvOption(value);
-  };
-
   const handleApplyJob = async () => {
-    if (cvOption === 'current' && !cv) {
-      toast.error('Không tìm thấy CV hiện tại');
-      return;
-    }
-  
-    if (cvOption.startsWith('resume-')) {
-      const resumeId = Number(cvOption.split('-')[1]);
-      if (!resumeId) {
-        toast.error('CV không hợp lệ');
-        return;
-      }
-    }
-  
     try {
       await updateInfoCandidate({
         name,
         phone
       });
       updateDataUser();
-  
-      if (cvOption === 'new') {
-        if (!fileCVnew) {
-          toast.error('Vui lòng tải lên CV mới');
-          return;
+      await applyJob(
+        Number(jobId),
+        {
+          resumeId: Number(cvOption),
+          note,
+          username: name,
+          phone,
         }
-        await applyJobWithNewCv(
-          Number(jobId),
-          {
-            username: name,
-            phone,
-            note,
-            cvId: -1
-          },
-          fileCVnew
-        );
-        toast.success('Ứng tuyển thành công');
-        return;
-      }
+      )
+
   
-      // Trường hợp chọn current hoặc resume từ danh sách
-      let resumeIdToSend = -1;
-      if (cvOption === 'current') {
-        resumeIdToSend = cv.id;
-      } else if (cvOption.startsWith('resume-')) {
-        resumeIdToSend = Number(cvOption.split('-')[1]);
-      }
-  
-      await applyJob(Number(jobId), {
-        resumeId: resumeIdToSend,
-        note,
-        username: name,
-        phone
-      });
-  
-      await createEmployerNotiAPI({
+      createEmployerNotiAPI({
         content: `Đơn ứng tuyển công việc "${job?.name}" của ${name}.`,
         title: 'Có đơn ứng tuyển mới',
         receiverAccountId: job?.employer.id || -1,
@@ -154,6 +93,7 @@ export default function JobApplicationForm() {
       });
   
       toast.success('Ứng tuyển thành công');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi khi ứng tuyển');
     }
@@ -181,53 +121,22 @@ export default function JobApplicationForm() {
         <CardContent className='space-y-6'>
           <div>
             <Label className='text-lg font-bold text-red-600 '>CV ứng tuyển *</Label>
-            <RadioGroup value={cvOption} onValueChange={handleChangeOptionCv} className='mt-3 space-y-3'>
-              <Label htmlFor='current' className='block'>
-                <Card
-                  className={`rounded-sm cursor-pointer border transition shadow-none ${
-                    cvOption === 'current' ? 'border-red-500 bg-red-50' : 'border-gray-200'
-                  }`}
-                >
-                  <CardContent className='flex items-start justify-between'>
-                    <div className='flex items-start'>
-                      <RadioGroupItem value='current' id='current' className='mr-3' />
-                      <div>
-                        {cv ? (
-                          <>
-                            <p className='text-sm font-semibold'>Sử dụng CV hiện tại</p>
-                            <div
-                              className='flex items-center gap-1 hover:underline w-fit text-sm p-1 text-blue-600'
-                              onClick={() => window.open(cv.url)}
-                            >
-                              <span>{cv.name}</span>
-                              <Eye className='w-4 h-4 ml-1' />
-                            </div>
-                            <p className='text-sx text-gray-400 font-normal px-1'>
-                              Cập nhật vào ngày {dayjs(cv.updatedAt).format('DD/MM/YYYY')}
-                            </p>
-                          </>
-                        ) : (
-                          <p className='text-sm font-semibold'>Chưa có CV nào</p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Label>
+            <RadioGroup value={cvOption} onValueChange={
+              (value) => setCvOption(value.toString())} className='mt-3 space-y-3'>
               {
                 resumes.length > 0 && resumes.map((resume) => (
-                  <Label key={resume.id} htmlFor={`resume-${resume.id}`} className='block'>
+                  <Label key={resume.id} htmlFor={`${resume.id}`} className='block'>
                     <Card
-                      className={`rounded-sm cursor-pointer border transition shadow-none ${
-                        cvOption === `resume-${resume.id}` ? 'border-red-500 bg-red-50' : 'border-gray-200'
+                      className={`rounded-sm cursor-pointer border-2 transition shadow-none ${
+                        cvOption === `${resume.id}` ? 'border-red-500 bg-red-50' : 'border-gray-200'
                       }`}
                     >
                       <CardContent className='flex items-start justify-between'>
                         <div className='flex items-start'>
-                          <RadioGroupItem value={`resume-${resume.id}`} id={`resume-${resume.id}`} className='mr-3'  />
-                          <div>
-                            <p className='text-sm font-semibold'>Sử dụng hồ sơ của trang web</p>
-                            <p className='text-sm font-semibold'>{resume.resumeName}</p>
+                          <RadioGroupItem value={`${resume.id}`} id={`${resume.id}`} className='mr-3'  />
+                          <div className='flex flex-col gap-2'>
+                            <p className='text-xl font-semibold'>{resume.name}</p>
+                            <p className='text-blue-600 font-semibold'>Cập nhật lần cuối {convertDateToString(resume.updatedAt)}</p>
                           </div>
                         </div>
                       </CardContent>
@@ -235,40 +144,6 @@ export default function JobApplicationForm() {
                   </Label>
                 ))
               }
-
-              <Label htmlFor='new' className='block'>
-                <Card
-                  className={`rounded-sm cursor-pointer border transition shadow-none ${
-                    cvOption === 'new' ? 'border-red-500 bg-red-50' : 'border-gray-200'
-                  }`}
-                >
-                  <CardContent className='flex items-start justify-between'>
-                    <div className='flex items-start'>
-                      <RadioGroupItem value='new' id='new' className='mr-3' />
-                      <div>
-                        <p className='text-sm font-semibold'>Tải lên CV mới</p>
-                        <p className='text-xs text-gray-500'>Tạo mới từ mẫu</p>
-                      </div>
-                    </div>
-                    <Button variant='secondary' size='sm' className='border border-red-600 text-red-600'>
-                      <ArrowUpFromLine className='w-4 h-4 mr-1' />
-                      <Label
-                        htmlFor='cv-upload'
-                        className='cursor-pointer text-sm font-semibold text-red-600'
-                      >Tải lên CV</Label>
-                        <input
-                          id='cv-upload'
-                          type='file'
-                          className='hidden'
-                          onChange={e => {
-                            const file = e.target.files?.[0];
-                            if (file) setFileCVnew(file);
-                          }}
-                        />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </Label>
             </RadioGroup>
           </div>
 
