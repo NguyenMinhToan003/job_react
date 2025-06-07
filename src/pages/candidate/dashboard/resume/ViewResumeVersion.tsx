@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { viewResumeAPI } from '@/apis/resumeAPI';
+import { getResumeVersionsByIdAPI, viewResumeAPI } from '@/apis/resumeAPI';
 import AboutMeResume from '@/components/elements/resume/popup/AboutMeResume';
 import EdicationResume from '@/components/elements/resume/popup/EducationResume';
 import InfoResume from '@/components/elements/resume/popup/InfoResume';
@@ -11,13 +11,13 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-export default function Resume() {
+export default function ViewResumeVersion() {
   const [resume, setResume] = useState<ResumeVersion>();
-  const { resumeId } = useParams<{ resumeId: string }>();
+  const { resumeVerId } = useParams<{ resumeVerId: string }>();
 
   const fetchResume = async () => {
     try {
-      const response = await viewResumeAPI(Number(resumeId));
+      const response = await getResumeVersionsByIdAPI(Number(resumeVerId));
       setResume(response);
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +27,7 @@ export default function Resume() {
   }
 
   useEffect(() => {
-    if (resumeId) {
+    if (resumeVerId) {
       fetchResume();
     }
   }, [])
@@ -36,7 +36,7 @@ export default function Resume() {
     return <div>Loading...</div>;
   }
   return (
-    <div className='space-y-4'>
+    <div className='space-y-4 w-5xl'>
       <InfoResume
         resumeVer={resume}
       />

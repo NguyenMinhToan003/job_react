@@ -5,3 +5,7 @@ export interface MajorResponse {
   name: string;
   skills: Skill[];
 }
+export interface Major{
+  id: number;
+  name: string;
+}

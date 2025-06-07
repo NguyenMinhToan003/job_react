@@ -187,7 +187,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
                       <Badge
                         key={index}
                         variant='outline'
-                        className='text-xs font-normal px-3 py-1 rounded-full border border-gray-300 text-gray-700 hover:border-black transition-colors duration-200'
+                        className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold'
                       >
                         {skill.name}
                       </Badge>

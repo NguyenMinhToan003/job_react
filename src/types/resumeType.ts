@@ -1,7 +1,8 @@
 import { Education } from "./educationType";
-import { Language } from "./LanguageType";
+import { LanguageResume } from "./LanguageType";
 import { Level } from "./levelType";
 import { DistrictResponse } from "./location";
+import { Major } from "./majorType";
 import { Skill } from "./SkillType";
 import { TypeJob } from "./TypeJobType";
 
@@ -34,5 +35,29 @@ export interface ResumeVersion {
   desiredLevel: Level;
   typeJob: TypeJob;
   district: DistrictResponse;
-  languageResumes: Language[];
+  languageResumes: LanguageResume[];
+  majors: Major[];
+}
+
+export interface CreateResumeVersionDto {
+  username: string;
+  phone: string;
+  gender: string;
+  location: string;
+  dateOfBirth: string;
+  about: string;
+  languageResumes: { languageId: number; level: number }[];
+  education: number;
+  level: number;
+  district: string;
+  email: string;
+  name: string;
+  skills: number[];
+  avatar?: File | string;
+  majors?: number[];
+}
+export interface EducationResume {
+  educationId: number;
+  schoolName: string;
+  major: string;
 }

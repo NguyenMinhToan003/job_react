@@ -13,6 +13,7 @@ import {
   Settings,
   User,
   Inbox,
+  InfoIcon,
 } from 'lucide-react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAccount } from '@/providers/UserProvider';
@@ -20,6 +21,7 @@ import { useAccount } from '@/providers/UserProvider';
 const userMenuItems = [
   { label: 'Tổng quan', icon: <LayoutDashboard className='w-6 h-6' />, path: '' },
   { label: 'Hồ sơ', icon: <User className='w-6 h-6' />, path: 'ho-so' },
+  { label: 'Tạo hồ sơ', icon: <InfoIcon className='w-6 h-6' />, path: 'tao-ho-so' },
   { label: 'Việc làm của tôi', icon: <Briefcase className='w-6 h-6' />, path: 'viec-lam' },
   { label: 'Tin nhắn', icon: <Inbox className='w-6 h-6' />, path: 'tin-nhan' },
   { label: 'Thông báo', icon: <Mail className='w-6 h-6' />, path: 'thong-bao' },

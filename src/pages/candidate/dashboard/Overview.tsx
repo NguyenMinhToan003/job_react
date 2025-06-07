@@ -87,7 +87,7 @@ export default function Overview() {
               <p className='text-sm text-muted-foreground'>{dataUser?.account.email}</p>
             </Button>
             <Button variant='ghost' className='mt-2 flex items-center gap-2'
-              onClick={() => navigate('/tong-quat-ho-so/cap-nhat-thong-tin')}>s
+              onClick={() => navigate('/tong-quat-ho-so/cap-nhat-thong-tin')}>
               <ChevronRight className='text-blue-600' />
               <p className='text-sm text-blue-600'>Cập nhật hồ sơ</p>
             </Button>

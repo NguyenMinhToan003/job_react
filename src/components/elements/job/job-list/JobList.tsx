@@ -92,12 +92,12 @@ export default function JobList({
         <div className='flex flex-wrap gap-1'>
           {job.skills.slice(0, 4).map((skill, idx) => (
             <Badge
-              key={idx}
-              variant='outline'
-              className='text-xs font-normal px-3 py-1 rounded-full border border-gray-300 text-gray-700 hover:border-black transition-colors duration-200'
-            >
-              {skill.name}
-            </Badge>
+            variant={'outline'}  
+            key={idx}
+            className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold'
+          >
+            {skill.name}
+          </Badge>
           ))}
           {job.skills.length > 4 && (
             <Badge

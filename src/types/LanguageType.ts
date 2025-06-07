@@ -6,3 +6,9 @@ export interface LanguageJob {
   languageId: number;
   level: number;
 }
+export interface LanguageResume {
+  id?: number;
+  level: number;
+  language: Language;
+  languageId: number;
+}

@@ -104,7 +104,7 @@ export default function JobDetailCompany() {
                     <Button
                       variant="link"
                       onClick={() => {
-                        window.open(item?.resumeVersion.url, "_blank");
+                        window.open(`/danh-cho-nha-tuyen-dung/xem-ho-so/${item.resumeVersion.id}`, "_blank");
                       }}
                     >
                       Xem Cv

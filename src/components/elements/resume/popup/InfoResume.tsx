@@ -1,71 +1,67 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ResumeVersion } from '@/types/resumeType';
 import { convertDateToString } from '@/utils/dateTime';
 import { Calendar, Edit, Globe, Mail, MapPin, Phone, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-export default function InfoResume({resumeVer}: { resumeVer: ResumeVersion}) {
+export default function InfoResume({ resumeVer }: { resumeVer: ResumeVersion }) {
+  const navigate = useNavigate()
   return (
-    <Card className='p-2 shadow-xl' >
-      <CardHeader className='p-2'>
-        <div className='flex items-start justify-between gap-4'>
-          <div className='flex items-start gap-4'>
-            <Avatar className='w-18 h-18'>
-              <AvatarImage src={resumeVer.avatar} alt={resumeVer.username} />
-            </Avatar>
-            <div>
-              <h1 className='text-xl font-bold text-black mb-1'>
-                {resumeVer.username}
-              </h1>
-              <p className='text-gray-600 text-sm'>it</p>
+    <>
+      <Card className='p-2'>
+        <CardHeader className='p-2'>
+          <div className='flex items-start justify-between gap-4'>
+            <div className='flex items-start gap-4'>
+              <Avatar className='w-20 h-20'>
+                <AvatarImage src={resumeVer.avatar} />
+              </Avatar>
+              <div className='flex flex-col justify-between items-start gap-1'>
+                <h1 className='font-extrabold text-2xl'>{resumeVer.username}</h1>
+                <p className='font-bold text-gray-700 text-sm'>
+                  {resumeVer.resume.name}
+                </p>
+              </div>
+            </div>
+            <div className='flex items-center gap-2 mt-2'>
+              <Edit onClick={() => navigate(`/tong-quat-ho-so/chinh-sua-ho-so/${resumeVer.resume.id}`)} className='w-5 h-5 text-red-600 cursor-pointer' />
             </div>
           </div>
-          <div className='flex items-center gap-2 mt-2'>
-            <Edit className='w-4 h-4 text-red-500' />
-            <span className='text-red-500'>Chỉnh sửa</span>
-            <span className='text-gray-400'>|</span>
-            <span className='text-gray-400'>Tải xuống</span>
-            <span className='text-gray-400'>|</span>
-            <span className='text-gray-400'>Xem trước</span>
+        </CardHeader>
+        <CardContent className='space-y-3 pb-4'>
+          <div className='grid grid-cols-2 gap-2 text-sm'>
+            <div className='flex items-center gap-2'>
+              <Mail className='w-4 h-4 text-gray-500' />
+              <span className='font-semibold text-sm text-gray-700'>{resumeVer.email}</span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Phone className='w-4 h-4 text-gray-500' />
+              <span className='font-semibold text-sm text-gray-700'>{resumeVer.phone}</span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Calendar className='w-4 h-4 text-gray-500' />
+              <span className='font-semibold text-sm text-gray-700'>{convertDateToString(resumeVer.dateOfBirth)}</span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <User className='w-4 h-4 text-gray-500' />
+              <span className='font-semibold text-sm text-gray-700'>{resumeVer.gender}</span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <MapPin className='w-4 h-4 text-gray-500' />
+              <span className='font-semibold text-sm text-gray-700'>
+                {resumeVer.district?.name + ', ' + resumeVer.district?.city?.name}
+              </span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Globe className='w-4 h-4 text-gray-500' />
+              <span className='font-semibold text-sm text-gray-700'>
+                {resumeVer.location}
+              </span>
+            </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent className='space-y-3 pb-4'>
-        <div className='grid grid-cols-2 gap-x-8 gap-y-3 text-sm'>
-          <div className='flex items-center gap-2'>
-            <Mail className='w-4 h-4 text-gray-400' />
-            <span className='text-red-500'>
-              {resumeVer.email || 'chua co email'}
-            </span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <Phone className='w-4 h-4 text-gray-400' />
-            <span className='text-gray-700'>
-              {resumeVer.phone || 'chua co so dien thoai'}
-            </span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <Calendar className='w-4 h-4 text-gray-400' />
-            <span className='text-gray-700'>
-              {convertDateToString(resumeVer.dateOfBirth) || 'chua co ngay sinh'}
-            </span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <User className='w-4 h-4 text-gray-400' />
-            <span className='text-gray-700'>Nam</span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <MapPin className='w-4 h-4 text-gray-400' />
-            <span className='text-gray-700'>
-              {resumeVer.district?.name + ', ' + resumeVer.district?.city?.name || 'chua co dia chi'}
-            </span>
-          </div>
-          <div className='flex items-center gap-2'>
-            <Globe className='w-4 h-4 text-gray-400' />
-            <span className='text-red-500'>youtube.com</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
+        </CardContent>
+      </Card>
+    </>
+  );
 }

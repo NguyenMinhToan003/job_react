@@ -36,6 +36,9 @@ import UpdateInfoCandidate from '@/pages/candidate/dashboard/UpdateInfo';
 import RegisterEmployer from '@/pages/auth/RegisterEmployer';
 import ListResume from '@/pages/candidate/dashboard/resume/ListResume';
 import Resume from '@/pages/candidate/dashboard/resume/Resume';
+import FormUpdateResume from '@/pages/candidate/dashboard/resume/FormUpdateResume';
+import FormCreateResume from '@/pages/candidate/dashboard/resume/FormCreateResume';
+import ViewResumeVersion from '@/pages/candidate/dashboard/resume/ViewResumeVersion';
 
 export default function AppRouter() {
   const { updateDataUser } = useAccount()
@@ -53,21 +56,24 @@ export default function AppRouter() {
         <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />
         <Route path='/tong-quat-ho-so' element={<UserDashboard />} >
           <Route index element={<Overview />} />
+          <Route path='tao-ho-so' element={<FormCreateResume />} />
           <Route path='cap-nhat-thong-tin' element={<UpdateInfoCandidate />} />
           <Route path='ca-nhan' element={<Overview />} />
           <Route path='viec-lam' element={<JobForMe />} />
           <Route path='tin-nhan' element={<Overview />} />
           <Route path='thong-bao' element={<Overview />} />
           <Route path='cai-dat' element={<Overview />} />
+          <Route path='chinh-sua-ho-so/:resumeId' element={<FormUpdateResume/>}/>
           <Route path='ho-so' element={<ListResume />} />
           <Route path='ho-so/:resumeId' element={<Resume />} />
+          <Route path='*' element={<Overview />} />
         </Route>
         <Route path='/nha-tuyen-dung/:id'>
           <Route index element={<CompanyPage />} />
         </Route>
         <Route path='cong-viec/:id' element={<JobDetail />} />
       </Route>
-      // admin
+
       <Route path='/admin' element={<IndexAdmin />}>
         <Route index element={<OverViewAdmin />} />
         <Route path='quyen-loi' element={<BenefitPage />} />
@@ -94,6 +100,7 @@ export default function AppRouter() {
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
         <Route path='dang-tin-tuyen-dung' element={<CreateJob />} />
         <Route path='thong-tin-tuyen-dung/:id' element={<ViewJob />} />
+        <Route path='xem-ho-so/:resumeVerId' element={<ViewResumeVersion />} />
         <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
         <Route path='thong-bao' element={<EmployerNotification />} />
         <Route path='*' element={<OverViewCompany />} />
