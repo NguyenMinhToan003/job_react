@@ -25,6 +25,9 @@ import { createResumeAPI } from '@/apis/resumeAPI';
 import { getListMajorAPI } from '@/apis/majorAPI';
 import { Major } from '@/types/majorType';
 import { useAccount } from '@/providers/UserProvider';
+import { TypeJob } from '@/types/TypeJobType';
+import { getTypeJobList } from '@/apis/typeJobAPI';
+import { ResumeVersionExp } from '@/types/resumeType';
 
 export default function FormCreateResume() {
   const { dataUser } = useAccount();
@@ -51,21 +54,27 @@ export default function FormCreateResume() {
   const [avatar, setAvatar] = useState<File | string>('');
   const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
   const [majors, setMajors] = useState<Major[]>([]);
+  const [typeJobs, setTypeJobs] = useState<TypeJob[]>([]);
+  const [selectedResumeVersionExps, setSelectedResumeVersionExps] = useState<ResumeVersionExp[]>([]);
+  const [editResumeVersionExps, setEditResumeVersionExps] = useState<ResumeVersionExp>();
+  const [statusAddResumeVersionExp, setStatusAddResumeVersionExp] = useState<boolean>(false);
 
   const fetchElements = async () => {
       try {
-        const [cityList, skillList, languageList, educationList, majorsList] = await Promise.all([
+        const [cityList, skillList, languageList, educationList, majorsList, typejobList] = await Promise.all([
           getCityList(),
           getSkillList(),
           getAllLanguages(),
           getAllEducations(),
-          getListMajorAPI()
+          getListMajorAPI(),
+          getTypeJobList(),
         ]);
         setCitys(cityList);
         setSkills(skillList);
         setLanguages(languageList);
         setEducations(educationList);
         setMajors(majorsList);
+        setTypeJobs(typejobList);
         setAvatar(dataUser?.avatar || '');
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,6 +99,7 @@ export default function FormCreateResume() {
         name,
         skills: selectedSkills.map(skill => +skill.id),
         level: 1,
+        resumeversionExps: selectedResumeVersionExps,
         languageResumes: selectedLanguage.map(lang => ({
           languageId: lang.language.id,
           level: lang.level,
@@ -254,16 +264,16 @@ export default function FormCreateResume() {
                 />
               </div>
               <div>
- <div>
+              <div>
                 <Label htmlFor='majors' className='text-sm font-semibold'>
                   Chuyên ngành
                 </Label>
               <Select
-                  defaultValue={selectedMajors.length > 0
-                    ? selectedMajors.map(major=>{
+                  defaultValue={selectedMajors?.length > 0
+                    ? selectedMajors?.map(major=>{
                       return <>
                         <span  key={major.id} className='text-sm font-semibold bg-red-50 text-red-700 py-1 px-4 '>
-                          {major.name}
+                          {major?.name}
                         </span>
                       </>;
                     })
@@ -324,7 +334,7 @@ export default function FormCreateResume() {
                 Trình độ học vấn
             </Label>
             <Select
-              value={selectEducation?.name}
+              defaultValue={selectEducation ? selectEducation?.name : 'Chọn trình độ học vấn'}
               onValueChange={(value) => {
                 console.log(value);
                 const select = educations.find(edu => edu.id === +value);
@@ -396,8 +406,33 @@ export default function FormCreateResume() {
                   >
                     + Thêm ngôn ngữ
                   </Badge>
-                </div>
-
+            </div>
+            <div>
+              <Label htmlFor='resume-exp' className='text-sm font-semibold'>
+                Kinh nghiệm làm việc
+              </Label>
+              <Badge
+                onClick={() => setStatusAddResumeVersionExp(!statusAddResumeVersionExp)}
+                variant={'outline'}
+                className='text-sm px-3 py-1 rounded-full border border-red-300 text-red-600 bg-red-100 hover:border-black transition-colors duration-200 font-semibold cursor-pointer'
+              >
+                + Thêm kinh nghiệm
+              </Badge>
+              <Card className='bg-transparent border-red border-1 shadow-none mt-2 p-0'>
+              {
+                selectedResumeVersionExps.length > 0 && selectedResumeVersionExps.map((exp, index) => <>
+                  <CardContent key={index} className='border-b border-gray-200 p-2'>
+                  <div className='text-xl font-bold'>{exp.position}</div>
+                      <div className='text-sm font-semibold'>{exp.companyName}</div>
+                      <div className='text-sm text-gray-600'>
+                        {exp.endTime} - {exp.endTime}
+                      </div>
+                    <div className='text-sm text-gray-600'>{exp.jobDescription}</div>
+                  </CardContent>
+                </>)
+                }
+              </Card>
+            </div>
               </div>
         </div>
         <Button 
@@ -513,6 +548,112 @@ export default function FormCreateResume() {
             Đóng
           </Button>
         </div>
+      </DialogContent>
+    </Dialog>
+    <Dialog open={statusAddResumeVersionExp} onOpenChange={setStatusAddResumeVersionExp}>
+      <DialogContent className='max-w-2xl p-6'>
+        <div className='flex items-center justify-between mb-4'>
+          <h2 className='text-lg font-semibold'>Thêm kinh nghiệm làm việc</h2>
+          <Close onClick={() => setStatusAddResumeVersionExp(false)} className='w-5 h-5 text-gray-500 cursor-pointer' />
+        </div>
+
+        <Label className='text-sm font-semibold'>Chọn loại công việc</Label>
+        <Select
+          onValueChange={(value) => {
+            const selectedTypeJob = typeJobs.find(job => job.id.toString() === value);
+            if (selectedTypeJob) {
+              setEditResumeVersionExps({
+                ...editResumeVersionExps,
+                typeJob: selectedTypeJob,
+              } as ResumeVersionExp);
+            }
+          }}
+          defaultValue={editResumeVersionExps?.typeJob.id.toString() || ''}
+        >
+          <SelectTrigger className='w-full'>
+            <SelectValue placeholder='Chọn loại công việc' />
+          </SelectTrigger>
+          <SelectContent>
+            {typeJobs.map((job) => (
+              <SelectItem key={job.id} value={job.id.toString()}>
+                {job.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Label className='text-sm font-semibold mt-4'>Tên công ty</Label>
+        <Input
+          value={editResumeVersionExps?.companyName || ''}
+          onChange={(e) => {
+            setEditResumeVersionExps({
+              ...editResumeVersionExps,
+              companyName: e.target.value,
+            } as ResumeVersionExp);
+          }}
+          placeholder='Nhập tên công ty'
+        />
+        <Label className='text-sm font-semibold mt-4'>Vị trí công việc</Label>
+        <Input
+          value={editResumeVersionExps?.position || ''}
+          onChange={(e) => {
+            setEditResumeVersionExps({
+              ...editResumeVersionExps,
+              position: e.target.value,
+            } as ResumeVersionExp);
+          }}
+          placeholder='Nhập vị trí công việc'
+        />
+        <Label className='text-sm font-semibold mt-4'>Thời gian làm việc</Label>
+        <div className='grid grid-cols-2 gap-4'>
+          <Input
+            type='date'
+            value={editResumeVersionExps?.startTime || ''}
+            onChange={(e) => {
+              setEditResumeVersionExps({
+                ...editResumeVersionExps,
+                startTime: e.target.value,
+              } as ResumeVersionExp);
+            }}
+            placeholder='Ngày bắt đầu'
+          />
+          <Input
+            type='date'
+            value={editResumeVersionExps?.endTime || ''}
+            onChange={(e) => {
+              setEditResumeVersionExps({
+                ...editResumeVersionExps,
+                endTime: e.target.value,
+              } as ResumeVersionExp);
+            }}
+            placeholder='Ngày kết thúc'
+          />
+        </div>
+        <Label className='text-sm font-semibold mt-4'>Mô tả công việc</Label>
+        <Textarea
+          value={editResumeVersionExps?.jobDescription || ''}
+          onChange={(e) => {
+            setEditResumeVersionExps({
+              ...editResumeVersionExps,
+              jobDescription: e.target.value,
+            });
+          }}
+          placeholder='Nhập mô tả công việc'
+          className='mt-2 min-h-32 h-fit resize-none rounded-sm border-gray-300 focus:ring-none focus:shadow-none'
+        />
+        <Button
+          variant='default'
+          onClick={() => {
+            setStatusAddResumeVersionExp(false);
+            if (editResumeVersionExps) {
+              setSelectedResumeVersionExps([...selectedResumeVersionExps, editResumeVersionExps]);
+              setEditResumeVersionExps(undefined);
+            } else {
+              toast.error('Vui lòng điền đầy đủ thông tin kinh nghiệm làm việc');
+            }
+          }}
+        >
+          Đóng
+        </Button>
       </DialogContent>
     </Dialog>
   </>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getApplyByStatus, unApplyJob } from "@/apis/applyJobAPI";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,7 +31,7 @@ export default function ApplyJob() {
       await unApplyJob(jobId);
       toast.success("Hủy ứng tuyển thành công");
     }
-    catch (error) {
+    catch (error: any) {
       toast.error(error.response?.data?.message || "Lỗi không xác định");
     }
   }
@@ -61,6 +62,13 @@ export default function ApplyJob() {
               <span className='text-[12px] text-gray-400 font-semibold'>Đã ứng tuyển vào {
                 convertDateToString(applyJob.time)
               }</span>
+              {
+               applyJob.viewStatus ? (
+                  <span className='text-[12px] text-green-500 font-semibold'>Đã xem</span>
+                ) : (
+                  <span className='text-[12px] text-gray-500 font-semibold'>Chưa xem</span>
+                )
+              }
               <Button variant={'destructive'}
                 className="w-full"
                 onClick={() => handleUnApplyJob(applyJob.job.id)}>

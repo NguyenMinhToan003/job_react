@@ -6,7 +6,7 @@ import { convertDateToString } from '@/utils/dateTime';
 import { Calendar, Edit, Globe, Mail, MapPin, Phone, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function InfoResume({ resumeVer }: { resumeVer: ResumeVersion }) {
+export default function InfoResume({ resumeVer, onView }: { resumeVer: ResumeVersion, onView?: boolean }) {
   const navigate = useNavigate()
   return (
     <>
@@ -25,7 +25,11 @@ export default function InfoResume({ resumeVer }: { resumeVer: ResumeVersion }) 
               </div>
             </div>
             <div className='flex items-center gap-2 mt-2'>
-              <Edit onClick={() => navigate(`/tong-quat-ho-so/chinh-sua-ho-so/${resumeVer.resume.id}`)} className='w-5 h-5 text-red-600 cursor-pointer' />
+              {
+                !onView && <>
+                <Edit onClick={() => navigate(`/tong-quat-ho-so/chinh-sua-ho-so/${resumeVer.resume.id}`)} className='w-5 h-5 text-red-600 cursor-pointer' />
+                </>
+              }
             </div>
           </div>
         </CardHeader>

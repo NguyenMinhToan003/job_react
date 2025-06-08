@@ -2,6 +2,7 @@
 import { viewResumeAPI } from '@/apis/resumeAPI';
 import AboutMeResume from '@/components/elements/resume/popup/AboutMeResume';
 import EdicationResume from '@/components/elements/resume/popup/EducationResume';
+import ExpResume from '@/components/elements/resume/popup/ExpResume';
 import InfoResume from '@/components/elements/resume/popup/InfoResume';
 import LanguageResume from '@/components/elements/resume/popup/LanguageResume';
 import SkillResume from '@/components/elements/resume/popup/SkillResume';
@@ -41,6 +42,9 @@ export default function Resume() {
         resumeVer={resume}
       />
       <AboutMeResume 
+        resumeVer={resume}
+      />
+      <ExpResume
         resumeVer={resume}
       />
       <EdicationResume

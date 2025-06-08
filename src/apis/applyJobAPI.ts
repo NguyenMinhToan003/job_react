@@ -30,3 +30,8 @@ export const unApplyJob = async (jobId: number) => {
   const response = await axiosInstance.post(`/apply-job/un-apply/${jobId}`);
   return response.data;
 }
+
+export const markViewed = async (applyId: number) => {
+  const response = await axiosInstance.get(`/apply-job/mark-view/${applyId}`);
+  return response.data;
+}

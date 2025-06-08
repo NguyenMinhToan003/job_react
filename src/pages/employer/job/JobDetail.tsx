@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getApplyJobByJobId } from "@/apis/applyJobAPI";
+import { getApplyJobByJobId, markViewed } from "@/apis/applyJobAPI";
 import { ApplyJobResponse } from "@/types/applyJobType";
 import {
   Card,
@@ -21,6 +21,8 @@ import { Badge } from "@/components/ui/badge";
 import { Job } from "@/types/jobType";
 import { Button } from "@/components/ui/button";
 import { convertDateToString } from "@/utils/dateTime";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import ViewResumeVersion from "@/pages/candidate/dashboard/resume/ViewResumeVersion";
 
 export default function JobDetailCompany() {
   const { jobId } = useParams();
@@ -57,7 +59,14 @@ export default function JobDetailCompany() {
         return <Badge>Không xác định</Badge>;
     }
   };
-
+  const markView = (applyId: number) => {
+    try {
+      markViewed(applyId);
+    }
+    catch (error) {
+      console.error("Lỗi khi đánh dấu đã xem:", error);
+    }
+  }
   return (
     <Card className="w-full shadow-md">
       <CardHeader>
@@ -101,14 +110,20 @@ export default function JobDetailCompany() {
                     <span className="font-medium">{item?.resumeVersion.username}</span>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      variant="link"
-                      onClick={() => {
-                        window.open(`/danh-cho-nha-tuyen-dung/xem-ho-so/${item.resumeVersion.id}`, "_blank");
-                      }}
-                    >
-                      Xem Cv
-                    </Button>
+                    <Sheet>
+                      <SheetTrigger>
+                        <Button variant='link' className="w-full font-semibold"
+                          onClick={() => !item.viewStatus && markView(item.id)}
+                        >
+                          Xem hồ sơ
+                       </Button>
+                      </SheetTrigger>
+                      <SheetContent className="min-w-3xl z-[99999] h-[100vh] overflow-y-auto p-2 bg-gray-200">
+                        <ViewResumeVersion
+                          resumeVerIdOption={item.resumeVersion.id}
+                        />
+                      </SheetContent>
+                    </Sheet>
                   </TableCell>
                   <TableCell>{item.note || "Không có ghi chú"}</TableCell>
                   <TableCell>
