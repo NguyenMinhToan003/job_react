@@ -8,4 +8,10 @@ export interface MajorResponse {
 export interface Major{
   id: number;
   name: string;
+  field: Field;
+}
+export interface Field {
+  id: number;
+  name: string;
+  majors?: Major[];
 }

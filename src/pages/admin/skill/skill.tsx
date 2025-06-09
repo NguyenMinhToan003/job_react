@@ -4,33 +4,51 @@ import {
   createSkill,
   updateSkill,
   deleteSkill,
-  getSkillByAdmin,
+  paginateSkill,
 } from '@/apis/skillAPI';
-import { Skill, SkillCreateRequest, SkillUpdateRequest } from '@/types/SkillType';
+import { Skill, SkillResponse } from '@/types/SkillType';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog, DialogContent, DialogHeader,
+  DialogTitle, DialogFooter, DialogTrigger,
+} from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
+import {
+  Pagination, PaginationContent, PaginationItem,
+  PaginationLink, PaginationNext, PaginationPrevious,
+} from '@/components/ui/pagination';
+import { Field, Major } from '@/types/majorType';
+import { getFieldList } from '@/apis/fieldAPI';
+import { Select } from '@radix-ui/react-select';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 
 export default function SkillPage() {
-  const [skillList, setSkillList] = useState<Skill[]>([]);
+  const [skillList, setSkillList] = useState<SkillResponse[]>([]);
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [form, setForm] = useState<SkillCreateRequest | SkillUpdateRequest>({
-    name: '',
-    status: 1,
-  });
   const [editingId, setEditingId] = useState<number>(-1);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
+  const [majorList, setMajorList] = useState<Major[]>([]);
+  const [fieldList, setFieldList] = useState<Field[]>([]);
+  const [selectedField, setSelectedField] = useState<Field>();
+  const [selectedMajor, setSelectedMajor] = useState<Major>();
+  const [name, setName] = useState<string>('');
+  const [status, setStatus] = useState<number>(1);
 
   const fetchSkillList = async () => {
     try {
-      const response = await getSkillByAdmin();
-      setSkillList(response);
+      const response = await paginateSkill(page, limit);
+      setTotalPages(response.totalPages || 0);
+      setSkillList(response.items);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lấy danh sách kỹ năng thất bại');
       console.error(error);
@@ -39,15 +57,24 @@ export default function SkillPage() {
 
   useEffect(() => {
     fetchSkillList();
-  }, []);
+  }, [page, limit]);
 
   const handleSubmit = async () => {
     try {
-      if (isEdit && editingId) {
-        await updateSkill(+editingId, form as SkillUpdateRequest);
+      if (isEdit && editingId !== -1) {
+        await updateSkill({
+          id: editingId,
+          name: name,
+          status: status,
+          majorId: selectedMajor?.id || 0,
+        });
         toast.success('Cập nhật kỹ năng thành công!');
       } else {
-        await createSkill(form as SkillCreateRequest);
+        await createSkill({
+          name,
+          status,
+          majorId: selectedMajor?.id || 0,
+        });
         toast.success('Tạo kỹ năng mới thành công!');
       }
       fetchSkillList();
@@ -61,7 +88,7 @@ export default function SkillPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteSkill(+id);
+      await deleteSkill(id);
       toast.success('Xóa kỹ năng thành công!');
       fetchSkillList();
     } catch (error: any) {
@@ -70,12 +97,12 @@ export default function SkillPage() {
     }
   };
 
-  const handleEdit = (skill: Skill) => {
+  const handleEdit = (skill: SkillResponse) => {
     setIsEdit(true);
-    setForm({
-      name: skill.name,
-      status: skill.status,
-    });
+    setName(skill.name);
+    setStatus(skill.status);
+    setSelectedField(skill.major?.field);
+    setSelectedMajor(skill.major);
     setEditingId(skill.id);
     setOpen(true);
   };
@@ -83,13 +110,19 @@ export default function SkillPage() {
   const resetForm = () => {
     setIsEdit(false);
     setEditingId(-1);
-    setForm({ name: '', status: 1 }); // reset trạng thái về 1
+    setName('');
+    setStatus(1);
+    setSelectedMajor(undefined);
+    setSelectedField(undefined);
   };
 
-  // Hàm cập nhật trạng thái nhanh khi bật/tắt Switch trong bảng
   const toggleStatus = async (skill: Skill) => {
     try {
-      await updateSkill(skill.id, { ...skill, status: skill.status === 1 ? 0 : 1 });
+      await updateSkill({
+        id: skill.id,
+        name: skill.name,
+        status: skill.status === 1 ? 0 : 1,
+      });
       toast.success('Cập nhật trạng thái thành công!');
       fetchSkillList();
     } catch (error: any) {
@@ -97,9 +130,40 @@ export default function SkillPage() {
       console.error(error);
     }
   };
+  const getElement = async () => {
+    try {
+      const [fieldResponse] = await Promise.all([
+        getFieldList()
+      ]);
+      setFieldList(fieldResponse);
+    }
+    catch(error: any) {
+      toast.error(error.response?.data?.message || 'Lấy danh sách chuyên ngành thất bại');
+    }
+  }
+
+  useEffect(() => {
+    getElement();
+  }, []);
+
+  const handleSelectField = (value: string) => {
+    const field = fieldList.find(f => f.id.toString() === value);
+    setSelectedField(field);
+    setSelectedMajor(undefined);
+    if (field) {
+      setMajorList(field.majors || []);
+    } else {
+      setMajorList([]);
+    }
+  };
+
+  useEffect(() => {
+    setMajorList(selectedField?.majors || []);
+  },[selectedField])
+
 
   return (
-    <div className='p-6 flex gap-6 bg-[#f7f7f7] w-full'>
+    <div className='p-6 flex flex-col gap-6 bg-[#f7f7f7] w-full'>
       <Card className='flex-1'>
         <CardHeader className='flex justify-between items-center'>
           <CardTitle>Quản lý Kĩ năng</CardTitle>
@@ -114,15 +178,53 @@ export default function SkillPage() {
               <div className='space-y-4'>
                 <Input
                   placeholder='Tên kỹ năng'
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
-
+                <Label className='block mb-2'>
+                  Lĩnh vực
+                </Label>
+                <Select
+                  defaultValue={selectedField?.id?.toString() || ''}
+                  onValueChange={(value) => handleSelectField(value)}
+                >
+                  <SelectTrigger                   className='w-full'>
+                    <SelectValue placeholder='Chọn lĩnh vực' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {fieldList.map((field) => (
+                      <SelectItem key={field.id} value={field.id.toString()}>
+                        {field.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Label className='block mb-2'>
+                  Chuyên ngành
+                </Label>
+                <Select
+                  defaultValue={selectedMajor?.id?.toString() || ''}
+                  onValueChange={(value) => {
+                    const major = majorList.find(m => m.id === Number(value));
+                    setSelectedMajor(major);
+                  }}
+                >
+                  <SelectTrigger className='w-full'>
+                    <SelectValue placeholder='Chọn chuyên ngành' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {majorList.map((major) => (
+                      <SelectItem key={major.id} value={major?.id?.toString()}>
+                        {major.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <div className="flex items-center gap-2">
                   <span>Trạng thái:</span>
                   <Switch
-                    checked={form?.status === 1}
-                    onCheckedChange={(checked) => setForm({ ...form, status: checked ? 1 : 0 })}
+                    checked={status === 1}
+                    onCheckedChange={(checked) => setStatus(checked ? 1 : 0)}
                   />
                 </div>
               </div>
@@ -133,42 +235,82 @@ export default function SkillPage() {
             </DialogContent>
           </Dialog>
         </CardHeader>
+
         <CardContent className='p-6 space-y-2'>
           <Table className='w-full'>
             <TableHeader>
               <TableRow>
-                <TableHead className='w-[100px]'>ID</TableHead>
+                <TableHead>ID</TableHead>
                 <TableHead>Tên kỹ năng</TableHead>
-                <TableHead className='w-[100px] text-center'>Trạng thái</TableHead>
-                <TableHead className='w-[160px]'>Thao tác</TableHead>
+                <TableHead>Chuyên ngành</TableHead>
+                <TableHead>Lĩnh vực</TableHead>
+                <TableHead className='text-center'>Trạng thái</TableHead>
+                <TableHead className='w-[200px] text-center'>Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {skillList.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.id}</TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell className='text-center'>
-                    <Switch
-                      checked={item.status === 1}
-                      onCheckedChange={() => toggleStatus(item)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Button variant='outline' className='mr-2' onClick={() => handleEdit(item)}>Sửa</Button>
-                    <Button variant='destructive' onClick={() => handleDelete(item.id)}>Xóa</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {skillList.length === 0 && (
+              {skillList.length > 0 ? (
+                skillList.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.id}</TableCell>
+                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.major?.name || 'Không có'}</TableCell>
+                    <TableCell>{item.major?.field?.name || 'Không có'}</TableCell>
+                    <TableCell className='text-center'>
+                      <Switch
+                        checked={item.status === 1}
+                        onCheckedChange={() => toggleStatus(item)}
+                      />
+                    </TableCell>
+                    <TableCell className='text-center'>
+                      <Button variant='outline' className='mr-2' onClick={() => handleEdit(item)}>Sửa</Button>
+                      <Button variant='destructive' onClick={() => handleDelete(item.id)}>Xóa</Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className='text-center text-gray-500'>Không có kỹ năng nào.</TableCell>
+                  <TableCell colSpan={6} className='text-center text-gray-500'>
+                    Không có kỹ năng nào.
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+
+      <Pagination>
+        <PaginationContent className='list-none flex justify-center items-center gap-1'>
+          <PaginationPrevious
+            title='Trước'
+            className='cursor-pointer'
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Trước
+          </PaginationPrevious>
+
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink
+                className={`cursor-pointer ${page === index + 1 ? 'bg-blue-500 text-white' : 'text-blue-500 hover:bg-blue-100'}`}
+                onClick={() => setPage(index + 1)}
+                isActive={page === index + 1}
+              >
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          <PaginationNext
+            title='Tiếp theo'
+            className='cursor-pointer'
+            onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+          >
+            Tiếp theo
+          </PaginationNext>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

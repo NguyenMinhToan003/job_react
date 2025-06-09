@@ -78,7 +78,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
               <AvatarImage src={job.employer.logo} />
             </Avatar>
             <div className='flex flex-col gap-2'>
-              <div className='text-3xl font-bold text-gray-700'>
+              <div className='text-2xl font-bold text-gray-700'>
                 <NavLink
                   to={`/cong-viec/${job.id}`}
                   className='hover:underline cursor-pointer'
@@ -111,7 +111,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
             <Button className='bg-orange-100 text-green-700 font-bold flex-1 cursor-pointer rounded-none h-[45px]'
               variant={'outline'}
             >
-              Bạn đã ứng tuyển
+              Bạn đã ứng tuyển  
             </Button>
           ) : (
             <Button
@@ -187,7 +187,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
                       <Badge
                         key={index}
                         variant='outline'
-                        className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold'
+                        className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold cursor-pointer'
                       >
                         {skill.name}
                       </Badge>
@@ -201,14 +201,16 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
                   Chuyên môn:
                 </TableCell>
                 <TableCell>
-                  {job.skills.slice(2, 4).map((skill, index) => (
-                    <Badge
-                      key={index}
-                      variant='outline'
-                      className='text-xs font-normal px-3 py-1 rounded-full border border-gray-300 text-gray-700 hover:border-black transition-colors duration-200'
-                    >
-                      {skill.name}
-                    </Badge>
+                  {job.fields.map((field, index) => (
+                    field?.majors?.map((major, majorIndex) => (
+                      <Badge
+                        key={`${index}-${majorIndex}`}
+                        variant='outline'
+                        className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold cursor-pointer'
+                      >
+                        {major.name}
+                      </Badge>
+                    ))
                   ))}
                 </TableCell>
               </TableRow>
@@ -218,13 +220,13 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
                   Lĩnh vực:
                 </TableCell>
                 <TableCell>
-                  {job.skills.slice(2, 4).map((skill, index) => (
+                  {job.fields.map((field, index) => (
                     <Badge
                       key={index}
                       variant='outline'
-                      className='text-xs font-normal px-3 py-1 rounded-full border border-gray-300 text-gray-700 hover:border-black transition-colors duration-200'
+                      className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold cursor-pointer'
                     >
-                      {skill.name}
+                      {field.name}
                     </Badge>
                   ))}
                 </TableCell>
@@ -233,30 +235,18 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
           </Table>
           <div className='space-y-2 text-sm text-gray-700 leading-relaxed'>
             <p className='font-bold text-lg text-black'>Mô tả công việc:</p>
-            <ul className='list-disc list-inside space-y-2'>
-              {job.description.split('\n').map((line, index) => (
-                <li
-                  key={index}
-                  className='marker:text-[#ed1b2f] font-medium text-sm leading-7 text-gray-700'
-                >
-                  {line}
-                </li>
-              ))}
-            </ul>
+            <div
+                className='font-semibold text-gray-800'
+                dangerouslySetInnerHTML={{ __html: job.description }}
+              />
           </div>
 
           <div className='space-y-2 text-sm text-gray-700 leading-relaxed'>
             <p className='font-bold text-lg text-black'>Yêu cầu công việc:</p>
-            <ul className='list-disc list-inside space-y-2'>
-              {job.requirement.split('\n').map((line, index) => (
-                <li
-                  key={index}
-                  className='marker:text-[#ed1b2f] font-medium text-sm leading-7 text-gray-700'
-                >
-                  {line}
-                </li>
-              ))}
-            </ul>
+            <div
+              className='font-semibold text-gray-800'
+              dangerouslySetInnerHTML={{ __html: job.requirement }}
+            />
           </div>
           <div>
           <p className='font-bold text-lg text-black'>Quyền lợi:</p>

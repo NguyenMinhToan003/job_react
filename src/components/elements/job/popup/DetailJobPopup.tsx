@@ -8,15 +8,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@/components/ui/toggle-group';
-import {
-  Bold,
   CirclePlus,
-  Italic,
   SquarePen,
-  Underline,
 } from 'lucide-react';
 import {
   Card,
@@ -24,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import Editer from '../../editer/editer';
 
 export default function DetailJobPopup({
   description,
@@ -71,19 +65,18 @@ export default function DetailJobPopup({
         </CardHeader>
 
         <CardContent className='px-6 space-y-2'>
-          <ul className='space-y-1 list-disc pl-4'>
-            {description.split('\n').map(
-              (line, index) =>
-                line.trim() && (
-                  <li
-                    key={index}
-                    className='text-sm text-gray-700 font-medium marker:text-red-500'
-                  >
-                    {line.trim()}
-                  </li>
-                )
-            )}
-          </ul>
+          {
+            description.trim() === '' ? (
+              <div className='text-gray-500 text-sm'>
+                Bạn có thể thêm mô tả công việc tại đây.
+              </div>
+            ) : (
+              <div
+                className='font-semibold text-gray-800'
+                dangerouslySetInnerHTML={{ __html: description }}
+              />
+            )
+          }
         </CardContent>
       </Card>
 
@@ -102,27 +95,10 @@ export default function DetailJobPopup({
             hoặc bất kỳ thông tin nào bạn muốn chia sẻ với nhà tuyển dụng.
           </div>
 
-          <div className='border rounded-md p-2 min-h-[250px] h-[300px] flex flex-col'>
-            <ToggleGroup type='multiple' className='mb-2'>
-              <ToggleGroupItem value='bold' aria-label='Toggle bold' title='Bold'>
-                <Bold className='h-4 w-4' />
-              </ToggleGroupItem>
-              <ToggleGroupItem value='italic' aria-label='Toggle italic' title='Italic'>
-                <Italic className='h-4 w-4' />
-              </ToggleGroupItem>
-              <ToggleGroupItem value='underline' aria-label='Toggle underline' title='Underline'>
-                <Underline className='h-4 w-4' />
-              </ToggleGroupItem>
-            </ToggleGroup>
-
-            <textarea
-              className='w-full flex-1 resize-none overflow-y-auto bg-transparent text-gray-700 placeholder-gray-500 border-none text-sm font-medium focus-visible:ring-0 focus-visible:outline-none p-2'
-              placeholder='Nhập mô tả công việc...'
-              maxLength={2500}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-          </div>
+          <Editer
+            text={text}
+            setText={setText}
+          />
 
           <div className='text-right text-xs text-muted-foreground mt-2'>
             {text.length}/2500 characters

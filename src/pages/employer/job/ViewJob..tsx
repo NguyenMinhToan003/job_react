@@ -38,6 +38,7 @@ import { JOB_STATUS, NOTI_TYPE, ROLE_LIST } from '@/types/type';
 import { TypeJob } from '@/types/TypeJobType';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 export default function ViewJob() {
   const url = window.location.href;
@@ -130,6 +131,7 @@ export default function ViewJob() {
     fetchDataJob();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const navigate = useNavigate();
 
   const handleActivateJob = async () => {
     try {
@@ -142,7 +144,7 @@ export default function ViewJob() {
       });
       setIsActive(JOB_STATUS.ACTIVE);
       await createEmployerNotiAPI({
-        content: `Công việc "${nameJob}" đã được duyệt.`,
+        content: `Công việc '${nameJob}' đã được duyệt.`,
         receiverAccountId: employer?.id || -1,
         title: 'Công việc đã được duyệt',
         link: `/danh-cho-nha-tuyen-dung/thong-tin-tuyen-dung/${id}`,
@@ -155,15 +157,18 @@ export default function ViewJob() {
   };
 
   return (
-    <Card className="w-full bg-[#f7f7f7]">
+    <Card className='w-full bg-[#f7f7f7]'>
       <CardHeader>
-        <CardTitle className="font-bold text-2xl flex justify-between items-center">
+        <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>REVIEW</div>
+          <Button onClick={()=> navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${id}`)}>
+            Cập nhật
+          </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="py-4">
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-1">
+      <CardContent className='py-4'>
+        <div className='flex flex-col md:flex-row gap-6'>
+          <div className='flex-1'>
             <NameJobPopup nameJob={nameJob} setNameJob={setNameJob} notEdit={true} />
             <SalaryJonPopup
               salaryMin={salaryMin}
@@ -197,14 +202,14 @@ export default function ViewJob() {
           </div>
 
           {/* Right side: Action Buttons */}
-          <div className="w-full md:w-[300px] sticky top-20 h-56">
-            <Card className="shadow-md border-dashed border-2 border-gray-300 p-4 h-full flex flex-col justify-center items-center">
+          <div className='w-full md:w-[300px] sticky top-20 h-56'>
+            <Card className='shadow-md border-dashed border-2 border-gray-300 p-4 h-full flex flex-col justify-center items-center'>
               <div>
-                <div className="text-sm text-gray-500 text-center font-bold flex flex-col items-center gap-3">
+                <div className='text-sm text-gray-500 text-center font-bold flex flex-col items-center gap-3'>
                   {isActive === JOB_STATUS.PENDING ? (
                     role === ROLE_LIST.ADMIN ? (
                       <>
-                        <Button variant="destructive" className="cursor-pointer w-full" onClick={handleActivateJob}>
+                        <Button variant='destructive' className='cursor-pointer w-full' onClick={handleActivateJob}>
                           DUYỆT CÔNG VIỆC
                         </Button>
                         <RejectJobForm
@@ -217,9 +222,9 @@ export default function ViewJob() {
                       <div>Hãy chờ đến khi công việc được duyệt.</div>
                     )
                   ) : isActive === JOB_STATUS.ACTIVE ? (
-                    <div className="text-green-600">Công việc đã được duyệt</div>
+                    <div className='text-green-600'>Công việc đã được duyệt</div>
                   ) : isActive === JOB_STATUS.BLOCK ? (
-                    <div className="text-red-600">Công việc đã bị từ chối</div>
+                    <div className='text-red-600'>Công việc đã bị từ chối</div>
                   ) : null}
                 </div>
               </div>

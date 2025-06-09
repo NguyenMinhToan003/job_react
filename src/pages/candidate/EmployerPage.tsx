@@ -7,9 +7,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EmployerDetailResponse } from '@/types/companyType';
 import { useEffect, useState } from 'react';
 import { getCompanyDetailAPI } from '@/apis/companyAPI';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import JobList from '@/components/elements/job/job-list/JobList';
-import { JobResponse } from '@/types/jobType';
+import { JobFilterResponse } from '@/types/jobType';
 
 import { toast } from 'sonner';
 import ViewCompany from '@/components/elements/company/ViewCompany';
@@ -17,6 +17,7 @@ import { followEmployerAPI } from '@/apis/followEmployerAPI';
 
 export default function CompanyPage() {
   const { id = -1 } = useParams();
+  const navigate = useNavigate();
   const [employer, setCompany] = useState<EmployerDetailResponse>();
 
   const fetchCompanyDetail = async () => {
@@ -45,6 +46,7 @@ export default function CompanyPage() {
   if (!employer) {
     return <div className='text-center py-16 text-gray-500'>Loading...</div>;
   }
+
 
   return (
     <div className='flex flex-col bg-[#f7f7f7]'>
@@ -166,13 +168,15 @@ export default function CompanyPage() {
             <div className='space-y-4'>
               <div className='col-span-2 space-y-4'>
                 {employer.jobs.map((job) => (
-                  <JobList
-                    isPrev={true}
-                    key={job.id}
-                    job={job}
-                    selectedJob={{} as JobResponse}
-                    setSelectedJob={() => {}}
-                  />
+                  <div key={job.id} onClick={()=> navigate(`/cong-viec/${job.id}`)} className='cursor-pointer'>
+                    <JobList
+                      isPrev={true}
+                      key={job.id}
+                      job={job}
+                      selectedJob={{} as JobFilterResponse}
+                      setSelectedJob={() => {}}
+                    />
+                  </div>
                 ))}
               </div>
             </div>

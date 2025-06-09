@@ -40,6 +40,7 @@ import FormUpdateResume from '@/pages/candidate/dashboard/resume/FormUpdateResum
 import FormCreateResume from '@/pages/candidate/dashboard/resume/FormCreateResume';
 import ViewResumeVersion from '@/pages/candidate/dashboard/resume/ViewResumeVersion';
 
+
 export default function AppRouter() {
   const { updateDataUser } = useAccount()
   useEffect(() => {
@@ -51,6 +52,7 @@ export default function AppRouter() {
       <Route path='/' element={<Index />}>
         <Route path='dang-ky' element={<RegisterCandidate />} />
         <Route path='login-success' element={<LoginSuccess />} />
+        <Route path='cong-viec/:id' element={<JobDetail />} />
         <Route index element={<Home />} />
         <Route path='map/:lat/:lng' element={<Map />} />
         <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />
@@ -71,7 +73,6 @@ export default function AppRouter() {
         <Route path='/nha-tuyen-dung/:id'>
           <Route index element={<CompanyPage />} />
         </Route>
-        <Route path='cong-viec/:id' element={<JobDetail />} />
       </Route>
 
       <Route path='/admin' element={<IndexAdmin />}>

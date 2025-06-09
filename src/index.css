@@ -117,4 +117,19 @@
   body {
     @apply bg-background text-foreground;
   }
+  h1 {
+    @apply text-2xl font-semibold;
+  }
+  h2 {
+    @apply text-xl font-semibold;
+  }
+  h3 {
+    @apply text-lg font-semibold;
+  }
+  ul {
+    @apply list-disc;
+  }
+  li {
+    @apply marker:text-red-600 ml-4;
+  }
 }

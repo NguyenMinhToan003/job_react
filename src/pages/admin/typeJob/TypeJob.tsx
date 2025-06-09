@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import {
   getTypeJobList,
@@ -5,7 +6,7 @@ import {
   updateTypeJob,
   deleteTypeJob,
 } from '@/apis/typeJobAPI';
-import { TypeJob, UpdateTypeJobRequest } from '@/types/typeJobType';
+import { TypeJob, UpdateTypeJobRequest } from '@/types/TypeJobType';
 
 import {
   Card,
@@ -40,7 +41,6 @@ export default function TypeJobPage() {
   const [editing, setEditing] = useState<TypeJob | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     status: 1,
   });
 
@@ -57,7 +57,6 @@ export default function TypeJobPage() {
     setEditing(null);
     setFormData({
       name: '',
-      description: '',
       status: 1,
     });
   };
@@ -67,7 +66,6 @@ export default function TypeJobPage() {
       if (editing) {
         await updateTypeJob(editing.id, {
           name: formData.name,
-          description: formData.description,
           status: formData.status,
         } as UpdateTypeJobRequest);
       } else {
@@ -85,7 +83,6 @@ export default function TypeJobPage() {
     setEditing(typeJob);
     setFormData({
       name: typeJob.name,
-      description: typeJob.description || '',
       status: typeJob.status ?? 1,
     });
     setOpen(true);
@@ -105,7 +102,6 @@ export default function TypeJobPage() {
     try {
       await updateTypeJob(typeJob.id, {
         name: typeJob.name,
-        description: typeJob.description || '',
         status: typeJob.status === 1 ? 0 : 1, 
       } as UpdateTypeJobRequest);
       fetchTypeJobs();
@@ -148,16 +144,7 @@ export default function TypeJobPage() {
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   />
                 </div>
-                <div>
-                  <Label htmlFor="description">Mô tả</Label>
-                  <Input
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                  />
-                </div>
+                
                 <div className="flex items-center gap-2">
                   <Label>Trạng thái</Label>
                   <Switch
@@ -180,8 +167,7 @@ export default function TypeJobPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>ID</TableHead>
-                <TableHead>Tên</TableHead>
-                <TableHead>Mô tả</TableHead>
+                <TableHead className='w-full'>Tên</TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead className="text-center">Thao tác</TableHead>
               </TableRow>
@@ -191,7 +177,6 @@ export default function TypeJobPage() {
                 <TableRow key={item.id}>
                   <TableCell>{item.id}</TableCell>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.description || '-'}</TableCell>
                   <TableCell>
                     <Switch
                       checked={item.status === 1}

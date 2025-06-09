@@ -131,7 +131,7 @@ export default function ExperiencePage() {
             <TableHeader>
               <TableRow>
                 <TableHead className='w-[100px]'>ID</TableHead>
-                <TableHead>Tên kinh nghiệm</TableHead>
+                <TableHead className='w-full'>Tên kinh nghiệm</TableHead>
                 <TableHead>Trạng thái</TableHead> {/* Thêm cột trạng thái */}
                 <TableHead className='w-[160px]'>Thao tác</TableHead>
               </TableRow>

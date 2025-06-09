@@ -168,7 +168,7 @@ export default function LevelPage() {
             <TableHeader>
               <TableRow>
                 <TableHead className='w-[100px]'>ID</TableHead>
-                <TableHead>Tên cấp độ</TableHead>
+                <TableHead className='w-full'>Tên cấp độ</TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead className='w-[150px] text-center'>Thao tác</TableHead>
               </TableRow>

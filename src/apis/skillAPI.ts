@@ -1,4 +1,4 @@
-import { Skill, SkillCreateRequest, SkillUpdateRequest } from "@/types/skillType"
+import { Skill, SkillCreateRequest, SkillPaginateResponse, SkillResponse, SkillUpdateRequest } from "@/types/skillType"
 import { axiosInstance } from "./index"
 
 export const getSkillList = async () => {
@@ -16,8 +16,8 @@ export const createSkill = async (skill: SkillCreateRequest) => {
   return response.data
 }
 
-export const updateSkill = async (id: number, skill: SkillUpdateRequest) => {
-  const response = await axiosInstance.patch<Skill>(`/skill/${id}`, skill)
+export const updateSkill = async (skill: SkillUpdateRequest) => {
+  const response = await axiosInstance.patch<Skill>(`/skill/${skill.id}`, skill)
   return response.data
 }
 
@@ -28,5 +28,10 @@ export const deleteSkill = async (id: number) => {
 
 export const toggleSkillStatus = async (id: number) => {
   const response = await axiosInstance.post<Skill>(`/skill/toggle-status/${id}`)
+  return response.data
+}
+
+export const paginateSkill = async (page: number, limit: number)=> {
+  const response = await axiosInstance.get<SkillPaginateResponse>(`/skill/paginate/${page}/${limit}`)
   return response.data
 }
