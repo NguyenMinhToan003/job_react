@@ -13,5 +13,9 @@ export interface Major{
 export interface Field {
   id: number;
   name: string;
-  majors?: Major[];
+  majors?: MajorResponse[];
+}
+export interface MajorRequest {
+  name: string;
+  fieldId: number;
 }

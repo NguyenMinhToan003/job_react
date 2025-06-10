@@ -26,7 +26,9 @@ const userMenuItems = [
   { label: "Quản lý thành phố/quận", icon: <MapPin className="w-6 h-6" />, path: 'thanh-pho' },
   { label: "Quản lý Hình thức làm việc", icon: <Clock className="w-6 h-6" />, path: 'hinh-thuc-lam-viec' }, // thay Map
   { label: "Quản lý quyền lợi", icon: <HeartHandshake className="w-6 h-6" />, path: 'quyen-loi' }, // thay Map
-  { label: "Quản lý lĩnh vực", icon: <Shapes className="w-6 h-6" />, path: 'cai-dat' }, // thay Landmark
+  { label: "Quản lý lĩnh vực", icon: <Shapes className="w-6 h-6" />, path: 'linh-vuc' }, // thay Landmark
+  { label: "Quốc gia", icon: <BarChart2 className="w-6 h-6" />, path: 'quoc-gia' }, // thay BarChart
+
 ];
 
 

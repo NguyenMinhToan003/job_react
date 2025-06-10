@@ -39,6 +39,10 @@ import Resume from '@/pages/candidate/dashboard/resume/Resume';
 import FormUpdateResume from '@/pages/candidate/dashboard/resume/FormUpdateResume';
 import FormCreateResume from '@/pages/candidate/dashboard/resume/FormCreateResume';
 import ViewResumeVersion from '@/pages/candidate/dashboard/resume/ViewResumeVersion';
+import Country from '@/pages/admin/country/Country';
+import FieldList from '@/pages/admin/field/FieldList';
+import FieldDetail from '@/pages/admin/field/FieldDetail';
+import Major from '@/pages/admin/major/Major';
 
 
 export default function AppRouter() {
@@ -80,9 +84,13 @@ export default function AppRouter() {
         <Route path='quyen-loi' element={<BenefitPage />} />
         <Route path='kinh-nghiem' element={<Experience />} />
         <Route path='ki-nang' element={<SkillPage />} />
+        <Route path='quoc-gia' element={<Country />} />
         <Route path='cap-bac' element={<LevelPage />} />
         <Route path='hinh-thuc-lam-viec' element={<TypeJobPage />} />
         <Route path='thanh-pho' element={<CityDistrictPage />} />
+        <Route path='linh-vuc' element={<FieldList />} />
+        <Route path='linh-vuc/:fieldId' element={<FieldDetail />} />
+        <Route path='chuyen-nganh/:majorId' element={<Major />} />
         <Route path='nha-tuyen-dung' element={<CompanyListPage />} />
         <Route path='*' element={<OverViewAdmin />} />
         <Route path='tuyen-dung'>

@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Dialog, DialogContent, DialogHeader,
-  DialogTitle, DialogFooter, DialogTrigger,
+  DialogTitle, DialogFooter,
 } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
@@ -28,6 +28,11 @@ import { getFieldList } from '@/apis/fieldAPI';
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { Popover } from '@radix-ui/react-popover';
+import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { MoreVertical } from 'lucide-react';
+import { getListMajorAPI } from '@/apis/majorAPI';
+import { useNavigate } from 'react-router-dom';
 
 export default function SkillPage() {
   const [skillList, setSkillList] = useState<SkillResponse[]>([]);
@@ -43,6 +48,7 @@ export default function SkillPage() {
   const [selectedMajor, setSelectedMajor] = useState<Major>();
   const [name, setName] = useState<string>('');
   const [status, setStatus] = useState<number>(1);
+  const [allMajor, setAllMajor] = useState<Major[]>([]);
 
   const fetchSkillList = async () => {
     try {
@@ -132,10 +138,12 @@ export default function SkillPage() {
   };
   const getElement = async () => {
     try {
-      const [fieldResponse] = await Promise.all([
-        getFieldList()
+      const [fieldResponse, allMajorlist] = await Promise.all([
+        getFieldList(),
+        getListMajorAPI()
       ]);
       setFieldList(fieldResponse);
+      setAllMajor(allMajorlist);
     }
     catch(error: any) {
       toast.error(error.response?.data?.message || 'Lấy danh sách chuyên ngành thất bại');
@@ -159,7 +167,9 @@ export default function SkillPage() {
 
   useEffect(() => {
     setMajorList(selectedField?.majors || []);
-  },[selectedField])
+  }, [selectedField])
+
+  const navigate = useNavigate();
 
 
   return (
@@ -167,73 +177,15 @@ export default function SkillPage() {
       <Card className='flex-1'>
         <CardHeader className='flex justify-between items-center'>
           <CardTitle>Quản lý Kĩ năng</CardTitle>
-          <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
-            <DialogTrigger asChild>
-              <Button onClick={() => setIsEdit(false)}>+ Thêm kỹ năng</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{isEdit ? 'Sửa kỹ năng' : 'Thêm kỹ năng'}</DialogTitle>
-              </DialogHeader>
-              <div className='space-y-4'>
-                <Input
-                  placeholder='Tên kỹ năng'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-                <Label className='block mb-2'>
-                  Lĩnh vực
-                </Label>
-                <Select
-                  defaultValue={selectedField?.id?.toString() || ''}
-                  onValueChange={(value) => handleSelectField(value)}
-                >
-                  <SelectTrigger                   className='w-full'>
-                    <SelectValue placeholder='Chọn lĩnh vực' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {fieldList.map((field) => (
-                      <SelectItem key={field.id} value={field.id.toString()}>
-                        {field.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Label className='block mb-2'>
-                  Chuyên ngành
-                </Label>
-                <Select
-                  defaultValue={selectedMajor?.id?.toString() || ''}
-                  onValueChange={(value) => {
-                    const major = majorList.find(m => m.id === Number(value));
-                    setSelectedMajor(major);
-                  }}
-                >
-                  <SelectTrigger className='w-full'>
-                    <SelectValue placeholder='Chọn chuyên ngành' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {majorList.map((major) => (
-                      <SelectItem key={major.id} value={major?.id?.toString()}>
-                        {major.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <div className="flex items-center gap-2">
-                  <span>Trạng thái:</span>
-                  <Switch
-                    checked={status === 1}
-                    onCheckedChange={(checked) => setStatus(checked ? 1 : 0)}
-                  />
-                </div>
-              </div>
-              <DialogFooter className='mt-4'>
-                <Button variant='outline' onClick={() => setOpen(false)}>Hủy</Button>
-                <Button onClick={handleSubmit}>{isEdit ? 'Cập nhật' : 'Tạo mới'}</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+
+          <div className='flex items-center gap-2'>
+
+            <Button onClick={() => {
+              setOpen(true)
+              setIsEdit(false)
+            }}>+ Thêm kỹ năng</Button>
+           
+          </div>
         </CardHeader>
 
         <CardContent className='p-6 space-y-2'>
@@ -254,7 +206,10 @@ export default function SkillPage() {
                   <TableRow key={item.id}>
                     <TableCell>{item.id}</TableCell>
                     <TableCell>{item.name}</TableCell>
-                    <TableCell>{item.major?.name || 'Không có'}</TableCell>
+                    <TableCell
+                      className='cursor-pointer hover:underline'
+                      onClick={() => navigate(`/admin/chuyen-nganh/${item.major?.id}`)}
+                    >{item.major?.name || 'Không có'}</TableCell>
                     <TableCell>{item.major?.field?.name || 'Không có'}</TableCell>
                     <TableCell className='text-center'>
                       <Switch
@@ -263,8 +218,22 @@ export default function SkillPage() {
                       />
                     </TableCell>
                     <TableCell className='text-center'>
-                      <Button variant='outline' className='mr-2' onClick={() => handleEdit(item)}>Sửa</Button>
-                      <Button variant='destructive' onClick={() => handleDelete(item.id)}>Xóa</Button>
+                      <Popover>
+                        <PopoverTrigger className='p-0'>
+                          <Button variant='outline' className='w-full justify-center'>
+                            <MoreVertical className='h-4 w-4' />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className='w-fit p-0'>
+                          <Button variant='ghost' className='w-full justify-start hover:bg-blue-500 hover:text-white rounded-none'
+                            onClick={() => handleEdit(item)}>
+                            Sửa
+                          </Button>
+                          <Button variant='ghost' onClick={() => handleDelete(item.id)} className='w-full justify-start hover:bg-red-500 hover:text-white rounded-none'>
+                            Xóa
+                          </Button>
+                        </PopoverContent>
+                      </Popover>
                     </TableCell>
                   </TableRow>
                 ))
@@ -311,6 +280,70 @@ export default function SkillPage() {
           </PaginationNext>
         </PaginationContent>
       </Pagination>
+      <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{isEdit ? 'Sửa kỹ năng' : 'Thêm kỹ năng'}</DialogTitle>
+                </DialogHeader>
+                <div className='space-y-4'>
+                  <Input
+                    placeholder='Tên kỹ năng'
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                  <Label className='block mb-2'>
+                    Lĩnh vực
+                  </Label>
+                  <Select
+                    defaultValue={selectedField?.id?.toString() || ''}
+                    onValueChange={(value) => handleSelectField(value)}
+                  >
+                    <SelectTrigger                   className='w-full'>
+                      <SelectValue placeholder='Chọn lĩnh vực' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fieldList.map((field) => (
+                        <SelectItem key={field.id} value={field.id.toString()}>
+                          {field.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Label className='block mb-2'>
+                    Chuyên ngành
+                  </Label>
+                  <Select
+                    defaultValue={selectedMajor?.id?.toString() || ''}
+                    onValueChange={(value) => {
+                      const major = majorList.find(m => m.id === Number(value));
+                      setSelectedMajor(major);
+                    }}
+                  >
+                    <SelectTrigger className='w-full'>
+                      <SelectValue placeholder='Chọn chuyên ngành' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {majorList.map((major) => (
+                        <SelectItem key={major.id} value={major?.id?.toString()}>
+                          {major.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div className="flex items-center gap-2">
+                    <span>Trạng thái:</span>
+                    <Switch
+                      checked={status === 1}
+                      onCheckedChange={(checked) => setStatus(checked ? 1 : 0)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter className='mt-4'>
+                  <Button variant='outline' onClick={() => setOpen(false)}>Hủy</Button>
+                  <Button onClick={handleSubmit}>{isEdit ? 'Cập nhật' : 'Tạo mới'}</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
     </div>
   );
 }
