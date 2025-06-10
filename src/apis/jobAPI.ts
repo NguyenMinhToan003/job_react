@@ -1,5 +1,6 @@
-import { CompanyFilterJob, CreateJobRequest, JobFilterAdminRequest, JobFilterRequest, JobFilterResponse, JobResponse, UpdateJobAdminRequest } from '@/types/jobType';
+import { CompanyFilterJob, CreateJobRequest, JobFilterAdminRequest, JobFilterRequest, JobFilterResponse, JobResponse, MatchingWeightRequest, UpdateJobAdminRequest } from '@/types/jobType';
 import { axiosInstance } from './index';
+import { toast } from 'sonner';
 
 export const createJob = async (data: CreateJobRequest) => {
   const response = await axiosInstance.post('/job', data);
@@ -51,5 +52,11 @@ export const toggleJobStatus = async (jobId: number) => {
 
 export const viewJobAPI = async (jobId: number) => {
   const response = await axiosInstance.get<JobResponse>(`/job/view-all-element-job/${jobId}`);
+  return response.data;
+}
+
+export const createMatchingWeightJob = async (jobId: number | null, data: MatchingWeightRequest) => {
+  if (!jobId) toast.error('Sảy ra lỗi khi tạo trọng số phù hợp cho công việc');
+  const response = await axiosInstance.post(`/matching-weight/trigger-job-create/${jobId}`, data);
   return response.data;
 }

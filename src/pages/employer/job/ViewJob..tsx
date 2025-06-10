@@ -39,6 +39,11 @@ import { TypeJob } from '@/types/TypeJobType';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { MoreVertical } from 'lucide-react';
+import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
+import { set } from 'date-fns';
+import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
 
 export default function ViewJob() {
   const url = window.location.href;
@@ -65,6 +70,13 @@ export default function ViewJob() {
   const [isActive, setIsActive] = useState<JOB_STATUS>(JOB_STATUS.PENDING);
   const [educationsList, setEducationsList] = useState<Education[]>([]);
   const [selectedEducation, setSelectedEducation] = useState<number>();
+  const [expiredAt, setExpiredAt] = useState<Date| null>(null);
+  const [locationWeight, setLocationWeight] = useState(20);
+  const [skillWeight, setSkillWeight] = useState(25);
+  const [majorWeight, setMajorWeight] = useState(20);
+  const [languageWeight, setLanguageWeight] = useState(10);
+  const [educationWeight, setEducationWeight] = useState(15);
+  const [levelWeight, setLevelWeight] = useState(15);
 
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
@@ -94,6 +106,14 @@ export default function ViewJob() {
       setIsActive(response.isActive);
       setSelectedEducation(response.education?.id || undefined);
       setLanguageIds(response.languageJobs)
+      setExpiredAt(response.expiredAt ? new Date(response.expiredAt) : null);
+      setLocationWeight(response.matchingWeights?.locationWeight || 20);
+      setSkillWeight(response.matchingWeights?.skillWeight || 25);
+      setMajorWeight(response.matchingWeights?.majorWeight || 20);
+      setLanguageWeight(response.matchingWeights?.languageWeight || 10);
+      setEducationWeight(response.matchingWeights?.educationWeight || 15);
+      setLevelWeight(response.matchingWeights?.levelWeight || 15);
+      
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải thông tin công việc');
     }
@@ -161,9 +181,20 @@ export default function ViewJob() {
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>REVIEW</div>
-          <Button onClick={()=> navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${id}`)}>
-            Cập nhật
-          </Button>
+          <Popover>
+            <PopoverTrigger>
+              <Button
+              >
+                <MoreVertical />
+            </Button>
+            </PopoverTrigger>
+            <PopoverContent className='w-fit p-0 flex flex-col'>
+              <Button variant={'ghost'} className='w-full hover:bg-blue-500 hover:text-white rounded-none'
+                onClick={() => navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${id}`)}>
+                Chỉnh sửa
+              </Button>
+            </PopoverContent>
+          </Popover>
         </CardTitle>
       </CardHeader>
       <CardContent className='py-4'>
@@ -180,7 +211,11 @@ export default function ViewJob() {
             <QuantityJobPopup quantityJob={quantityJob} setQuantityJob={setQuantityJob} notEdit={true} />
             <LocationJobPopup locationIds={locationIds} setLocationIds={setLocationIds} locationList={locationList} notEdit={true} />
             <DetailJobPopup description={description} setDescription={setDescription} notEdit={true} />
-
+            <ExpiredJobPopup
+              expiredAt={expiredAt}
+              setExpiredAt={setExpiredAt}
+              isEdit={true}
+            />
             <RequirementPopup requirement={requirement} setRequirement={setRequirement} notEdit={true} />
             <EducationJobPopup
               educationList={educationsList}
@@ -199,6 +234,26 @@ export default function ViewJob() {
             <BenefitJobPopup benefitList={benefitList} setBenefitIds={setBenefitIds} benefitIds={benefitIds} notEdit={true} />
             <TypeJobPopup typeJobList={typeJobList} typeJobId={typeJobId} setTypeJobId={setTypeJobId} notEdit={true} />
             <SkillJobPopup skillList={skillList} selectedSkills={skillId} setSelectedSkills={setSkillId} notEdit={true} />
+
+            {
+              role === ROLE_LIST.EMPLOYER &&
+              <MatchingJobPopup
+                locationWeight={locationWeight}
+                setLocationWeight={setLocationWeight}
+                skillWeight={skillWeight}
+                setSkillWeight={setSkillWeight}
+                majorWeight={majorWeight}
+                setMajorWeight={setMajorWeight}
+                languageWeight={languageWeight}
+                setLanguageWeight={setLanguageWeight}
+                educationWeight={educationWeight}
+                setEducationWeight={setEducationWeight}
+                levelWeight={levelWeight}
+                setLevelWeight={setLevelWeight}
+                jobId={+id}
+                isEdit={true}
+              />
+            }
           </div>
 
           {/* Right side: Action Buttons */}

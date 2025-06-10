@@ -2,7 +2,7 @@
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
-import { createJob } from '@/apis/jobAPI';
+import { createJob, createMatchingWeightJob } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
@@ -13,9 +13,11 @@ import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
 import EducationJobPopup from '@/components/elements/job/popup/EducationJobPopup';
 import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
+import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
 import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
 import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
 import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
+import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
 import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
 import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
 import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
@@ -59,13 +61,21 @@ export default function CreateJob() {
   const [skillId, setSkillId] = useState<number[]>([])
   const [educationList, setEducationList] = useState<Education[]>([]);
   const [selectedEducation, setSelectedEducation] = useState<number>();
+  const [expiredAt, setExpiredAt] = useState<Date| null>(null);
+  const [locationWeight, setLocationWeight] = useState(20);
+  const [skillWeight, setSkillWeight] = useState(25);
+  const [majorWeight, setMajorWeight] = useState(20);
+  const [languageWeight, setLanguageWeight] = useState(10);
+  const [educationWeight, setEducationWeight] = useState(15);
+  const [levelWeight, setLevelWeight] = useState(15);
+
 
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
 
   const handleCreateJob = async () => {
     try {
-      await createJob({
+      const create = await createJob({
         name: nameJob,
         description: description,
         benefits: benefitIds,
@@ -80,6 +90,15 @@ export default function CreateJob() {
         maxSalary: salaryMax,
         education: selectedEducation,
         languages: languageIds,
+        expiredAt: expiredAt,
+      })
+      createMatchingWeightJob(create.id, {
+        locationWeight: locationWeight,
+        skillWeight: skillWeight,
+        majorWeight: majorWeight,
+        languageWeight: languageWeight,
+        educationWeight: educationWeight,
+        levelWeight: levelWeight,
       })
       toast.success('Tin tuyển dụng đã được tạo thành công');
     }
@@ -161,6 +180,10 @@ export default function CreateJob() {
               setLocationIds={setLocationIds}
               locationList={locationList}
             />
+            <ExpiredJobPopup
+              expiredAt={expiredAt}
+              setExpiredAt={setExpiredAt}
+            />
             <DetailJobPopup
               description={description}
               setDescription={setDescription}
@@ -203,6 +226,20 @@ export default function CreateJob() {
               skillList={skillList}
               selectedSkills={skillId}
               setSelectedSkills={setSkillId}
+            />
+            <MatchingJobPopup
+              locationWeight={locationWeight}
+              setLocationWeight={setLocationWeight}
+              skillWeight={skillWeight}
+              setSkillWeight={setSkillWeight}
+              majorWeight={majorWeight}
+              setMajorWeight={setMajorWeight}
+              languageWeight={languageWeight}
+              setLanguageWeight={setLanguageWeight}
+              educationWeight={educationWeight}
+              setEducationWeight={setEducationWeight}
+              levelWeight={levelWeight}
+              setLevelWeight={setLevelWeight}
             />
           </div>
           {/* Right side: Add Button */}

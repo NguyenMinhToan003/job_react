@@ -13,9 +13,11 @@ import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
 import EducationJonPopup from '@/components/elements/job/popup/EducationJobPopup';
 import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
+import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
 import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
 import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
 import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
+import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
 import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
 import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
 import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
@@ -24,6 +26,7 @@ import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
 import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Benefit } from '@/types/benefitType';
 import { Education } from '@/types/educationType';
 import { Experience } from '@/types/experienceType';
@@ -33,8 +36,9 @@ import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
-import { RotateCcw } from 'lucide-react';
+import { MoreVertical, RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function UpdateJob() {
@@ -63,6 +67,13 @@ export default function UpdateJob() {
   const [selectedEducation, setSelectedEducation] = useState<number>();
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
+  const [expiredAt, setExpiredAt] = useState<Date | null>(null);
+  const [locationWeight, setLocationWeight] = useState(20);
+  const [skillWeight, setSkillWeight] = useState(25);
+  const [majorWeight, setMajorWeight] = useState(20);
+  const [languageWeight, setLanguageWeight] = useState(10);
+  const [educationWeight, setEducationWeight] = useState(15);
+  const [levelWeight, setLevelWeight] = useState(15);
 
   const handleUpdateJob = async () => {
     try {
@@ -81,6 +92,7 @@ export default function UpdateJob() {
         experience: experienceId,
         languages: languageIds,
         education: selectedEducation,
+        expiredAt: expiredAt,
       });
       toast.success('Cập nhật bài đăng thành công');
     }
@@ -132,6 +144,7 @@ export default function UpdateJob() {
       setSkillId(response.skills.map((skill) => skill.id));
       setLanguageIds(response.languageJobs);
       setSelectedEducation(response.education.id);
+      setExpiredAt(new Date(response.expiredAt));
     }
     catch(error) {
       console.error('Error fetching job data:', error);
@@ -143,10 +156,12 @@ export default function UpdateJob() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const navigate = useNavigate();
   const handleDeleteJob = async () => {
     try {
       await deleteJob(+id);
-      window.history.back();
+      navigate('/danh-cho-nha-tuyen-dung/tuyen-dung')
+      toast.success('Xóa bài đăng thành công');
     }
     catch (error: any) {
       toast.error(error.response.data.message);
@@ -165,7 +180,6 @@ export default function UpdateJob() {
       salaryMax,
       selectedEducation
     ].filter(Boolean).length;
-
     setCheckField(filledFields);
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax, selectedEducation]);
@@ -174,12 +188,20 @@ export default function UpdateJob() {
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>CẬP NHẬT BÀI ĐĂNG TUYỂN DỤNG</div>
-          <Button
-            className='bg-[#ed1b2f] text-white rounded-md px-4 py-2 mt-2'
-            onClick={() => handleDeleteJob()}
-          >
-            XÓA
+          <Popover>
+            <PopoverTrigger>
+              <Button
+              >
+                <MoreVertical />
             </Button>
+            </PopoverTrigger>
+            <PopoverContent className='w-fit p-0'>
+              <Button variant={'ghost'} className='w-fit hover:bg-red-500 hover:text-white rounded-none'
+                onClick={() => handleDeleteJob()}>
+                Xóa bài đăng
+              </Button>
+            </PopoverContent>
+          </Popover>
         </CardTitle>
       </CardHeader>
       <CardContent className='py-4'>
@@ -204,6 +226,10 @@ export default function UpdateJob() {
               locationIds={locationIds}
               setLocationIds={setLocationIds}
               locationList={locationList}
+            />
+            <ExpiredJobPopup
+              expiredAt={expiredAt}
+              setExpiredAt={setExpiredAt}
             />
             <DetailJobPopup
               description={description}
@@ -247,6 +273,21 @@ export default function UpdateJob() {
               skillList={skillList}
               selectedSkills={skillId}
               setSelectedSkills={setSkillId}
+            />
+            <MatchingJobPopup
+              locationWeight={locationWeight}
+              setLocationWeight={setLocationWeight}
+              skillWeight={skillWeight}
+              setSkillWeight={setSkillWeight}
+              majorWeight={majorWeight}
+              setMajorWeight={setMajorWeight}
+              languageWeight={languageWeight}
+              setLanguageWeight={setLanguageWeight}
+              educationWeight={educationWeight}
+              setEducationWeight={setEducationWeight}
+              levelWeight={levelWeight}
+              setLevelWeight={setLevelWeight}
+              jobId={+id}
             />
           </div>
           {/* Right side: Add Button */}

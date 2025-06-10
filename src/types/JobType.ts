@@ -38,6 +38,7 @@ export interface CreateJobRequest {
   description: string;
   education?: number;
   languages?: LanguageJob[];
+  expiredAt: Date| null;
 }
 
 export interface JobResponse {
@@ -63,6 +64,7 @@ export interface JobResponse {
   applyJobs: Cv[];
   education: Education;
   languageJobs: LanguageJob[];
+  matchingWeights: MatchingWeightResponse | null;
 }
 export interface JobFilterRequest {
   id?: number;
@@ -114,6 +116,9 @@ export interface JobFilterResponse {
   isApplied: boolean;
   isSaved: boolean;
   fields: Field[];
+  languageJobs: LanguageJob[];
+  education: Education;
+  matchingWeights: MatchingWeightResponse | null;
 }
 
 export interface UpdateJobAdminRequest {
@@ -136,4 +141,21 @@ export interface CompanyFilterJob {
   isExpired?: number;
   page?: number;
   limit?: number;
+}
+export interface MatchingWeightRequest {
+  locationWeight: number;
+  skillWeight: number;
+  majorWeight: number;
+  languageWeight: number;
+  educationWeight: number;
+  levelWeight: number;
+}
+export interface MatchingWeightResponse {
+  jobId: number;
+  locationWeight: number;
+  skillWeight: number;
+  majorWeight: number;
+  languageWeight: number;
+  educationWeight: number;
+  levelWeight: number;
 }
