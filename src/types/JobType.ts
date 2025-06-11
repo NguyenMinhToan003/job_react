@@ -41,6 +41,11 @@ export interface CreateJobRequest {
   expiredAt: Date| null;
 }
 
+export interface ViewJobResponse {
+  job: JobResponse;
+  viewDate: string;
+}
+
 export interface JobResponse {
   id: number;
   name: string;
@@ -64,7 +69,7 @@ export interface JobResponse {
   applyJobs: Cv[];
   education: Education;
   languageJobs: LanguageJob[];
-  matchingWeights: MatchingWeightResponse | null;
+  matchingWeights: MatchingWeightResponse;
 }
 export interface JobFilterRequest {
   id?: number;

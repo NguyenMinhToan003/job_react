@@ -47,20 +47,7 @@ export default function JobDetailCompany() {
     fetchData();
   }, [jobId]);
 
-  const renderStatus = (status: string) => {
-    switch (status) {
-      case 'UNG_TUYEN':
-        return <Badge variant="secondary">Chờ phản hồi</Badge>;
-      case 'THANH_CONG':
-        return <Badge variant="default">Đã phản hồi</Badge>;
-      case 'HUY':
-        return <Badge variant="outline">Hẹn phỏng vấn</Badge>;
-      case 'TU_CHOI':
-        return <Badge variant="destructive">Từ chối</Badge>;
-      default:
-        return <Badge>Không xác định</Badge>;
-    }
-  };
+
   const markView = (applyId: number) => {
     try {
       markViewed(applyId);
@@ -104,11 +91,11 @@ export default function JobDetailCompany() {
             <TableHeader>
                   <TableRow>
                     <TableHead className="w-[200px]">Độ phù hợp</TableHead>
-                <TableHead>Ứng viên</TableHead>
-                    <TableHead>Ghi chú</TableHead>
+                    <TableHead>Ứng viên</TableHead>
                     <TableHead>Hồ sơ</TableHead>
-                <TableHead>Thời gian nộp</TableHead>
-                <TableHead>Trạng thái</TableHead>
+                    <TableHead>Lời nhắn</TableHead>
+                    <TableHead>Thời gian nộp</TableHead>
+                    <TableHead>Trạng thái</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -149,7 +136,7 @@ export default function JobDetailCompany() {
                       convertDateToString(item.time)
                     }
                   </TableCell>
-                  <TableCell>{renderStatus(item.status)}</TableCell>
+                  <TableCell>{item.status}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

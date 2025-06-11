@@ -20,15 +20,18 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { filterJob, getDetailJobById } from '@/apis/jobAPI';
-import { Job, JobFilterResponse, JobResponse } from '@/types/jobType';
+import { JobFilterResponse } from '@/types/jobType';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import { saveJob } from '@/apis/saveJobAPI';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import JobList from '@/components/elements/job/job-list/JobList';
+import { addViewJobAPI } from '@/apis/viewJobAPI';
+import { ROLE_LIST } from '@/types/type';
 
 export default function JobDetail() {
   const { id } = useParams();
+  const role = localStorage.getItem('role');
   const [job, setJob] = useState<JobFilterResponse>();
   const navigate = useNavigate();
   const [jobOrders, setJobOrders] = useState<JobFilterResponse[]>([]);
@@ -51,10 +54,21 @@ export default function JobDetail() {
       toast.error(error.response?.data?.message || 'Lỗi khi lưu công việc');
     }
   }
+  const handleViewJob = async () => {
+    try {
+      addViewJobAPI(Number(id));
+    }
+    catch (error: any) {
+      toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin công việc');
+    }
+  }
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     fetchJobDetail();
+    if (role === ROLE_LIST.CANDIDATE) {
+      handleViewJob();
+    }
   }, [id]);
 
   const getJobOrther = async() => {

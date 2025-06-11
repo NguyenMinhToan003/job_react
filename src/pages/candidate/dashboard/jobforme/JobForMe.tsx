@@ -2,6 +2,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ApplyJob from "./ApplyJob";
 import SaveJob from "./SaveJob";
+import ViewJob from "./ViewJob";
 
 export default function JobForMe() {
   return <>
@@ -17,6 +18,9 @@ export default function JobForMe() {
           <TabsTrigger className="max-w-fit px-7 h-16 mr-1.5 rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none text-lg font-bold" value='saved'>
             Đã lưu
           </TabsTrigger>
+          <TabsTrigger className="max-w-fit px-7 h-16 mr-1.5 rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none text-lg font-bold" value='view'>
+           Xem gần đây
+          </TabsTrigger>
         </TabsList>
         <div className="mt-9">
         <TabsContent className='pt-3' value='applied'>
@@ -24,6 +28,9 @@ export default function JobForMe() {
         </TabsContent>
         <TabsContent className='pt-3' value='saved'>
           <SaveJob/>
+        </TabsContent>
+        <TabsContent className='pt-3' value='view'>
+          <ViewJob/>
         </TabsContent>
         </div>
       </Tabs>
