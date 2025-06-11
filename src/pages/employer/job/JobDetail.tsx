@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getApplyJobByJobId, markViewed } from "@/apis/applyJobAPI";
 import { ApplyJobResponse } from "@/types/applyJobType";
@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { convertDateToString } from "@/utils/dateTime";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ViewResumeVersion from "@/pages/candidate/dashboard/resume/ViewResumeVersion";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { MoreVertical } from "lucide-react";
 
 export default function JobDetailCompany() {
   const { jobId } = useParams();
@@ -67,11 +69,27 @@ export default function JobDetailCompany() {
       console.error("Lỗi khi đánh dấu đã xem:", error);
     }
   }
+  const navigate= useNavigate();
+  const { id } = job;
   return (
     <Card className="w-full shadow-md">
       <CardHeader>
-        <CardTitle className="text-xl font-bold">
-          Danh sách ứng viên ứng tuyển
+      <CardTitle className='font-bold text-2xl flex justify-between items-center'>
+          <div>DANH SACH ỨNG TUYỂN</div>
+          <Popover>
+            <PopoverTrigger>
+              <Button
+              >
+                <MoreVertical />
+            </Button>
+            </PopoverTrigger>
+            <PopoverContent className='w-fit p-0 flex flex-col'>
+              <Button variant={'ghost'} className='w-full hover:bg-blue-500 hover:text-white rounded-none'
+                onClick={() => navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${id}`)}>
+                Chỉnh sửa trọng số
+              </Button>
+            </PopoverContent>
+          </Popover>
         </CardTitle>
       </CardHeader>
       <CardContent>

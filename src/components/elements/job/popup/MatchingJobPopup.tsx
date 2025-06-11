@@ -36,7 +36,7 @@ export default function MatchingJobPopup({locationWeight,
 
 
   return <>
-    <Card>
+    <Card >
       <CardHeader>
         <CardTitle className='text-lg font-bold text-start'>
           TIÊU CHÍ ĐÁNH GIÁ

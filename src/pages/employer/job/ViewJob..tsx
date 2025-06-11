@@ -42,7 +42,6 @@ import { useNavigate } from 'react-router-dom';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoreVertical } from 'lucide-react';
 import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
-import { set } from 'date-fns';
 import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
 
 export default function ViewJob() {
@@ -71,12 +70,12 @@ export default function ViewJob() {
   const [educationsList, setEducationsList] = useState<Education[]>([]);
   const [selectedEducation, setSelectedEducation] = useState<number>();
   const [expiredAt, setExpiredAt] = useState<Date| null>(null);
-  const [locationWeight, setLocationWeight] = useState(20);
-  const [skillWeight, setSkillWeight] = useState(25);
-  const [majorWeight, setMajorWeight] = useState(20);
-  const [languageWeight, setLanguageWeight] = useState(10);
-  const [educationWeight, setEducationWeight] = useState(15);
-  const [levelWeight, setLevelWeight] = useState(15);
+  const [locationWeight, setLocationWeight] = useState(0);
+  const [skillWeight, setSkillWeight] = useState(0);
+  const [majorWeight, setMajorWeight] = useState(0);
+  const [languageWeight, setLanguageWeight] = useState(0);
+  const [educationWeight, setEducationWeight] = useState(0);
+  const [levelWeight, setLevelWeight] = useState(0);
 
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
@@ -107,12 +106,12 @@ export default function ViewJob() {
       setSelectedEducation(response.education?.id || undefined);
       setLanguageIds(response.languageJobs)
       setExpiredAt(response.expiredAt ? new Date(response.expiredAt) : null);
-      setLocationWeight(response.matchingWeights?.locationWeight || 20);
-      setSkillWeight(response.matchingWeights?.skillWeight || 25);
-      setMajorWeight(response.matchingWeights?.majorWeight || 20);
-      setLanguageWeight(response.matchingWeights?.languageWeight || 10);
-      setEducationWeight(response.matchingWeights?.educationWeight || 15);
-      setLevelWeight(response.matchingWeights?.levelWeight || 15);
+      setLocationWeight(response.matchingWeights?.locationWeight);
+      setSkillWeight(response.matchingWeights?.skillWeight);
+      setMajorWeight(response.matchingWeights?.majorWeight);
+      setLanguageWeight(response.matchingWeights?.languageWeight);
+      setEducationWeight(response.matchingWeights?.educationWeight);
+      setLevelWeight(response.matchingWeights?.levelWeight);
       
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải thông tin công việc');

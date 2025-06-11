@@ -3,7 +3,7 @@
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
-import { deleteJob, updateJob, viewJobAPI } from '@/apis/jobAPI';
+import { deleteJob, updateJob, updateMatchingWeightJob, viewJobAPI } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
@@ -68,15 +68,20 @@ export default function UpdateJob() {
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
   const [expiredAt, setExpiredAt] = useState<Date | null>(null);
-  const [locationWeight, setLocationWeight] = useState(20);
-  const [skillWeight, setSkillWeight] = useState(25);
-  const [majorWeight, setMajorWeight] = useState(20);
-  const [languageWeight, setLanguageWeight] = useState(10);
-  const [educationWeight, setEducationWeight] = useState(15);
-  const [levelWeight, setLevelWeight] = useState(15);
+  const [locationWeight, setLocationWeight] = useState(0);
+  const [skillWeight, setSkillWeight] = useState(0);
+  const [majorWeight, setMajorWeight] = useState(0);
+  const [languageWeight, setLanguageWeight] = useState(0);
+  const [educationWeight, setEducationWeight] = useState(0);
+  const [levelWeight, setLevelWeight] = useState(0);
 
   const handleUpdateJob = async () => {
     try {
+      const score = levelWeight + skillWeight + majorWeight + languageWeight + educationWeight + locationWeight;
+      if (score !== 100) {
+        toast.error('Tổng trọng số phải bằng 100');
+        return;
+      }
       await updateJob(+id, {
         name: nameJob,
         locations: locationIds,
@@ -94,6 +99,15 @@ export default function UpdateJob() {
         education: selectedEducation,
         expiredAt: expiredAt,
       });
+      await updateMatchingWeightJob(+id, {
+        locationWeight,
+        skillWeight,
+        majorWeight,
+        languageWeight,
+        educationWeight,
+        levelWeight
+      }
+      )
       toast.success('Cập nhật bài đăng thành công');
     }
     catch (error : any) {
@@ -145,6 +159,13 @@ export default function UpdateJob() {
       setLanguageIds(response.languageJobs);
       setSelectedEducation(response.education.id);
       setExpiredAt(new Date(response.expiredAt));
+      setLocationWeight(response.matchingWeights?.locationWeight);
+      setSkillWeight(response.matchingWeights?.skillWeight);
+      setMajorWeight(response.matchingWeights?.majorWeight);
+      setLanguageWeight(response.matchingWeights?.languageWeight);
+      setEducationWeight(response.matchingWeights?.educationWeight);
+      setLevelWeight(response.matchingWeights?.levelWeight);
+
     }
     catch(error) {
       console.error('Error fetching job data:', error);

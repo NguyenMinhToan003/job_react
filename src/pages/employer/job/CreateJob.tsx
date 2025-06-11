@@ -66,7 +66,7 @@ export default function CreateJob() {
   const [skillWeight, setSkillWeight] = useState(25);
   const [majorWeight, setMajorWeight] = useState(20);
   const [languageWeight, setLanguageWeight] = useState(10);
-  const [educationWeight, setEducationWeight] = useState(15);
+  const [educationWeight, setEducationWeight] = useState(10);
   const [levelWeight, setLevelWeight] = useState(15);
 
 
@@ -75,6 +75,11 @@ export default function CreateJob() {
 
   const handleCreateJob = async () => {
     try {
+      const score = levelWeight + educationWeight + languageWeight + majorWeight + skillWeight + locationWeight;
+      if (score !== 100) {
+        toast.error('Tổng trọng số phải bằng 100');
+        return;
+      }
       const create = await createJob({
         name: nameJob,
         description: description,

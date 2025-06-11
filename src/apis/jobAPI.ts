@@ -60,3 +60,8 @@ export const createMatchingWeightJob = async (jobId: number | null, data: Matchi
   const response = await axiosInstance.post(`/matching-weight/trigger-job-create/${jobId}`, data);
   return response.data;
 }
+
+export const updateMatchingWeightJob = async (jobId: number, data: MatchingWeightRequest) => {
+  const response = await axiosInstance.patch(`/matching-weight/${jobId}`, data);
+  return response.data;
+}
