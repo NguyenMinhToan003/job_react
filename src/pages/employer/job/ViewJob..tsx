@@ -180,7 +180,8 @@ export default function ViewJob() {
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>REVIEW</div>
-          <Popover>
+          {
+            role === ROLE_LIST.EMPLOYER &&  <Popover>
             <PopoverTrigger>
               <Button
               >
@@ -194,6 +195,7 @@ export default function ViewJob() {
               </Button>
             </PopoverContent>
           </Popover>
+          }
         </CardTitle>
       </CardHeader>
       <CardContent className='py-4'>

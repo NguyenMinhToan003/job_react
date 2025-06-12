@@ -1,6 +1,12 @@
 import { CvResponse } from "./cvType";
+import { Education } from "./educationType";
 import { JobResponse } from "./jobType";
+import { LanguageJob, LanguageResume } from "./LanguageType";
+import { Level } from "./levelType";
+import { City } from "./location";
+import { Major } from "./majorType";
 import { ResumeVersion } from "./resumeType";
+import { Skill } from "./SkillType";
 
 export interface CreateApplyRequest {
   resumeId : number;
@@ -31,4 +37,32 @@ export interface ApplyJobResponse {
   time: string;
   resumeVersion: ResumeVersion;
   matchingScore: number;
+}
+export interface ApplyJobByJobIdResponse {
+  id: number;
+  applyTime: string;
+  status: string;
+  note: string;
+  viewStatus: number;
+  job: JobResponse;
+  resumeVersion: ResumeVersion;
+  score: {
+    skillScore: number,
+    educationScore: number,
+    levelScore: number,
+    majorScore: number,
+    locationScore: number,
+    total: number;
+    languageScore: number;
+  }
+  majors: Major[];
+  matchingFields: {
+    skill: Skill[];
+    education: Education[];
+    level: Level[];
+    major: Major[];
+    location: City[];
+    language: LanguageResume[];
+  }
+  rank: number;
 }

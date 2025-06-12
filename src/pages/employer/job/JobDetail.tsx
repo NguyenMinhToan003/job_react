@@ -101,7 +101,9 @@ export default function JobDetailCompany() {
             <TableBody>
               {list.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell>
+                  <TableCell
+                    onClick={() => navigate(`/danh-cho-nha-tuyen-dung/danh-gia-ho-so-cong-viec/${item.id}`)}
+                  >
                     <Badge >
                       {item.matchingScore.toFixed(2)}%
                     </Badge>

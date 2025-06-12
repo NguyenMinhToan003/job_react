@@ -28,6 +28,8 @@ import { Major } from '@/types/majorType';
 import { ResumeVersion, ResumeVersionExp } from '@/types/resumeType';
 import { TypeJob } from '@/types/TypeJobType';
 import { getTypeJobList } from '@/apis/typeJobAPI';
+import DatePicker from 'react-datepicker';
+import { vi } from 'date-fns/locale';
 
 export default function FormUpdateResume() {
   const { resumeId } = useParams<{ resumeId: string }>();
@@ -222,11 +224,18 @@ export default function FormUpdateResume() {
                 <Label htmlFor='dob' className='text-sm font-semibold'>
                   Ngày sinh
                 </Label>
-                <Input
-                  id='dob'
-                  type='date'
-                  value={dayOfBirth}
-                  onChange={(e) => setDayOfBirth(e.target.value)}
+                <DatePicker
+                  selected={dayOfBirth||null}
+                  onChange={(date) => setDayOfBirth(date)}
+                  dateFormat='dd/MM/yyyy'
+                  locale={vi}
+                  placeholderText='Chọn ngày sinh'
+                  maxDate={new Date()}
+                  showYearDropdown
+                  scrollableMonthYearDropdown
+                  yearDropdownItemNumber={100}
+                  showMonthDropdown
+                  dropdownMode='select'
                 />
               </div>
               <div>

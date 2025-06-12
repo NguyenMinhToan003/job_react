@@ -65,3 +65,7 @@ export const updateMatchingWeightJob = async (jobId: number, data: MatchingWeigh
   const response = await axiosInstance.patch(`/matching-weight/${jobId}`, data);
   return response.data;
 }
+export const filterJobByMajor = async (majorId: number) => {
+  const response = await axiosInstance.get<JobFilterResponse[]>(`/job/major/${majorId}`);
+  return response.data;
+}

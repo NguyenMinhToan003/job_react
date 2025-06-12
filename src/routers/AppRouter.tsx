@@ -38,11 +38,12 @@ import ListResume from '@/pages/candidate/dashboard/resume/ListResume';
 import Resume from '@/pages/candidate/dashboard/resume/Resume';
 import FormUpdateResume from '@/pages/candidate/dashboard/resume/FormUpdateResume';
 import FormCreateResume from '@/pages/candidate/dashboard/resume/FormCreateResume';
-import ViewResumeVersion from '@/pages/candidate/dashboard/resume/ViewResumeVersion';
 import Country from '@/pages/admin/country/Country';
 import FieldList from '@/pages/admin/field/FieldList';
 import FieldDetail from '@/pages/admin/field/FieldDetail';
 import Major from '@/pages/admin/major/Major';
+import ViewResumeVersionForJob from '@/pages/employer/resume/ViewResumeVersionForJob';
+import CopyJob from '@/pages/employer/job/CopyJob';
 
 
 export default function AppRouter() {
@@ -109,7 +110,8 @@ export default function AppRouter() {
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
         <Route path='dang-tin-tuyen-dung' element={<CreateJob />} />
         <Route path='thong-tin-tuyen-dung/:id' element={<ViewJob />} />
-        <Route path='xem-ho-so/:resumeVerId' element={<ViewResumeVersion />} />
+        <Route path='nhan-ban/:id' element={<CopyJob />} />
+        <Route path='danh-gia-ho-so-cong-viec/:applyId' element={<ViewResumeVersionForJob />} />
         <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
         <Route path='thong-bao' element={<EmployerNotification />} />
         <Route path='*' element={<OverViewCompany />} />

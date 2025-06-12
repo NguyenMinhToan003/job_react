@@ -1,4 +1,4 @@
-import { ApplyJobResponse, CreateApplyRequest } from "@/types/applyJobType";
+import { ApplyJobByJobIdResponse, ApplyJobResponse, CreateApplyRequest } from "@/types/applyJobType";
 import { axiosInstance } from "./index";
 import { Job } from "@/types/jobType";
 
@@ -33,5 +33,10 @@ export const unApplyJob = async (jobId: number) => {
 
 export const markViewed = async (applyId: number) => {
   const response = await axiosInstance.get(`/apply-job/mark-view/${applyId}`);
+  return response.data;
+}
+
+export const analysResumeVersion = async (applyId: number) => {
+  const response = await axiosInstance.get<ApplyJobByJobIdResponse>(`/apply-job/employer/analys/${applyId}`);
   return response.data;
 }

@@ -28,6 +28,8 @@ import { useAccount } from '@/providers/UserProvider';
 import { TypeJob } from '@/types/TypeJobType';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import { ResumeVersionExp } from '@/types/resumeType';
+import DatePicker from 'react-datepicker';
+import { vi } from 'date-fns/locale';
 
 export default function FormCreateResume() {
   const { dataUser } = useAccount();
@@ -84,6 +86,10 @@ export default function FormCreateResume() {
   }
   const handleCreateResume = async () => {
     try {
+      if (selectEducation.id === undefined) {
+        toast.error('Vui lòng chọn trình độ học vấn');
+        return;
+      }
       await createResumeAPI({
         username,
         phone,
@@ -185,12 +191,19 @@ export default function FormCreateResume() {
                 </div>
                 <div>
                   <Label htmlFor='dob' className='text-sm font-semibold'>Ngày sinh</Label>
-                  <Input
-                    id='dob'
-                    type='date'
-                    value={dateOfBirth}
-                    onChange={(e) => setDayOfBirth(e.target.value)}
-                  />
+              <DatePicker
+                selected={dateOfBirth ? new Date(dateOfBirth) : null}
+                onChange={(date) => setDayOfBirth(date ? date.toISOString().split('T')[0] : '')}
+                locale={vi}
+                dateFormat='dd/MM/yyyy'
+                placeholderText='Chọn ngày sinh'
+                maxDate={new Date()}
+                showYearDropdown
+                scrollableMonthYearDropdown
+                yearDropdownItemNumber={100}
+                showMonthDropdown
+                dropdownMode='select'
+              />
                 </div>
                 <div>
                   <Label className='text-sm font-semibold'>Giới tính</Label>
@@ -334,7 +347,7 @@ export default function FormCreateResume() {
                 Trình độ học vấn
             </Label>
             <Select
-              defaultValue={selectEducation ? selectEducation?.name : 'Chọn trình độ học vấn'}
+              defaultValue={selectEducation ? selectEducation.name : 'Chọn trình độ học vấn'}
               onValueChange={(value) => {
                 console.log(value);
                 const select = educations.find(edu => edu.id === +value);

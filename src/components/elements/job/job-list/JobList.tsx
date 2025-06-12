@@ -75,10 +75,14 @@ export default function JobList({
               </div>
             ))}
 
-          <div className='flex gap-2 items-center text-gray-600'>
-            <MapPin size={14} />
-            {job.locations[0]?.district?.city?.name}
-          </div>
+          {
+            job.locations.length > 0 && job.locations.map((location, index) => (
+              <div key={index} className='flex gap-2 items-center text-shadow-gray-600'>
+                <MapPin size={14} />
+                {location.name}
+              </div>
+            ))
+          }
         </div>
 
 
