@@ -36,7 +36,7 @@ export default function CityDistrictPage() {
   }, []);
 
   return (
-    <div className='px-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#f7f7f7] w-full'>
+    <div className='px-6 grid grid-cols-1 md:grid-cols-2 gap-6  w-full'>
       {/* Danh sách Tỉnh/Thành */}
       <Card>
         <CardHeader>

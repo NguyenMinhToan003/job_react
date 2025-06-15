@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
+import { employerSubGetStatusActive, subscriptionJob } from '@/apis/employer_sub';
 import { getExperienceList } from '@/apis/experienceAPI';
 import { createJob, createMatchingWeightJob } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
@@ -22,12 +23,14 @@ import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
 import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
 import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
 import SalaryJonPopup from '@/components/elements/job/popup/SalaryJobPopup';
+import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
 import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
 import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Benefit } from '@/types/benefitType';
 import { Education } from '@/types/educationType';
+import { EmployerSubResponse } from '@/types/employerSubType';
 import { Experience } from '@/types/experienceType';
 import { Language, LanguageJob } from '@/types/LanguageType';
 
@@ -68,10 +71,10 @@ export default function CreateJob() {
   const [languageWeight, setLanguageWeight] = useState(10);
   const [educationWeight, setEducationWeight] = useState(10);
   const [levelWeight, setLevelWeight] = useState(15);
-
-
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
+  const [employerSub, setEmployerSub] = useState<EmployerSubResponse[]>([]);
+  const [selectEmployerSub, setSelectEmployerSub] = useState<EmployerSubResponse | null>(null);
 
   const handleCreateJob = async () => {
     try {
@@ -105,6 +108,12 @@ export default function CreateJob() {
         educationWeight: educationWeight,
         levelWeight: levelWeight,
       })
+      if (selectEmployerSub) {
+        subscriptionJob({
+          jobId: create.id,
+          subscriptionId: selectEmployerSub.id,
+        });
+      }
       toast.success('Tin tuyển dụng đã được tạo thành công');
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,7 +123,7 @@ export default function CreateJob() {
   }
   const fetchListElements = async () => {
     try {
-      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages] = await Promise.all([
+      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages, employer_subList] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -123,6 +132,7 @@ export default function CreateJob() {
         getSkillList(),
         getAllEducations(),
         getAllLanguages(),
+        employerSubGetStatusActive(),
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -132,6 +142,7 @@ export default function CreateJob() {
       setSkillList(skills);
       setEducationList(educations);
       setLanguageList(languages);
+      setEmployerSub(employer_subList);
     }
     catch (error : any) {
       toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tải dữ liệu');
@@ -158,14 +169,19 @@ export default function CreateJob() {
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax]);
   return <>
-    <Card className='w-full bg-[#f7f7f7] border-none shadow-none p-0'>
+    <Card className='w-full bg-transparent border-none shadow-none p-0'>
       <CardHeader>
-        <CardTitle className='font-bold text-2xl text-red-600'>ĐĂNG TUYỂN DỤNG</CardTitle>
+        <CardTitle className='font-bold text-2xl text-red-600'>TẠO TIN TUYỂN DỤNG</CardTitle>
       </CardHeader>
       <CardContent>
         <div className='flex flex-col md:flex-row gap-6'>
           {/* Left side: Job List */}
           <div className='flex-1'>
+            <SelectServiceJobPopup
+              employerSub={employerSub}
+              selectEmployerSub={selectEmployerSub}
+              setSelectEmployerSub={setSelectEmployerSub}
+            />
             <NameJobPopup
               nameJob={nameJob}
               setNameJob={setNameJob}
@@ -248,7 +264,8 @@ export default function CreateJob() {
             />
           </div>
           {/* Right side: Add Button */}
-          <div className='w-full md:w-[300px] sticky top-20 h-56'>
+          <div className='w-full md:w-[300px] sticky top-20 h-56 flex flex-col gap-4'>
+            
             <Card className='shadow-md border-dashed border-2 border-gray-300 p-4 h-full flex flex-col justify-center items-center'>
               <div>
                 <div className='text-sm text-gray-500 text-center font-bold'>

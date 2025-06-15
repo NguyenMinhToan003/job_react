@@ -44,6 +44,8 @@ import FieldDetail from '@/pages/admin/field/FieldDetail';
 import Major from '@/pages/admin/major/Major';
 import ViewResumeVersionForJob from '@/pages/employer/resume/ViewResumeVersionForJob';
 import CopyJob from '@/pages/employer/job/CopyJob';
+import Price from '@/pages/employer/price/Price';
+import Service from '@/pages/employer/Service';
 
 
 export default function AppRouter() {
@@ -54,6 +56,7 @@ export default function AppRouter() {
   return (<>
     <Routes>
       <Route path='/auth/login' element={<LoginPage />} />
+      <Route path='/nha-tuyen-dung/dang-ky' element={<RegisterEmployer />} />
       <Route path='/' element={<Index />}>
         <Route path='dang-ky' element={<RegisterCandidate />} />
         <Route path='login-success' element={<LoginSuccess />} />
@@ -102,10 +105,10 @@ export default function AppRouter() {
       </Route>
       // employer
       <Route path='/danh-cho-nha-tuyen-dung' element={<IndexCompany />} >
+        <Route path='bang-gia' element={<Price />} />
         <Route index element={<OverViewCompany />} />
-        <Route path='dang-ky' element={<RegisterEmployer />} />
         <Route path='tuyen-dung' element={<CompanyJob />} />
-        <Route path='tuyen-dung/:tab' element={<CompanyJob />} />
+        <Route path='dich-vu' element={<Service />} />
         <Route path='dia-diem' element={<LocationCompany />} />
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
         <Route path='dang-tin-tuyen-dung' element={<CreateJob />} />

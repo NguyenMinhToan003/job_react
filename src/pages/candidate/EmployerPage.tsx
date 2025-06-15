@@ -49,7 +49,7 @@ export default function CompanyPage() {
 
 
   return (
-    <div className='flex flex-col bg-[#f7f7f7]'>
+    <div className='flex flex-col '>
       <div className='bg-gradient-to-r from-[#121212] to-[#53151c] text-white'>
         <div className='max-w-7xl mx-auto py-4 px-6 flex items-center gap-6'>
           <div className='bg-white rounded-md p-1 min-w-40 min-h-40 max-w-40 max-h-40 flex items-center justify-center'>

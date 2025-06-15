@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { getCvMe } from '@/apis/cvAPI';
 import { useAccount } from '@/providers/UserProvider';
-import { updateInfoCandidate } from '@/apis/userAPI';
+import { updateInfoCandidate } from '@/apis/candidateAPI';
 import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';
 import { NOTI_TYPE } from '@/types/type';
 import { Resume } from '@/types/resumeType';

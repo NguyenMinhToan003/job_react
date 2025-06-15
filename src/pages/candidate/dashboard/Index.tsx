@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAccount } from '@/providers/UserProvider';
+import { Switch } from '@/components/ui/switch';
 
 const userMenuItems = [
   { label: 'Tổng quan', icon: <LayoutDashboard className='w-6 h-6' />, path: '' },
@@ -36,7 +37,7 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className='w-7xl mx-auto p-6 flex gap-6'>
+    <div className='w-8xl mx-auto p-6 flex gap-6 min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 '>
       <Card className='w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-18'>
         <CardHeader>
           <p className='text-sm text-muted-foreground'>👋 Xin chào</p>

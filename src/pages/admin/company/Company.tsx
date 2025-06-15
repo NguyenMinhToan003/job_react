@@ -51,7 +51,7 @@ export default function CompanyListPage() {
   };
 
   return (
-    <div className="p-6 flex gap-6 bg-[#f7f7f7] w-full">
+    <div className="p-6 flex gap-6  w-full">
       <Card className="flex-1 w-full">
         <CardHeader>
           <CardTitle>Quản lý Công ty</CardTitle>

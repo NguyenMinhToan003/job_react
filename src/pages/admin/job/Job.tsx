@@ -36,7 +36,7 @@ export default function JobListPage() {
   }, []);
 
   return (
-    <div className='p-6 bg-[#f7f7f7] w-full'>
+    <div className='p-6  w-full'>
       <Tabs defaultValue='gioi-thieu' className='mb-8'>
           <TabsList className='border-b w-full justify-start rounded-sm h-auto p-0 mb-6 bg-white shadow-xl border-b-gray-300'>
             <TabsTrigger

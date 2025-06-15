@@ -192,7 +192,7 @@ export default function CopyJob() {
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax, selectedEducation]);
   return <>
-    <Card className='w-full bg-[#f7f7f7]'>
+    <Card className='w-full'>
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>NHÂN BẢN BÀI ĐĂNG TUYỂN DỤNG</div>

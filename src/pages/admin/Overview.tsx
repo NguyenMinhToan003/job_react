@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 export default function OverViewAdmin() {
   return (
     <>
-      <div className="bg-[#f7f7f7] min-h-screen">
+      <div className=" min-h-screen">
         <div className="h-[400px] bg-gradient-to-r from-[#121212] to-[#53151c] flex gap-2 items-center justify-center px-4">
 
           <div className="bg-white rounded-sm p-2 flex-1 max-w-[600px]">

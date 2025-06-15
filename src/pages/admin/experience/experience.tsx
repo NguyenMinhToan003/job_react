@@ -93,7 +93,7 @@ export default function ExperiencePage() {
   }
 
   return (
-    <div className='p-6 flex gap-6 bg-[#f7f7f7] w-full'>
+    <div className='p-6 flex gap-6 w-full'>
       <Card className='flex-1'>
         <CardHeader className='flex justify-between items-center'>
           <CardTitle>Quản lý kinh nghiệm</CardTitle>

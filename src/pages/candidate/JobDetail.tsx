@@ -107,7 +107,7 @@ export default function JobDetail() {
   }
 
   return (
-    <div className='max-w-6xl mx-auto p-6 space-y-6'>
+    <div className='max-w-7xl mx-auto p-6 space-y-6'>
       {/* Job Header */}
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         <Card className='lg:col-span-2'>
@@ -284,6 +284,37 @@ export default function JobDetail() {
             </Avatar>
             <CardTitle className='text-lg'>{job.employer.name}</CardTitle>
           </CardHeader>
+          <CardContent className='text-gray-600 space-y-2'>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-500">Lĩnh vực công ty</span>
+              <span className="text-sm font-medium text-gray-900">Dịch Vụ và Tự Vấn IT</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-500">Quy mô công ty</span>
+              <span className="text-sm font-medium text-gray-900">
+                {job.employer.employeeScale}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-500">Quốc gia</span>
+              <div>
+                <img
+                  src={job.employer.country.flag}
+                  alt={job.employer.country.name}
+                  className="inline-block w-6 h-6 mr-2 object-cover rounded-full border-2 border-gray-500 "
+                />
+                <span className="text-sm font-medium text-gray-900">
+                  {job.employer.country.name}
+                </span>
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-500">Lĩnh vực</span>
+              <span className="text-sm font-medium text-gray-900">
+                {job.employer.businessType}
+              </span>
+            </div>
+          </CardContent>
         </Card>
       </div>
 

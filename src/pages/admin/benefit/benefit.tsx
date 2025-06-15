@@ -22,7 +22,7 @@ export default function BenefitPage() {
   }, []);
 
   return (
-    <div className="p-6 bg-[#f7f7f7] min-h-screen">
+    <div className="p-6 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Quản lý quyền lợi</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {benefits.map((benefit) => (

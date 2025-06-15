@@ -5,79 +5,177 @@ import { Resume } from '@/types/resumeType';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { User, Phone, Mail, MapPin, Calendar, Eye, Trash2, Plus, FileText, Edit } from 'lucide-react';
 
 export default function ListResume() {
   const [listResume, setListResume] = useState<Resume[]>([]);
   const navigate = useNavigate();
+
   const fetchResume = async () => {
     try {
       const response = await getAllResumeAPI();
       setListResume(response);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error : any) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải danh sách hồ sơ');
     }
   };
+
   useEffect(() => {
     fetchResume();
-  }, [])
+  }, []);
 
   const handleDeleteResume = async (resumeId: number) => {
     try {
       await deleteResumeAPI(resumeId);
       toast.success('Xóa hồ sơ thành công');
       fetchResume();
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    catch (error : any) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi xóa hồ sơ');
     }
-  }
-  return <>
-    
-    <Card>
-      <CardHeader>
-        <CardTitle className='flex items-center justify-between'>
-          <span className='text-2xl font-semibold'>Danh sách hồ sơ</span>
-          <Button
-            className='ml-4'
-            onClick={() => navigate('create')}
-          >
-            Tạo hồ sơ mới
-          </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {
-          listResume.length > 0 ? (
-            <ul className='space-y-4'>
-              {listResume.map((resume) => (
-                <li
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('vi-VN');
+  };
+
+  const getGenderDisplay = (gender: string) => {
+    return gender === 'NAM' ? 'Nam' : 'Nữ';
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Resume List */}
+        {listResume.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {listResume.map((resume) => {
+              const latestVersion = resume.resumeVersions?.[0];
+              return (
+                <Card
                   key={resume.id}
-                  className='border p-4 rounded-md flex items-center justify-between hover:bg-gray-50 transition-all cursor-pointer'
+                  className="group hover:shadow-md transition-all duration-300 border border-gray-200 rounded-lg bg-white overflow-hidden"
                 >
-                  <div
-                    onClick={() => navigate(`${resume.id}`)}
-                    className='text-lg font-semibold flex-1'>
-                    {resume.id}-{resume.name}
-                  </div>
-                  <Button
-                    variant='destructive'
-                    className='mt-2'
-                    onClick={() => {
-                      handleDeleteResume(resume.id);
-                    }}
-                  >
-                    Xoá
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className='text-gray-500'>Bạn chưa có hồ sơ nào.</p>
-          )
-        }
-      </CardContent>
-    </Card>
-  </>
+                  <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        {latestVersion?.avatar ? (
+                          <img
+                            src={latestVersion.avatar}
+                            alt={latestVersion.username}
+                            className="w-12 h-12 rounded-full border-2 border-white object-cover"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white flex items-center justify-center">
+                            <User className="w-6 h-6 text-white" />
+                          </div>
+                        )}
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                          <FileText className="w-2 h-2 text-white" />
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-lg font-semibold">{resume.name}</CardTitle>
+                        <p className="text-xs text-white/80">
+                          Cập nhật: {formatDate(resume.updatedAt)}
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="p-4">
+                    {latestVersion ? (
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <User className="w-4 h-4 text-blue-600" />
+                          <span className="font-medium">{latestVersion.username}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Phone className="w-4 h-4 text-green-600" />
+                          <span>{latestVersion.phone}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Mail className="w-4 h-4 text-red-600" />
+                          <span>{latestVersion.email}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <MapPin className="w-4 h-4 text-purple-600" />
+                          <span>{latestVersion.location}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Calendar className="w-4 h-4 text-blue-500" />
+                          <span>
+                            {formatDate(latestVersion.dateOfBirth)} -{' '}
+                            {getGenderDisplay(latestVersion.gender)}
+                          </span>
+                        </div>
+                        {latestVersion.about && (
+                          <div className="mt-3 p-2 bg-gray-100 rounded-md">
+                            <p className="text-xs text-gray-600 line-clamp-2">
+                              {latestVersion.about}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center py-4">
+                        <FileText className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                        <p className="text-gray-500 text-xs">Chưa có thông tin chi tiết</p>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 mt-4 pt-3 border-t border-gray-200">
+                      <Button
+                        onClick={() => navigate(`${resume.id}`)}
+                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-xs py-1.5 flex items-center justify-center gap-1"
+                      >
+                        <Eye className="w-4 h-4" />
+                        Xem
+                      </Button>
+                      <Button
+                        onClick={() => navigate(`/tong-quat-ho-so/chinh-sua-ho-so/${resume.id}`)}
+                        variant="outline"
+                        className="flex-1 border-gray-300 hover:border-blue-500 hover:text-blue-600 rounded-md text-xs py-1.5 flex items-center justify-center gap-1"
+                      >
+                        <Edit className="w-4 h-4" />
+                        Sửa
+                      </Button>
+                      <Button
+                        onClick={() => handleDeleteResume(resume.id)}
+                        variant="outline"
+                        className="px-2 border-red-300 text-red-600 hover:bg-red-50 hover:border-red-500 rounded-md text-xs py-1.5"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="max-w-sm mx-auto">
+              <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-12 h-12 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                Chưa có hồ sơ nào
+              </h3>
+              <p className="text-gray-500 text-sm mb-6">
+                Bạn chưa tạo hồ sơ nào. Hãy tạo hồ sơ đầu tiên để bắt đầu tìm kiếm công việc mơ ước!
+              </p>
+              <Button
+                onClick={() => navigate('create')}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md flex items-center gap-2 mx-auto"
+              >
+                <Plus className="w-4 h-4" />
+                Tạo hồ sơ đầu tiên
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

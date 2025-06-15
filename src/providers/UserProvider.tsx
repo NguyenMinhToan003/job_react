@@ -1,4 +1,4 @@
-import { getDataCandidate } from '@/apis/userAPI';
+import { getDataCandidate } from '@/apis/candidateAPI';
 import { CandidateResponse } from '@/types/accountType';
 import { ROLE_LIST } from '@/types/type';
 

@@ -173,7 +173,7 @@ export default function SkillPage() {
 
 
   return (
-    <div className='p-6 flex flex-col gap-6 bg-[#f7f7f7] w-full'>
+    <div className='p-6 flex flex-col gap-6  w-full'>
       <Card className='flex-1'>
         <CardHeader className='flex justify-between items-center'>
           <CardTitle>Quản lý Kĩ năng</CardTitle>

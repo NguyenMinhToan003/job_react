@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { viewResumeAPI } from '@/apis/resumeAPI';
+import PdfViewer from '@/components/elements/pdf/prevPdf';
 import AboutMeResume from '@/components/elements/resume/popup/AboutMeResume';
 import EdicationResume from '@/components/elements/resume/popup/EducationResume';
 import ExpResume from '@/components/elements/resume/popup/ExpResume';
@@ -37,25 +38,31 @@ export default function Resume() {
     return <div>Loading...</div>;
   }
   return (
-    <div className='space-y-4'>
-      <InfoResume
-        resumeVer={resume}
-      />
-      <AboutMeResume 
-        resumeVer={resume}
-      />
-      <ExpResume
-        resumeVer={resume}
-      />
-      <EdicationResume
-        resumeVer={resume}
-      />
-      <SkillResume
-        resumeVer={resume}
-      />
-      <LanguageResume 
-        resumeVer={resume}
-      />
+    <div >
+      <div className='space-y-2'>
+        <InfoResume
+            resumeVer={resume}
+          />
+          <AboutMeResume 
+            resumeVer={resume}
+          />
+          <ExpResume
+            resumeVer={resume}
+          />
+          <EdicationResume
+            resumeVer={resume}
+          />
+          <SkillResume
+            resumeVer={resume}
+          />
+          <LanguageResume 
+            resumeVer={resume}
+        />
+      </div>
+      <iframe
+        className='w-full h-[800px] p-5'
+        src={resume?.urlPdf || ''}
+      ></iframe>
     </div>
   );
 }
