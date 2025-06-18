@@ -8,8 +8,9 @@ import { TypeJob } from "./TypeJobType";
 
 export interface Resume {
   id: number;
-  resumeVers: ResumeVersion[];
+  resumeVersions: ResumeVersion[];
   name: string;
+  isDefault: boolean;
   updatedAt: string;
 }
 

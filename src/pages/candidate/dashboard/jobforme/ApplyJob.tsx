@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getApplyByStatus, unApplyJob } from "@/apis/applyJobAPI";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApplyJobResponse } from "@/types/applyJobType";
 import { APPLY_JOB_STATUS } from "@/types/type";
 import { convertDateToString } from "@/utils/dateTime";
@@ -36,6 +36,13 @@ export default function ApplyJob() {
     }
   }
   return <>
+    <Card className="rounded-none shadow-none hover:shadow-2xl">
+      <CardHeader>
+        <CardTitle className="text-lg font-semibold text-gray-800">
+          Vị trí tuyển dụng đã ứng tuyển {applyJobs.length > 0 ? `(${applyJobs.length})` : ''}
+        </CardTitle>
+      </CardHeader>
+    </Card>
     {
       applyJobs.map((applyJob) => (
         <Card className="rounded-none shadow-none hover:shadow-2xl" key={applyJob.id}>

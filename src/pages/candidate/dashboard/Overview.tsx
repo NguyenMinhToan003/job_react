@@ -1,4 +1,4 @@
-import { getCvMe, uploadCv } from '@/apis/cvAPI';
+import {  uploadCv } from '@/apis/cvAPI';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,8 +38,7 @@ export default function Overview() {
   const fetchCvs = async () => {
     setLoading(true);
     try {
-      const response = await getCvMe();
-      setCvs(response);
+
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error fetching CVs');
     } finally {

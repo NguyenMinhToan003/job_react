@@ -69,3 +69,16 @@ export const filterJobByMajor = async (majorId: number) => {
   const response = await axiosInstance.get<JobFilterResponse[]>(`/job/major/${majorId}`);
   return response.data;
 }
+
+export const getJobBanner = async () => {
+  const response = await axiosInstance.post<JobFilterResponse[]>('/job/banner');
+  return response.data;
+}
+export const getJobByLocation = async (map: {
+  latitude: number;
+  longitude: number;
+  radius: number;
+}) => {
+  const response = await axiosInstance.post<JobFilterResponse[]>(`/job/job-map`, map);
+  return response.data;
+}

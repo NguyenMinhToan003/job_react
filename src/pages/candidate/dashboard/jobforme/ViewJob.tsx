@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getAllViewJobsAPI } from "@/apis/viewJobAPI";
+import { getAllViewJobsAPI, getRecomendedViewJobAPI } from "@/apis/viewJobAPI";
+import JobList from "@/components/elements/job/job-list/JobList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ViewJobResponse } from "@/types/jobType";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { JobFilterResponse, ViewJobResponse } from "@/types/jobType";
 import { convertDateToString } from "@/utils/dateTime";
 import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,19 +14,35 @@ import { toast } from "sonner";
 export default function ViewJob() {
   const [jobs, setJobs] = useState<ViewJobResponse[]>([]);
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const [totalPages, setTotalPages] = useState(1);
+  const [recomendedJobs, setRecomendedJobs] = useState<JobFilterResponse[]>([]);
   const fetchJobs = async () => {
     try {
-      const response = await getAllViewJobsAPI();
-      setJobs(response);
+      const response = await getAllViewJobsAPI(page, limit);
+      setJobs(response.items);
+      setTotalPages(response.totalPage || 1);
     }
     catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi lấy danh sách công việc đã xem');
     }
   }
+  const fetchRecomendedJobs = async () => {
+    try {
+      const response = await getRecomendedViewJobAPI();
+      setRecomendedJobs(response);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Lỗi khi lấy danh sách công việc gợi ý');
+    }
+  }
 
   useEffect(() => {
-    fetchJobs();
+    fetchRecomendedJobs();
   }, []);
+  useEffect(() => {
+    fetchJobs();
+  }, [page]);
 
   
   return <>
@@ -71,5 +89,64 @@ export default function ViewJob() {
         </Card>
       ))
     }
+    <Pagination className=' w-full bg-white py-2'>
+        <PaginationContent className='list-none flex justify-center items-center gap-1'>
+          <PaginationPrevious
+            title='Trước'
+            className='cursor-pointer'
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Trước
+          </PaginationPrevious>
+
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink
+                className={`cursor-pointer ${
+                  page === index + 1
+                    ? 'bg-blue-500 text-white'
+                    : 'text-blue-500 hover:bg-blue-100'
+                }`}
+                onClick={() => setPage(index + 1)}
+                isActive={page === index + 1}
+              >
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+
+          <PaginationNext
+            title='Tiếp theo'
+            className='cursor-pointer'
+            onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))}
+          >
+            Tiếp theo
+          </PaginationNext>
+        </PaginationContent>
+    </Pagination>
+    
+    <Card className='mt-4'>
+            <CardHeader className='text-center text-gray-800 font-bold'>
+              <CardTitle>
+                Gợi ý công việc đã lưu cho bạn
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='text-center text-gray-500 font-semibold grid grid-cols-2 gap-4'>
+              {
+                recomendedJobs.length > 0 ? (
+                  recomendedJobs.map((job: JobFilterResponse) => (
+                    <JobList
+                      key={job.id}
+                      job={job}
+                      selectedJob={job}
+                      setSelectedJob={() => navigate(`/cong-viec/${job.id}`)}
+                    />
+                  ))
+                ) : (
+                  <div className='col-span-2'>Không có công việc gợi ý</div>
+                )
+              }
+            </CardContent>
+          </Card>
   </>
 }

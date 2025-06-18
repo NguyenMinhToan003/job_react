@@ -1,12 +1,15 @@
 import {
   LayoutDashboard,
-  Briefcase,
   MapPin,
-  UserCog,
-  Mail,
   Settings,
   ChevronDown,
   ChevronRight,
+  Package,
+  DollarSign,
+  Search,
+  MessageCircle,
+  ClipboardList,
+  Bell,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,7 +41,7 @@ export default function CompanyNavbar() {
     { label: 'Tổng quan', icon: <LayoutDashboard className='w-6 h-6' />, path: '' },
     {
       label: 'Quản lý tuyển dụng',
-      icon: <UserCog className='w-6 h-6' />,
+      icon: <ClipboardList className='w-6 h-6' />, // thay vì UserCog
       children: [
         { label: 'Danh sách', path: 'tuyen-dung' },
         { label: 'Hết hạn', path: 'tuyen-dung/het-han' },
@@ -47,9 +50,11 @@ export default function CompanyNavbar() {
       ],
     },
     { label: 'Quản lý địa điểm', icon: <MapPin className='w-6 h-6' />, path: 'dia-diem' },
-    { label: 'Dịch vụ', icon: <Briefcase className='w-6 h-6' />, path: 'dich-vu' },
-    { label: 'Bảng giá', icon: <Briefcase className='w-6 h-6' />, path: 'bang-gia' },
-    { label: 'Quản lý thông tin', icon: <Briefcase className='w-6 h-6' />, path: 'tin-nhan' },
+    { label: 'Dịch vụ', icon: <Package className='w-6 h-6' />, path: 'dich-vu' },
+    { label: 'Bảng giá', icon: <DollarSign className='w-6 h-6' />, path: 'bang-gia' },
+    { label: 'Tìm kiếm ứng viên', icon: <Search className='w-6 h-6' />, path: 'tim-kiem-ung-vien' },
+    { label: 'Blog', icon: <MessageCircle className='w-6 h-6' />, path: 'blog' },
+    { label: 'Quản lý thông tin', icon: <MessageCircle className='w-6 h-6' />, path: 'tin-nhan' },
     {
       label: (
         <span className='flex items-center gap-1'>
@@ -61,11 +66,12 @@ export default function CompanyNavbar() {
           )}
         </span>
       ),
-      icon: <Mail className='w-6 h-6' />,
+      icon: <Bell className='w-6 h-6' />, // thay vì Mail
       path: 'thong-bao',
     },
     { label: 'Cài đặt', icon: <Settings className='w-6 h-6' />, path: 'cai-dat' },
   ];
+  
 
   const isPathActive = (path?: string) =>
     path && location.pathname.includes(path);

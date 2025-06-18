@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Bell, ChevronDown, Menu } from 'lucide-react';
+import { Bell, ChevronDown, MapIcon, Menu } from 'lucide-react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAccount } from '@/providers/UserProvider';
 
@@ -11,6 +11,11 @@ export default function UserNavbar() {
 
   const navItems = [
     {
+      label: 'Tìm theo vị trí',
+      path: '/tim-theo-vi-tri',
+      icon: <MapIcon className='h-5 w-5 text-[#f5f3f4]' />,
+    },
+    {
       label: 'Nhà Tuyển Dụng',
       path: '/danh-cho-nha-tuyen-dung',
       icon: null,
@@ -19,7 +24,7 @@ export default function UserNavbar() {
       label: 'Tài khoản',
       path: '/tong-quat-ho-so',
       icon: (
-        <Avatar className='p-[0.5px] bg-[#3d1419] border border-[#f5f3f4]'>
+        <Avatar className=' bg-[#3d1419] border border-[#f5f3f4]'>
           <AvatarImage src={dataUser?.avatar} />
         </Avatar>
       ),
@@ -38,22 +43,22 @@ export default function UserNavbar() {
   };
 
   return (
-    <div className='sticky top-0 z-50 w-full border-b border-[#502c30] shadow-sm bg-gradient-to-r from-[#121212] to-[#53151c]'>
+    <div className='sticky top-0 z-50 w-full border-b border-[#451da1] shadow-sm bg-[#451da1]'>
       <div className='flex h-16 items-center justify-between px-4'>
         {/* Left section */}
         <div className='flex items-center gap-1'>
-          <Avatar className='p-[0.5px] border border-[#f5f3f4]'>
+          <Avatar className=' border border-[#f5f3f4]'>
             <AvatarImage src={dataUser?.avatar} />
           </Avatar>
-          <Button className='text-[#959595]' variant='link'>
+          <Button className='text-white' variant='link'>
             <span>
               <NavLink to='/'>
-                <span className='text-gray-400 font-semibold'>Tìm việc</span>
+                <span className='text-white font-semibold'>Tìm việc</span>
               </NavLink>
             </span>
             <ChevronDown className='h-5 w-5' />
           </Button>
-          <Button className='text-gray-400' variant='link'>
+          <Button className='text-white' variant='link'>
             <span>Tìm Công ty</span>
             <ChevronDown className='h-5 w-5' />
           </Button>

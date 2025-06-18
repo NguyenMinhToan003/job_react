@@ -70,7 +70,7 @@ function NavigationMenuTrigger({
   return (
     <NavigationMenuPrimitive.Trigger
       data-slot="navigation-menu-trigger"
-      className={cn(navigationMenuTriggerStyle(), "group", className)}
+      className={cn(navigationMenuTriggerStyle(), "group", className , 'font-semibold text-[#451da1] rounded-sm text-sm bg-[#f3e8ff] hover:bg-[#d9c2f5]')}
       {...props}
     >
       {children}{" "}

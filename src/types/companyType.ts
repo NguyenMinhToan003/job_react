@@ -22,7 +22,17 @@ export interface EmployerDetailResponse {
   logo: string;
   introduction: string;
   taxCode: string;
+  website?: string;
+  employeeScale: string;
+  businessType: string;
+  countryId: number;
+  phone: string;
   jobs: JobResponse[];
+  country: {
+    id: number;
+    name: string;
+    flag: string;
+  }
   locations: LocationResponse[];
   isFollowed?: boolean;
 }

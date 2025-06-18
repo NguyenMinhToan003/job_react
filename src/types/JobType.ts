@@ -124,6 +124,7 @@ export interface JobFilterResponse {
   languageJobs: LanguageJob[];
   education: Education;
   matchingWeights: MatchingWeightResponse | null;
+  distanceKm?: number | null;
 }
 
 export interface UpdateJobAdminRequest {

@@ -2,16 +2,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect, useState } from 'react';
-import { MapPin, Search } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { 
+  Flashlight, 
+  MapPin, 
+  Search, 
+  SearchIcon, 
+  TrendingUp,
+  Clock,
+  Briefcase,
+  Gift,
+  Award,
+  RotateCcw,
+  BriefcaseIcon, 
+  FlameIcon,
+  DollarSignIcon,
+  CalendarIcon
+} from 'lucide-react';
 import { toast } from 'sonner';
 
 import { getCityList } from '@/apis/cityAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
-import { filterJob } from '@/apis/jobAPI';
-import { iconMap } from "@/utils/SetListIcon";
+import { filterJob, getJobBanner } from '@/apis/jobAPI';
+import { iconMap } from '@/utils/SetListIcon';
 
 import JobList from '@/components/elements/job/job-list/Index';
 import { Button } from '@/components/ui/button';
@@ -41,6 +56,13 @@ import { Benefit } from '@/types/benefitType';
 import { getBenefit } from '@/apis/benefitAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { Skill } from '@/types/skillType';
+import JobItem from '@/components/elements/job/job-list/JobList';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Field } from '@/types/majorType';
+import { getFieldList } from '@/apis/fieldAPI';
+import { convertDateToDiffTime } from '@/utils/dateTime';
+import dayjs from 'dayjs';
 
 export default function Home() {
   const [countJobs, setCountJobs] = useState(0);
@@ -65,6 +87,9 @@ export default function Home() {
   const [selectSkills, setSelectSkills] = useState<number[]>([]);
 
   const [search, setSearch] = useState<string>('');
+  const [fields, setFields] = useState<Field[]>([]);
+
+  const [jobsBanner, setJobsBanner] = useState<JobFilterResponse[]>([]);
 
   useEffect(() => {
     fetchInitialData();
@@ -78,13 +103,15 @@ export default function Home() {
 
   const fetchInitialData = async () => {
     try {
-      const [cities, levels, types, experiences, benefits, skills] = await Promise.all([
+      const [cities, levels, types, experiences, benefits, skills, fields, jobsBanner] = await Promise.all([
         getCityList(),
         getLevelList(),
         getTypeJobList(),
         getExperienceList(),
         getBenefit(),
-        getSkillList()
+        getSkillList(),
+        getFieldList(),
+        getJobBanner(),
       ]);
       setCityOptions(cities);
       setLevelOptions(levels);
@@ -92,6 +119,8 @@ export default function Home() {
       setExperienceOptions(experiences);
       setBenefitOptions(benefits);
       setSkillOptions(skills);
+      setFields(fields);
+      setJobsBanner(jobsBanner);
     } catch (error) {
       console.error('Error fetching initial data:', error);
     }
@@ -142,7 +171,14 @@ export default function Home() {
       setSelectExperience([...selectExperience, id]);
     }
   }
+  const nextRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextRef.current?.click();
+    }, 10000);
 
+    return () => clearInterval(interval);
+  }, []);
   const handleResetFilter = () => {
     setSearch('');
     setSelectedCity(undefined);
@@ -155,11 +191,61 @@ export default function Home() {
     setJobList([]);
     fetchJobList({} as JobFilterRequest);
   };
+  function chunkArray<T>(array: T[], size: number): T[][] {
+    const result: T[][] = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  }
 
   return (
-    <div className='bg-[#f7f7f7] min-h-screen'>
-      {/* Banner tìm kiếm */}
-      <div className='h-[400px] bg-gradient-to-r from-[#121212] to-[#53151c] flex gap-2 items-center justify-center px-4'>
+    <div className='bg-[#fbfaff] min-h-screen '>
+      <div className='w-full '>
+        <img src='https://vieclam24h.vn/_next/image?url=https%3A%2F%2Fcdn1.vieclam24h.vn%2Fimages%2Fseeker-banner%2F2025%2F05%2F16%2Fbanner-cts-timdungviec-pc_174740689238.jpg&w=1920&q=75'
+          className='w-full h-[250px] object-cover ' alt='Banner' />  
+      </div>
+      <div className='flex items-center justify-center gap-1 h-fit p-1 absolute top-[240px] left-1/2 -translate-x-1/2 z-10 rounded-md w-7xl bg-white shadow-xl border border-gray-100'>
+        <div className='bg-white rounded-none p-1.5 flex-1 max-w-[600px] border-none '>
+          <SearchIcon className='text-[#451da1] w-6 h-6 absolute left-3 top-1/2 -translate-y-1/2' />
+          <Input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className='w-full bg-transparent border-none text-xl font-semibold p-3
+            focus:ring-0 focus:outline-none text-gray-700 placeholder:text-gray-400'
+            placeholder='Nhập từ khóa tìm kiếm việc làm, ví dụ: "Lập trình viên"'
+          />
+        </div>
+        <Select
+          value={fields.length > 0 ? fields[0].name : 'undefinded'}
+          onValueChange={value => {
+            const selectedField = fields.find(field => field.name === value);
+            setFields(selectedField ? [selectedField] : []);
+          }}
+        >
+          <Button variant='ghost' className='w-[200px] p-0 rounded-none bg-white hover:bg-white border-l-1 border-gray-200'>
+            <SelectTrigger className='w-full h-full text-left px-4 border-none'>
+              <SelectValue
+                placeholder={
+                  <span className='flex items-center gap-2 text-gray-600'>
+                    <Flashlight className='w-4 h-4' />
+                    Chọn lĩnh vực
+                  </span>
+                }
+              />
+            </SelectTrigger>
+          </Button>
+          <SelectContent>
+            <SelectItem value={'undefinded'}>
+              <span className='text-gray-600'>Tất cả lĩnh vực</span>
+            </SelectItem>
+            {fields.map(field => (
+              <SelectItem key={field.id} value={field.name}>
+                {field.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select
           value={citySelected?.name}
           onValueChange={value => {
@@ -167,7 +253,7 @@ export default function Home() {
             setSelectedCity(selected);
           }}
         >
-          <Button variant='secondary' className='h-[54px] w-[200px] p-0'>
+          <Button variant='ghost' className='w-[200px] p-0 rounded-none bg-white hover:bg-white border-l-1 border-gray-200'>
             <SelectTrigger className='w-full h-full text-left px-4 border-none'>
               <SelectValue
                 placeholder={
@@ -191,51 +277,30 @@ export default function Home() {
             ))}
           </SelectContent>
         </Select>
-
-        <div className='bg-white rounded-sm p-1.5 flex-1 max-w-[600px] border-2 border-orange-800 shadow-sm'>
-          <Input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className='w-full bg-transparent border-none text-xl font-medium text-orange-900 p-3'
-            placeholder='Nhập từ khóa tìm kiếm...'
-          />
-        </div>
-
         <Button
-          variant='destructive'
-          className='h-[54px] text-base bg-[#ed1b2f] w-[200px]'
+          variant='ghost'
+          className='  w-[200px] bg-[#451e99] rounded-sm text-white font-semibold flex items-center justify-center gap-2 hover:bg-[#451e99] hover:text-white'
           onClick={handleFilter}
         >
           <Search />
-          <span className='text-green-900'>Tìm kiếm</span>
+          <span className='text-white'>Tìm kiếm</span>
         </Button>
       </div>
 
-      {/* Header kết quả */}
-      <div className=' rounded-md p-4 mt-4 border border-gray-300 flex justify-between items-center shadow-sm w-7xl mx-auto'>
-        <h3 className='font-semibold text-lg text-gray-800'>
-          Tìm thấy {countJobs} việc làm
-        </h3>
-      </div>
-
-      {/* Bộ lọc */}
-      <div className=' rounded-md p-4 mt-4 border border-gray-300 flex justify-between items-center shadow-sm w-7xl mx-auto'>
+      <div className=' rounded-md p-4  bg-white flex justify-between items-center shadow-xl w-7xl mx-auto'>
         <NavigationMenu >
           <NavigationMenuList>
             {/* Cấp bậc */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger
-                className={` ${
+              <NavigationMenuTrigger className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-[#451e99]" />
+                {
                   selectLevels.length > 0
-                    ? 'bg-yellow-300 '
-                    : 'text-orange-700 '
-                }`}
-              >{
-                selectLevels.length > 0
-                  ? `Cấp bậc (${selectLevels.length})`
-                  : 'Cấp bậc'
-              }</NavigationMenuTrigger>
-              <NavigationMenuContent className='gap-3 grid grid-cols-2 min-w-[500px] max-w-[500px]'>
+                    ? `Cấp bậc (${selectLevels.length})`
+                    : 'Cấp bậc'
+                }
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className='bg-white gap-3 grid grid-cols-2 min-w-[500px] max-w-[500px]'>
                 {levelOptions.map(level => (
                   <Label
                     key={level.id}
@@ -247,7 +312,7 @@ export default function Home() {
                         toggleLevel(level.id)
                       }
                     />
-                    <span className='text-green-900'>{level.name}</span>
+                    <span className='text-[#451e99]'>{level.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -255,18 +320,15 @@ export default function Home() {
 
             {/* Kinh nghiệm */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger
-                className={` ${
+              <NavigationMenuTrigger className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#451e99]" />
+                {
                   selectExperience.length > 0
-                    ? 'bg-yellow-300 '
-                  : 'text-orange-700 '
-                }`}
-              >{
-                selectExperience.length > 0
-                  ? `Kinh nghiệm (${selectExperience.length})`
-                  : 'Kinh nghiệm'
-              }</NavigationMenuTrigger>
-              <NavigationMenuContent className='grid min-w-[500px] p-2'>
+                    ? `Kinh nghiệm (${selectExperience.length})`
+                    : 'Kinh nghiệm'
+                }
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className='bg-white grid min-w-[500px] p-2'>
                 {experienceOptions.map(exp => (
                   <Label
                     key={exp.id}
@@ -278,7 +340,7 @@ export default function Home() {
                         toggleExperience(exp.id)
                       }
                     />
-                    <span className='text-green-900'>{exp.name}</span>
+                    <span className='text-[#451e99]'>{exp.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -286,18 +348,15 @@ export default function Home() {
 
             {/* Loại công việc */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger
-                className={` ${
+              <NavigationMenuTrigger className="flex items-center gap-2">
+                <Briefcase className="w-4 h-4 text-[#451e99]" />
+                {
                   selectType.length > 0
-                    ? 'bg-yellow-300 '
-                    : 'text-orange-700 '
-                }`}
-              >{
-                selectType.length > 0
-                  ? `Loại công việc (${selectType.length})`
-                  : 'Loại công việc'
-              }</NavigationMenuTrigger>
-              <NavigationMenuContent className='grid min-w-[500px] p-2'>
+                    ? `Loại công việc (${selectType.length})`
+                    : 'Loại công việc'
+                }
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className='bg-white grid min-w-[500px] p-2'>
                 {typeOptions.map(type => (
                   <Label
                     key={type.id}
@@ -309,7 +368,7 @@ export default function Home() {
                         toggleType(type.id)
                       }
                     />
-                    <span className='text-green-900'>{type.name}</span>
+                    <span className='text-[#451e99]'>{type.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -317,18 +376,15 @@ export default function Home() {
 
             {/* Phúc lợi */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger
-                className={` ${
+              <NavigationMenuTrigger className="flex items-center gap-2">
+                <Gift className="w-4 h-4 text-[#451e99]" />
+                {
                   selectBenefits.length > 0
-                    ? 'bg-yellow-300 '
-                    : 'text-orange-700 '
-                }`}
-              >{
-                selectBenefits.length > 0
-                  ? `Phúc lợi (${selectBenefits.length})`
-                  : 'Phúc lợi'
-              }</NavigationMenuTrigger>
-              <NavigationMenuContent className='grid grid-cols-2 min-w-[500px] p-2'>
+                    ? `Phúc lợi (${selectBenefits.length})`
+                    : 'Phúc lợi'
+                }
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className='bg-white grid grid-cols-2 min-w-[500px] p-2'>
                 {benefitOptions.map(benefit => (
                   <Label
                     key={benefit.id}
@@ -346,7 +402,7 @@ export default function Home() {
                     />
                     <div className='flex items-center gap-2 p-1'>
                       {iconMap[benefit.icon]} 
-                      <span className='text-green-900'>{benefit.name}</span>
+                      <span className='text-[#451e99]'>{benefit.name}</span>
                     </div>
                   </Label>
                 ))}
@@ -354,18 +410,15 @@ export default function Home() {
             </NavigationMenuItem>
             {/* Kỹ năng */}
             <NavigationMenuItem>
-              <NavigationMenuTrigger
-                className={` ${
+              <NavigationMenuTrigger className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-[#451e99]" />
+                {
                   selectSkills.length > 0
-                    ? 'bg-yellow-300 '
-                    : 'text-orange-700 '
-                }`}
-              >{
-                selectSkills.length > 0
-                  ? `Kỹ năng (${selectSkills.length})`
-                  : 'Kỹ năng'
-              }</NavigationMenuTrigger>
-              <NavigationMenuContent className='grid grid-cols-4 min-w-[900px] p-2'>
+                    ? `Kỹ năng (${selectSkills.length})`
+                    : 'Kỹ năng'
+                }
+              </NavigationMenuTrigger>
+              <NavigationMenuContent className='bg-white grid grid-cols-4 min-w-[900px] p-2'>
                 {skillOption.map(skill => (
                   <Label
                     key={skill.id}
@@ -381,7 +434,7 @@ export default function Home() {
                         )
                       }
                     />
-                    <span className='text-green-900'>{skill.name}</span>
+                    <span className='text-[#451e99]'>{skill.name}</span>
                   </Label>
                 ))}
               </NavigationMenuContent>
@@ -391,13 +444,85 @@ export default function Home() {
 
         <Button
           variant='destructive'
-          className='bg-[#ed1b2f] px-7 py-1 rounded-4xl hover:bg-gray-100  font-semibold border border-gray-300 hover:text-black text-white'
+          className='bg-[#451da1] px-7 py-1 hover:bg-gray-100  font-semibold border border-gray-300 hover:text-black text-white flex items-center gap-2'
           onClick={handleResetFilter}
         >
+          <RotateCcw className="w-4 h-4" />
           <span>Đặt lại bộ lọc</span>
         </Button>
       </div>
+      <Card className="w-7xl mx-auto mt-4 p-3 bg-transparent shadow-none">
+  <CardHeader className="text-center">
+    <CardTitle className="text-2xl font-bold text-red-500 flex justify-center items-center gap-2">
+      <FlameIcon className="text-red-500  w-10 h-10" />
+      Việc làm tuyển gấp
+    </CardTitle>
+  </CardHeader>
 
+  <CardContent className="p-6">
+    <Carousel>
+      <CarouselContent>
+        {jobsBanner.length > 0 &&
+          chunkArray(jobsBanner, 6).map((jobGroup, index) => (
+            <CarouselItem key={index} className="w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {jobGroup.map((job) => (
+                  <Card
+                    key={job.id}
+                    className="shadow-sm p-4 border border-gray-200 hover:border-[#2c95ff] transition-all duration-200 cursor-pointer rounded-lg"
+                  >
+                    <div className="flex items-center space-x-3 mb-3">
+                      <img
+                        src={job.employer.logo}
+                        alt={job.employer.name}
+                        className="w-10 h-10 object-cover rounded-full border"
+                      />
+                      <div>
+                        <div className="text-sm font-semibold text-gray-800">
+                          {job.employer.name}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {job.employer.businessType}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2 mb-1">
+                      <BriefcaseIcon className="h-4 w-4 text-[#2c95ff] mt-0.5" />
+                      <div className="text-sm font-semibold text-gray-900">
+                        {job.name}
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2 mt-1 text-xs text-gray-700 font-medium">
+                      <DollarSignIcon className="h-3.5 w-3.5 text-green-600 mt-0.5" />
+                      {job.minSalary && job.maxSalary
+                        ? `${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()} VNĐ`
+                        : 'Thoả thuận'}
+                    </div>
+
+                    <div className="flex items-start gap-2 mt-1 text-xs text-gray-500 font-medium">
+                      <CalendarIcon className="h-3.5 w-3.5 text-gray-500 mt-0.5" />
+                      <span>{convertDateToDiffTime(job.createdAt)}</span>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </CarouselItem>
+          ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext ref={nextRef} />
+    </Carousel>
+  </CardContent>
+</Card>
+
+      {/* Header kết quả */}
+      <div className=' rounded-md p-4 mt-40 border border-gray-300 flex justify-between items-center shadow-sm w-7xl mx-auto '>
+        <h3 className='font-semibold text-lg text-gray-800'>
+          Tìm thấy {countJobs} việc làm
+        </h3>
+      </div>
       {/* Danh sách việc làm */}
       <JobList jobs={jobList} />
     </div>

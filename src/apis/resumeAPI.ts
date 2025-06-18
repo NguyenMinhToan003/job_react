@@ -106,3 +106,22 @@ export const getResumeVersionsByIdAPI = async (resumeVersionId: number) => {
   const response = await axiosInstance.get<ResumeVersion>(`/resume-version/${resumeVersionId}`);
   return response.data;
 }
+
+export const toggleDefaultResumeAPI = async (resumeId: number) => {
+  const response = await axiosInstance.post(`/resume/toggle-default/${resumeId}`);
+  return response.data;
+}
+
+export const searchResumeCandidateAPI = async (query: {
+  search?: string;
+  skills?: number[];
+  levels?: number[];
+  page?: number;
+  limit?: number;
+}| null ) => {
+  const response = await axiosInstance.post<{ items: ResumeVersion[]; total: number; totalPages: number }>(
+    '/resume-version/search',
+    query
+  );
+  return response.data;
+}

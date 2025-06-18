@@ -6,7 +6,7 @@ import { convertDateToDiffTime } from '@/utils/dateTime';
 import { Avatar } from '@radix-ui/react-avatar';
 import { Book, Building2, HandCoins, MapPin } from 'lucide-react';
 
-export default function JobList({
+export default function JobItem({
   job,
   selectedJob,
   setSelectedJob,
@@ -16,13 +16,14 @@ export default function JobList({
   selectedJob: JobFilterResponse;
   setSelectedJob: (job: JobFilterResponse) => void;
   isPrev?: boolean;
-}) {
+  }) {
+  if (!job) return null;
   return (
     <Card
       key={job.id}
       className={`rounded-lg cursor-pointer relative border-2  px-3 py-4 transition-all duration-200 gap-0 ${
-        selectedJob.id === job.id
-          ? 'border-orange-900 bg-white shadow-sm'
+        selectedJob.id === job?.id
+          ? 'border-[#2c95ff] bg-white shadow-sm'
           : 'bg-white border border-gray-200'
       }`}
       onClick={() => setSelectedJob(job)}

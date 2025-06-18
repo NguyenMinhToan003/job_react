@@ -46,6 +46,10 @@ import ViewResumeVersionForJob from '@/pages/employer/resume/ViewResumeVersionFo
 import CopyJob from '@/pages/employer/job/CopyJob';
 import Price from '@/pages/employer/price/Price';
 import Service from '@/pages/employer/Service';
+import Follows from '@/pages/candidate/dashboard/follow/follow';
+import RecommentFollow from '@/pages/candidate/dashboard/follow/RecommentFollow';
+import SearchJobInLocation from '@/pages/candidate/SearchJobInLocation';
+import SearchCandidate from '@/pages/employer/search-candidate/SearchCandidate';
 
 
 export default function AppRouter() {
@@ -56,11 +60,13 @@ export default function AppRouter() {
   return (<>
     <Routes>
       <Route path='/auth/login' element={<LoginPage />} />
+      <Route path='/tim-kiem-theo-toa-do' element={<SearchJobInLocation />} />
       <Route path='/nha-tuyen-dung/dang-ky' element={<RegisterEmployer />} />
       <Route path='/' element={<Index />}>
         <Route path='dang-ky' element={<RegisterCandidate />} />
         <Route path='login-success' element={<LoginSuccess />} />
         <Route path='cong-viec/:id' element={<JobDetail />} />
+        <Route path='/tim-theo-vi-tri' element={<SearchJobInLocation />} />
         <Route index element={<Home />} />
         <Route path='map/:lat/:lng' element={<Map />} />
         <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />
@@ -69,10 +75,13 @@ export default function AppRouter() {
           <Route path='tao-ho-so' element={<FormCreateResume />} />
           <Route path='cap-nhat-thong-tin' element={<UpdateInfoCandidate />} />
           <Route path='ca-nhan' element={<Overview />} />
+          <Route path='goi-y-tu-nha-tuyen-dung' element={<RecommentFollow />} />
           <Route path='viec-lam' element={<JobForMe />} />
           <Route path='tin-nhan' element={<Overview />} />
           <Route path='thong-bao' element={<Overview />} />
           <Route path='cai-dat' element={<Overview />} />
+          <Route path='follow-nha-tuyen-dung' element={<Follows />} />
+          <Route path='cong-ty-goi-y' element={<RecommentFollow />} />
           <Route path='chinh-sua-ho-so/:resumeId' element={<FormUpdateResume/>}/>
           <Route path='ho-so' element={<ListResume />} />
           <Route path='ho-so/:resumeId' element={<Resume />} />
@@ -106,6 +115,7 @@ export default function AppRouter() {
       // employer
       <Route path='/danh-cho-nha-tuyen-dung' element={<IndexCompany />} >
         <Route path='bang-gia' element={<Price />} />
+        <Route path='tim-kiem-ung-vien' element={<SearchCandidate />} />
         <Route index element={<OverViewCompany />} />
         <Route path='tuyen-dung' element={<CompanyJob />} />
         <Route path='dich-vu' element={<Service />} />
