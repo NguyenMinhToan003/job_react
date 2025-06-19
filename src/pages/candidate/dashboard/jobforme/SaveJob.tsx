@@ -1,5 +1,5 @@
 import { getRecomendedSaveJobAPI, getSaveJobAPI } from '@/apis/saveJobAPI';
-import JobList from '@/components/elements/job/job-list/JobList';
+import JobList from '@/components/elements/job/job-list/JobItem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {

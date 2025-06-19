@@ -9,7 +9,6 @@ export default function Editer({text, setText}: {
   text: string;
   setText: (text: string) => void;
 }) {
-  
   const editor = useEditor({
     extensions: [
       StarterKit,

@@ -38,7 +38,8 @@ export interface CreateJobRequest {
   description: string;
   education?: number;
   languages?: LanguageJob[];
-  expiredAt: Date| null;
+  expiredAt: Date | null;
+  fieldId?: number;
 }
 
 export interface ViewJobResponse {
@@ -120,11 +121,11 @@ export interface JobFilterResponse {
   employer: Employer;
   isApplied: boolean;
   isSaved: boolean;
-  fields: Field[];
   languageJobs: LanguageJob[];
   education: Education;
   matchingWeights: MatchingWeightResponse | null;
   distanceKm?: number | null;
+  field?: Field | null;
 }
 
 export interface UpdateJobAdminRequest {

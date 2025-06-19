@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Card,
+  CardContent,
   CardHeader,
   CardTitle,
-  CardContent,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -16,18 +16,33 @@ import {
   Book,
   Building2,
   TimerIcon,
+  Users,
+  Clock,
+  GraduationCap,
+  Globe,
+  Trophy,
+  Target,
+  Briefcase,
+  Star,
+  CheckCircle,
+  AlertCircle,
+  TrendingUp,
+  Zap,
+  Eye,
+  TargetIcon,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { filterJob, getDetailJobById } from '@/apis/jobAPI';
 import { JobFilterResponse } from '@/types/jobType';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { convertDateToDiffTime } from '@/utils/dateTime';
+import { convertDateToDiffTime, convertDateToString, dayRemaning } from '@/utils/dateTime';
 import { saveJob } from '@/apis/saveJobAPI';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import JobList from '@/components/elements/job/job-list/JobList';
-import { addViewJobAPI } from '@/apis/viewJobAPI';
 import { ROLE_LIST } from '@/types/type';
+import { addViewJobAPI } from '@/apis/viewJobAPI';
+import JobItem from '@/components/elements/job/job-list/JobItem';
+import { convertPrice } from '@/utils/convertPrice';
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -41,27 +56,27 @@ export default function JobDetail() {
       const response = await getDetailJobById(Number(id));
       setJob(response);
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || 'Lỗi khi tải thông tin công việc'
-      );
+      toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin công việc');
     }
   };
+
   const handleSaveJob = async () => {
     try {
       await saveJob(Number(id));
       toast.success('Lưu công việc thành công!');
+      fetchJobDetail();
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi lưu công việc');
     }
-  }
+  };
+
   const handleViewJob = async () => {
     try {
-      addViewJobAPI(Number(id));
+      await addViewJobAPI(Number(id));
+    } catch (error: any) {
+      console.log('Error viewing job:', error);
     }
-    catch (error: any) {
-      toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin công việc');
-    }
-  }
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -71,32 +86,33 @@ export default function JobDetail() {
     }
   }, [id]);
 
-  const getJobOrther = async() => {
+  const getJobOrther = async () => {
     try {
       const ortherJobs = await filterJob({
         benefits: job?.benefits.map((benefit) => benefit.id) || [],
         skills: job?.skills.map((skill) => skill.id) || [],
         levels: job?.levels.map((level) => level.id) || [],
         page: 1,
-        limit: 5,
+        limit: 4,
       });
       ortherJobs.data = ortherJobs.data.filter((j: JobFilterResponse) => j.id !== job?.id);
       setJobOrders(ortherJobs.data);
-    }
-    catch(error: any) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin công việc');
     }
-  }
+  };
 
   useEffect(() => {
-    if(job) {
+    if (job) {
       getJobOrther();
     }
   }, [job]);
 
+
+
   if (!job) {
     return (
-      <div className='max-w-6xl mx-auto p-6'>
+      <div className='max-w-6xl mx-auto'>
         <div className='animate-pulse space-y-4'>
           <div className='h-8 bg-gray-200 rounded w-3/4' />
           <div className='h-4 bg-gray-200 rounded w-1/2' />
@@ -107,294 +123,295 @@ export default function JobDetail() {
   }
 
   return (
-    <div className='max-w-7xl mx-auto p-6 space-y-6'>
-      {/* Job Header */}
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-        <Card className='lg:col-span-2'>
-          <CardHeader className='pb-4'>
-            <div className='flex justify-between items-start'>
-              <div className='space-y-2'>
-                <CardTitle className='text-2xl font-bold text-gray-900'>
-                  {job.name}
-                </CardTitle>
-              </div>
-              {
-                job.isSaved === true ? (
-                  <Button
-                  onClick={handleSaveJob}
-                  variant='outline'
-                  size='sm'
-                  className='text-red-500 border-red-200 hover:bg-red-50'
-                >
-                  <Heart size={16} className='mr-1'/>
-                  Lưu
-                </Button>
-                )
-                : <>
-                  <Button>
-                    Đã lưu công việc
+    <div className='w-full mx-auto  min-h-screen'>
+      <div className='bg-gradient-to-r from-[#121212] to-[#53151c] text-white sticky top-0 z-[99999999]'>
+        <div className='max-w-7xl mx-auto py-2 px-4 flex items-center gap-6 shadow-lg'>
+          <div className='bg-white rounded-md p-1 min-w-25 min-h-25 max-w-25 max-h-25 flex items-start justify-center'>
+            <img src={job.employer.logo}  className='w-full h-full' />
+          </div>
+          <div className='flex-1'>
+            <div className='text-2xl font-bold'>{job.name}</div>
+            <div
+              className='flex font-semibold items-center mt-2 gap-4 text-[#fbfaff] cursor-pointer hover:underline'
+              onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
+            >
+              {job.employer.name}
+            </div>
+          </div>
+          <div className='flex gap-4'>
+            <Button
+              variant='destructive'
+              className='bg-red-600 hover:bg-red-700 rounded-[2px]  h-14 text-md font-bold'
+            >
+              <TargetIcon className='w-5 h-5 mr-2' />
+              Ứng tuyển ngay
+            </Button>
+            {
+              !job.isSaved ? <>
+                <Button className='bg-white hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
+             >
+              
+              <Heart className='w-5 h-5 mr-2' />
+                  Lưu công việc
+            </Button>
+              </>
+                : 
+                <>
+                  <Button className='bg-gray-200 hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
+                  >
+                    <Heart className='w-5 h-5 mr-2' />
+                    Đã lưu
                   </Button>
                 </>
-              }
-            </div>
-            <div className='flex items-center gap-2 text-green-600 font-semibold text-md'>
-              <HandCoins size={16} />
-              {job.maxSalary === job.minSalary && job.maxSalary === null ? (
-                <span>Thỏa thuận</span>
-              ) : (
-                <span>
-                  {job.minSalary} - {job.maxSalary} VND
-                </span>
+            }
+          </div>
+        </div>
+      </div>
+      <div className='max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mt-5'>
+        <div className='lg:col-span-2 space-y-6'>
+          <Card className='p-6 bg-white shadow-sm border border-gray-200'>
+            <CardHeader className='border-b'>
+              <CardTitle className='text-lg font-semibold text-[#000209] flex items-center gap-2'>
+                <Building2 className='w-5 h-5 text-blue-600' />
+                Chi tiết tuyển dụng
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent>
+            {/* Job Details */}
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-1 mt-6'>
+              <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                <TimerIcon className='w-5 h-5 text-blue-600 mt-0.5' />
+                <div>
+                  <div className='text-sm font-medium text-[#857876]'>Đăng tuyển</div>
+                  <div className='text-[#000209] font-semibold'>{convertDateToDiffTime(job.createdAt)} trước</div>
+                </div>
+              </div>
+              <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                <Clock className={`w-5 h-5 mt-0.5 ${dayRemaning(job.expiredAt) <= 7 ? 'text-red-600' : 'text-gray-600'}`} />
+                <div>
+                  <div className='text-sm font-medium text-[#857876]'>Hạn nộp</div>
+                  <div className={`text-[#000209] font-semibold ${dayRemaning(job.expiredAt) <= 7 ? 'font-bold text-red-600' : ''}`}>
+                    {convertDateToString(job.expiredAt)}
+                  </div>
+                </div>
+              </div>
+              <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                <Briefcase className='w-5 h-5 text-purple-600 mt-0.5' />
+                <div>
+                  <div className='text-sm font-medium text-[#857876]'>Loại công việc</div>
+                  <div className='text-[#000209] font-semibold'>{job.typeJobs.map((typeJob) => typeJob.name).join(', ')}</div>
+                </div>
+              </div>
+              <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                <Users className='w-5 h-5 text-[#9277f2] mt-0.5' />
+                <div>
+                  <div className='text-sm font-medium text-[#857876]'>Số lượng</div>
+                  <div className='text-[#000209] font-semibold'>{job.quantity} người</div>
+                </div>
+              </div>
+              <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                <Book className='w-5 h-5 text-green-600 mt-0.5' />
+                <div>
+                  <div className='text-sm font-medium text-[#857876]'>Kinh nghiệm</div>
+                  <div className='text-[#000209] font-semibold'>{job.experience.name}</div>
+                </div>
+              </div>
+              {job.education && (
+                <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                  <GraduationCap className='w-5 h-5 text-indigo-600 mt-0.5' />
+                  <div>
+                    <div className='text-sm font-medium text-[#857876]'>Học vấn</div>
+                    <div className='text-[#000209] font-semibold'>{job.education.name}</div>
+                  </div>
+                </div>
               )}
             </div>
-            <div className='grid grid-cols-1 gap-4 mt-6'>
-              <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                <TimerIcon className='text-gray-500 w-5 h-5' />
-                <span className='text-sm text-gray-600 font-semibold'>
-                  {convertDateToDiffTime(job.createdAt)} trước
-                </span>
-              </div>
-            <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                {
-                  job.typeJobs.map((typeJob) => (
-                    <div key={typeJob.id} className='flex items-center gap-2'>
-                      <Building2 size={16} />
-                      {typeJob.name}
-                    </div>
-                  ))
-                }
-            </div>
 
-            {job.locations.map((location) => (
+            {/* Locations */}
+            <Card className='mt-6'>
+              <h2 className='text-lg text-[#000209] font-semibold mb-4 flex items-center gap-2'>
+                <MapPin className='w-5 h-5 text-red-600' />
+                Địa điểm làm việc
+              </h2>
+              <div className='space-y-2'>
+                {job.locations.map((location) => (
+                  <div
+                    key={location.id}
+                    className='flex items-center justify-between p-3 bg-blue-50 '
+                  >
+                    <div className='flex items-center gap-2 text-sm text-[#000209] font-semibold'>
+                      <MapPin size={14} className='text-blue-600' />
+                      {location.name}
+                    </div>
+                    {location.lat && location.lng && (
+                      <Button
+                        variant='ghost'
+                        size='sm'
+                        onClick={() => navigate(`/map/${location.lat}/${location.lng}`)}
+                      >
+                        <ExternalLink className='w-4 h-4 text-blue-600' />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* Skills and Fields */}
+            <div className='mt-6'>
+              <h2 className='text-lg  text-[#000209] font-semibold mb-4 flex items-center gap-2'>
+                <Trophy className='w-5 h-5 text-yellow-600' />
+                Yêu cầu kỹ năng và ngành nghề
+              </h2>
+              <Table border={0} className='bg-white  border border-gray-200'>
+                <TableBody className='divide-y-0 divide-gray-200 '>
+                  <TableRow>
+                    <TableCell className='font-semibold text-[#857876] w-1/3'>
+                      Kỹ năng yêu cầu
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex flex-wrap gap-2'>
+                        {job.skills.map((skill) => (
+                          <Badge
+                            key={skill.id}
+                            variant='secondary'
+                            className='font-semibold px-3 py-1'
+                          >
+                            <Zap size={12} className='mr-1 text-orange-500' />
+                            {skill.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                  {job.field && (
+                    <TableRow>
+                      <TableCell className='font-semibold text-[#857876]'>Ngành nghề</TableCell>
+                      <TableCell>
+                        <div className=' text-[#2b7fdc] font-bold hover:underline cursor-pointer'>
+                          {job.field.name}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {job.levels.length > 0 && (
+                    <TableRow>
+                      <TableCell className='font-semibold text-[#857876]'>Cấp bậc</TableCell>
+                      <TableCell>
+                        <div className='flex flex-wrap gap-2'>
+                          {job.levels.map((level) => (
+                            <Badge
+                              key={level.id}
+                              className='font-semibold bg-[#451da1] text-white px-3 py-1'
+                            >
+                              <Star size={12} className='mr-1' />
+                              {level.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {job.languageJobs.length > 0 && (
+                    <TableRow>
+                      <TableCell className='font-semibold text-[#857876]'>Ngôn ngữ</TableCell>
+                      <TableCell>
+                        <div className='flex flex-wrap gap-2'>
+                          {job.languageJobs.map((lang) => (
+                            <Badge
+                              variant='secondary'
+                              key={lang.id}
+                              className='px-3 py-1 '
+                            >
+                              {lang.language?.name} - {lang.level}
+                            </Badge>
+                          ))}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+            </CardContent>
+          </Card>
+
+          {/* Benefits */}
+          <Card className='p-6 bg-white shadow-sm border border-gray-200'>
+            <h2 className='text-lg text-[#000209] font-semibold mb-4 flex items-center gap-2'>
+              <Trophy className='w-5 h-5 text-yellow-600' />
+              {job.benefits.length} Lý do gia nhập
+            </h2>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+              {job.benefits.map((benefit) => (
+                <div
+                  key={benefit.id}
+                  className='flex items-start gap-3 p-3 bg-green-50 '
+                >
+                  <CheckCircle className='w-5 h-5 text-green-600 mt-0.5' />
+                  <span className='text-[#000209] font-semibold'>{benefit.name}</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Job Description */}
+          <Card className='p-6 bg-white shadow-sm border border-gray-200'>
+            <h2 className='text-lg font-semibold text-[#000209]  mb-4 flex items-center gap-2'>
+              <Book className='w-5 h-5 text-blue-600' />
+              Mô tả công việc
+            </h2>
+            <div
+              className='text-[#857876] prose prose-sm max-w-none'
+              dangerouslySetInnerHTML={{ __html: job.description }}
+            />
+          </Card>
+
+          {/* Job Requirements */}
+          <Card className='p-6 bg-white shadow-sm border border-gray-200'>
+            <h2 className='text-lg  text-[#000209] font-semibold mb-4 flex items-center gap-2'>
+              <CheckCircle className='w-5 h-5 text-orange-600' />
+              Yêu cầu công việc
+            </h2>
+            <div
+              className='text-[#857876] prose prose-sm max-w-none'
+              dangerouslySetInnerHTML={{ __html: job.requirement }}
+            />
+          </Card>
+        </div>
+
+        {/* Company Info Sidebar */}
+        <div className='space-y-6'>
+        {jobOrders.length > 0 && (
+        <Card className='border-none shadow-none bg-transparent'>
+          <CardHeader className='bg-white border-b'>
+              <CardTitle className='text-lg font-semibold text-[#000209] flex gap-3 items-center'>
+                <TrendingUp className='w-5 h-5 text-purple-600' />
+                {jobOrders.length} Việc làm tương tự
+              </CardTitle>
+          </CardHeader>
+          <CardContent className='flex flex-col gap-4 p-0'>
+            {jobOrders.map((jobOrder) => (
               <div
-                key={location.id}
-                className='flex items-center gap-2 text-sm text-gray-600 font-semibold'
+                key={jobOrder.id}
+                onClick={() => navigate(`/cong-viec/${jobOrder.id}`)}
+                className='cursor-pointer'
               >
-                <MapPin size={16} />
-                {location.name}
-                <ExternalLink
-                  className='w-4 h-4 text-blue-600'
-                  onClick={() =>
-                    navigate(`/map/${location.lat}/${location.lng}`)
-                  }
+                <JobItem
+                  isPrev={true}
+                  job={jobOrder}
+                  selectedJob={{} as JobFilterResponse}
+                  setSelectedJob={() => {}}
                 />
               </div>
             ))}
-
-            <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-              <Book size={16} />
-              {job.experience.name} kinh nghiệm làm việc
-            </div>
-          </div>
-
-          <Table className='bg-transparent'>
-            <TableBody>
-              <TableRow className='border-none bg-transparent'>
-                <TableCell className='font-semibold text-gray-700'>
-                  Kỹ năng:
-                </TableCell>
-                <TableCell>
-                  <div className='flex flex-wrap gap-2'>
-                    {job.skills.map((skill, index) => (
-                      <Badge
-                        key={index}
-                        variant='outline'
-                        className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold cursor-pointer'
-                      >
-                        {skill.name}
-                      </Badge>
-                    ))}
-                  </div>
-                </TableCell>
-              </TableRow>
-
-              <TableRow className='border-none bg-transparent'>
-                <TableCell className='font-semibold text-gray-700'>
-                  Chuyên môn:
-                </TableCell>
-                <TableCell className='flex flex-wrap gap-2'>
-                  {job.fields.map((field, index) => (
-                    field?.majors?.map((major, majorIndex) => (
-                      <Badge
-                        key={`${index}-${majorIndex}`}
-                        variant='outline'
-                        className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold cursor-pointer'
-                      >
-                        {major.name}
-                      </Badge>
-                    ))
-                  ))}
-                </TableCell>
-              </TableRow>
-
-              <TableRow className='border-none bg-transparent'>
-                <TableCell className='font-semibold text-gray-700'>
-                  Lĩnh vực:
-                </TableCell>
-                <TableCell>
-                  {job.fields.map((field, index) => (
-                    <Badge
-                      key={index}
-                      variant='outline'
-                      className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold cursor-pointer'
-                    >
-                      {field.name}
-                    </Badge>
-                  ))}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          </CardHeader>
-
-          <CardContent className='space-y-4'>
-
-
-            {
-              job.isApplied ? (
-                <Button
-                  variant='outline'
-                  className=' bg-green-50 rounded-sm w-fit border-green-700 text-green-700 font-bold py-3 border-2' 
-                >
-                  Đã ứng tuyển
-                </Button>
-              ) : (
-                  <Button
-                    variant='outline'
-                onClick={() => navigate(`/ung-tuyen-cong-viec/${job.id}`)}
-                className='w-full  bg-red-100 text-red-600 font-bold py-3 border-2 border-red-600 hover:bg-red-200 transition-colors duration-200 rounded-none'>
-                ỨNG TUYỂN
-              </Button>
-              )
-              
-            
-            }
           </CardContent>
         </Card>
+      )}
 
-        {/* Company Info */}
-        <Card>
-          <CardHeader className='text-center pb-3'>
-            <Avatar className='w-24 h-24 mx-auto mb-2'>
-              <AvatarImage
-                src={job.employer.logo}
-                alt={job.employer.name}
-                className='rounded-full'
-              />
-            </Avatar>
-            <CardTitle className='text-lg'>{job.employer.name}</CardTitle>
-          </CardHeader>
-          <CardContent className='text-gray-600 space-y-2'>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Lĩnh vực công ty</span>
-              <span className="text-sm font-medium text-gray-900">Dịch Vụ và Tự Vấn IT</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Quy mô công ty</span>
-              <span className="text-sm font-medium text-gray-900">
-                {job.employer.employeeScale}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Quốc gia</span>
-              <div>
-                <img
-                  src={job.employer.country.flag}
-                  alt={job.employer.country.name}
-                  className="inline-block w-6 h-6 mr-2 object-cover rounded-full border-2 border-gray-500 "
-                />
-                <span className="text-sm font-medium text-gray-900">
-                  {job.employer.country.name}
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Lĩnh vực</span>
-              <span className="text-sm font-medium text-gray-900">
-                {job.employer.businessType}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Job Detail Sections */}
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-        <div className='lg:col-span-2 space-y-6'>
-          <Card>
-            <CardHeader>
-              <CardTitle className='text-xl font-bold'>
-                {job.benefits.length} Lý do để gia nhập công ty
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-           
-            <ul >
-              {job.benefits.map((benefit, idx) => (
-                <li key={idx} >
-                  {benefit.name}
-                </li>
-              ))}
-            </ul>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className='text-xl font-bold'>
-                Mô tả công việc
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div
-                className='text-gray-700 whitespace-pre-line'
-                dangerouslySetInnerHTML={{ __html: job.description }}
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className='text-xl font-bold'>
-                Yêu cầu công việc
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div
-                className='text-gray-700 whitespace-pre-line'
-                dangerouslySetInnerHTML={{ __html: job.requirement }}
-              />
-            </CardContent>
-          </Card>
         </div>
       </div>
-      {
-        jobOrders.length > 0 && <Card >
-        <CardHeader >
-          <CardTitle className='text-xl font-bold'>
-            Việc làm tương tự
-          </CardTitle>
-        </CardHeader>
-        <CardContent className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-        {
-          jobOrders.length > 0 && jobOrders.map((job, index) => (
-            <>
-              <div onClick={() => navigate(`/cong-viec/${job.id}`)} className='cursor-pointer'>
-                <JobList
-                isPrev={true}
-                key={index}
-                job={job}
-                selectedJob={{} as JobFilterResponse}
-                setSelectedJob={() => {}}
-              />
-            </div>
-            </>
-          )
-          )
-          }
-        </CardContent>
-      </Card>
-      }
     </div>
   );
 }

@@ -25,13 +25,36 @@ export const registerCompanyAPI = async (data: EmployerRegisterRequest) => {
   formData.append('password', data.password);
   formData.append('name', data.name);
   formData.append('taxCode', data.taxCode);
-  formData.append('employeeScale', data.employeeScale);
-  formData.append('businessType', data.businessType);
+  formData.append('employeeScaleId', data.employeeScaleId.toString());
+  formData.append('businessTypeId', data.businessTypeId.toString());
   formData.append('countryId', data.countryId.toString());
   formData.append('phone', data.phone);
   if (data.introduction) {
     formData.append('introduction', data.introduction);
   }
   const response = await axiosInstance.post<Employer>('/auth/register/employer', formData);
+  return response.data;
+}
+
+export const getMeEmployer = async () => {
+  const response = await axiosInstance.get<EmployerDetailResponse>('/employer/me');
+  return response.data;
+}
+export const updateMeEmployer = async (data: EmployerRegisterRequest) => {
+  const formData = new FormData();
+  if (data.logo) {
+    formData.append('logo', data.logo);
+  }
+  formData.append('name', data.name);
+  formData.append('taxCode', data.taxCode);
+  formData.append('employeeScaleId', data.employeeScaleId.toString());
+  formData.append('businessTypeId', data.businessTypeId.toString());
+  formData.append('countryId', data.countryId.toString());
+  formData.append('website', data.website || '');
+  formData.append('phone', data.phone);
+  if (data.introduction) {
+    formData.append('introduction', data.introduction);
+  }
+  const response = await axiosInstance.patch<EmployerDetailResponse>('/employer/me', formData);
   return response.data;
 }

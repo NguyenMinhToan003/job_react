@@ -3,6 +3,7 @@ import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
 import { employerSubGetStatusActive, subscriptionJob } from '@/apis/employer_sub';
 import { getExperienceList } from '@/apis/experienceAPI';
+import { getFieldList } from '@/apis/fieldAPI';
 import { createJob, createMatchingWeightJob } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
@@ -15,6 +16,7 @@ import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
 import EducationJobPopup from '@/components/elements/job/popup/EducationJobPopup';
 import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
 import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
+import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
 import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
 import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
 import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
@@ -36,6 +38,7 @@ import { Language, LanguageJob } from '@/types/LanguageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
+import { Field } from '@/types/majorType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
 import { CirclePlus } from 'lucide-react';
@@ -75,6 +78,8 @@ export default function CreateJob() {
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
   const [employerSub, setEmployerSub] = useState<EmployerSubResponse[]>([]);
   const [selectEmployerSub, setSelectEmployerSub] = useState<EmployerSubResponse | null>(null);
+  const [fields, setFields] = useState<Field[]>([]);
+  const [selectField, setSelectField] = useState<number | null>(null);
 
   const handleCreateJob = async () => {
     try {
@@ -96,6 +101,7 @@ export default function CreateJob() {
         locations: locationIds,
         minSalary: salaryMin,
         maxSalary: salaryMax,
+        fieldId: selectField || undefined,
         education: selectedEducation,
         languages: languageIds,
         expiredAt: expiredAt,
@@ -123,7 +129,7 @@ export default function CreateJob() {
   }
   const fetchListElements = async () => {
     try {
-      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages, employer_subList] = await Promise.all([
+      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages, employer_subList, fieldlist] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -133,6 +139,7 @@ export default function CreateJob() {
         getAllEducations(),
         getAllLanguages(),
         employerSubGetStatusActive(),
+        getFieldList(),
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -143,6 +150,7 @@ export default function CreateJob() {
       setEducationList(educations);
       setLanguageList(languages);
       setEmployerSub(employer_subList);
+      setFields(fieldlist);
     }
     catch (error : any) {
       toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tải dữ liệu');
@@ -242,6 +250,11 @@ export default function CreateJob() {
               typeJobList={typeJobList}
               typeJobId={typeJobId}
               setTypeJobId={setTypeJobId}
+            />
+            <FieldJobPopup
+              selectField={selectField}
+              setSelectField={setSelectField}
+              fields={fields}
             />
             <SkillJobPopup
               skillList={skillList}

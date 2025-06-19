@@ -100,16 +100,12 @@ export default function DetailJobPopup({
             setText={setText}
           />
 
-          <div className='text-right text-xs text-muted-foreground mt-2'>
-            {text.length}/2500 characters
-          </div>
-
           <DialogFooter className='mt-4'>
             <Button
               variant='outline'
               onClick={() => {
                 setOpenPopup(false);
-                setText(description); // reset lại nếu huỷ
+                setText(description);
               }}
             >
               Cancel

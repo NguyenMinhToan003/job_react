@@ -1,5 +1,7 @@
+import { Account } from "./accountType";
 import { JobResponse } from "./jobType";
 import { LocationResponse } from "./location";
+import { Element } from "./type";
 
 export interface Employer {
   id: number;
@@ -23,8 +25,6 @@ export interface EmployerDetailResponse {
   introduction: string;
   taxCode: string;
   website?: string;
-  employeeScale: string;
-  businessType: string;
   countryId: number;
   phone: string;
   jobs: JobResponse[];
@@ -33,6 +33,9 @@ export interface EmployerDetailResponse {
     name: string;
     flag: string;
   }
+  employeeScale: Element;
+  businessType: Element;
   locations: LocationResponse[];
   isFollowed?: boolean;
+  account: Account;
 }

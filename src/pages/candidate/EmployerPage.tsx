@@ -8,12 +8,12 @@ import { EmployerDetailResponse } from '@/types/companyType';
 import { useEffect, useState } from 'react';
 import { getCompanyDetailAPI } from '@/apis/companyAPI';
 import { useNavigate, useParams } from 'react-router-dom';
-import JobList from '@/components/elements/job/job-list/JobList';
 import { JobFilterResponse } from '@/types/jobType';
 
 import { toast } from 'sonner';
 import ViewCompany from '@/components/elements/company/ViewCompany';
 import { followEmployerAPI } from '@/apis/followEmployerAPI';
+import JobItem from '@/components/elements/job/job-list/JobItem';
 
 export default function CompanyPage() {
   const { id = -1 } = useParams();
@@ -49,7 +49,7 @@ export default function CompanyPage() {
 
 
   return (
-    <div className='flex flex-col '>
+    <div className='flex flex-col border-t border-red-200'>
       <div className='bg-gradient-to-r from-[#121212] to-[#53151c] text-white'>
         <div className='max-w-7xl mx-auto py-4 px-6 flex items-center gap-6'>
           <div className='bg-white rounded-md p-1 min-w-40 min-h-40 max-w-40 max-h-40 flex items-center justify-center'>
@@ -87,8 +87,8 @@ export default function CompanyPage() {
               </>
                 : 
                 <>
-                  <Button className='bg-white hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
-              onClick={handleFollow}>
+                  <Button className='bg-gray-200 hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
+                  onClick={handleFollow}>
                     Đã theo dõi
                   </Button>
                 </>
@@ -169,7 +169,7 @@ export default function CompanyPage() {
               <div className='col-span-2 space-y-4'>
                 {employer.jobs.map((job) => (
                   <div key={job.id} onClick={()=> navigate(`/cong-viec/${job.id}`)} className='cursor-pointer'>
-                    <JobList
+                    <JobItem
                       isPrev={true}
                       key={job.id}
                       job={job}

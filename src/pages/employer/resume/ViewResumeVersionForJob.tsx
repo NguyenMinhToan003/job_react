@@ -13,7 +13,7 @@ import { AvatarImage } from '@radix-ui/react-avatar';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Eye, Star, Trophy, User, MapPin, GraduationCap } from 'lucide-react';
+import { Eye, User, MapPin, Calendar, Trophy } from 'lucide-react';
 
 export default function ViewResumeVersionForJob() {
   const { applyId } = useParams();
@@ -33,24 +33,24 @@ export default function ViewResumeVersionForJob() {
   }, [applyId]);
 
   const getScoreColor = (score: number) => {
-    if (score >= 8) return 'bg-gradient-to-r from-green-500 to-emerald-600';
-    if (score >= 6) return 'bg-gradient-to-r from-yellow-500 to-orange-500';
-    return 'bg-gradient-to-r from-red-500 to-pink-500';
+    if (score >= 8) return 'text-green-600';
+    if (score >= 6) return 'text-orange-600';
+    return 'text-red-600';
   };
 
-  const getScoreBadgeColor = (score: number) => {
-    if (score >= 8) return 'bg-green-100 text-green-800 border-green-300';
-    if (score >= 6) return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-    return 'bg-red-100 text-red-800 border-red-300';
+  const getScoreBg = (score: number) => {
+    if (score >= 8) return 'bg-green-50 text-green-700 border-green-200';
+    if (score >= 6) return 'bg-orange-50 text-orange-700 border-orange-200';
+    return 'bg-red-50 text-red-700 border-red-200';
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 p-4">
-      <div className="max-w-6xl mx-auto">
-        <Card className="w-full shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-[#6c43d3] to-[#451e99] text-white rounded-t-lg">
-            <CardTitle className="text-2xl font-bold flex items-center gap-2">
-              <User className="w-6 h-6" />
+    <div className="min-h-screen p-4">
+      <div className="w-6xl mx-auto">
+        <Card className="w-full shadow-sm border">
+          <CardHeader className="bg-white border-b">
+            <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+              <User className="w-5 h-5" />
               Xem Hồ sơ ứng tuyển
             </CardTitle>
           </CardHeader>
@@ -59,71 +59,60 @@ export default function ViewResumeVersionForJob() {
             <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
               {/* Thông tin ứng viên */}
               <div className="xl:col-span-3 space-y-4">
-                <div className="flex items-center justify-between bg-gradient-to-r from-purple-100 to-indigo-100 p-4 rounded-xl">
-                  <h2 className="text-lg font-bold text-[#451e99] flex items-center gap-2">
-                    <User className="w-5 h-5" />
-                    Thông tin ứng viên
-                  </h2>
+                <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border">
+                  <h2 className="text-lg font-medium text-gray-900">Thông tin ứng viên</h2>
                   <Sheet>
                     <SheetTrigger>
                       <Button 
                         size="sm" 
-                        className="bg-gradient-to-r from-[#6c43d3] to-[#451e99] hover:from-[#451e99] hover:to-[#6c43d3] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        variant="outline"
+                        className="border-gray-300 hover:bg-gray-50"
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         Xem hồ sơ
                       </Button>
                     </SheetTrigger>
-                    <SheetContent className="min-w-3xl z-[99999] h-[100vh] overflow-y-auto p-2 bg-gray-200">
+                    <SheetContent className="min-w-3xl z-[99999] h-[100vh] overflow-y-auto p-2 bg-gray-50">
                       <ViewResumeVersion resumeVerIdOption={apply?.resumeVersion.id || 0} />
                     </SheetContent>
                   </Sheet>
                 </div>
 
-                <div className="bg-white p-4 rounded-xl shadow-lg border border-purple-100">
+                <div className="bg-white p-4 rounded-lg border">
                   <div className="flex items-start space-x-4 mb-4">
-                    <div className="relative">
-                      <Avatar className="w-16 h-16 ring-2 ring-[#6c43d3] ring-offset-2">
-                        <AvatarImage src={apply?.resumeVersion.avatar} alt="Avatar" />
-                      </Avatar>
-                      <div className="absolute -bottom-1 -right-1 bg-gradient-to-r from-[#6c43d3] to-[#451e99] text-white p-1 rounded-full">
-                        <Star className="w-3 h-3" />
-                      </div>
-                    </div>
+                    <Avatar className="w-16 h-16">
+                      <AvatarImage src={apply?.resumeVersion.avatar} alt="Avatar" />
+                    </Avatar>
                     <div className="space-y-1 flex-1">
-                      <div className="text-xl font-bold text-[#451e99]">{apply?.resumeVersion.username}</div>
-                      <div className="text-sm text-gray-600 flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 bg-[#6c43d3] rounded-full"></div>
-                        {apply?.resumeVersion.email}
-                      </div>
-                      <div className="text-sm text-gray-600 flex items-center gap-1">
-                        <div className="w-1.5 h-1.5 bg-[#451e99] rounded-full"></div>
-                        {apply?.resumeVersion.phone}
-                      </div>
+                      <div className="text-xl font-semibold text-gray-900">{apply?.resumeVersion.username}</div>
+                      <div className="text-sm text-gray-600">{apply?.resumeVersion.email}</div>
+                      <div className="text-sm text-gray-600">{apply?.resumeVersion.phone}</div>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-3 rounded-lg">
+                    <div className="bg-gray-50 p-3 rounded border">
                       <div className="flex items-center gap-2 mb-1">
-                        <MapPin className="w-3 h-3 text-[#6c43d3]" />
-                        <span className="font-medium text-[#451e99] text-sm">Địa chỉ</span>
+                        <MapPin className="w-4 h-4 text-gray-500" />
+                        <span className="font-medium text-gray-700 text-sm">Địa chỉ</span>
                       </div>
-                      <div className="text-sm text-gray-700">{apply?.resumeVersion.location}</div>
+                      <div className="text-sm text-gray-600">{apply?.resumeVersion.location}</div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-3 rounded-lg">
+                    <div className="bg-gray-50 p-3 rounded border">
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="w-3 h-3 bg-[#6c43d3] rounded-full"></div>
-                        <span className="font-medium text-[#451e99] text-sm">Ngày sinh</span>
+                        <Calendar className="w-4 h-4 text-gray-500" />
+                        <span className="font-medium text-gray-700 text-sm">Ngày sinh</span>
                       </div>
-                      <div className="text-sm text-gray-700">{convertDateToString(apply?.resumeVersion.dateOfBirth)}</div>
+                      <div className="text-sm text-gray-600">
+                        {convertDateToString(apply?.resumeVersion.dateOfBirth)}
+                      </div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-3 rounded-lg">
+                    <div className="bg-gray-50 p-3 rounded border">
                       <div className="flex items-center gap-2 mb-1">
-                        <User className="w-3 h-3 text-[#6c43d3]" />
-                        <span className="font-medium text-[#451e99] text-sm">Giới tính</span>
+                        <User className="w-4 h-4 text-gray-500" />
+                        <span className="font-medium text-gray-700 text-sm">Giới tính</span>
                       </div>
-                      <div className="text-sm text-gray-700">{apply?.resumeVersion.gender}</div>
+                      <div className="text-sm text-gray-600">{apply?.resumeVersion.gender}</div>
                     </div>
                   </div>
                 </div>
@@ -131,55 +120,50 @@ export default function ViewResumeVersionForJob() {
 
               {/* Điểm số và xếp hạng */}
               <div className="xl:col-span-1 space-y-4">
-                <div className="bg-white p-4 rounded-xl shadow-lg border-2 border-[#6c43d3]/20">
-                  <div className="text-center">
-                    <div className="text-4xl font-black bg-gradient-to-r from-[#6c43d3] to-[#451e99] bg-clip-text text-transparent mb-2">
-                      {apply?.score.total}
-                    </div>
-                    <div className="text-sm font-medium text-gray-600 mb-2">Tổng điểm</div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full">
-                      <div 
-                        className={`h-2 rounded-full ${getScoreColor(apply?.score.total || 0)}`}
-                        style={{ width: `${Math.min(100, (apply?.score.total || 0) * 10)}%` }}
-                      ></div>
-                    </div>
+                <div className="bg-white p-4 rounded-lg border text-center">
+                  <div className={`text-3xl font-bold mb-2 ${getScoreColor(apply?.score.total || 0)}`}>
+                    {apply?.score.total}
+                  </div>
+                  <div className="text-sm font-medium text-gray-600 mb-2">Tổng điểm</div>
+                  <div className="w-full h-2 bg-gray-200 rounded">
+                    <div 
+                      className={`h-2 rounded ${apply?.score.total && apply.score.total >= 8 ? 'bg-green-500' : apply?.score.total && apply.score.total >= 6 ? 'bg-orange-500' : 'bg-red-500'}`}
+                      style={{ width: `${Math.min(100, (apply?.score.total || 0) * 10)}%` }}
+                    ></div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-[#6c43d3] to-[#451e99] text-white p-4 rounded-xl shadow-lg text-center">
-                  <Trophy className="w-6 h-6 mx-auto mb-2" />
-                  <div className="text-sm font-medium mb-1">Xếp hạng</div>
-                  <div className="text-2xl font-bold">{apply?.rank}</div>
+                <div className="bg-white border p-4 rounded-lg text-center">
+                  <Trophy className="w-6 h-6 mx-auto mb-2 text-gray-600" />
+                  <div className="text-sm font-medium mb-1 text-gray-600">Xếp hạng</div>
+                  <div className="text-2xl font-bold text-gray-900">{apply?.rank}</div>
                 </div>
               </div>
             </div>
 
             {/* Bảng so sánh */}
             <div className="mt-8">
-              <div className="bg-gradient-to-r from-[#6c43d3] to-[#451e99] text-white p-4 rounded-t-xl">
-                <h2 className="text-xl font-bold flex items-center gap-2">
-                  <GraduationCap className="w-5 h-5" />
-                  So sánh các thuộc tính
-                </h2>
+              <div className="bg-white border-b p-4">
+                <h2 className="text-lg font-medium text-gray-900">So sánh các thuộc tính</h2>
               </div>
               
-              <div className="bg-white rounded-b-xl shadow-lg overflow-hidden">
+              <div className="bg-white border rounded-b-lg overflow-hidden">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-gradient-to-r from-purple-100 to-indigo-100">
-                      <TableHead className="w-32 font-semibold text-[#451e99] text-sm">Tiêu chí</TableHead>
-                      <TableHead className="font-semibold text-[#451e99] text-sm">Công việc</TableHead>
-                      <TableHead className="font-semibold text-[#451e99] text-sm">Ứng viên</TableHead>
-                      <TableHead className="w-32 text-center font-semibold text-[#451e99] text-sm">Điểm</TableHead>
+                    <TableRow className="bg-gray-50">
+                      <TableHead className="w-32 font-medium text-gray-700">Tiêu chí</TableHead>
+                      <TableHead className="font-medium text-gray-700">Công việc</TableHead>
+                      <TableHead className="font-medium text-gray-700">Ứng viên</TableHead>
+                      <TableHead className="w-32 text-center font-medium text-gray-700">Điểm</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow className="hover:bg-purple-50/50 transition-colors">
-                      <TableCell className="font-medium text-[#451e99] text-sm">Kĩ năng</TableCell>
+                    <TableRow className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-700">Kĩ năng</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.job.skills.map((s, i) => (
-                            <Badge key={i} className="bg-blue-100 text-blue-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="secondary" className="text-xs">
                               {s.name}
                             </Badge>
                           ))}
@@ -188,67 +172,67 @@ export default function ViewResumeVersionForJob() {
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.resumeVersion.skills.map((s, i) => (
-                            <Badge key={i} className="bg-green-100 text-green-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="outline" className="text-xs">
                               {s.name}
                             </Badge>
                           ))}
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={`${getScoreBadgeColor(apply?.score.skillScore || 0)} font-semibold text-sm px-2 py-1`}>
+                        <Badge className={`${getScoreBg(apply?.score.skillScore || 0)} text-xs`}>
                           {apply?.score.skillScore.toFixed(1)}
                         </Badge>
                       </TableCell>
                     </TableRow>
                     
-                    <TableRow className="hover:bg-purple-50/50 transition-colors">
-                      <TableCell className="font-medium text-[#451e99] text-sm">Địa điểm</TableCell>
+                    <TableRow className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-700">Địa điểm</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.job.locations.map((l, i) => (
-                            <Badge key={i} className="bg-blue-100 text-blue-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="secondary" className="text-xs">
                               {l.name}
                             </Badge>
                           ))}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge className="bg-green-100 text-green-800 text-xs px-2 py-1">
+                        <Badge variant="outline" className="text-xs">
                           {apply?.resumeVersion.district.city.name}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={`${getScoreBadgeColor(apply?.score.locationScore || 0)} font-semibold text-sm px-2 py-1`}>
+                        <Badge className={`${getScoreBg(apply?.score.locationScore || 0)} text-xs`}>
                           {apply?.score.locationScore.toFixed(1)}
                         </Badge>
                       </TableCell>
                     </TableRow>
                     
-                    <TableRow className="hover:bg-purple-50/50 transition-colors">
-                      <TableCell className="font-medium text-[#451e99] text-sm">Trình độ</TableCell>
+                    <TableRow className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-700">Trình độ</TableCell>
                       <TableCell>
-                        <Badge className="bg-blue-100 text-blue-800 text-xs px-2 py-1">
+                        <Badge variant="secondary" className="text-xs">
                           {apply?.job.education.name}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge className="bg-green-100 text-green-800 text-xs px-2 py-1">
+                        <Badge variant="outline" className="text-xs">
                           {apply?.resumeVersion.education.name}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={`${getScoreBadgeColor(apply?.score.educationScore || 0)} font-semibold text-sm px-2 py-1`}>
+                        <Badge className={`${getScoreBg(apply?.score.educationScore || 0)} text-xs`}>
                           {apply?.score.educationScore.toFixed(1)}
                         </Badge>
                       </TableCell>
                     </TableRow>
                     
-                    <TableRow className="hover:bg-purple-50/50 transition-colors">
-                      <TableCell className="font-medium text-[#451e99] text-sm">Chuyên ngành</TableCell>
+                    <TableRow className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-700">Chuyên ngành</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.majors.map((m, i) => (
-                            <Badge key={i} className="bg-blue-100 text-blue-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="secondary" className="text-xs">
                               {m.name}
                             </Badge>
                           ))}
@@ -257,48 +241,48 @@ export default function ViewResumeVersionForJob() {
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.resumeVersion.majors.map((m, i) => (
-                            <Badge key={i} className="bg-green-100 text-green-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="outline" className="text-xs">
                               {m.name}
                             </Badge>
                           ))}
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={`${getScoreBadgeColor(apply?.score.majorScore || 0)} font-semibold text-sm px-2 py-1`}>
+                        <Badge className={`${getScoreBg(apply?.score.majorScore || 0)} text-xs`}>
                           {apply?.score.majorScore.toFixed(1)}
                         </Badge>
                       </TableCell>
                     </TableRow>
                     
-                    <TableRow className="hover:bg-purple-50/50 transition-colors">
-                      <TableCell className="font-medium text-[#451e99] text-sm">Cấp bậc</TableCell>
+                    <TableRow className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-700">Cấp bậc</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.job.levels.map((l, i) => (
-                            <Badge key={i} className="bg-blue-100 text-blue-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="secondary" className="text-xs">
                               {l.name}
                             </Badge>
                           ))}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge className="bg-green-100 text-green-800 text-xs px-2 py-1">
+                        <Badge variant="outline" className="text-xs">
                           {apply?.resumeVersion.level.name}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={`${getScoreBadgeColor(apply?.score.levelScore || 0)} font-semibold text-sm px-2 py-1`}>
+                        <Badge className={`${getScoreBg(apply?.score.levelScore || 0)} text-xs`}>
                           {apply?.score.levelScore.toFixed(1)}
                         </Badge>
                       </TableCell>
                     </TableRow>
                     
-                    <TableRow className="hover:bg-purple-50/50 transition-colors">
-                      <TableCell className="font-medium text-[#451e99] text-sm">Ngoại ngữ</TableCell>
+                    <TableRow className="hover:bg-gray-50">
+                      <TableCell className="font-medium text-gray-700">Ngoại ngữ</TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.job.languageJobs.map((l, i) => (
-                            <Badge key={i} className="bg-blue-100 text-blue-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="secondary" className="text-xs">
                               {l.language.name}
                             </Badge>
                           ))}
@@ -307,24 +291,24 @@ export default function ViewResumeVersionForJob() {
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {apply?.resumeVersion.languageResumes.map((l, i) => (
-                            <Badge key={i} className="bg-green-100 text-green-800 text-xs px-2 py-1">
+                            <Badge key={i} variant="outline" className="text-xs">
                               {l.language.name}
                             </Badge>
                           ))}
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={`${getScoreBadgeColor(apply?.score.languageScore || 0)} font-semibold text-sm px-2 py-1`}>
+                        <Badge className={`${getScoreBg(apply?.score.languageScore || 0)} text-xs`}>
                           {apply?.score.languageScore.toFixed(1)}
                         </Badge>
                       </TableCell>
                     </TableRow>
                     
-                    <TableRow className="bg-gradient-to-r from-[#6c43d3]/10 to-[#451e99]/10 hover:from-[#6c43d3]/20 hover:to-[#451e99]/20">
-                      <TableCell className="font-bold text-[#451e99] text-sm">Tổng điểm</TableCell>
+                    <TableRow className="bg-gray-50 font-medium">
+                      <TableCell className="font-semibold text-gray-900">Tổng điểm</TableCell>
                       <TableCell colSpan={2}></TableCell>
                       <TableCell className="text-center">
-                        <Badge className="bg-gradient-to-r from-[#6c43d3] to-[#451e99] text-white text-sm font-bold px-3 py-1.5 shadow-md">
+                        <Badge className="bg-gray-900 text-white font-semibold">
                           {apply?.score.total.toFixed(1)}
                         </Badge>
                       </TableCell>

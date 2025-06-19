@@ -6,6 +6,7 @@ import { getCompanyDetailAPI } from '@/apis/companyAPI';
 import { EmployerDetailResponse } from '@/types/companyType';
 import { LocationResponse } from '@/types/location';
 import { toast } from 'sonner';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 export default function ViewCompany() {
   const { id = '-1' } = useParams();
@@ -48,27 +49,32 @@ export default function ViewCompany() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <h3 className="text-md text-gray-400 mb-1 font-semibold">Mô hình công ty</h3>
-              <p className="font-medium">{employer.businessModel || 'Chưa có dữ liệu'}</p>
+              <p className="font-medium">{employer?.businessType?.name || 'Chưa có dữ liệu'}</p>
             </div>
             <div>
               <h3 className="text-md text-gray-400 mb-1 font-semibold">Lĩnh vực công ty</h3>
-              <p className="font-medium">{employer.field || 'Chưa có dữ liệu'}</p>
+              <p className="font-medium">{'Chưa có dữ liệu'}</p>
             </div>
             <div>
               <h3 className="text-md text-gray-400 mb-1 font-semibold">Quy mô công ty</h3>
-              <p className="font-medium">{employer.size || 'Chưa có dữ liệu'}</p>
+              <p className="font-medium">{employer?.employeeScale?.name || 'Chưa có dữ liệu'}</p>
             </div>
             <div>
               <h3 className="text-md text-gray-400 mb-1 font-semibold">Quốc gia</h3>
-              <p className="font-medium">{employer.country || 'Chưa có dữ liệu'}</p>
+              <p className="font-medium flex items-center gap-2">
+                <Avatar>
+                  <AvatarImage src={employer.country.flag} alt={employer.country.name} className='object-cover' />
+                </Avatar>
+                {employer.country.name || 'Chưa có dữ liệu'}
+              </p>
             </div>
             <div>
               <h3 className="text-md text-gray-400 mb-1 font-semibold">Thời gian làm việc</h3>
-              <p className="font-medium">{employer.workingTime || 'Chưa có dữ liệu'}</p>
+              <p className="font-medium">{'Chưa có dữ liệu'}</p>
             </div>
             <div>
               <h3 className="text-md text-gray-400 mb-1 font-semibold">Làm việc ngoài giờ</h3>
-              <p className="font-medium">{employer.overtime || 'Chưa có dữ liệu'}</p>
+              <p className="font-medium">{'Chưa có dữ liệu'}</p>
             </div>
           </div>
         </CardContent>
@@ -78,7 +84,10 @@ export default function ViewCompany() {
         <CardContent>
           <span className="font-bold text-2xl">Giới thiệu công ty</span>
           <div className="w-full h-[1px] bg-gray-200 my-4"></div>
-          <p className="text-gray-700 mb-4 font-semibold space-x-1">{employer.description || 'Chưa có mô tả'}</p>
+          <div
+            className='text-gray-700 mb-4 font-semibold space-x-1'
+            dangerouslySetInnerHTML={{ __html: employer.introduction || 'Chưa có dữ liệu' }}
+          />
         </CardContent>
       </Card>
 

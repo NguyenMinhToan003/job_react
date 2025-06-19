@@ -2,6 +2,7 @@ import { AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobFilterResponse } from '@/types/jobType';
+import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import { Avatar } from '@radix-ui/react-avatar';
 import { Book, Building2, HandCoins, MapPin } from 'lucide-react';
@@ -29,7 +30,7 @@ export default function JobItem({
       onClick={() => setSelectedJob(job)}
     >
       <CardHeader className='p-0'>
-        <CardTitle className='flex items-center justify-between text-orange-800 text-[12px] font-bold'>
+        <CardTitle className='flex items-center justify-between text-[#451da1] text-[12px] font-bold'>
           Đăng {convertDateToDiffTime(job.createdAt)}
         </CardTitle>
       </CardHeader>
@@ -49,20 +50,9 @@ export default function JobItem({
         )}
 
 
-        <div className='text-green-600 font-semibold text-sm p-2'>
-          {job.maxSalary === job.minSalary && job.maxSalary === null ? (
-            <div className='flex gap-2 items-center font-bold'>
-              <HandCoins />
-              <span>Thỏa thuận</span>
-            </div>
-          ) : (
-            <div className='flex gap-2 items-center font-bold'>
-              <HandCoins />
-              <span>
-                Từ {job.minSalary} đến {job.maxSalary}
-              </span>
-            </div>
-          )}
+        <div className='text-green-600 font-bold text-sm p-2 flex items-center gap-1 rounded-md'>
+          <HandCoins />
+          <span >{convertPrice(job.minSalary,job.maxSalary)}</span>
         </div>
 
 

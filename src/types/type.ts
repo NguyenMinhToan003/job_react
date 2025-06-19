@@ -20,3 +20,8 @@ export enum NOTI_TYPE {
   REJECTED = 'REJECTED',
   DEFAULT = 'DEFAULT',
 }
+export interface Element {
+  id: number;
+  name: string;
+  status: number;
+}

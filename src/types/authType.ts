@@ -27,8 +27,8 @@ export interface EmployerRegisterRequest {
   logo?: File | null;
   website?: string;
   taxCode: string;
-  employeeScale: string;
-  businessType: string;
+  employeeScaleId: number;
+  businessTypeId: number;
   countryId: number;
   phone: string;
   introduction?: string;

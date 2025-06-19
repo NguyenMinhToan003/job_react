@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import JobListDetail from './JobListDisplay';
 import { JobFilterResponse } from '@/types/jobType';
-import JobList from './JobList';
+import JobList from './JobItem';
 import { useEffect, useState } from 'react';
 
 export default function Index({jobs}: { jobs: JobFilterResponse[] }) {

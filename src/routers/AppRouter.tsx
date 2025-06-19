@@ -50,6 +50,7 @@ import Follows from '@/pages/candidate/dashboard/follow/follow';
 import RecommentFollow from '@/pages/candidate/dashboard/follow/RecommentFollow';
 import SearchJobInLocation from '@/pages/candidate/SearchJobInLocation';
 import SearchCandidate from '@/pages/employer/search-candidate/SearchCandidate';
+import InfoEmployer from '@/pages/employer/info/Info-Employer';
 
 
 export default function AppRouter() {
@@ -124,7 +125,9 @@ export default function AppRouter() {
         <Route path='dang-tin-tuyen-dung' element={<CreateJob />} />
         <Route path='thong-tin-tuyen-dung/:id' element={<ViewJob />} />
         <Route path='nhan-ban/:id' element={<CopyJob />} />
-        <Route path='danh-gia-ho-so-cong-viec/:applyId' element={<ViewResumeVersionForJob />} />
+        <Route path='quan-ly-thong-tin' element={<InfoEmployer />} />
+        <Route path='danh-gia-ho-so-cong-viec/:applyId'
+          element={<ViewResumeVersionForJob />} />
         <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
         <Route path='thong-bao' element={<EmployerNotification />} />
         <Route path='*' element={<OverViewCompany />} />

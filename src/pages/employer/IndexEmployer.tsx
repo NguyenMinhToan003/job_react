@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 
 export default function IndexEmployer() {
-  const [account, setAccount] = useState<Employer>();
+  const [setAccount] = useState<Employer>();
   const fetchData = async () => {
     try {
       const response = await getEmployerInfo();

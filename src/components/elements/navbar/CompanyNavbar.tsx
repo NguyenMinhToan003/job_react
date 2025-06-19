@@ -54,7 +54,7 @@ export default function CompanyNavbar() {
     { label: 'Bảng giá', icon: <DollarSign className='w-6 h-6' />, path: 'bang-gia' },
     { label: 'Tìm kiếm ứng viên', icon: <Search className='w-6 h-6' />, path: 'tim-kiem-ung-vien' },
     { label: 'Blog', icon: <MessageCircle className='w-6 h-6' />, path: 'blog' },
-    { label: 'Quản lý thông tin', icon: <MessageCircle className='w-6 h-6' />, path: 'tin-nhan' },
+    { label: 'Quản lý thông tin', icon: <MessageCircle className='w-6 h-6' />, path: 'quan-ly-thong-tin' },
     {
       label: (
         <span className='flex items-center gap-1'>

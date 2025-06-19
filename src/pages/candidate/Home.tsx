@@ -56,7 +56,7 @@ import { Benefit } from '@/types/benefitType';
 import { getBenefit } from '@/apis/benefitAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { Skill } from '@/types/skillType';
-import JobItem from '@/components/elements/job/job-list/JobList';
+import JobItem from '@/components/elements/job/job-list/JobItem';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field } from '@/types/majorType';

@@ -25,3 +25,8 @@ export const convertDateToDiffTime = (date: string): string => {
 export const convertDateToString = (date: string): string => {
   return dayjs(date).format('DD/MM/YYYY');
 }
+export const dayRemaning = (date: string): number => {
+  const time = dayjs(date);
+  const now = dayjs();
+  return time.diff(now, 'day');
+}

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllViewJobsAPI, getRecomendedViewJobAPI } from "@/apis/viewJobAPI";
-import JobList from "@/components/elements/job/job-list/JobList";
+import JobList from "@/components/elements/job/job-list/JobItem";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";

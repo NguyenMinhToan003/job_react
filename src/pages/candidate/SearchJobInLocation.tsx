@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getJobByLocation } from '@/apis/jobAPI';
@@ -15,6 +13,8 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { MapPinnedIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { convertPrice } from '@/utils/convertPrice';
+import { convertDateToString } from '@/utils/dateTime';
 
 export default function SearchJobInLocation() {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -56,7 +56,7 @@ export default function SearchJobInLocation() {
       const data = await getJobByLocation({
         latitude: lat,
         longitude: lng,
-        radius: radiusKm * 1000, // convert to meters
+        radius: radiusKm * 1000,
       });
       setJobs(data);
     } catch {
@@ -77,7 +77,7 @@ export default function SearchJobInLocation() {
   }, [location, radius]);
 
   return (
-    <div className="p-4">
+    <div className="p-4  w-7xl mx-auto">
       <Card className="rounded-none shadow-none mb-4">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-gray-800">
@@ -151,30 +151,31 @@ export default function SearchJobInLocation() {
               </CardHeader>
 
               <CardContent>
-                <p className="text-sm mb-2">{job.employer.introduction}</p>
-
                 <div
                   onClick={() => navigate(`/cong-viec/${job.id}`)}
-                  className="p-2 border rounded hover:bg-muted transition cursor-pointer space-y-1"
+                  className="p-2 border rounded hover:bg-muted transition cursor-pointer space-y-1 "
                 >
-                  <div className="font-medium">{job.name}</div>
+                  <div className="font-medium ">{job.name}</div>
                   <div className="text-sm text-muted-foreground font-semibold">
-                    Mức lương:{' '}
-                    {job.minSalary && job.maxSalary
-                      ? `${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()} VNĐ`
-                      : 'Thoả thuận'}
+                    {convertPrice(job.minSalary, job.maxSalary)}
                   </div>
+
                   <div className="text-xs text-gray-500 font-semibold">
-                    Hạn: {new Date(job.expiredAt).toLocaleDateString()}
+                    {job.locations.map((loc) => loc.name).join(', ')}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-gray-500 font-semibold">
+                    Hạn: {convertDateToString(job.expiredAt)}
                   </div>
                   <div>
                     <MapPinnedIcon className="h-4 w-4 text-gray-500 inline-block mr-1" />
                     <span className="text-xs text-blue-500">Xem đường đi</span>
                   </div>
-                </div>
+                  </div>
+                  </div>
 
-                <div className="mt-4 text-end bg-green-100 p-2 rounded">
-                  <Button variant="secondary" size="sm">
+                  <div className="mt-4 text-end bg-[#fbfaff] p-2 rounded">
+                  <Button variant="secondary" size="sm" className='text-[#2c95ff]'>
                     {job.distanceKm} km
                   </Button>
                 </div>
