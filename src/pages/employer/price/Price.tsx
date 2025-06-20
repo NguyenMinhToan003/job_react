@@ -1,70 +1,90 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getPackagesBisiness } from '@/apis/employer_sub';
-import DialogCart from '@/components/elements/cart/DialogCart';
+import { getPackagesBisiness } from '@/apis/paymentAPI';
+import DialogCart, { CartItem } from '@/components/elements/cart/DialogCart';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PackageResponse } from '@/types/employerSubType';
+import { PackageResponse } from '@/types/packageType';
 import { MinusIcon, PlusIcon, ShoppingCartIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
+interface PackageAddQuatity extends PackageResponse {
+  quantity: number;
+}
 export default function Price() {
-  const [packages, setPackages] = useState<PackageResponse[]>([]);
-  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
-  const [cart, setCart] = useState<{ [key: number]: number }>({});
+  const [packages, setPackages] = useState<PackageAddQuatity[]>([]);
   const [showDialog, setShowDialog] = useState(false);
+  const [cartData, setCartData] = useState<CartItem[]>([]);
 
-
-  useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const response = await getPackagesBisiness();
-        setPackages(response);
-        const initialQuantities = Object.fromEntries(response.map(pkg => [pkg.id, 1]));
-        setQuantities(initialQuantities);
-      } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Lỗi không xác định');
+  const fetchPackages = async () => {
+    try {
+      const response = await getPackagesBisiness();
+      let convertResponse = [] as PackageAddQuatity[];
+      convertResponse = response.map(pkg => {
+        return {
+          ...pkg,
+          quantity: 0,
+        } as PackageAddQuatity;
+      });
+      setPackages(convertResponse);
+      const storedCart = sessionStorage.getItem('cart');
+      if (storedCart) {
+        const storedCartData: CartItem[] = JSON.parse(storedCart);
+        setCartData(storedCartData);
       }
-    };
-
-    const cartSession = sessionStorage.getItem('cart');
-    if (cartSession) {
-      setCart(JSON.parse(cartSession));
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Lỗi không xác định');
     }
-
+  };
+  useEffect(() => {
     fetchPackages();
   }, []);
 
-  const updateQuantity = (id: number, type: 'inc' | 'dec') => {
-    setQuantities(prev => ({
-      ...prev,
-      [id]: Math.max(1, prev[id] + (type === 'inc' ? 1 : -1)),
-    }));
-  };
 
-  const addToCart = (id: number) => {
-    const newCart = {
-      ...cart,
-      [id]: (cart[id] || 0) + (quantities[id] || 1),
-    };
-    setCart(newCart);
-    sessionStorage.setItem('cart', JSON.stringify(newCart));
-    toast.success('Đã thêm vào giỏ hàng');
-  };
 
-  const totalItems = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
-  const totalPrice = packages.reduce((total, pkg) => {
-    const quantity = cart[pkg.id] || 0;
-    return total + pkg.price * quantity;
-  }, 0);
+  const handleIncrement = (index: number) => () => {
+    const updatedPackages = [...packages];
+    updatedPackages[index].quantity = (updatedPackages[index].quantity || 0) + 1;
+    setPackages(updatedPackages);
+  };
+  const handleDecrement = (index: number) => () => {
+    const updatedPackages = [...packages];
+    if (updatedPackages[index].quantity && updatedPackages[index].quantity > 0) {
+      updatedPackages[index].quantity -= 1;
+      setPackages(updatedPackages);
+    }
+  };
+  const handleAddCart = (index: number) => () => {
+    const selectedPackage = packages[index];
+    if (selectedPackage.quantity && selectedPackage.quantity > 0) {
+      const newCart: CartItem[] = [...cartData, {
+        packageId: selectedPackage.id,
+        quantity: selectedPackage.quantity,
+      }];
+      setCartData(newCart);
+      sessionStorage.setItem('cart', JSON.stringify(newCart));
+      toast.success('Đã thêm vào giỏ hàng');
+    } else {
+      toast.error('Vui lòng chọn số lượng');
+    }
+  }
+  const itemCart = cartData.filter(pkg => pkg.quantity > 0)
+  const totalItems = itemCart.length;
+  const totalPrice = cartData.length > 0 ? cartData.map(i => {
+    const index = packages.findIndex(e => e.id === i.packageId);
+    console.log(packages[index]);
+    return i.quantity * packages[index].price;
+  }).reduce((i, next) => i + next, 0) : 0;
+  
 
   return (
     <div className="w-full space-y-4 pb-24">
-      <DialogCart open={showDialog} onClose={() => setShowDialog(false)} />
-
-      {packages.map(pkg => (
+      <DialogCart open={showDialog} onClose={() => {
+        setShowDialog(false)
+        fetchPackages();
+      }} />
+      {packages.map((pkg, index) => (
         <Card key={pkg.id} className="flex flex-col md:flex-row items-center p-4 bg-[#f9f9fb]">
           <div className="w-full md:w-[260px] h-[150px] relative rounded-md overflow-hidden">
             <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />
@@ -83,21 +103,21 @@ export default function Price() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => updateQuantity(pkg.id, 'dec')}
                     className="border-r rounded-none w-10 h-10"
+                    onClick={handleDecrement(index)}
                   >
                     <MinusIcon className="w-4 h-4" />
                   </Button>
                   <Input
                     readOnly
                     className="w-14 text-center rounded-none border-x-0"
-                    value={quantities[pkg.id] || 1}
+                    value={pkg.quantity}
                   />
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => updateQuantity(pkg.id, 'inc')}
                     className="border-l rounded-none w-10 h-10"
+                    onClick={handleIncrement(index)}
                   >
                     <PlusIcon className="w-4 h-4" />
                   </Button>
@@ -113,14 +133,14 @@ export default function Price() {
                 <Label className="font-medium text-gray-600">Giá bán</Label>
                 <span className="text-[#451e99] text-lg font-bold">
                   <span className="underline align-text-bottom">đ</span>{' '}
-                  {pkg.price.toLocaleString('vi-VN')}
+                  {(pkg.price* 1.0).toLocaleString('vi-VN')}
                 </span>
               </div>
 
               <div className="mt-3 md:mt-0">
                 <Button
                   className="bg-[#6c43d3] hover:bg-[#5c39ba] text-white"
-                  onClick={() => addToCart(pkg.id)}
+                  onClick={handleAddCart(index)}
                 >
                   <ShoppingCartIcon className="w-4 h-4 mr-2" />
                   Thêm vào giỏ

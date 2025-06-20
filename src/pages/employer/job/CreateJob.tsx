@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
-import { employerSubGetStatusActive, subscriptionJob } from '@/apis/employer_sub';
+import { getPackageAvailable, subscriptionUseJob } from '@/apis/paymentAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
 import { getFieldList } from '@/apis/fieldAPI';
 import { createJob, createMatchingWeightJob } from '@/apis/jobAPI';
@@ -10,7 +10,6 @@ import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
-
 import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
 import EducationJobPopup from '@/components/elements/job/popup/EducationJobPopup';
@@ -25,14 +24,12 @@ import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
 import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
 import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
 import SalaryJonPopup from '@/components/elements/job/popup/SalaryJobPopup';
-import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
 import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
 import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Benefit } from '@/types/benefitType';
 import { Education } from '@/types/educationType';
-import { EmployerSubResponse } from '@/types/employerSubType';
 import { Experience } from '@/types/experienceType';
 import { Language, LanguageJob } from '@/types/LanguageType';
 
@@ -44,6 +41,8 @@ import { TypeJob } from '@/types/TypeJobType';
 import { CirclePlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { PackageResponse } from '@/types/packageType';
+import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
 
 export default function CreateJob() {
   const [nameJob, setNameJob] = useState('')
@@ -76,8 +75,8 @@ export default function CreateJob() {
   const [levelWeight, setLevelWeight] = useState(15);
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
-  const [employerSub, setEmployerSub] = useState<EmployerSubResponse[]>([]);
-  const [selectEmployerSub, setSelectEmployerSub] = useState<EmployerSubResponse | null>(null);
+  const [packageAvailable, setPackageAvailable] = useState<PackageResponse[]>([]);
+  const [selectPackage, setSelectPackage] = useState<PackageResponse | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
   const [selectField, setSelectField] = useState<number | null>(null);
 
@@ -114,10 +113,11 @@ export default function CreateJob() {
         educationWeight: educationWeight,
         levelWeight: levelWeight,
       })
-      if (selectEmployerSub) {
-        subscriptionJob({
+      if (selectPackage) {
+      
+        subscriptionUseJob({
           jobId: create.id,
-          subscriptionId: selectEmployerSub.id,
+          packageId: selectPackage.id,
         });
       }
       toast.success('Tin tuyển dụng đã được tạo thành công');
@@ -129,7 +129,7 @@ export default function CreateJob() {
   }
   const fetchListElements = async () => {
     try {
-      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages, employer_subList, fieldlist] = await Promise.all([
+      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages, fieldlist, packageAvailables] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -138,8 +138,8 @@ export default function CreateJob() {
         getSkillList(),
         getAllEducations(),
         getAllLanguages(),
-        employerSubGetStatusActive(),
         getFieldList(),
+        getPackageAvailable()
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -149,8 +149,8 @@ export default function CreateJob() {
       setSkillList(skills);
       setEducationList(educations);
       setLanguageList(languages);
-      setEmployerSub(employer_subList);
       setFields(fieldlist);
+      setPackageAvailable(packageAvailables);
     }
     catch (error : any) {
       toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tải dữ liệu');
@@ -183,12 +183,11 @@ export default function CreateJob() {
       </CardHeader>
       <CardContent>
         <div className='flex flex-col md:flex-row gap-6'>
-          {/* Left side: Job List */}
           <div className='flex-1'>
             <SelectServiceJobPopup
-              employerSub={employerSub}
-              selectEmployerSub={selectEmployerSub}
-              setSelectEmployerSub={setSelectEmployerSub}
+              selectPackage={selectPackage}
+              setSelectPackage={setSelectPackage}
+              packageAvailable={packageAvailable}
             />
             <NameJobPopup
               nameJob={nameJob}

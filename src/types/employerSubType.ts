@@ -1,3 +1,6 @@
+import { JobResponse } from "./jobType";
+import { PackageResponse } from "./packageType";
+
 export interface EmployerSubResponse {
   id: number;
   note: string;
@@ -6,30 +9,47 @@ export interface EmployerSubResponse {
   status: string;
   createdAt: string;
   package: PackageResponse;
+  job: JobResponse | null;
 }
-export interface PackageResponse {
-  id: string;
-  name: string;
-  features: string;
-  price: number;
-  dayValue: number;
-  image: string;
+export interface EmployerSub {
+  id: number;
+  note: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  createdAt: string;
 }
 
 export interface PaymentEmployerSubRequest {
   packageId: string;
-  count: number;
+  quantity: number;
 }
+export interface TransactionRequest {
+  subscriptions: PaymentEmployerSubRequest[];
+  transactionType: string;
+} 
 export interface UseSubscriptionRequest {
   jobId: number;
-  subscriptionId: number;
+  packageId: string;
 }
 export interface TransactionResponse {
   id: number;
   createdAt: string;
+  vnp_TxnRef: string;
   amount: number;
+  status: string;
+  transactionType: string;
+  recordedAt: string;
+  package: PackageResponse[];
+}
+
+export interface TransactionDetailResponse {
+  id: number;
+  createdAt: string;
+  vnp_TxnRef: string;
+  amount: number;
+  status: string;
   transactionType: string;
   recordedAt: string;
   employerSubscriptions: EmployerSubResponse[];
-  useCount: number;
 }

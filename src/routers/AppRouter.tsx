@@ -45,12 +45,14 @@ import Major from '@/pages/admin/major/Major';
 import ViewResumeVersionForJob from '@/pages/employer/resume/ViewResumeVersionForJob';
 import CopyJob from '@/pages/employer/job/CopyJob';
 import Price from '@/pages/employer/price/Price';
-import Service from '@/pages/employer/Service';
 import Follows from '@/pages/candidate/dashboard/follow/follow';
 import RecommentFollow from '@/pages/candidate/dashboard/follow/RecommentFollow';
 import SearchJobInLocation from '@/pages/candidate/SearchJobInLocation';
 import SearchCandidate from '@/pages/employer/search-candidate/SearchCandidate';
 import InfoEmployer from '@/pages/employer/info/Info-Employer';
+import PaymentSuccess from '@/pages/employer/PaymentResult';
+import Service from '@/pages/employer/servicePage/Service';
+import DetailService from '@/pages/employer/servicePage/DetailService';
 
 
 export default function AppRouter() {
@@ -60,6 +62,7 @@ export default function AppRouter() {
   }, [])
   return (<>
     <Routes>
+    <Route path='/payment-result' element={<PaymentSuccess/>}/>
       <Route path='/auth/login' element={<LoginPage />} />
       <Route path='/tim-kiem-theo-toa-do' element={<SearchJobInLocation />} />
       <Route path='/nha-tuyen-dung/dang-ky' element={<RegisterEmployer />} />
@@ -120,6 +123,7 @@ export default function AppRouter() {
         <Route index element={<OverViewCompany />} />
         <Route path='tuyen-dung' element={<CompanyJob />} />
         <Route path='dich-vu' element={<Service />} />
+        <Route path='dich-vu/:id' element={<DetailService />} />
         <Route path='dia-diem' element={<LocationCompany />} />
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
         <Route path='dang-tin-tuyen-dung' element={<CreateJob />} />
