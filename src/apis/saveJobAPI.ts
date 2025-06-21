@@ -13,6 +13,7 @@ export const getSaveJobAPI = async (page: number, limit: number) => {
     totalPage: number;
     page: number;
     limit: number;
+    total: number;
   }>(`/save-job/me/${page}/${limit}`);
   return response.data;
 }

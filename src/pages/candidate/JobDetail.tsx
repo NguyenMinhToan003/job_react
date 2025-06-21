@@ -19,23 +19,21 @@ import {
   Users,
   Clock,
   GraduationCap,
-  Globe,
   Trophy,
-  Target,
   Briefcase,
   Star,
   CheckCircle,
-  AlertCircle,
   TrendingUp,
   Zap,
-  Eye,
   TargetIcon,
+  Coins,
+  DollarSignIcon,
+  CircleDollarSignIcon,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { filterJob, getDetailJobById } from '@/apis/jobAPI';
 import { JobFilterResponse } from '@/types/jobType';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { convertDateToDiffTime, convertDateToString, dayRemaning } from '@/utils/dateTime';
 import { saveJob } from '@/apis/saveJobAPI';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
@@ -142,6 +140,7 @@ export default function JobDetail() {
             <Button
               variant='destructive'
               className='bg-red-600 hover:bg-red-700 rounded-[2px]  h-14 text-md font-bold'
+              onClick={() => navigate(`/ung-tuyen-cong-viec/${job.id}`)}
             >
               <TargetIcon className='w-5 h-5 mr-2' />
               Ứng tuyển ngay
@@ -149,8 +148,9 @@ export default function JobDetail() {
             {
               !job.isSaved ? <>
                 <Button className='bg-white hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
+                onClick={handleSaveJob}
+                disabled={job.isSaved}
              >
-              
               <Heart className='w-5 h-5 mr-2' />
                   Lưu công việc
             </Button>
@@ -179,7 +179,23 @@ export default function JobDetail() {
 
             <CardContent>
             {/* Job Details */}
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-1 mt-6'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-1 mt-6'>
+                <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                  <CircleDollarSignIcon className='w-5 h-5 text-green-600 mt-0.5' />
+                  <div>
+                    <div className='text-sm font-medium text-[#857876]'>Mức lương</div>
+                    <div className='text-[#000209] font-semibold'>
+                      {convertPrice(job.minSalary, job.maxSalary)}
+                    </div>
+                  </div>
+                </div>
+                <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                <Users className='w-5 h-5 text-[#9277f2] mt-0.5' />
+                <div>
+                  <div className='text-sm font-medium text-[#857876]'>Số lượng</div>
+                  <div className='text-[#000209] font-semibold'>{job.quantity} người</div>
+                </div>
+              </div>
               <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
                 <TimerIcon className='w-5 h-5 text-blue-600 mt-0.5' />
                 <div>
@@ -203,13 +219,7 @@ export default function JobDetail() {
                   <div className='text-[#000209] font-semibold'>{job.typeJobs.map((typeJob) => typeJob.name).join(', ')}</div>
                 </div>
               </div>
-              <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
-                <Users className='w-5 h-5 text-[#9277f2] mt-0.5' />
-                <div>
-                  <div className='text-sm font-medium text-[#857876]'>Số lượng</div>
-                  <div className='text-[#000209] font-semibold'>{job.quantity} người</div>
-                </div>
-              </div>
+              
               <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
                 <Book className='w-5 h-5 text-green-600 mt-0.5' />
                 <div>

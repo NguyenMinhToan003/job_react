@@ -18,3 +18,7 @@ export const countUnreadAPI = async () => {
   const response = await axiosInstance.get<NotiAccount[]>('/noti-account/count-unread');
   return response.data;
 }
+export const markAsReadAPI = async (id: number) => {
+  const response = await axiosInstance.get<NotiAccount>(`/noti-account/me/mark-read/${id}`);
+  return response.data;
+}

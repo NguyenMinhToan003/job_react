@@ -12,7 +12,6 @@ import { JobFilterResponse } from '@/types/jobType';
 import { filterJob } from '@/apis/jobAPI';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { getCvMe } from '@/apis/cvAPI';
 import { useAccount } from '@/providers/UserProvider';
 import { updateInfoCandidate } from '@/apis/candidateAPI';
 import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';

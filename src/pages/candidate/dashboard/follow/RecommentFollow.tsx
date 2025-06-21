@@ -66,7 +66,7 @@ export default function RecommentFollow() {
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm mb-2">{employer.introduction}</p>
+
               <div className="space-y-2">
                 {employer.jobs.slice(0, 3).map((job) => (
                   <div

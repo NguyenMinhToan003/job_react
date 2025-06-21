@@ -25,7 +25,7 @@ export default function UserNavbar() {
       path: '/tong-quat-ho-so',
       icon: (
         <Avatar className='border border-[#f5f3f4]'>
-          <AvatarImage src={dataUser?.avatar} />
+          <AvatarImage src={dataUser?.avatar || dataUser?.logo} />
         </Avatar>
       ),
     },
@@ -43,12 +43,12 @@ export default function UserNavbar() {
   };
 
   return (
-    <div className='sticky top-0 z-50 w-full border-b border-[#6136c6] shadow-sm bg-[#562cb7]'>
+    <div className='sticky top-0 z-50 w-full border-b border-[#6136c6] shadow-sm bg-[#451da1]'>
       <div className='flex h-16 items-center justify-between px-4'>
         {/* Left section */}
         <div className='flex items-center gap-1'>
           <Avatar className=' border border-[#f5f3f4]'>
-            <AvatarImage src={dataUser?.avatar} />
+            <AvatarImage src={dataUser?.avatar|| dataUser?.logo} />
           </Avatar>
           <Button className='text-white' variant='link'>
             <span>

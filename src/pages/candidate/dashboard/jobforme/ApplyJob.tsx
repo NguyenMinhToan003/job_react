@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApplyJobResponse } from "@/types/applyJobType";
 import { APPLY_JOB_STATUS } from "@/types/type";
+import { convertPrice } from "@/utils/convertPrice";
 import { convertDateToString } from "@/utils/dateTime";
 import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -60,7 +61,9 @@ export default function ApplyJob() {
                 {applyJob?.job?.maxSalary === applyJob?.job?.minSalary && applyJob?.job?.maxSalary === null ? (
                   <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
                 ) : (
-                  <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4"/> <span>Từ {applyJob?.job?.minSalary} đến {applyJob?.job?.maxSalary}</span></div>
+                    <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4" /> <span>
+                    {convertPrice(applyJob.job.minSalary, applyJob.job.maxSalary)}
+                    </span></div>
                 )}
               </div>
               

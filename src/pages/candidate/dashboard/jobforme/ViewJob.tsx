@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { JobFilterResponse, ViewJobResponse } from "@/types/jobType";
+import { convertPrice } from "@/utils/convertPrice";
 import { convertDateToString } from "@/utils/dateTime";
-import { HandCoins } from "lucide-react";
+import { ChevronLeft, ChevronRight, HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -17,12 +18,14 @@ export default function ViewJob() {
   const [page, setPage] = useState(1);
   const limit = 5;
   const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const [recomendedJobs, setRecomendedJobs] = useState<JobFilterResponse[]>([]);
   const fetchJobs = async () => {
     try {
       const response = await getAllViewJobsAPI(page, limit);
       setJobs(response.items);
       setTotalPages(response.totalPage || 1);
+      setTotal(response.total);
     }
     catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi lấy danh sách công việc đã xem');
@@ -49,7 +52,7 @@ export default function ViewJob() {
     <Card className="rounded-none shadow-none hover:shadow-2xl">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-gray-800">
-          Công việc đã xem gần đây {jobs.length > 0 ? `(${jobs.length})` : ''}
+          Công việc đã xem gần đây {total > 0 ? `(${total})` : ''}
         </CardTitle>
       </CardHeader>
     </Card>
@@ -70,7 +73,11 @@ export default function ViewJob() {
                 {viewjob.job?.maxSalary === viewjob.job?.minSalary && viewjob.job?.maxSalary === null ? (
                   <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
                 ) : (
-                  <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/> <span>Từ {viewjob.job?.minSalary} đến {viewjob.job?.maxSalary}</span></div>
+                    <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4" />
+                      <span className='font-bold'>
+                        {convertPrice(viewjob.job.minSalary, viewjob.job.maxSalary)}
+                      </span>
+                    </div>
                 )}
               </div>
               
@@ -79,8 +86,9 @@ export default function ViewJob() {
                <span className='text-[12px] text-gray-400 font-semibold'>Đã xem vào {
                   convertDateToString(viewjob.viewDate)
                 }</span>
-                <Button variant={'destructive'}
-                  onClick={()=> navigate(`/ung-tuyen-cong-viec/${viewjob.job.id}`)}
+              <Button variant={'destructive'}
+                className='cursor-pointer'
+                  onClick={()=> navigate(`/cong-viec/${viewjob.job.id}`)}
                 >
                  Xem công việc
               </Button>
@@ -91,13 +99,15 @@ export default function ViewJob() {
     }
     <Pagination className=' w-full bg-white py-2'>
         <PaginationContent className='list-none flex justify-center items-center gap-1'>
-          <PaginationPrevious
+          <Button
+            variant='ghost'
             title='Trước'
             className='cursor-pointer'
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          >
+        >
+            <ChevronLeft className='w-4 h-4' />
             Trước
-          </PaginationPrevious>
+          </Button>
 
           {Array.from({ length: totalPages }, (_, index) => (
             <PaginationItem key={index}>
@@ -115,20 +125,22 @@ export default function ViewJob() {
             </PaginationItem>
           ))}
 
-          <PaginationNext
+          <Button
+            variant='ghost'
             title='Tiếp theo'
-            className='cursor-pointer'
+            className='cursor-pointer ml-5'
             onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))}
           >
-            Tiếp theo
-          </PaginationNext>
+          Tiếp theo
+            <ChevronRight className='w-4 h-4' />
+          </Button>
         </PaginationContent>
     </Pagination>
     
     <Card className='mt-4'>
             <CardHeader className='text-center text-gray-800 font-bold'>
-              <CardTitle>
-                Gợi ý công việc đã lưu cho bạn
+              <CardTitle className='text-lg font-semibold text-[#451da1]'>
+                Gợi ý công việc dựa trên công việc đã xem
               </CardTitle>
             </CardHeader>
             <CardContent className='text-center text-gray-500 font-semibold grid grid-cols-2 gap-4'>
@@ -138,7 +150,7 @@ export default function ViewJob() {
                     <JobList
                       key={job.id}
                       job={job}
-                      selectedJob={job}
+                      selectedJob={{} as JobFilterResponse}
                       setSelectedJob={() => navigate(`/cong-viec/${job.id}`)}
                     />
                   ))

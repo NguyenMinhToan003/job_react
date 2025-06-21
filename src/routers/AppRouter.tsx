@@ -47,12 +47,13 @@ import CopyJob from '@/pages/employer/job/CopyJob';
 import Price from '@/pages/employer/price/Price';
 import Follows from '@/pages/candidate/dashboard/follow/follow';
 import RecommentFollow from '@/pages/candidate/dashboard/follow/RecommentFollow';
-import SearchJobInLocation from '@/pages/candidate/SearchJobInLocation';
+import SearchJobInLocation from '@/pages/candidate/searchjob/SearchJobInLocation';
 import SearchCandidate from '@/pages/employer/search-candidate/SearchCandidate';
 import InfoEmployer from '@/pages/employer/info/Info-Employer';
 import PaymentSuccess from '@/pages/employer/PaymentResult';
 import Service from '@/pages/employer/servicePage/Service';
 import DetailService from '@/pages/employer/servicePage/DetailService';
+import SearchJob from '@/pages/candidate/searchjob/SearchJob';
 
 
 export default function AppRouter() {
@@ -64,13 +65,13 @@ export default function AppRouter() {
     <Routes>
     <Route path='/payment-result' element={<PaymentSuccess/>}/>
       <Route path='/auth/login' element={<LoginPage />} />
-      <Route path='/tim-kiem-theo-toa-do' element={<SearchJobInLocation />} />
       <Route path='/nha-tuyen-dung/dang-ky' element={<RegisterEmployer />} />
       <Route path='/' element={<Index />}>
         <Route path='dang-ky' element={<RegisterCandidate />} />
         <Route path='login-success' element={<LoginSuccess />} />
         <Route path='cong-viec/:id' element={<JobDetail />} />
-        <Route path='/tim-theo-vi-tri' element={<SearchJobInLocation />} />
+        <Route path='tim-theo-vi-tri' element={<SearchJobInLocation />} />
+        <Route path='tim-kiem-cong-viec' element={<SearchJob />} />
         <Route index element={<Home />} />
         <Route path='map/:lat/:lng' element={<Map />} />
         <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />

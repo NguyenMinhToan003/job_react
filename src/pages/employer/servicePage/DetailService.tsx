@@ -9,6 +9,7 @@ import { TransactionDetailResponse } from "@/types/employerSubType";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { MarsStroke } from "lucide-react";
 
 export default function DetailService() {
   const { id } = useParams<{ id: string }>();
@@ -87,7 +88,7 @@ export default function DetailService() {
                 <div className="text-xs font-semibold text-[#060607]">
                   Tổng tiền:{" "}
                   <span className="text-red-600 font-semibold">
-                    {transactionDetail.amount.toLocaleString()} VNĐ
+                    {(transactionDetail.amount * 1.0).toLocaleString('vi-VN')} VNĐ
                   </span>
                 </div>
               </div>
@@ -106,6 +107,7 @@ export default function DetailService() {
           <Table border={0}>
             <TableRow className="bg-[#f2f3f7] text-[#181818] font-bold">
               <TableCell className="w-full">Tên gói</TableCell>
+              <TableCell>Công việc được kích hoạt</TableCell>
               <TableCell>Thời gian</TableCell>
               <TableCell>Ngày bắt đầu</TableCell>
               <TableCell>Ngày kết thúc</TableCell>
@@ -115,6 +117,9 @@ export default function DetailService() {
             {transactionDetail.employerSubscriptions.map((sub) => (
               <TableRow key={sub.id} className="font-medium hover:bg-transparent">
                 <TableCell>{sub.package?.name}</TableCell>
+                <TableCell className="text-purple-600 ">
+                  {sub?.job?.name} 
+                </TableCell>
                 <TableCell>{sub.package?.dayValue} ngày</TableCell>
                 <TableCell className="text-emerald-600">
                   {convertDateToString(sub.startDate)}

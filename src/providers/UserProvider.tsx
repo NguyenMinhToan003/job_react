@@ -1,12 +1,13 @@
 import { getDataCandidate } from '@/apis/candidateAPI';
-import { CandidateResponse } from '@/types/accountType';
+import { getEmployerInfo } from '@/apis/companyAPI';
+import { CandidateResponse, EmployerResponse } from '@/types/accountType';
 import { ROLE_LIST } from '@/types/type';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { toast } from 'sonner';
 
 interface AccountContextType {
-  dataUser: CandidateResponse | null;
+  dataUser: CandidateResponse | EmployerResponse| null;
   updateDataUser: () => void;
 }
 
@@ -20,14 +21,19 @@ interface AccountProviderProps {
 }
 
 export const AccountProvider = ({ children }: AccountProviderProps) => {
-  const [dataUser, setDataUser] = useState<CandidateResponse | null>(null);
+  const [dataUser, setDataUser] = useState<CandidateResponse| EmployerResponse | null>(null);
 
   const fetchDataUser = async () => {
     const role = localStorage.getItem('role');
     try {
-      const response = await getDataCandidate();
+      let response = {} as CandidateResponse| EmployerResponse;
+      if (role === ROLE_LIST.CANDIDATE) {
+        response = await getDataCandidate();
+      }
+      if (role === ROLE_LIST.EMPLOYER) {
+        response = await getEmployerInfo();
+      }
       setDataUser(response);
-      console.log('login', response);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (role === ROLE_LIST.CANDIDATE) {

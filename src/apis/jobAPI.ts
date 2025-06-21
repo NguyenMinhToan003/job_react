@@ -28,10 +28,15 @@ export const deleteJob = async (jobId: number) => {
 }
 
 export const filterJob = async (data: JobFilterRequest) => {
-  const response = await axiosInstance.post<{
+  const response = await axiosInstance.get<{
     total: number;
     data: JobFilterResponse[];
-  }>('/job/filter', data);
+    page: number;
+    limit: number;
+    totalPage: number;
+  }>('/job/filter/search', {
+    params:data
+  });
   return response.data;
 }
 

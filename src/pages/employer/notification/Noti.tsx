@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { getMeNotificationAPI, markAllAsReadAPI } from '@/apis/employerNotiAPI';
+import { getMeNotificationAPI, markAllAsReadAPI, markAsReadAPI } from '@/apis/employerNotiAPI';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Bell, LinkIcon, CheckCircle2, DotSquareIcon } from 'lucide-react';
+import { Bell, LinkIcon, CheckCircle2, Clock, CircleAlert } from 'lucide-react';
 import { NOTI_TYPE } from '@/types/type';
 import { convertDateToString } from '@/utils/dateTime';
 import { NotiAccount } from '@/types/eployerNotiType';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 const NOTI_CONFIG = {
   [NOTI_TYPE.ACCEPTED]: { label: 'Đã chấp nhận', color: 'bg-green-100 text-green-600 border-green-200' },
@@ -26,24 +28,26 @@ function NotificationItem({ noti }: { noti: NotiAccount }) {
           {!isRead && (
             <div className='min-w-2 h-2 rounded-full bg-red-500 mt-2' title='Chưa đọc' />
           )}
-          <div className='space-y-1'>
-            <ul className='text-gray-800 font-medium'>
+          <div className='space-y-2'>
+            <ul className=' text-gray-800 font-medium'>
               {
                 noti.content.split('\n').map((line, index) => (
                   line.trim() && (
                     <li key={index} className='flex items-center gap-1 mb-1'>
-                      <DotSquareIcon className='inline-block text-red-500 mr-1' size={16} />
-                      <span key={index} className='block'>
+                      <Label key={index} className='block'>
                       {line}
-                    </span>
+                    </Label>
                   </li>
                   )
                 ))
               }
             </ul>
-            <p className='text-sm text-gray-500'>
-              {convertDateToString(noti.time)}
-            </p>
+            <Label className='text-xs ml-3 text-gray-500 flex items-center gap-2'>
+              <Clock className='w-4 h-4'/>
+              <span >
+                {convertDateToString(noti.time)}
+              </span>
+            </Label>
           </div>
         </div>
         <div className='flex items-center gap-2'>
@@ -51,21 +55,23 @@ function NotificationItem({ noti }: { noti: NotiAccount }) {
             {label}
           </Badge>
           {noti.link && (
-            <a
-              href={noti.link}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-blue-500 hover:text-blue-700 flex items-center gap-1 transition-colors'
-              onClick={(e) => e.stopPropagation()}
+            <Button
+              variant='ghost'
+              className='text-gray-500 hover:text-gray-700'
+              onClick={() => {
+                markAsReadAPI(noti.id)
+                window.open(noti.link, '_blank');
+              }}
             >
-              <LinkIcon size={16} />
-            </a>
+              <LinkIcon size={16}  />
+            </Button>
           )}
-          <button
+          <Button
+            variant='ghost'
             className={`text-sm ${isRead ? 'text-gray-400' : 'text-green-500 hover:text-green-700'} transition-colors`}
           >
             <CheckCircle2 size={16} />
-          </button>
+          </Button>
         </div>
       </div>
     </Card>
@@ -82,7 +88,6 @@ export default function EmployerNotification() {
     try {
       const data = await getMeNotificationAPI();
       setNotifications(Array.isArray(data) ? data : [data]);
-      await markAllAsReadAPI();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Lỗi khi tải thông báo');
     } finally {
@@ -95,11 +100,23 @@ export default function EmployerNotification() {
   }, []);
 
   return (
-    <Card className='shadow-lg w-full'>
+    <Card className='shadow-lg w-full mt-2 mr-2'>
       <CardHeader className='flex items-center gap-3'>
         <Bell className='text-red-500 h-6 w-6' />
-        <CardTitle className='text-2xl font-bold text-gray-800'>
-          THÔNG BÁO
+        <CardTitle className=' flex items-center justify-between w-full'>
+          <Label>Thông báo</Label>
+          <Button
+            variant='outline'
+            className='text-sm text-gray-700 hover:bg-gray-100'
+            onClick={async () => {
+              await markAllAsReadAPI();
+              fetchNotifications();
+            }}
+            disabled={loading}
+          >
+            <CircleAlert className='h-4 w-4 mr-2' />
+            Đánh dấu tất cả là đã đọc
+          </Button>
         </CardTitle>
       </CardHeader>
       <CardContent className='space-y-4'>

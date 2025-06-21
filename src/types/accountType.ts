@@ -1,5 +1,4 @@
 import { Employer } from "./companyType";
-import { CvResponse } from "./cvType";
 
 export interface Account {
   id: number;
@@ -16,7 +15,20 @@ export interface CandidateResponse {
   gender: number;
   account: Account;
   phone: string;
-  cv: CvResponse[];
+}
+export interface EmployerResponse {
+  id: number;
+  name: string;
+  description: string;
+  logo: string;
+  introduction: string;
+  taxCode: string;
+  website?: string;
+  employeeScale: string;
+  businessType: string;
+  countryId: number;
+  phone: string;
+  account: Account;
 }
 
 export interface Candidate {

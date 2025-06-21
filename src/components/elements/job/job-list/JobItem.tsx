@@ -5,6 +5,7 @@ import { JobFilterResponse } from '@/types/jobType';
 import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import { Avatar } from '@radix-ui/react-avatar';
+import clsx from 'clsx';
 import { Book, Building2, HandCoins, MapPin } from 'lucide-react';
 
 export default function JobItem({
@@ -37,7 +38,15 @@ export default function JobItem({
 
       <CardContent className='space-y-2 p-0'>
 
-        <div className='text-lg font-bold text-gray-900'>{job.name}</div>
+      <div
+        className={clsx(
+          'text-lg font-bold',
+          job.isActiveSubscription ? 'text-red-600 hover:text-red-700 transition-colors duration-200' : 'text-gray-900'
+        )}
+      >
+        {job.name}
+      </div>
+
 
 
         {job.employer && (

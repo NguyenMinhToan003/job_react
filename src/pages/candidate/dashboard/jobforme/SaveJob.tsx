@@ -7,12 +7,11 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious
 } from '@/components/ui/pagination';
 import { ApplyJobResponse } from '@/types/applyJobType';
 import { JobFilterResponse } from '@/types/jobType';
-import { HandCoins } from 'lucide-react';
+import { convertPrice } from '@/utils/convertPrice';
+import { ChevronLeft, ChevronRight, HandCoins } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,11 +22,13 @@ export default function SaveJob() {
   const limit = 5;
   const [totalPages, setTotalPages] = useState(0);
   const [recomendedJobs, setRecomendedJobs] = useState<JobFilterResponse[]>([]);
+  const [total, setTotal] = useState(0);
 
   const fetchApplyJobs = async () => {
     try {
       const response = await getSaveJobAPI(page, limit);
       setApplyJobs(response.items);
+      setTotal(response.total);
       setTotalPages(response.totalPage || 0);
     } catch (error) {
       console.error('Error fetching saved jobs:', error);
@@ -47,23 +48,15 @@ export default function SaveJob() {
 
   useEffect(() => {
     fetchApplyJobs();
+  }, [page, limit]);
 
-  }, [page, limit]); // Cập nhật theo page và limit
-
-  const renderSalary = (job: ApplyJobResponse['job']) => {
-    const { minSalary, maxSalary } = job;
-    if (minSalary === maxSalary && maxSalary === null) {
-      return <span>Thỏa thuận</span>;
-    }
-    return <span>Từ {minSalary} đến {maxSalary}</span>;
-  };
 
   return (
     <>
     <Card className="rounded-none shadow-none  border-none">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-gray-800">
-          Công việc đã lưu {applyJobs.length > 0 ? `(${applyJobs.length})` : ''}
+          Công việc đã lưu {total > 0 ? `(${total})` : ''}
         </CardTitle>
       </CardHeader>
     </Card>
@@ -100,13 +93,14 @@ export default function SaveJob() {
 
                 <div className='flex gap-2 items-center justify-start font-semibold text-green-600 text-sm'>
                   <HandCoins className='w-4 h-4' />
-                  {renderSalary(savejob.job)}
+                  {convertPrice(savejob.job.minSalary, savejob.job.maxSalary)}
                 </div>
               </div>
 
               <div className='flex flex-col items-end justify-start gap-2'>
                 <Button
                   variant={'destructive'}
+                  className='cursor-pointer text-sm font-semibold h-10  bg-red-500'
                   onClick={() => navigate(`/ung-tuyen-cong-viec/${savejob.job.id}`)}
                 >
                   Ứng tuyển công việc
@@ -123,13 +117,14 @@ export default function SaveJob() {
 
       <Pagination className=' w-full bg-white py-2'>
         <PaginationContent className='list-none flex justify-center items-center gap-1'>
-          <PaginationPrevious
-            title='Trước'
+          <Button
+            variant='ghost'
             className='cursor-pointer'
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           >
+            <ChevronLeft className='w-4 h-4 mr-1' />
             Trước
-          </PaginationPrevious>
+          </Button>
 
           {Array.from({ length: totalPages }, (_, index) => (
             <PaginationItem key={index}>
@@ -147,19 +142,20 @@ export default function SaveJob() {
             </PaginationItem>
           ))}
 
-          <PaginationNext
-            title='Tiếp theo'
-            className='cursor-pointer'
+          <Button
+            variant='ghost'
+            className='cursor-pointer ml-5'
             onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))}
           >
             Tiếp theo
-          </PaginationNext>
+            <ChevronRight className='w-4 h-4 mr-1' />
+          </Button>
         </PaginationContent>
       </Pagination>
       <Card className='mt-4 bg-transparent shadow-none'>
         <CardHeader className='text-center text-gray-800 font-bold'>
-          <CardTitle>
-            Gợi ý công việc đã lưu cho bạn
+          <CardTitle className='text-lg text-[#451da1]'>
+            <p>Dựa trên công việc bạn lưu mà chúng tôi tìm thấy <strong>{recomendedJobs.length}</strong> công việc tương tự</p>
           </CardTitle>
         </CardHeader>
         <CardContent className='text-center text-gray-500 font-semibold  grid grid-cols-2 gap-4 p-0'>

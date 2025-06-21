@@ -11,6 +11,7 @@ export const getAllViewJobsAPI = async (page: number, limit: number) => {
     totalPage: number;
     page: number;
     limit: number;
+    total: number;
   }>(`/view-job/me/${page}/${limit}`);
   return response.data;
 }

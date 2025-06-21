@@ -2,6 +2,7 @@ import { Benefit } from "./benefitType";
 import { Employer } from "./companyType";
 import { Cv } from "./cvType";
 import { Education } from "./educationType";
+import { EmployerSubResponse } from "./employerSubType";
 import { Experience } from "./experienceType";
 import { LanguageJob } from "./LanguageType";
 import { Level } from "./levelType";
@@ -85,6 +86,7 @@ export interface JobFilterRequest {
   skills?: number[];
   page?: number;
   limit?: number;
+  fieldId?: number;
 }
 export interface JobFilterAdminRequest {
   search?: string;
@@ -126,6 +128,7 @@ export interface JobFilterResponse {
   matchingWeights: MatchingWeightResponse | null;
   distanceKm?: number | null;
   field?: Field | null;
+  isActiveSubscription?: boolean;
 }
 
 export interface UpdateJobAdminRequest {

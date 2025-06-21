@@ -5,6 +5,15 @@ import { toast } from 'sonner';
 import { getAllCountries } from '@/apis/countryAPI';
 import { CountryResponse } from '@/types/countryType';
 import { registerCompanyAPI } from '@/apis/companyAPI';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import Editer from '@/components/elements/editer/editer';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Element } from '@/types/type';
+import { getAllEmployerScales } from '@/apis/employerScalesAPI';
+import { getAllBusinessTypes } from '@/apis/businesTypeAPI';
+import { useNavigate } from 'react-router-dom';
 
 export default function CompanyRegistration() {
 
@@ -17,8 +26,8 @@ export default function CompanyRegistration() {
   const [countries, setCountries] = useState<CountryResponse[]>([]);
   const [name, setName] = useState('');
   const [taxCode, setTaxCode] = useState('');
-  const [businessType, setBusinessType] = useState('');
-  const [employeeScale, setEmployeeScale] = useState('');
+  const [businessType, setBusinessType] = useState<number>(-1);
+  const [employeeScale, setEmployeeScale] = useState<number>(-1);
   const [countryId, setCountryId] = useState(0);
   const [website, setWebsite] = useState('');
   const [introduction, setIntroduction] = useState('');
@@ -27,42 +36,29 @@ export default function CompanyRegistration() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const [employeeScales, setEmployeeScales] = useState<Element[]>([]);
+  const [businessTypes, setBusinessTypes] = useState<Element[]>([]);
+  const navigate = useNavigate();
 
-  const fetchElements = async () => {
-    try {
-      const [contriesList] = await Promise.all([
-        getAllCountries(),
-      ]);
-      setCountries(contriesList);
+    const fetchElements = async () => {
+      try {
+        const [contriesList, employerScales, businessTypes] = await Promise.all([
+          getAllCountries(),
+          getAllEmployerScales(),
+          getAllBusinessTypes(),
+        ]);
+        setCountries(contriesList);
+        setEmployeeScales(employerScales);
+        setBusinessTypes(businessTypes);
+      }
+      catch (error: any) {
+        toast.error(error.response?.data?.message || 'Lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
+      }
     }
-    catch (error: any) {
-      toast.error(error.response?.data?.message || 'Lỗi khi tải dữ liệu. Vui lòng thử lại sau.');
-    }
-  }
-  useEffect(() => {
-    fetchElements();
-  }, []);
+    useEffect(() => {
+      fetchElements();
+    }, []);
 
-  const employeeScales = [
-    '1-10 nhân viên',
-    '11-50 nhân viên', 
-    '51-200 nhân viên',
-    '201-500 nhân viên',
-    '501-1000 nhân viên',
-    'Trên 1000 nhân viên'
-  ];
-
-  const businessTypes = [
-    'Công ty TNHH',
-    'Công ty Cổ phần',
-    'Doanh nghiệp tư nhân',
-    'Công ty Hợp danh',
-    'Doanh nghiệp FDI',
-    'Chi nhánh công ty nước ngoài',
-    'Văn phòng đại diện',
-    'Hợp tác xã',
-    'Khác'
-  ];
 
   const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -85,8 +81,8 @@ export default function CompanyRegistration() {
       await registerCompanyAPI({
         name,
         taxCode,
-        businessType,
-        employeeScale,
+        businessTypeId: businessType,
+        employeeScaleId: employeeScale,
         countryId: countryId,
         website,
         introduction,
@@ -96,7 +92,7 @@ export default function CompanyRegistration() {
         logo: selectedLogo || undefined
       })
         setIsSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.data?.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
     } finally {
       setIsLoading(false);
@@ -115,10 +111,10 @@ export default function CompanyRegistration() {
             Cảm ơn bạn đã đăng ký. Chúng tôi sẽ xem xét hồ sơ và liên hệ với bạn trong vòng 24 giờ.
           </p>
           <button 
-            onClick={() => setIsSubmitted(false)}
+            onClick={() => navigate('/auth/login')}
             className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
           >
-            Quay lại trang chủ
+          <span className="ml-2">Đăng nhập ngay</span>
           </button>
         </div>
       </div>
@@ -127,315 +123,320 @@ export default function CompanyRegistration() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
-            <Building2 className="w-8 h-8 text-white" />
+    <div className="max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
+          <Building2 className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Đăng ký Doanh nghiệp</h1>
+        <p className="text-gray-600">Tạo tài khoản để bắt đầu đăng tin tuyển dụng</p>
+      </div>
+
+      <div  className="space-y-6 bg-white p-4 rounded-lg shadow-lg">
+
+        <div>
+          <Label className=" text-sm font-medium text-[#2c95ff] mb-2">
+            Logo công ty
+          </Label>
+          <div className="flex items-center space-x-4">
+            {logoPreview ? (
+              <div className="relative">
+                <img
+                  src={logoPreview}
+                  alt="Logo Preview"
+                  className="w-20 h-20 rounded-lg object-cover border-2 border-gray-200"
+                />
+                <Button
+                  onClick={removeLogo}
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            ) : (
+              <div className="w-20 h-20 rounded-lg bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center">
+                <Building2 className="w-8 h-8 text-gray-400" />
+              </div>
+            )}
+            
+            <div className="flex-1">
+              <Input
+                type="file"
+                id="logo-upload"
+                accept="image/*"
+                onChange={handleLogoSelect}
+                className="hidden"
+              />
+              <Label
+                htmlFor="logo-upload"
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-colors"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {selectedLogo ? 'Thay đổi logo' : 'Chọn logo'}
+              </Label>
+              <p className="text-xs text-gray-500 mt-1">
+                PNG, JPG tối đa 5MB
+              </p>
+            
+            </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Đăng ký Doanh nghiệp</h1>
-          <p className="text-gray-600">Tạo tài khoản để bắt đầu đăng tin tuyển dụng</p>
         </div>
 
-        {/* Registration Form */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            
-            {/* Logo Upload Section */}
+        {/* Company Basic Information */}
+        <div className="border-b border-gray-200 pb-6">
+          <h2 className="text-xl font-semibold text-[#2c95ff] mb-4 flex items-center">
+            <Building2 className="w-5 h-5 mr-2 text-[#2c95ff]" />
+            Thông tin cơ bản
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="md:col-span-2">
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                Tên công ty *
+              </Label>
+              <Input
+                type="text"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
+                placeholder="Nhập tên công ty"
+              />
+              
+            </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Logo công ty
-              </label>
-              <div className="flex items-center space-x-4">
-                {logoPreview ? (
-                  <div className="relative">
-                    <img
-                      src={logoPreview}
-                      alt="Logo Preview"
-                      className="w-20 h-20 rounded-lg object-cover border-2 border-gray-200"
-                    />
-                    <button
-                      type="button"
-                      onClick={removeLogo}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                ) : (
-                  <div className="w-20 h-20 rounded-lg bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center">
-                    <Building2 className="w-8 h-8 text-gray-400" />
-                  </div>
-                )}
-                
-                <div className="flex-1">
-                  <input
-                    type="file"
-                    id="logo-upload"
-                    accept="image/*"
-                    onChange={handleLogoSelect}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="logo-upload"
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-colors"
-                  >
-                    <Upload className="w-4 h-4 mr-2" />
-                    {selectedLogo ? 'Thay đổi logo' : 'Chọn logo'}
-                  </label>
-                  <p className="text-xs text-gray-500 mt-1">
-                    PNG, JPG tối đa 5MB
-                  </p>
-                
-                </div>
-              </div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                <Hash className="w-4 h-4 inline  text-[#9277f2]" />
+                Mã số thuế *
+              </Label>
+              <Input
+                type="text"
+                name="taxCode"
+                value={taxCode}
+                onChange={(e) => setTaxCode(e.target.value)}
+                className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
+                placeholder="0123456789"
+              />
+             
             </div>
 
-            {/* Company Basic Information */}
-            <div className="border-b border-gray-200 pb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <Building2 className="w-5 h-5 mr-2 text-blue-600" />
-                Thông tin cơ bản
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tên công ty *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
-                    placeholder="Nhập tên công ty"
-                  />
-                  
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Hash className="w-4 h-4 inline mr-1" />
-                    Mã số thuế *
-                  </label>
-                  <input
-                    type="text"
-                    name="taxCode"
-                    value={taxCode}
-                    onChange={(e) => setTaxCode(e.target.value)}
-                    className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
-                    placeholder="0123456789"
-                  />
-                 
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Briefcase className="w-4 h-4 inline mr-1" />
-                    Loại hình doanh nghiệp *
-                  </label>
-                  <select
-                    name="businessType"
-                    value={businessType}
-                    onChange={(e) => setBusinessType(e.target.value)}
-                    className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
-                  >
-                    <option value="">Chọn loại hình</option>
-                    {businessTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Users className="w-4 h-4 inline mr-1" />
-                    Quy mô nhân viên *
-                  </label>
-                  <select
-                    name="employeeScale"
-                    value={employeeScale}
-                    onChange={(e) => setEmployeeScale(e.target.value)}
-                    className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                  >
-                    <option value="">Chọn quy mô</option>
-                    {employeeScales.map(scale => (
-                      <option key={scale} value={scale}>{scale}</option>
-                    ))}
-                  </select>
-
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <MapPin className="w-4 h-4 inline mr-1" />
-                    Quốc gia *
-                  </label>
-                  <select
-                    name="countryId"
-                    value={countryId}
-                    onChange={(e) => setCountryId(e.target.value)}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  >
-                    {countries.map(country => (
-                      <option key={country.id} value={country.id}>{country.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Globe className="w-4 h-4 inline mr-1" />
-                    Website công ty
-                  </label>
-                  <input
-                    type="url"
-                    name="website"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    placeholder="https://www.company.com"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <FileText className="w-4 h-4 inline mr-1" />
-                    Giới thiệu công ty
-                  </label>
-                  <textarea
-                    name="introduction"
-                    value={introduction}
-                    onChange={(e) => setIntroduction(e.target.value)}
-                    rows={4}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-                    placeholder="Mô tả ngắn về công ty, hoạt động kinh doanh, văn hóa doanh nghiệp..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Contact & Account Information */}
-            <div className="pb-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <Lock className="w-5 h-5 mr-2 text-blue-600" />
-                Thông tin liên hệ & Tài khoản
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Mail className="w-4 h-4 inline mr-1" />
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
-                    placeholder="email@company.com"
-                  />
-                 
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <Phone className="w-4 h-4 inline mr-1" />
-                    Số điện thoại *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
-                    placeholder="0123 456 789"
-                  />
-                  
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Mật khẩu *
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className={`w-full px-3 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
-                      placeholder="Nhập mật khẩu"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Xác nhận mật khẩu *
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      name="confirmPassword"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className={`w-full px-3 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
-                      placeholder="Nhập lại mật khẩu"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            <div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                <Briefcase className="w-4 h-4 inline  text-[#9277f2]" />
+                Loại hình doanh nghiệp *
+              </Label>
+              <Select
+                defaultValue={businessType?.toString()}
+                onValueChange={(value) => setBusinessType(+value)}
               >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    Đang đăng ký...
-                  </>
-                ) : (
-                  <>
-                    <Building2 className="w-5 h-5 mr-2" />
-                    Đăng ký tài khoản
-                  </>
-                )}
-              </button>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Chọn loại hình" >
+                    {
+                      businessTypes.find(type => type.id === businessType)?.name || 'Chọn loại hình'
+                    }
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {businessTypes.map(type => (
+                  <SelectItem key={type.id} value={type.id.toString()}>
+                    {type.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             </div>
-          </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
-              Đã có tài khoản?{' '}
-              <a href="#" className="text-blue-600 hover:underline font-medium">
-                Đăng nhập ngay
-              </a>
-            </p>
+            <div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                <Users className="w-4 h-4 inline  text-[#9277f2]" />
+                <span>Quy mô nhân sự *</span>
+              </Label>
+            <Select
+              defaultValue={employeeScale?.toString()}
+              onValueChange={(value) => setEmployeeScale(+value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Chọn quy mô" >
+                  {
+                    employeeScales.find(scale => scale.id === employeeScale)?.name || 'Chọn quy mô'
+                  }
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {employeeScales.map(scale => (
+                  <SelectItem key={scale.id} value={scale.id.toString()}>
+                    {scale.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+              </Select>
+
+            </div>
+
+            <div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                <MapPin className="w-4 h-4 inline  text-[#9277f2]" />
+                <span>Quốc gia *</span>
+              </Label>
+            <Select
+              defaultValue={countryId.toString()}
+              onValueChange={(value) => setCountryId(Number(value))}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Chọn quốc gia" >
+                  {countries.find(country => country.id === countryId)?.name || 'Chọn quốc gia'}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {countries.map(country => (
+                  <SelectItem key={country.id} value={country.id.toString()}>
+                    {country.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            </div>
+
+            <div className="md:col-span-2 ">
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                <Globe className="w-4 h-4 inline  text-[#9277f2]" />
+                <span>Website công ty</span>
+              </Label>
+              <Input
+                type="url"
+                name="website"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                className="w-full px-3 py-3 border border-gray-300 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                placeholder="https://www.company.com"
+              />
+            </div>
+
+            <div className="md:col-span-2 ">
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center ">
+                <FileText className="w-4 h-4 inline  text-[#9277f2]" />
+                <span >Giới thiệu công ty</span> *
+              </Label>
+              <Editer
+                text={introduction}
+                setText={setIntroduction}
+              />
+            </div>
           </div>
+        </div>
+
+        {/* Contact & Account Information */}
+        <div className="pb-6">
+          <h2 className="text-xl font-semibold text-[#2c95ff] mb-4 flex items-center">
+            <Lock className="w-5 h-5 mr-2 text-[#2c95ff]" />
+            Thông tin liên hệ & Tài khoản
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                <Mail className="w-4 h-4 inline  text-[#9277f2]" />
+                Email *
+              </Label>
+            <Input
+                                  
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
+                placeholder="email@company.com"
+              />
+             
+            </div>
+
+            <div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                <Phone className="w-4 h-4 inline  text-[#9277f2]" />
+                Số điện thoại *
+              </Label>
+              <Input
+                type="tel"
+                name="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className={`w-full px-3 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
+                placeholder="0123 456 789"
+              />
+              
+            </div>
+
+            <div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                Mật khẩu *
+              </Label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`w-full px-3 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
+                  placeholder="Nhập mật khẩu"
+                />
+                <Button
+                  variant='ghost'
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </Button>
+                </div>
+                
+              </div>
+              <div>
+              <Label className=" text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
+                  Xác nhận mật khẩu *
+                </Label>
+                <div className="relative">
+                  <Input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={`w-full px-3 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors `}
+                    placeholder="Nhập lại mật khẩu"
+                  />
+                  <Button
+                    variant='ghost'
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </Button>
+                </div>
+              </div>
+          </div>
+        </div>
+        <div className="space-y-4">
+        <Button
+            onClick={handleSubmit}
+            disabled={isLoading}
+            className=" text-white py-3 px-4 bg-[#451e99] font-medium flex items-center justify-center  rounded-sm w-fit"
+          >
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Đang đăng ký...
+              </>
+            ) : (
+              <>
+                <Building2 className="w-5 h-5 mr-2" />
+                Đăng ký Nhà tuyển dụng
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>
+  </div>
   );
 }

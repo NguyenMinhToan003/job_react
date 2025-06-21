@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { convertDateToString, dayRemaning } from '@/utils/dateTime';
 import { convertPrice } from '@/utils/convertPrice';
+import { iconMap } from '@/utils/SetListIcon';
 
 export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) {
   const navigate = useNavigate();
@@ -71,8 +72,8 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
 
   if (loading || !job) {
     return (
-      <div className='sticky top-4'>
-        <Card className='bg-white border border-gray-200 shadow-sm rounded-md overflow-hidden h-[400px]'>
+      <div className=''>
+        <Card className=' rounded-md overflow-hidden h-[400px]'>
           <CardContent className='p-6 space-y-6'>
             <Skeleton className='h-8 w-full' />
             <Skeleton className='h-4 w-full' />
@@ -86,7 +87,7 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
 
 
   return (
-    <div className='sticky top-4'>
+    <div className=''>
       <Card className='overflow-hidden shadow-lg'>
         <CardContent className='p-6 space-y-6'>
           <div className='flex-1 space-y-4'>
@@ -191,89 +192,111 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
             </div>
 
             {/* Enhanced Information Grid */}
-            <div className='grid grid-cols-1 gap-4 mt-6'>
+            <div className='grid grid-cols-1 gap-4 bg-gray-50 p-4 rounded-xl'>
               {/* Job Type */}
-              <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                <Briefcase size={16} className='text-blue-600' />
-                <span className='text-[#000209]'>Loại công việc:</span>
-                <span>{job.typeJobs.map((type) => type.name).join(', ')}</span>
+              <div className='flex items-center gap-3 text-sm'>
+                <div className='w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center'>
+                  <Briefcase size={16} className='text-blue-600' />
+                </div>
+                <div>
+                  <span className='font-medium text-gray-900'>Loại công việc</span>
+                  <p className='text-gray-600'>{job.typeJobs.map((type) => type.name).join(', ')}</p>
+                </div>
               </div>
 
               {/* Locations */}
               {job.locations.map((location) => (
-                <div
-                  key={location.id}
-                  className='flex items-center flex-wrap  gap-2 text-sm text-gray-600 font-semibold'
-                >
-                  <MapPin size={16} className='text-red-600' />
-                  <span className='text-[#000209]'>Địa điểm:</span>
-                  <span >{location.name}</span>
+                <div key={location.id} className='flex items-center gap-3 text-sm'>
+                  <div className='w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center'>
+                    <MapPin size={16} className='text-red-600' />
+                  </div>
+                  <div className='flex-1'>
+                    <span className='font-medium text-gray-900'>Địa điểm</span>
+                    <p className='text-gray-600'>{location.name}</p>
+                  </div>
                   {location.lat && location.lng && (
                     <ExternalLink
-                      className='w-4 h-4 text-blue-600 cursor-pointer hover:text-blue-800'
-                      onClick={() =>
-                        navigate(`/map/${location.lat}/${location.lng}`)
-                      }
+                      className='w-5 h-5 text-blue-600 cursor-pointer hover:text-blue-800 transition-colors'
+                      onClick={() => navigate(`/map/${location.lat}/${location.lng}`)}
                     />
                   )}
                 </div>
               ))}
 
               {/* Experience */}
-              <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                <Book size={16} className='text-green-600' />
-                <span className='text-[#000209]'>Kinh nghiệm:</span>
-                <span>{job.experience.name} kinh nghiệm làm việc</span>
+              <div className='flex items-center gap-3 text-sm'>
+                <div className='w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center'>
+                  <Book size={16} className='text-green-600' />
+                </div>
+                <div>
+                  <span className='font-medium text-gray-900'>Kinh nghiệm</span>
+                  <p className='text-gray-600'>{job.experience.name}</p>
+                </div>
               </div>
 
               {/* Education */}
               {job.education && (
-                <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                  <GraduationCap size={16} className='text-purple-600' />
-                  <span className='text-[#000209]'>Học vấn:</span>
-                  <span>{job.education.name}</span>
+                <div className='flex items-center gap-3 text-sm'>
+                  <div className='w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center'>
+                    <GraduationCap size={16} className='text-purple-600' />
+                  </div>
+                  <div>
+                    <span className='font-medium text-gray-900'>Học vấn</span>
+                    <p className='text-gray-600'>{job.education.name}</p>
+                  </div>
                 </div>
               )}
 
               {/* Quantity */}
-              <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                <Users size={16} className='text-orange-600' />
-                <span className='text-[#000209]'>Số lượng tuyển:</span>
-                <span>{job.quantity} người</span>
+              <div className='flex items-center gap-3 text-sm'>
+                <div className='w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center'>
+                  <Users size={16} className='text-orange-600' />
+                </div>
+                <div>
+                  <span className='font-medium text-gray-900'>Số lượng tuyển</span>
+                  <p className='text-gray-600'>{job.quantity} người</p>
+                </div>
               </div>
 
-              {/* Created Date */}
-              <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                <Calendar size={16} className='text-indigo-600' />
-                <span className='text-[#000209]'>Ngày đăng:</span>
-                <span>{convertDateToString(job.createdAt)}</span>
-              </div>
-
-              {/* Expiry Date */}
-              <div className='flex items-center gap-2 text-sm text-gray-600 font-semibold'>
-                <Clock size={16} className={dayRemaning(job.expiredAt) <= 7 ? 'text-red-600' : 'text-gray-600'} />
-                <span className='text-[#000209]'>Hạn nộp:</span>
-                <span className={dayRemaning(job.expiredAt) <= 7 ? 'text-red-600 font-bold' : ''}>
-                  {convertDateToString(job.expiredAt)}
-                  {dayRemaning(job.expiredAt) > 0 ? ` (còn ${dayRemaning(job.expiredAt)} ngày)` : ' (đã hết hạn)'}
-                </span>
+              {/* Dates */}
+              <div className='grid grid-cols-2 gap-4'>
+                <div className='flex items-center gap-2 text-sm'>
+                  <Calendar size={14} className='text-indigo-600' />
+                  <div>
+                    <span className='font-medium text-gray-900 block'>Ngày đăng</span>
+                    <span className='text-gray-600 text-xs'>{convertDateToString(job.createdAt)}</span>
+                  </div>
+                </div>
+                <div className='flex items-center gap-2 text-sm'>
+                  <Clock size={14} className={dayRemaning(job.expiredAt) <= 7 ? 'text-red-600' : 'text-gray-600'} />
+                  <div>
+                    <span className='font-medium text-gray-900 block'>Hạn nộp</span>
+                    <span className={`text-xs ${dayRemaning(job.expiredAt) <= 7 ? 'text-red-600 font-semibold' : 'text-gray-600'}`}>
+                      {convertDateToString(job.expiredAt)}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Languages */}
               {job.languageJobs && job.languageJobs.length > 0 && (
-                <div className='flex items-start gap-2 text-sm text-gray-600 font-semibold'>
-                  <Globe size={16} className='text-cyan-600 mt-0.5' />
-                  <span className='text-[#000209]'>Ngôn ngữ:</span>
-                  <div className='flex flex-wrap gap-1'>
-                    {job.languageJobs.map((lang, index) => (
-                      <Badge
-                        key={index}
-                        variant='outline'
-                        className='text-xs px-2 py-0.5 bg-cyan-50 text-cyan-700 border-cyan-200'
-                      >
-                        {lang.language?.name}
-                      </Badge>
-                    ))}
+                <div className='flex items-start gap-3 text-sm'>
+                  <div className='w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center mt-0.5'>
+                    <Globe size={16} className='text-cyan-600' />
+                  </div>
+                  <div>
+                    <span className='font-medium text-gray-900'>Ngôn ngữ</span>
+                    <div className='flex flex-wrap gap-1 mt-1'>
+                      {job.languageJobs.map((lang, index) => (
+                        <Badge
+                          key={index}
+                          variant='outline'
+                          className='text-xs px-2 py-0.5 bg-cyan-50 text-cyan-700 border-cyan-200 font-medium'
+                        >
+                          {lang.language?.name}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -378,26 +401,30 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
               <div className='bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg'>
                 <ul className='list-disc list-inside text-sm text-[#000209 mt-2 space-y-2 font-semibold'>
                   {job.benefits.map((benefit, idx) => (
-                    <li key={idx} className='marker:text-[#ed1b2f] flex items-start gap-2'>
-                      <CheckCircle size={14} className='text-green-600 mt-0.5 flex-shrink-0' />
-                      <span className='flex-1'>{benefit.name}</span>
+                    <li key={idx} className=' flex items-start gap-2'>
+                     <Button
+                        variant='ghost'
+                        className='text-green-600 hover:text-green-800 w-full text-left'
+                      >
+                       {iconMap[benefit.icon]}
+                       <span className='flex-1'>{benefit.name}</span>
+                      </Button>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
-
-            {/* More jobs from employer */}
-            <div className='flex justify-end mt-4'>
+              <div className='pt-6 border-t border-gray-200'>
               <Button
                 variant='outline'
-                className='text-gray-600 hover:text-gray-800 flex items-center gap-2'
+                className='w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 flex items-center justify-center gap-2 h-12 rounded-xl border-2 border-gray-200 font-medium'
                 onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
               >
                 <Building2 size={16} />
-                Xem thêm việc làm của nhà tuyển dụng
+                Xem thêm việc làm từ {job.employer.name}
               </Button>
             </div>
+            </div>
+
           </div>
         </CardContent>
       </Card>

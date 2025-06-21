@@ -17,17 +17,22 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { countUnreadAPI } from '@/apis/employerNotiAPI';
 import clsx from 'clsx';
+import { useAccount } from '@/providers/UserProvider';
+import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function CompanyNavbar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { dataUser } = useAccount();
   const [countNoti, setCountNoti] = useState(0);
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
 
   const fetchNotificationCount = async () => {
     try {
       const response = await countUnreadAPI();
-      setCountNoti(response.length);
+      setCountNoti(response);
     } catch (error) {
       console.error('Error fetching notification count:', error);
     }
@@ -41,7 +46,7 @@ export default function CompanyNavbar() {
     { label: 'Tổng quan', icon: <LayoutDashboard className='w-6 h-6' />, path: '' },
     {
       label: 'Quản lý tuyển dụng',
-      icon: <ClipboardList className='w-6 h-6' />, // thay vì UserCog
+      icon: <ClipboardList className='w-6 h-6' />,
       children: [
         { label: 'Danh sách', path: 'tuyen-dung' },
         { label: 'Hết hạn', path: 'tuyen-dung/het-han' },
@@ -57,12 +62,12 @@ export default function CompanyNavbar() {
     { label: 'Quản lý thông tin', icon: <MessageCircle className='w-6 h-6' />, path: 'quan-ly-thong-tin' },
     {
       label: (
-        <span className='flex items-center gap-1'>
-          Thông báo
+        <span className='flex items-center gap-2'>
+          <Label className='text-sm'>Thông báo</Label>
           {countNoti > 0 && (
-            <span className='bg-red-500 text-white text-xs font-semibold rounded-full px-2 py-1'>
+            <Badge className='bg-purple-500 text-white rounded-full px-2  text-xs w-fit'>
               {countNoti}
-            </span>
+            </Badge>
           )}
         </span>
       ),
@@ -77,10 +82,22 @@ export default function CompanyNavbar() {
     path && location.pathname.includes(path);
 
   return (
-    <Card className='min-w-[300px] max-w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-6'>
+    <Card className='min-w-[300px] max-w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-18'>
       <CardHeader>
-        <p className='text-sm text-muted-foreground'>👋 Xin chào</p>
-        <CardTitle className='text-2xl font-semibold'>Toan</CardTitle>
+        <CardTitle className='text-2xl font-semibold'>
+          <div className='flex items-center gap-2'>
+            <Avatar
+              className='border border-gray-300 w-20 h-20 rounded-sm'
+            >
+              <AvatarImage
+                src={dataUser?.logo}
+                alt='Company Logo'
+              />
+              <AvatarFallback>{dataUser?.name[0]}</AvatarFallback>
+            </Avatar>
+            {dataUser?.name || 'Công ty'}
+          </div>
+        </CardTitle>
       </CardHeader>
 
       <CardContent className='text-base space-y-2 p-0'>
@@ -102,8 +119,8 @@ export default function CompanyNavbar() {
                 variant='ghost'
                 className={clsx(
                   'w-full justify-between rounded-md px-3 h-12 transition-colors duration-300',
-                  isPathActive(typeof item.path === 'string' ? item.path : '') && 'bg-red-50 text-red-600',
-                  'hover:bg-red-50 hover:text-gray-600'
+                  isPathActive(typeof item.path === 'string' ? item.path : '') && 'bg-purple-50 text-purple-600',
+                  'hover:bg-purple-50 hover:text-gray-600'
                 )}
               >
                 <div className='flex items-center gap-3'>
@@ -133,8 +150,8 @@ export default function CompanyNavbar() {
                       className={clsx(
                         'w-full justify-start text-sm h-10 transition-colors duration-300',
                         isPathActive(child.path)
-                          ? 'text-red-600 bg-red-50'
-                          : 'text-muted-foreground hover:text-red-600 hover:bg-red-50'
+                          ? 'text-purple-600 bg-purple-50'
+                          : 'text-muted-foreground '
                       )}
                     >
                       {child.label}

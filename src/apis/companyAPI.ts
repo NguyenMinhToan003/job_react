@@ -1,6 +1,7 @@
 import { Employer, EmployerDetailResponse } from "@/types/companyType";
 import { axiosInstance } from "./index";
 import { EmployerRegisterRequest } from "@/types/authType";
+import { EmployerResponse } from "@/types/accountType";
 
 
 export const getAllEmployers = async () => {
@@ -9,7 +10,7 @@ export const getAllEmployers = async () => {
 }
 
 export const getEmployerInfo = async () => {
-  const response = await axiosInstance.get<Employer>('/employer/info');
+  const response = await axiosInstance.get<EmployerResponse>('/employer/info');
   return response.data;
 }
 export const getCompanyDetailAPI = async (companyId: number) => {
