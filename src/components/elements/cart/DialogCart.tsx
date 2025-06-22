@@ -26,13 +26,13 @@ export default function DialogCart({ open, onClose }: DialogCartProps) {
   const [packages, setPackages] = useState<PackageResponse[]>([]);
 
   const handlePayment = async () => {
+    toast.success('Quá trình thanh toán đang được xử lý, vui lòng đợi trong giây lát.');
     try {
-
       const payment = await createPaymentUrl({
         subscriptions: cartData,
         transactionType: 'VNPAY',
       })
-      toast.success('Đặt hàng thành công');
+      
       window.open(payment.paymentUrl, '_blank');
     }
     catch (error: any) {
@@ -42,7 +42,6 @@ export default function DialogCart({ open, onClose }: DialogCartProps) {
 
   useEffect(() => {
     const stored = sessionStorage.getItem('cart');
-    console.log('Stored cart data:', stored);
     if (stored) { 
       setCartData(JSON.parse(stored));
     }

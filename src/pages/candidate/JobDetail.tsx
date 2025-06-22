@@ -26,8 +26,6 @@ import {
   TrendingUp,
   Zap,
   TargetIcon,
-  Coins,
-  DollarSignIcon,
   CircleDollarSignIcon,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -38,7 +36,7 @@ import { convertDateToDiffTime, convertDateToString, dayRemaning } from '@/utils
 import { saveJob } from '@/apis/saveJobAPI';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ROLE_LIST } from '@/types/type';
-import { addViewJobAPI } from '@/apis/viewJobAPI';
+import { addViewJobAPI, getViewJobByIdAPI } from '@/apis/viewJobAPI';
 import JobItem from '@/components/elements/job/job-list/JobItem';
 import { convertPrice } from '@/utils/convertPrice';
 
@@ -48,11 +46,14 @@ export default function JobDetail() {
   const [job, setJob] = useState<JobFilterResponse>();
   const navigate = useNavigate();
   const [jobOrders, setJobOrders] = useState<JobFilterResponse[]>([]);
+  const [view , setView] = useState(0);
 
   const fetchJobDetail = async () => {
     try {
       const response = await getDetailJobById(Number(id));
+      const countView = await getViewJobByIdAPI(Number(id));
       setJob(response);
+      setView(countView);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin công việc');
     }
@@ -106,7 +107,9 @@ export default function JobDetail() {
     }
   }, [job]);
 
-
+  const filterMajor = (majorId: number) => {
+    navigate(`/tim-kiem-cong-viec?majorId=${majorId}`);
+  }
 
   if (!job) {
     return (
@@ -134,6 +137,9 @@ export default function JobDetail() {
               onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
             >
               {job.employer.name}
+            </div>
+            <div className='text-xs font-semibold'>
+              {view} lượt xem
             </div>
           </div>
           <div className='flex gap-4'>
@@ -235,7 +241,20 @@ export default function JobDetail() {
                     <div className='text-[#000209] font-semibold'>{job.education.name}</div>
                   </div>
                 </div>
-              )}
+                )}
+                {
+                  job.majors.length > 0 && (
+                    <div className='flex items-start gap-3 p-3 bg-[#f5f3ff] '>
+                      <Star className='w-5 h-5 text-yellow-600 mt-0.5' />
+                      <div>
+                        <div className='text-sm font-medium text-[#857876]'>Ngành nghề</div>
+                        <div className='text-[#000209] font-semibold'>
+                          {job.majors[0].field.name}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
             </div>
 
             {/* Locations */}
@@ -295,13 +314,25 @@ export default function JobDetail() {
                       </div>
                     </TableCell>
                   </TableRow>
-                  {job.field && (
+                  {job.majors.length> 0 && (
                     <TableRow>
-                      <TableCell className='font-semibold text-[#857876]'>Ngành nghề</TableCell>
-                      <TableCell>
-                        <div className=' text-[#2b7fdc] font-bold hover:underline cursor-pointer'>
-                          {job.field.name}
-                        </div>
+                      <TableCell className='font-semibold text-[#857876]'>Chuyên ngành</TableCell>
+                      <TableCell className='flex flex-wrap gap-2'>
+                        {
+                            job.majors.map((major, index) => (
+                              <div className=' text-[#2b7fdc] font-bold hover:underline cursor-pointer flex items-center gap-2'>
+                                <div
+                                  key={major.id}
+                                  onClick={() => filterMajor(major.id)}
+                                >{major.name}{' '}</div>
+                                {
+                                  index < job.majors.length - 1
+                                    ? <div>/</div>
+                                    : ''
+                                }
+                              </div>
+                            ))
+                        }
                       </TableCell>
                     </TableRow>
                   )}

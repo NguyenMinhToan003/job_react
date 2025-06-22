@@ -61,7 +61,7 @@ export default function ExpiredJobs() {
 
 
   return (
-    <Card>
+    <Card className="w-full mt-2 mr-2">
       {/* <CardHeader>
         <CardTitle className="text-2xl font-bold text-gray-800 ">
           DANH SÁCH TUYỂN DỤNG

@@ -2,12 +2,11 @@ import { Benefit } from "./benefitType";
 import { Employer } from "./companyType";
 import { Cv } from "./cvType";
 import { Education } from "./educationType";
-import { EmployerSubResponse } from "./employerSubType";
 import { Experience } from "./experienceType";
 import { LanguageJob } from "./LanguageType";
 import { Level } from "./levelType";
 import { LocationResponse } from "./location";
-import { Field } from "./majorType";
+import { Field, Major, MajorResponse } from "./majorType";
 import { Skill } from "./SkillType";
 import { TypeJob } from "./TypeJobType";
 
@@ -40,7 +39,7 @@ export interface CreateJobRequest {
   education?: number;
   languages?: LanguageJob[];
   expiredAt: Date | null;
-  fieldId?: number;
+  majors: number[];
 }
 
 export interface ViewJobResponse {
@@ -87,6 +86,7 @@ export interface JobFilterRequest {
   page?: number;
   limit?: number;
   fieldId?: number;
+  majorId?: number;
 }
 export interface JobFilterAdminRequest {
   search?: string;
@@ -127,7 +127,7 @@ export interface JobFilterResponse {
   education: Education;
   matchingWeights: MatchingWeightResponse | null;
   distanceKm?: number | null;
-  field?: Field | null;
+  majors: Major[];
   isActiveSubscription?: boolean;
 }
 

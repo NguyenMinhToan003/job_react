@@ -212,7 +212,7 @@ export default function ViewResumeVersionForJob() {
                       <TableCell className="font-medium text-gray-700">Trình độ</TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="text-xs">
-                          {apply?.job.education.name}
+                          {apply?.job.education?.name}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -249,7 +249,7 @@ export default function ViewResumeVersionForJob() {
                       </TableCell>
                       <TableCell className="text-center">
                         <Badge className={`${getScoreBg(apply?.score.majorScore || 0)} text-xs`}>
-                          {apply?.score.majorScore.toFixed(1)}
+                          {apply?.score?.majorScore?.toFixed(1)}
                         </Badge>
                       </TableCell>
                     </TableRow>

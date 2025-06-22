@@ -687,35 +687,6 @@ export default function FormUpdateResume() {
             </div>
           </div>
 
-          {/* Work Experience */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Kinh nghiệm làm việc</Label>
-            <Badge
-              onClick={() => setStatusAddResumeVersionExp(true)}
-              className="px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium hover:bg-green-200 cursor-pointer"
-            >
-              + Thêm kinh nghiệm
-            </Badge>
-            <Card className="mt-2 bg-transparent border-none shadow-none">
-              {selectedResumeVersionExps.map((exp, index) => (
-                <CardContent key={index} className="border-b border-gray-200 p-4">
-                  <div className="text-lg font-bold text-gray-900">{exp.position}</div>
-                  <div className="text-sm font-semibold text-gray-700">{exp.companyName}</div>
-                  <div className="text-sm text-gray-600">
-                    {exp.startTime} - {exp.endTime}
-                  </div>
-                  <div className="text-sm text-gray-600">{exp.jobDescription}</div>
-                  <X
-                    className="ml-auto w-4 h-4 text-red-600 cursor-pointer"
-                    onClick={() =>
-                      setSelectedResumeVersionExps(selectedResumeVersionExps.filter((_, i) => i !== index))
-                    }
-                  />
-                </CardContent>
-              ))}
-            </Card>
-          </div>
-
           {/* Submit Button */}
           <Button
             onClick={handleUpdateResume}

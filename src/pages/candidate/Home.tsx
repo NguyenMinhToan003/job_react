@@ -468,13 +468,13 @@ export default function Home() {
                             </CardTitle>
                             <Button
                               variant="ghost"
-                              className="text-gray-500 hover:text-red-500 hover:bg-red-100"
+                              className=" hover:bg-[#eeeaff]"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleSaveJob(job.id);
                               }}
                             >
-                              <Heart className="w-5 h-5" />
+                              <Heart className="w-5 h-5 text-[#2c95ff] shadow-xl" />
                             </Button>
                           </CardHeader>
                           <CardContent className="flex-1 p-1 space-y-2">

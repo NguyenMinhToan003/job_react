@@ -35,7 +35,7 @@ import { Language, LanguageJob } from '@/types/LanguageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
-import { Field } from '@/types/majorType';
+import { Field, Major } from '@/types/majorType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
 import { CirclePlus } from 'lucide-react';
@@ -78,7 +78,8 @@ export default function CreateJob() {
   const [packageAvailable, setPackageAvailable] = useState<PackageResponse[]>([]);
   const [selectPackage, setSelectPackage] = useState<PackageResponse | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
-  const [selectField, setSelectField] = useState<number | null>(null);
+  const [selectField, setSelectField] = useState<Field | null>(null);
+  const [selectMajors, setSelectMajors] = useState<number[]>([]);
 
   const handleCreateJob = async () => {
     try {
@@ -100,7 +101,7 @@ export default function CreateJob() {
         locations: locationIds,
         minSalary: salaryMin,
         maxSalary: salaryMax,
-        fieldId: selectField || undefined,
+        majors: selectMajors,
         education: selectedEducation,
         languages: languageIds,
         expiredAt: expiredAt,
@@ -254,6 +255,8 @@ export default function CreateJob() {
               selectField={selectField}
               setSelectField={setSelectField}
               fields={fields}
+              selectMajors={selectMajors}
+              setSelectMajors={setSelectMajors}
             />
             <SkillJobPopup
               skillList={skillList}

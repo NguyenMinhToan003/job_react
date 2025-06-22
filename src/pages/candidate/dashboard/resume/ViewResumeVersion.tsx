@@ -18,7 +18,6 @@ export default function ViewResumeVersion({ resumeVerIdOption }: { resumeVerIdOp
 
   const fetchResume = async () => {
     try {
-      console.log('resumeVerIdOption', resumeVerIdOption);
       const response = await getResumeVersionsByIdAPI(resumeVerIdOption ? resumeVerIdOption : Number(resumeVerId));
       setResume(response);
     } catch (error: any) {
@@ -109,29 +108,6 @@ export default function ViewResumeVersion({ resumeVerIdOption }: { resumeVerIdOp
         </CardContent>
       </Card>
 
-      {/* ExpResume */}
-      <Card className='shadow-md border border-gray-200 rounded-xl bg-white'>
-        <CardHeader>
-          <CardTitle className='text-xl font-bold text-[#7C3AED]'>KINH NGHIỆM LÀM VIỆC</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className='list-disc space-y-2 px-4'>
-            {resume.experiences.length > 0 &&
-              resume.experiences.map((exp, index) => (
-                <li key={index} className='text-gray-700 marker:text-red-600 font-semibold'>
-                  <div className='text-xl font-bold'>{exp.position}</div>
-                  <div className='text-sm font-semibold'>{exp.companyName}</div>
-                  <div className='text-sm text-gray-600 font-semibold'>
-                    {exp.startTime} - {exp.endTime}
-                  </div>
-                  <div className='text-sm text-gray-600 font-semibold'>{exp.jobDescription}</div>
-                </li>
-              ))}
-          </ul>
-        </CardContent>
-      </Card>
-
-      {/* EducationResume */}
       <Card className='shadow-md border border-gray-200 rounded-xl bg-white'>
         <CardHeader className='flex flex-row items-center justify-between pb-3'>
           <CardTitle className='text-xl font-bold text-[#7C3AED]'>TRÌNH ĐỘ</CardTitle>

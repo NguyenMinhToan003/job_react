@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableCell, TableRow } from "@/components/ui/table";
 import { TransactionResponse } from "@/types/employerSubType";
+import { PAYMENT_STATUS } from "@/types/type";
 import { convertDateToString } from "@/utils/dateTime";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -56,7 +57,9 @@ export default function Service() {
                   </Button>
                 </CardTitle>
                 <div className="text-sm text-gray-600 mt-3 space-y-3">
-                  <div className="text-xs font-semibold text-[#060607]">Ngày ghi nhận: <span className="text-emerald-600">Đang cập nhật</span></div>
+                  <div className="text-xs font-semibold text-[#060607]">Ngày ghi nhận: <span className="text-emerald-600">
+                    {convertDateToString(transaction.recordedAt)}
+                  </span></div>
                   <div className="text-xs font-semibold text-[#060607]">
                     Ngày tạo:{" "}
                     <span className="text-emerald-600">
@@ -115,8 +118,10 @@ export default function Service() {
                     </TableCell>
                     <TableCell>
                       {
-                        pkg.sub_total - pkg.sub_used
-                      } Tin
+                        transaction.status !== PAYMENT_STATUS.SUCCESS
+                          ? <div className="text-red-600">0 Tin</div>
+                          : <div className="text-blue-500">{pkg.sub_total - pkg.sub_used} Tin</div>
+                      }
                     </TableCell>
                   </TableRow>
                 ))

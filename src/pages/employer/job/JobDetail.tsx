@@ -25,19 +25,23 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ViewResumeVersion from "@/pages/candidate/dashboard/resume/ViewResumeVersion";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MoreVertical } from "lucide-react";
+import { getViewJobByIdAPI } from "@/apis/viewJobAPI";
 
 export default function JobDetailCompany() {
   const { jobId } = useParams();
   const job = { id: Number(jobId) } as Job;
   const [list, setList] = useState<ApplyJobResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState(0);
 
   useEffect(() => {
     if (!jobId) return;
     const fetchData = async () => {
       try {
         const res = await getApplyJobByJobId(job);
+        const countView = await getViewJobByIdAPI(Number(jobId));
         setList(res);
+        setView(countView);
       } catch (error) {
         console.error("Lỗi khi lấy danh sách ứng tuyển:", error);
       } finally {

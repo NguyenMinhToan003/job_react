@@ -94,32 +94,24 @@ export default function JobItem({
         )}
         <div className='w-full h-[1px] bg-gray-300 my-3' />
         <div className='flex flex-wrap gap-1'>
-          {job.skills.slice(0, 4).map((skill, idx) => (
+          {job.majors.slice(0, 4).map((major, idx) => (
             <Badge
             variant={'outline'}  
             key={idx}
             className='text-sm px-3 py-1 rounded-full border border-gray-300 text-gray-600 bg-gray-100 hover:border-black transition-colors duration-200 font-semibold'
           >
-            {skill.name}
+            {major.name}
           </Badge>
           ))}
-          {job.skills.length > 4 && (
+          {job.majors.length > 4 && (
             <Badge
               variant='outline'
               className='text-xs font-normal px-3 py-1 rounded-full border border-gray-300 text-gray-700 hover:border-black transition-colors duration-200'
             >
-              +{job.skills.length - 4} kỹ năng khác
+              +{job.majors.length - 4} kỹ năng khác
             </Badge>
           )}
         </div>
-
-        {/* <ul className='list-disc list-inside text-sm text-gray-700 mt-2 space-y-1 font-semibold'>
-          {job.benefits.map((benefit, idx) => (
-            <li key={idx} className='marker:text-[#ed1b2f]'>
-              {benefit.name}
-            </li>
-          ))}
-        </ul> */}
       </CardContent>
     </Card>
   );

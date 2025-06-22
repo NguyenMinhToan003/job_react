@@ -19,3 +19,7 @@ export const getRecomendedViewJobAPI = async () => {
   const response = await axiosInstance.get<JobFilterResponse[]>(`/view-job/recommended`);
   return response.data;
 }
+export const getViewJobByIdAPI = async (id: number) => {
+  const response = await axiosInstance.get<number>(`/view-job/getViews/${id}`);
+  return response.data;
+}

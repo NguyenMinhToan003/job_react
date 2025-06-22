@@ -35,7 +35,6 @@ import RegisterCandidate from '@/pages/auth/RegisterCandidate';
 import UpdateInfoCandidate from '@/pages/candidate/dashboard/UpdateInfo';
 import RegisterEmployer from '@/pages/auth/RegisterEmployer';
 import ListResume from '@/pages/candidate/dashboard/resume/ListResume';
-import Resume from '@/pages/candidate/dashboard/resume/Resume';
 import FormUpdateResume from '@/pages/candidate/dashboard/resume/FormUpdateResume';
 import FormCreateResume from '@/pages/candidate/dashboard/resume/FormCreateResume';
 import Country from '@/pages/admin/country/Country';
@@ -54,6 +53,9 @@ import PaymentSuccess from '@/pages/employer/PaymentResult';
 import Service from '@/pages/employer/servicePage/Service';
 import DetailService from '@/pages/employer/servicePage/DetailService';
 import SearchJob from '@/pages/candidate/searchjob/SearchJob';
+import ViewResumeLastVersion from '@/pages/candidate/dashboard/resume/ViewResumeLastVersion';
+import ExpiredJobs from '@/pages/employer/job/ExpiredJobs';
+import PendingJobsList from '@/pages/employer/job/PendingJobsList';
 
 
 export default function AppRouter() {
@@ -89,7 +91,7 @@ export default function AppRouter() {
           <Route path='cong-ty-goi-y' element={<RecommentFollow />} />
           <Route path='chinh-sua-ho-so/:resumeId' element={<FormUpdateResume/>}/>
           <Route path='ho-so' element={<ListResume />} />
-          <Route path='ho-so/:resumeId' element={<Resume />} />
+          <Route path='ho-so/:resumeId' element={<ViewResumeLastVersion />} />
           <Route path='*' element={<Overview />} />
         </Route>
         <Route path='/nha-tuyen-dung/:id'>
@@ -123,6 +125,8 @@ export default function AppRouter() {
         <Route path='tim-kiem-ung-vien' element={<SearchCandidate />} />
         <Route index element={<OverViewCompany />} />
         <Route path='tuyen-dung' element={<CompanyJob />} />
+        <Route path='tuyen-dung/het-han' element={<ExpiredJobs />} />
+        <Route path='tuyen-dung/hang-doi' element={<PendingJobsList />} />
         <Route path='dich-vu' element={<Service />} />
         <Route path='dich-vu/:id' element={<DetailService />} />
         <Route path='dia-diem' element={<LocationCompany />} />

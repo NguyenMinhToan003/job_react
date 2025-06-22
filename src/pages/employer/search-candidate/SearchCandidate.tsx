@@ -186,9 +186,7 @@ export default function SearchCandidate() {
                     <div>
                       <div className="text-sm font-medium text-gray-700">Kinh nghiệm</div>
                       <div className="text-gray-900">
-                        {selectedResume.experiences.length > 0
-                          ? 'Đã có kinh nghiệm'
-                          : 'Chưa có kinh nghiệm'}
+                        
                       </div>
                     </div>
                   </div>

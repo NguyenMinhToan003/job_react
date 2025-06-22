@@ -1,11 +1,16 @@
+import { useEffect } from 'react';
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { TextAlign } from '@tiptap/extension-text-align'
-import EditerInput from "./editer-input";
-import EditerMenu from "./editer-menu";
+import { TextAlign } from '@tiptap/extension-text-align';
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
-export default function Editer({text, setText}: {
+import EditerMenu from "./editer-menu";
+import EditerInput from "./editer-input";
+
+export default function Editer({
+  text,
+  setText,
+}: {
   text: string;
   setText: (text: string) => void;
 }) {
@@ -18,29 +23,32 @@ export default function Editer({text, setText}: {
       TaskList,
       TaskItem.configure({
         nested: true,
-      })
+      }),
     ],
-    content: text,
+    content: '',
     onUpdate: ({ editor }) => {
-      setText(editor.getHTML());
+      const html = editor.getHTML();
+      if (html !== text) setText(html);
     },
     editorProps: {
       attributes: {
         class: 'prose prose-sm focus:outline-none p-2',
       },
     },
-  })
-  if (!editor) {
-    return null;
-  }
+  });
 
-  return <>
-  
-    <div className='border rounded-md  h-full flex flex-col '>
+  useEffect(() => {
+    if (editor && text && editor.getHTML() !== text) {
+      editor.commands.setContent(text);
+    }
+  }, [text, editor]);
+
+  if (!editor) return null;
+
+  return (
+    <div className='border rounded-md flex flex-col'>
       <EditerMenu editor={editor} />
-      <EditerInput 
-        editor={editor}
-      />
+      <EditerInput editor={editor} />
     </div>
-  </>
+  );
 }

@@ -40,7 +40,7 @@ export default function PendingJobsList() {
 
 
   return (
-    <Card>
+    <Card className="w-full mt-2 mr-2">
       
       <CardContent className="overflow-x-auto">
         {loading ? (

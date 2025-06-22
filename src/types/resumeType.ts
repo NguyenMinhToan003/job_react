@@ -38,7 +38,6 @@ export interface ResumeVersion {
   district: DistrictResponse;
   languageResumes: LanguageResume[];
   majors: Major[];
-  experiences: ResumeVersionExp[];
   urlPdf: string;
   publicIdPdf: string;
 }
@@ -59,8 +58,8 @@ export interface CreateResumeVersionDto {
   skills: number[];
   avatar?: File | string;
   majors?: number[];
-  resumeversionExps?: ResumeVersionExp[];
-  cv?: File|null;
+  cv?: File | null;
+  expectedSalary?: number;
 }
 export interface EducationResume {
   educationId: number;

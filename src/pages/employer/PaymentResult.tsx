@@ -12,16 +12,24 @@ import { Card } from '@/components/ui/card';
 import { TransactionResponse } from '@/types/employerSubType';
 import { checkoutPayment } from '@/apis/paymentAPI';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { PAYMENT_STATUS } from '@/types/type';
 
 export default function PaymentSuccess() {
   
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const transactionId = searchParams.get('transactionId');
+  const result = searchParams.get('result');
+  
+
   const [orderDetails, setOrderDetails] = useState<TransactionResponse>();
+
+
 
   const fetchData = async () => {
     try {
-      const response = await checkoutPayment(62);
+      const response = await checkoutPayment(Number(transactionId));
       setOrderDetails(response);
     } catch (error) {
       console.error('Error fetching order details:', error);
@@ -32,6 +40,10 @@ export default function PaymentSuccess() {
     fetchData();
   }, []);
 
+  // if (result !== PAYMENT_STATUS.SUCCESS || !transactionId) {
+  //   navigate('/danh-cho-nha-tuyen-dung/dich-vu');
+  //   return null;
+  // }
   if (!orderDetails) return null;
 
   return (

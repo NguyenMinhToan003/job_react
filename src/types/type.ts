@@ -25,3 +25,8 @@ export interface Element {
   name: string;
   status: number;
 }
+export enum PAYMENT_STATUS {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  FAILED = 'FAILED',
+}

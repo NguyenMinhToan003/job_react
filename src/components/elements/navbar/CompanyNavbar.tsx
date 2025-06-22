@@ -119,8 +119,8 @@ export default function CompanyNavbar() {
                 variant='ghost'
                 className={clsx(
                   'w-full justify-between rounded-md px-3 h-12 transition-colors duration-300',
-                  isPathActive(typeof item.path === 'string' ? item.path : '') && 'bg-purple-50 text-purple-600',
-                  'hover:bg-purple-50 hover:text-gray-600'
+                  isPathActive(typeof item.path === 'string' ? item.path : '') && 'bg-purple-100 text-purple-600',
+                  'hover:bg-purple-50 hover:text-purple-500'
                 )}
               >
                 <div className='flex items-center gap-3'>

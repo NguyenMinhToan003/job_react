@@ -5,6 +5,7 @@ import { getExperienceList } from "@/apis/experienceAPI";
 import { getFieldList } from "@/apis/fieldAPI";
 import { filterJob } from "@/apis/jobAPI";
 import { getLevelList } from "@/apis/levelAPI";
+import { getListMajorAPI } from "@/apis/majorAPI";
 import { getSkillList } from "@/apis/skillAPI";
 import { getTypeJobList } from "@/apis/typeJobAPI";
 import JobList from "@/components/elements/job/job-list/Index";
@@ -19,12 +20,11 @@ import { Experience } from "@/types/experienceType";
 import { JobFilterRequest, JobFilterResponse } from "@/types/jobType";
 import { Level } from "@/types/levelType";
 import { City } from "@/types/location";
-import { Field } from "@/types/majorType";
+import { Field, Major, MajorResponse } from "@/types/majorType";
 import { Skill } from "@/types/SkillType";
 import { TypeJob } from "@/types/TypeJobType";
 import { parseNumberArray, parseStringArray } from "@/utils/convertArray";
 import { iconMap } from "@/utils/SetListIcon";
-import { set } from "date-fns";
 import { Award, Briefcase, Clock, Flashlight, Gift, Layers3, MapPin, RotateCcw, Search, SearchIcon, TrendingUp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -45,6 +45,7 @@ export default function SearchJob() {
   const benefits = searchParams.get('benefits');
   const fieldId = searchParams.get('fieldId');
   const pageQuery = searchParams.get('page');
+  const majorIdQuery = searchParams.get('majorId');
 
   const [isPromaxSearch, setIsPromaxSearch] = useState<boolean>(false);
 
@@ -71,11 +72,15 @@ export default function SearchJob() {
   const [skillOption, setSkillOptions] = useState<Skill[]>([]);
   const [selectSkills, setSelectSkills] = useState<number[]>([]);
 
+  const [majors, setMajors] = useState<MajorResponse[]>([]);
+
   const [search, setSearch] = useState<string>(searchQuery || '');
   const [fields, setFields] = useState<Field[]>([]);
 
   const [minSalary, setMinSalary] = useState<number>();
   const [maxSalary, setMaxSalary] = useState<number>();
+
+  const [selectMajorId, setSelectMajorId] = useState<number>();
 
   const [selectedFieldId, setSelectedFieldId] = useState<number>();
 
@@ -91,7 +96,7 @@ export default function SearchJob() {
 
   const fetchInitialData = async () => {
     try {
-      const [citiesL, levelsL, typesL, experiencesL, benefitsL, skillsL, fieldsL] = await Promise.all([
+      const [citiesL, levelsL, typesL, experiencesL, benefitsL, skillsL, fieldsL, majorls] = await Promise.all([
         getCityList(),
         getLevelList(),
         getTypeJobList(),
@@ -99,6 +104,7 @@ export default function SearchJob() {
         getBenefit(),
         getSkillList(),
         getFieldList(),
+        getListMajorAPI(),
       ]);
       setCityOptions(citiesL);
       setLevelOptions(levelsL);
@@ -107,6 +113,7 @@ export default function SearchJob() {
       setBenefitOptions(benefitsL);
       setSkillOptions(skillsL);
       setFields(fieldsL);
+      setMajors(majorls);
 
       setSelectedCity(citiesL.find(c => c.id === city));
       setSelectLevel(parseStringArray(levels));
@@ -116,6 +123,7 @@ export default function SearchJob() {
       setSelectBenefits(parseStringArray(benefits));
       setSelectedFieldId(fieldId ? +fieldId : undefined);
       setPage(pageQuery ? +pageQuery : 1);
+      setSelectMajorId(majorIdQuery ? +majorIdQuery : undefined);
       
       if (searchQuery) setSearch(searchQuery);
 
@@ -156,6 +164,7 @@ export default function SearchJob() {
         benefits: selectBenefits,
         citys: citySelected ? [citySelected.id] : undefined,
         fieldId: selectedFieldId ? selectedFieldId : undefined,
+        majorId: selectMajorId,
         page,
         limit,
       } as JobFilterRequest);
@@ -167,7 +176,7 @@ export default function SearchJob() {
 
   useEffect(() => {
     filterJobs();
-  }, [selectLevels, selectExperience, selectType, selectSkills, selectBenefits, citySelected, selectedFieldId, page, limit]);
+  }, [selectLevels, selectExperience, selectType, selectSkills, selectBenefits, citySelected, selectedFieldId, page, limit, selectMajorId]);
 
   const handleFilterUrl = () => {
     const params = new URLSearchParams({
@@ -183,6 +192,7 @@ export default function SearchJob() {
       maxSalary: maxSalary ? maxSalary.toString() : '',
       page: '1',
       limit: limit.toString(),
+      majorId: selectMajorId ? selectMajorId.toString() : '',
     });
     navigate(`/tim-kiem-cong-viec?${params.toString()}`);
   };
@@ -219,14 +229,17 @@ export default function SearchJob() {
     setSelectType([]);
     setSelectBenefits([]);
     setSelectSkills([]);
+    setSelectedFieldId(undefined);
+    setSelectMajorId(undefined);
+    setMinSalary(undefined);
+    setMaxSalary(undefined);
+    setPage(1);
   };
-
-
   
   return <div className=" w-full min-h-screen bg-white relative mb-10">
     <Button
       variant='ghost'
-      className='fixed bottom-5 left-4'
+      className='fixed bottom-5 left-4 border-[#451da1] border text-[#451da1] hover:bg-[#451da1] hover:text-white z-50'
       onClick={() => setIsPromaxSearch(!isPromaxSearch)}
     >
       Nâng cao
@@ -470,7 +483,41 @@ export default function SearchJob() {
 
               </NavigationMenuContent>
                 </NavigationMenuItem>
- 
+
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="flex items-center gap-2">
+                    Chuyên Ngành {selectMajorId ? `(${majors.filter(m => m.id === selectMajorId).length})` : ''}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className='bg-white min-w-[600px] max-h-[
+600px]  p-2'>
+                    <div className='grid grid-cols-3 gap-2 max-h-[500px] overflow-y-auto'>
+                      <Label
+                        className='flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer'
+                        onClick={() => setSelectMajorId(undefined)}
+                      >
+                        <Checkbox
+                          className="rounded-full"
+                          checked={selectMajorId === undefined}
+                          onCheckedChange={() => setSelectMajorId(undefined)}
+                        />
+                        <span className='text-[#451e99]'>Tất cả chuyên ngành</span>
+                      </Label>
+                      {majors.map(major => (
+                        <Label
+                          key={major.id}
+                          className='flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer'
+                        >
+                          <Checkbox
+                            className="rounded-full"
+                            checked={selectMajorId === major.id}
+                            onCheckedChange={() => setSelectMajorId(major.id)}
+                          />
+                          <span className='text-[#451e99]'>{major.name}</span>
+                        </Label>
+                      ))}
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
         <Button

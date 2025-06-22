@@ -26,7 +26,7 @@ export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersion
   formData.append('level', dto.level?.toString());
   formData.append('district', dto.district);
   formData.append('email', dto.email);
-  formData.append('cv', dto.cv);
+  formData.append('cv', dto.cv ? dto.cv : '');
 
   formData.append('name', dto.name);
   formData.append('avatar', dto?.avatar as Blob);
@@ -42,16 +42,6 @@ export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersion
   dto?.majors?.forEach((major, idx) => {
     formData.append(`majors[${idx}]`, major?.toString());
   });
-  if (dto?.resumeversionExps?.length > 0) {
-    dto?.resumeversionExps.forEach((exp, idx) => {
-      formData.append(`resumeversionExps[${idx}][companyName]`, exp.companyName);
-      formData.append(`resumeversionExps[${idx}][position]`, exp.position);
-      formData.append(`resumeversionExps[${idx}][startTime]`, exp.startTime.toString());
-      formData.append(`resumeversionExps[${idx}][endTime]`, exp.endTime.toString());
-      formData.append(`resumeversionExps[${idx}][jobDescription]`, exp.jobDescription);
-      formData.append(`resumeversionExps[${idx}][typeJobId]`, exp.typeJob.id.toString());
-    });
-  }
   const response = await axiosInstance.patch<ResumeVersion>(`/resume-version/${resumeId}`, formData);
   return response.data;
 }
@@ -73,8 +63,9 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   formData.append('district', dto.district);
   formData.append('email', dto.email);
   formData.append('name', dto.name);
-  formData.append('cv', dto.cv);
+  formData.append('cv', dto.cv ? dto.cv : '');
   formData.append('avatar', dto.avatar as Blob);
+  formData.append('expectedSalary', dto.expectedSalary?.toString() || '0');
   if (dto.languageResumes?.length > 0) {
     dto.languageResumes.forEach((lang, index) => {
       formData.append(`languageResumes[${index}][languageId]`, lang.languageId.toString());
@@ -87,16 +78,6 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   dto?.majors?.forEach((major, idx) => {
     formData.append(`majors[${idx}]`, major?.toString());
   });
-  if (dto?.resumeversionExps?.length > 0) {
-    dto?.resumeversionExps.forEach((exp, idx) => {
-      formData.append(`resumeversionExps[${idx}][companyName]`, exp.companyName);
-      formData.append(`resumeversionExps[${idx}][position]`, exp.position);
-      formData.append(`resumeversionExps[${idx}][startTime]`, exp.startTime);
-      formData.append(`resumeversionExps[${idx}][endTime]`, exp.endTime);
-      formData.append(`resumeversionExps[${idx}][jobDescription]`, exp.jobDescription);
-      formData.append(`resumeversionExps[${idx}][typeJobId]`, exp.typeJob.id.toString());
-    });
-  }
 
   const response = await axiosInstance.post<ResumeVersion>('/resume-version/init', formData);
   return response.data;

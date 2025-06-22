@@ -91,8 +91,7 @@ export default function DetailJobPopup({
 
           <div className='text-sm mb-2'>
             <span className='text-orange-600 font-semibold'>Tips:</span>{' '}
-            Bạn có thể nhập nội dung mô tả về bản thân, kỹ năng, sở thích,
-            hoặc bất kỳ thông tin nào bạn muốn chia sẻ với nhà tuyển dụng.
+            Bạn có thể sử dụng các định dạng văn bản như in đậm, in nghiêng, danh sách, và liên kết.
           </div>
 
           <Editer
