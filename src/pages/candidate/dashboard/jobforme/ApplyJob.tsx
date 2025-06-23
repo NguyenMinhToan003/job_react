@@ -16,7 +16,7 @@ export default function ApplyJob() {
   const [applyJobs, setApplyJobs] = useState<ApplyJobResponse[]>([])
   const fetchApplyJobs = async () => {
     try {
-      const response = await getApplyByStatus(APPLY_JOB_STATUS.PENDING);
+      const response = await getApplyByStatus(APPLY_JOB_STATUS.PROCESSING);
       setApplyJobs(response);
     }
     catch(error) {

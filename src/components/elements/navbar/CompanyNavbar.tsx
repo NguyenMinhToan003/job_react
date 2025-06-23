@@ -54,6 +54,7 @@ export default function CompanyNavbar() {
       ],
     },
     { label: 'Quản lý địa điểm', icon: <MapPin className='w-6 h-6' />, path: 'dia-diem' },
+    { label: 'Quản lý thẻ', icon: <ClipboardList className='w-6 h-6' />, path: 'quan-ly-the' },
     { label: 'Dịch vụ', icon: <Package className='w-6 h-6' />, path: 'dich-vu' },
     { label: 'Bảng giá', icon: <DollarSign className='w-6 h-6' />, path: 'bang-gia' },
     { label: 'Tìm kiếm ứng viên', icon: <Search className='w-6 h-6' />, path: 'tim-kiem-ung-vien' },

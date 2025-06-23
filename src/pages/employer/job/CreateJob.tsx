@@ -43,7 +43,6 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { PackageResponse } from '@/types/packageType';
 import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useNavigate } from 'react-router-dom';
 import { useLoading } from '@/providers/LoadingProvider';
 import { useAlertDialog } from '@/providers/AlertDialogProvider';
@@ -135,7 +134,7 @@ export default function CreateJob() {
         title: 'Tạo tin tuyển dụng thành công',
         content: 'Tin tuyển dụng đã được tạo thành công bạn có thể xem danh sách công việc hoặc tạo thêm tin tuyển dụng mới.',
         handleConfirm() {
-          navigate('danh-cho-nha-tuyen-dung/tuyen-dung');
+          navigate('/danh-cho-nha-tuyen-dung/tuyen-dung');
         },
         confirmText: 'Xem danh sách công việc',
         cancelText: 'Đóng',

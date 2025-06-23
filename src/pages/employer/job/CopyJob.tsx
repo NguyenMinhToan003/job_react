@@ -8,6 +8,7 @@ import { createJob, createMatchingWeightJob, viewJobAPI } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
+import { getPackageAvailable, subscriptionUseJob } from '@/apis/paymentAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
@@ -24,10 +25,12 @@ import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
 import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
 import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
 import SalaryJonPopup from '@/components/elements/job/popup/SalaryJobPopup';
+import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
 import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
 import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAlertDialog } from '@/providers/AlertDialogProvider';
 import { Benefit } from '@/types/benefitType';
 import { Education } from '@/types/educationType';
 import { Experience } from '@/types/experienceType';
@@ -36,16 +39,19 @@ import { Language, LanguageJob } from '@/types/LanguageType';
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
 import { Field } from '@/types/majorType';
+import { PackageResponse } from '@/types/packageType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
-import { set } from 'date-fns';
 import { RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function CopyJob() {
   const url = window.location.href;
   const id = url.substring(url.lastIndexOf('/') + 1);
+  const { showAlert } = useAlertDialog();
+  const navigate = useNavigate();
   const [nameJob, setNameJob] = useState('')
   const [quantityJob, setQuantityJob] = useState(1)
   const [description, setDescription] = useState('')
@@ -79,6 +85,8 @@ export default function CopyJob() {
   const [fields, setFields] = useState<Field[]>([]);
   const [selectField, setSelectField] = useState<Field[]>([]);
   const [selectMajors, setSelectMajors] = useState<number[]>([]);
+  const [packageAvailable, setPackageAvailable] = useState<PackageResponse[]>([]);
+  const [selectPackage, setSelectPackage] = useState<PackageResponse | null>(null);
 
   const handleUpdateJob = async () => {
     try {
@@ -112,8 +120,22 @@ export default function CopyJob() {
         languageWeight,
         educationWeight,
         levelWeight
+      });
+      if (selectPackage) {
+        subscriptionUseJob({
+          jobId: create.id,
+          packageId: selectPackage.id,
+        });
       }
-      )
+      showAlert({
+        title: 'Tạo tin tuyển dụng thành công',
+        content: 'Tin tuyển dụng đã được tạo thành công bạn có thể xem danh sách công việc hoặc tạo thêm tin tuyển dụng mới.',
+        handleConfirm() {
+          navigate('/danh-cho-nha-tuyen-dung/tuyen-dung');
+        },
+        confirmText: 'Xem danh sách công việc',
+        cancelText: 'Đóng',
+      })
       toast.success('Tạo bài đăng thành công');
     }
     catch (error : any) {
@@ -123,7 +145,7 @@ export default function CopyJob() {
 
   const fetchElements = async () => {
     try {
-      const [benefits, levels, experiences, types, locations, skills, educations,fieldList ,languages] = await Promise.all([
+      const [benefits, levels, experiences, types, locations, skills, educations,fieldList ,languages, packageAvai] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -132,7 +154,8 @@ export default function CopyJob() {
         getSkillList(),
         getAllEducations(),
         getFieldList(),
-        getAllLanguages()
+        getAllLanguages(),
+        getPackageAvailable()
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -143,6 +166,7 @@ export default function CopyJob() {
       setEducationsList(educations);
       setLanguageList(languages)
       setFields(fieldList);
+      setPackageAvailable(packageAvai);
     }
     catch (error : any) {
       toast.error(error?.response.data.message)
@@ -175,7 +199,6 @@ export default function CopyJob() {
       setLevelWeight(response.matchingWeights?.levelWeight);
       setSelectField(response?.majors.field);
       setSelectMajors(response?.majors.map((major) => major.id) || []);
-
     }
     catch(error) {
       console.error('Error fetching job data:', error);
@@ -203,7 +226,7 @@ export default function CopyJob() {
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax, selectedEducation]);
   return <>
-    <Card className='w-full'>
+    <Card className='w-full bg-transparent shadow-none border-none'>
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>NHÂN BẢN BÀI ĐĂNG TUYỂN DỤNG</div>
@@ -213,6 +236,11 @@ export default function CopyJob() {
         <div className='flex flex-col md:flex-row gap-6'>
           {/* Left side: Job List */}
           <div className='flex-1'>
+          <SelectServiceJobPopup
+            selectPackage={selectPackage}
+            setSelectPackage={setSelectPackage}
+            packageAvailable={packageAvailable}
+          />
             <NameJobPopup
               nameJob={nameJob}
               setNameJob={setNameJob}
