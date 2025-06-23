@@ -57,7 +57,6 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   formData.append('gender', dto.gender);
   formData.append('location', dto.location);
   formData.append('dateOfBirth', dto.dateOfBirth);
-  formData.append('about', dto.about);
   formData.append('education', dto.education?.toString());
   formData.append('level', dto.level?.toString());
   formData.append('district', dto.district);
@@ -65,7 +64,8 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   formData.append('name', dto.name);
   formData.append('cv', dto.cv ? dto.cv : '');
   formData.append('avatar', dto.avatar as Blob);
-  formData.append('expectedSalary', dto.expectedSalary?.toString() || '0');
+  formData.append('expectedSalary', dto?.expectedSalary?.toString());
+  formData.append('typeJobId', dto.typeJobId?.toString());
   if (dto.languageResumes?.length > 0) {
     dto.languageResumes.forEach((lang, index) => {
       formData.append(`languageResumes[${index}][languageId]`, lang.languageId.toString());

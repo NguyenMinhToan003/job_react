@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { JobResponse } from '@/types/jobType';
 import { filterJobAdmin } from '@/apis/jobAPI';
 import { JOB_STATUS } from '@/types/type';
+import { toast } from 'sonner';
 
 export default function JobListPage() {
   const [jobsPending, setJobsPending] = useState<JobResponse[]>([]);
@@ -19,17 +20,17 @@ export default function JobListPage() {
     const fetchJobs = async () => {
       try {
         const [jobsPending, jobsActive, jobsExpired, jobsBlock] = await Promise.all([
-          filterJobAdmin({ isActive: JOB_STATUS.PENDING }),
-          filterJobAdmin({ isActive: JOB_STATUS.ACTIVE, isExpired: 0}),
-          filterJobAdmin({ isActive: JOB_STATUS.ACTIVE, isExpired: 1 }),
-          filterJobAdmin({ isActive: JOB_STATUS.BLOCK }),
+          filterJobAdmin({ isActive: [JOB_STATUS.PENDING] }),
+          filterJobAdmin({ isActive: [JOB_STATUS.ACTIVE], isExpired: 0}),
+          filterJobAdmin({ isActive: [JOB_STATUS.ACTIVE], isExpired: 1 }),
+          filterJobAdmin({ isActive: [JOB_STATUS.BLOCK] }),
         ])
         setJobsPending(jobsPending);
         setJobsActive(jobsActive);
         setJobsExpired(jobsExpired);
         setJobsBlock(jobsBlock);
       } catch (err) {
-        console.error('Lỗi lấy danh sách công việc:', err);
+        toast.error(err.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');
       }
     };
     fetchJobs();

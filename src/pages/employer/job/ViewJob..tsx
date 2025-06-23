@@ -43,6 +43,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { MoreVertical } from 'lucide-react';
 import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
 import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
+import { Field } from '@/types/majorType';
+import { get } from 'http';
+import { getFieldList } from '@/apis/fieldAPI';
+import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
 
 export default function ViewJob() {
   const url = window.location.href;
@@ -79,17 +83,15 @@ export default function ViewJob() {
 
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
-
+  const [selectField, setSelectField] = useState<Field | null>(null);
+  const [selectMajors, setSelectMajors] = useState<number[]>([]);
+  const [fields, setFields] = useState<Field[]>([]);
   const role = localStorage.getItem('role');
 
 
   const fetchDataJob = async () => {
     try {
       const response = await viewJobAPI(+id);
-      if (locationList.length === 0) {
-        setLocationList(response.locations);
-      }
-      setEmployer(response.employer);
       setNameJob(response.name);
       setDescription(response.description);
       setRequirement(response.requirement);
@@ -102,26 +104,28 @@ export default function ViewJob() {
       setTypeJobId(response.typeJobs.map((typeJob) => typeJob.id));
       setQuantityJob(response.quantity);
       setSkillId(response.skills.map((skill) => skill.id));
-      setIsActive(response.isActive);
-      setSelectedEducation(response.education?.id || undefined);
-      setLanguageIds(response.languageJobs)
-      setExpiredAt(response.expiredAt ? new Date(response.expiredAt) : null);
+      setLanguageIds(response.languageJobs);
+      setSelectedEducation(response.education.id);
+      setExpiredAt(new Date(response.expiredAt));
       setLocationWeight(response.matchingWeights?.locationWeight);
       setSkillWeight(response.matchingWeights?.skillWeight);
       setMajorWeight(response.matchingWeights?.majorWeight);
       setLanguageWeight(response.matchingWeights?.languageWeight);
       setEducationWeight(response.matchingWeights?.educationWeight);
       setLevelWeight(response.matchingWeights?.levelWeight);
-      
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải thông tin công việc');
+      setSelectMajors(response.majors.map((major) => major.id));
+      const fieldSelect = fields.find((field) => field.id === response.majors[0]?.field.id);
+      setSelectField(fieldSelect || null);
     }
-  };
+    catch(error) {
+      toast.error((error as any).response?.data?.message || 'Có lỗi xảy ra khi tải dữ liệu bài đăng');
+    }
+  }
 
   const fetchElements = async () => {
     try {
 
-      const [benefits, levels, experiences, types, locations, skills, educations, languages] = await Promise.all([
+      const [benefits, levels, experiences, types, locations, skills, educations, languages, fieldLs] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -129,7 +133,8 @@ export default function ViewJob() {
         getLocationByCompanyAPI(),
         getSkillList(),
         getAllEducations(),
-        getAllLanguages()
+        getAllLanguages(),
+        getFieldList(),
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -139,6 +144,7 @@ export default function ViewJob() {
       setSkillList(skills);
       setEducationsList(educations);
       setLanguageList(languages)
+      setFields(fieldLs);
     }
     catch(error: any) {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải dữ liệu');
@@ -146,10 +152,13 @@ export default function ViewJob() {
   }
 
   useEffect(() => {
-    fetchElements();
+    fetchElements()
+  }, [])
+
+  useEffect(() => {
     fetchDataJob();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fields]);
+
   const navigate = useNavigate();
 
   const handleActivateJob = async () => {
@@ -176,26 +185,10 @@ export default function ViewJob() {
   };
 
   return (
-    <Card className='w-full bg-[#f7f7f7]'>
+    <Card className='w-full bg-transparent shadow-none border-none'>
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>REVIEW</div>
-          {
-            role === ROLE_LIST.EMPLOYER &&  <Popover>
-            <PopoverTrigger>
-              <Button
-              >
-                <MoreVertical />
-            </Button>
-            </PopoverTrigger>
-            <PopoverContent className='w-fit p-0 flex flex-col'>
-              <Button variant={'ghost'} className='w-full hover:bg-blue-500 hover:text-white rounded-none'
-                onClick={() => navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${id}`)}>
-                Chỉnh sửa
-              </Button>
-            </PopoverContent>
-          </Popover>
-          }
         </CardTitle>
       </CardHeader>
       <CardContent className='py-4'>
@@ -234,6 +227,14 @@ export default function ViewJob() {
             <ExperienceJonPopup experienceId={experienceId} setExperienceId={setExperienceId} experienceList={experienceList || []} notEdit={true} />
             <BenefitJobPopup benefitList={benefitList} setBenefitIds={setBenefitIds} benefitIds={benefitIds} notEdit={true} />
             <TypeJobPopup typeJobList={typeJobList} typeJobId={typeJobId} setTypeJobId={setTypeJobId} notEdit={true} />
+            <FieldJobPopup
+              selectField={selectField}
+              setSelectField={setSelectField}
+              fields={fields}
+              selectMajors={selectMajors}
+              setSelectMajors={setSelectMajors}
+              notEdit={true}
+            />
             <SkillJobPopup skillList={skillList} selectedSkills={skillId} setSelectedSkills={setSkillId} notEdit={true} />
 
             {

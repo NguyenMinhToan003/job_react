@@ -29,7 +29,8 @@ export default function FieldJobPopup({
   selectMajors?: number[];
   setSelectMajors?: (majors: number[]) => void;
   notEdit?: boolean;
-}) {
+  }) {
+  console.log('selectField', selectField);
   return (
     <Card className="rounded-sm border-none shadow-md mb-4">
       <CardHeader>
@@ -44,7 +45,8 @@ export default function FieldJobPopup({
         {/* Select Field */}
         <Select
           disabled={notEdit}
-          value={selectField?.id.toString() || ''}
+          defaultValue={selectField?.id?.toString() || ''}
+          value={selectField?.id?.toString() || ''}
           onValueChange={(value) => {
             const selectedField = fields.find(
               (field) => field.id.toString() === value
@@ -71,17 +73,13 @@ export default function FieldJobPopup({
 
         {/* Majors */}
         <div className="grid grid-cols-3 gap-2 mt-3">
-          {selectField && selectField.majors?.length > 0 ? (
-            selectField.majors.map((major) => {
+          {selectField && selectField?.majors?.length > 0 ? (
+            selectField?.majors?.map((major) => {
               const isChecked = selectMajors.includes(major.id);
               const isDisabled =
                 !isChecked && selectMajors.length >= 3;
-
               return (
-                <div
-                  key={major.id}
-                  className="mt-2 flex gap-2 items-center"
-                >
+                  <Label key={major.id} className="ml-2 text-sm text-gray-700 mt-2 flex gap-2 items-center">
                   <Checkbox
                     disabled={notEdit || isDisabled}
                     checked={isChecked}
@@ -95,10 +93,10 @@ export default function FieldJobPopup({
                       }
                     }}
                   />
-                  <Label className="ml-2 text-sm text-gray-700">
-                    {major.name}
+                  {
+                    <span className='text-gray-600'>{major.name}</span>
+                  }
                   </Label>
-                </div>
               );
             })
           ) : (

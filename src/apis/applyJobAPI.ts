@@ -1,6 +1,6 @@
 import { ApplyJobByJobIdResponse, ApplyJobResponse, CreateApplyRequest } from "@/types/applyJobType";
 import { axiosInstance } from "./index";
-import { Job } from "@/types/jobType";
+import { APPLY_JOB_STATUS } from "@/types/type";
 
 export const applyJob = async (jobId: number, data: CreateApplyRequest) => {
   const response = await axiosInstance.post(`/apply-job/${jobId}`, data);
@@ -12,8 +12,8 @@ export const getApplyByStatus = async (status: string) => {
   return response.data;
 }
 
-export const getApplyJobByJobId = async (job: Job) => {
-  const response = await axiosInstance.get<ApplyJobResponse[]>(`/apply-job/employer/job/${job.id}`);
+export const getApplyJobByJobId = async (jobId: number) => {
+  const response = await axiosInstance.get<ApplyJobResponse[]>(`/apply-job/employer/job/${jobId}`);
   return response.data;
 }
 export const applyJobWithNewCv = async (jobId: number, data: CreateApplyRequest, cv: File ) => {
@@ -38,5 +38,9 @@ export const markViewed = async (applyId: number) => {
 
 export const analysResumeVersion = async (applyId: number) => {
   const response = await axiosInstance.get<ApplyJobByJobIdResponse>(`/apply-job/employer/analys/${applyId}`);
+  return response.data;
+}
+export const updateApplyJobStatus = async (applyId: number, status: APPLY_JOB_STATUS) => {
+  const response = await axiosInstance.post(`/apply-job/status/${applyId}`, { status });
   return response.data;
 }

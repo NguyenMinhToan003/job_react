@@ -6,8 +6,9 @@ import { Experience } from "./experienceType";
 import { LanguageJob } from "./LanguageType";
 import { Level } from "./levelType";
 import { LocationResponse } from "./location";
-import { Field, Major, MajorResponse } from "./majorType";
+import { Major, MajorResponse } from "./majorType";
 import { Skill } from "./SkillType";
+import { JOB_STATUS } from "./type";
 import { TypeJob } from "./TypeJobType";
 
 export interface Job {
@@ -58,7 +59,7 @@ export interface JobResponse {
   isShow: number;
   createdAt: string;
   updatedAt: string;
-  isActive: number;
+  isActive: JOB_STATUS;
   expiredAt: string;
   benefits: Benefit[];
   locations: LocationResponse[];
@@ -71,6 +72,7 @@ export interface JobResponse {
   education: Education;
   languageJobs: LanguageJob[];
   matchingWeights: MatchingWeightResponse;
+  majors: Major[];
 }
 export interface JobFilterRequest {
   id?: number;
@@ -98,7 +100,7 @@ export interface JobFilterAdminRequest {
   locations?: number[];
   benefits?: string[];
   skills?: number[];
-  isActive?: number;
+  isActive?: JOB_STATUS[];
   isShow?: number;
   isExpired?: number;
 }
@@ -146,7 +148,7 @@ export interface CompanyFilterJob {
   locations?: number[];
   benefits?: string[];
   skills?: string[];
-  isActive?: number;
+  isActive?: JOB_STATUS[];
   isShow?: number;
   isExpired?: number;
   page?: number;

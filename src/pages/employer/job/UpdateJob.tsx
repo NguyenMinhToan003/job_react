@@ -3,17 +3,20 @@
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
-import { deleteJob, updateJob, updateMatchingWeightJob, viewJobAPI } from '@/apis/jobAPI';
+import { getFieldList } from '@/apis/fieldAPI';
+import { updateJob, updateMatchingWeightJob, viewJobAPI } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
+import JobMenu from '@/components/elements/job/menu';
 import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
 import EducationJonPopup from '@/components/elements/job/popup/EducationJobPopup';
 import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
 import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
+import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
 import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
 import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
 import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
@@ -26,19 +29,19 @@ import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
 import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Benefit } from '@/types/benefitType';
 import { Education } from '@/types/educationType';
 import { Experience } from '@/types/experienceType';
+import { JobResponse } from '@/types/jobType';
 import { Language, LanguageJob } from '@/types/LanguageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
+import { Field, Major, MajorResponse } from '@/types/majorType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
-import { MoreVertical, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function UpdateJob() {
@@ -74,6 +77,10 @@ export default function UpdateJob() {
   const [languageWeight, setLanguageWeight] = useState(0);
   const [educationWeight, setEducationWeight] = useState(0);
   const [levelWeight, setLevelWeight] = useState(0);
+  const [job, setJob] = useState<JobResponse>();
+  const [fields, setFields] = useState<Field[]>([]);
+  const [selectField, setSelectField] = useState<Field | null>(null);
+  const [selectMajors, setSelectMajors] = useState<number[]>([]);
 
   const handleUpdateJob = async () => {
     try {
@@ -91,6 +98,7 @@ export default function UpdateJob() {
         types: typeJobId,
         requirement,
         description,
+        majors: selectMajors,
         minSalary: salaryMin,
         maxSalary: salaryMax,
         benefits: benefitIds,
@@ -117,7 +125,7 @@ export default function UpdateJob() {
 
   const fetchElements = async () => {
     try {
-      const [benefits, levels, experiences, types, locations, skills, educations, languages] = await Promise.all([
+      const [benefits, levels, experiences, types, locations, skills, educations, languages, fieldList] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -125,7 +133,8 @@ export default function UpdateJob() {
         getLocationByCompanyAPI(),
         getSkillList(),
         getAllEducations(),
-        getAllLanguages()
+        getAllLanguages(),
+        getFieldList(),
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -135,6 +144,7 @@ export default function UpdateJob() {
       setSkillList(skills);
       setEducationsList(educations);
       setLanguageList(languages)
+      setFields(fieldList);
     }
     catch (error : any) {
       toast.error(error?.response.data.message)
@@ -144,6 +154,7 @@ export default function UpdateJob() {
   const fetchDataJob = async () => {
     try {
       const response = await viewJobAPI(+id);
+      setJob(response);
       setNameJob(response.name);
       setDescription(response.description);
       setRequirement(response.requirement);
@@ -165,29 +176,22 @@ export default function UpdateJob() {
       setLanguageWeight(response.matchingWeights?.languageWeight);
       setEducationWeight(response.matchingWeights?.educationWeight);
       setLevelWeight(response.matchingWeights?.levelWeight);
-
+      setSelectMajors(response.majors.map((major) => major.id));
+      const fieldSelect = fields.find((field) => field.id === response.majors[0]?.field.id);
+      setSelectField(fieldSelect || null);
     }
     catch(error) {
-      console.error('Error fetching job data:', error);
+      toast.error((error as any).response?.data?.message || 'Có lỗi xảy ra khi tải dữ liệu bài đăng');
     }
   }
+
   useEffect(() => {
     fetchElements()
-    fetchDataJob()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const navigate = useNavigate();
-  const handleDeleteJob = async () => {
-    try {
-      await deleteJob(+id);
-      navigate('/danh-cho-nha-tuyen-dung/tuyen-dung')
-      toast.success('Xóa bài đăng thành công');
-    }
-    catch (error: any) {
-      toast.error(error.response.data.message);
-    }
-  }
+  useEffect(() => {
+    fetchDataJob();
+  }, [fields]);
   
   useEffect(() => {
     const filledFields = [
@@ -205,29 +209,17 @@ export default function UpdateJob() {
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax, selectedEducation]);
   return <>
-    <Card className='w-full bg-[#f7f7f7]'>
+    <Card className='w-full bg-transparent shadow-none border-none  '>
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
           <div>CẬP NHẬT BÀI ĐĂNG TUYỂN DỤNG</div>
-          <Popover>
-            <PopoverTrigger>
-              <Button
-              >
-                <MoreVertical />
-            </Button>
-            </PopoverTrigger>
-            <PopoverContent className='w-fit p-0'>
-              <Button variant={'ghost'} className='w-fit hover:bg-red-500 hover:text-white rounded-none'
-                onClick={() => handleDeleteJob()}>
-                Xóa bài đăng
-              </Button>
-            </PopoverContent>
-          </Popover>
+          {
+            job && <JobMenu job={job}/> 
+          }
         </CardTitle>
       </CardHeader>
       <CardContent className='py-4'>
         <div className='flex flex-col md:flex-row gap-6'>
-          {/* Left side: Job List */}
           <div className='flex-1'>
             <NameJobPopup
               nameJob={nameJob}
@@ -270,6 +262,13 @@ export default function UpdateJob() {
               languageIds={languageIds}
               setLanguageIds={setLanguageIds}
             />
+            <FieldJobPopup
+              selectField={selectField}
+              setSelectField={setSelectField}
+              fields={fields}
+              selectMajors={selectMajors}
+              setSelectMajors={setSelectMajors}
+            />
             <LevelJobPopup
               levelList={levelList}
               levelIds={levelIds}
@@ -289,6 +288,13 @@ export default function UpdateJob() {
               typeJobList={typeJobList}
               typeJobId={typeJobId}
               setTypeJobId={setTypeJobId}
+            />
+            <FieldJobPopup
+              fields={fields}
+              selectField={selectField}
+              setSelectField={setSelectField}
+              selectMajors={selectMajors}
+              setSelectMajors={setSelectMajors}
             />
             <SkillJobPopup
               skillList={skillList}

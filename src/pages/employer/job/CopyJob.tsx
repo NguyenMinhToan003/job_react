@@ -3,6 +3,7 @@
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
+import { getFieldList } from '@/apis/fieldAPI';
 import { createJob, createMatchingWeightJob, viewJobAPI } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
@@ -14,6 +15,7 @@ import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
 import EducationJonPopup from '@/components/elements/job/popup/EducationJobPopup';
 import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
 import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
+import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
 import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
 import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
 import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
@@ -33,11 +35,12 @@ import { Language, LanguageJob } from '@/types/LanguageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
+import { Field } from '@/types/majorType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
+import { set } from 'date-fns';
 import { RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export default function CopyJob() {
@@ -73,6 +76,9 @@ export default function CopyJob() {
   const [languageWeight, setLanguageWeight] = useState(0);
   const [educationWeight, setEducationWeight] = useState(0);
   const [levelWeight, setLevelWeight] = useState(0);
+  const [fields, setFields] = useState<Field[]>([]);
+  const [selectField, setSelectField] = useState<Field[]>([]);
+  const [selectMajors, setSelectMajors] = useState<number[]>([]);
 
   const handleUpdateJob = async () => {
     try {
@@ -90,6 +96,7 @@ export default function CopyJob() {
         types: typeJobId,
         requirement,
         description,
+        majors: selectMajors,
         minSalary: salaryMin,
         maxSalary: salaryMax,
         benefits: benefitIds,
@@ -116,7 +123,7 @@ export default function CopyJob() {
 
   const fetchElements = async () => {
     try {
-      const [benefits, levels, experiences, types, locations, skills, educations, languages] = await Promise.all([
+      const [benefits, levels, experiences, types, locations, skills, educations,fieldList ,languages] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -124,6 +131,7 @@ export default function CopyJob() {
         getLocationByCompanyAPI(),
         getSkillList(),
         getAllEducations(),
+        getFieldList(),
         getAllLanguages()
       ]);
       setBenefitList(benefits);
@@ -134,6 +142,7 @@ export default function CopyJob() {
       setSkillList(skills);
       setEducationsList(educations);
       setLanguageList(languages)
+      setFields(fieldList);
     }
     catch (error : any) {
       toast.error(error?.response.data.message)
@@ -164,6 +173,8 @@ export default function CopyJob() {
       setLanguageWeight(response.matchingWeights?.languageWeight);
       setEducationWeight(response.matchingWeights?.educationWeight);
       setLevelWeight(response.matchingWeights?.levelWeight);
+      setSelectField(response?.majors.field);
+      setSelectMajors(response?.majors.map((major) => major.id) || []);
 
     }
     catch(error) {
@@ -262,6 +273,13 @@ export default function CopyJob() {
               typeJobList={typeJobList}
               typeJobId={typeJobId}
               setTypeJobId={setTypeJobId}
+            />
+            <FieldJobPopup
+              selectField={selectField}
+              setSelectField={setSelectField}
+              fields={fields}
+              selectMajors={selectMajors}
+              setSelectMajors={setSelectMajors}
             />
             <SkillJobPopup
               skillList={skillList}

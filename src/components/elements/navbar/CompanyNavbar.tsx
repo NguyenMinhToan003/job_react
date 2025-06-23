@@ -50,7 +50,6 @@ export default function CompanyNavbar() {
       children: [
         { label: 'Danh sách', path: 'tuyen-dung' },
         { label: 'Hết hạn', path: 'tuyen-dung/het-han' },
-        { label: 'Hàng đợi', path: 'tuyen-dung/hang-doi' },
         { label: 'Tạo mới', path: 'dang-tin-tuyen-dung' },
       ],
     },

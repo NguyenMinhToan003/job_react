@@ -27,6 +27,11 @@ export const deleteJob = async (jobId: number) => {
   return response.data;
 }
 
+export const publishJob = async (jobId: number) => {
+  const response = await axiosInstance.post<JobResponse>(`/job/employer/request-publish/${jobId}`);
+  return response.data;
+}
+
 export const filterJob = async (data: JobFilterRequest) => {
   const response = await axiosInstance.get<{
     total: number;

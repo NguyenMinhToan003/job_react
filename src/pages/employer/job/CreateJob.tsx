@@ -35,7 +35,7 @@ import { Language, LanguageJob } from '@/types/LanguageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
-import { Field, Major } from '@/types/majorType';
+import { Field } from '@/types/majorType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
 import { CirclePlus } from 'lucide-react';
@@ -43,8 +43,17 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { PackageResponse } from '@/types/packageType';
 import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { useNavigate } from 'react-router-dom';
+import { useLoading } from '@/providers/LoadingProvider';
+import { useAlertDialog } from '@/providers/AlertDialogProvider';
 
 export default function CreateJob() {
+
+  const navigate = useNavigate();
+  const { showAlert } = useAlertDialog();
+  const { setLoading } = useLoading();
+
   const [nameJob, setNameJob] = useState('')
   const [quantityJob, setQuantityJob] = useState(1)
   const [description, setDescription] = useState('')
@@ -81,6 +90,7 @@ export default function CreateJob() {
   const [selectField, setSelectField] = useState<Field | null>(null);
   const [selectMajors, setSelectMajors] = useState<number[]>([]);
 
+
   const handleCreateJob = async () => {
     try {
       const score = levelWeight + educationWeight + languageWeight + majorWeight + skillWeight + locationWeight;
@@ -88,6 +98,7 @@ export default function CreateJob() {
         toast.error('Tổng trọng số phải bằng 100');
         return;
       }
+      setLoading(true);
       const create = await createJob({
         name: nameJob,
         description: description,
@@ -115,17 +126,26 @@ export default function CreateJob() {
         levelWeight: levelWeight,
       })
       if (selectPackage) {
-      
         subscriptionUseJob({
           jobId: create.id,
           packageId: selectPackage.id,
         });
       }
-      toast.success('Tin tuyển dụng đã được tạo thành công');
+      showAlert({
+        title: 'Tạo tin tuyển dụng thành công',
+        content: 'Tin tuyển dụng đã được tạo thành công bạn có thể xem danh sách công việc hoặc tạo thêm tin tuyển dụng mới.',
+        handleConfirm() {
+          navigate('danh-cho-nha-tuyen-dung/tuyen-dung');
+        },
+        confirmText: 'Xem danh sách công việc',
+        cancelText: 'Đóng',
+      })
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     catch (error: any) {
       toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tạo tin tuyển dụng');
+    }
+    finally {
+      setLoading(false);
     }
   }
   const fetchListElements = async () => {
@@ -173,7 +193,6 @@ export default function CreateJob() {
       salaryMin,
       salaryMax
     ].filter(Boolean).length;
-
     setCheckField(filledFields);
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax]);

@@ -17,6 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import dayjs from "dayjs";
 import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { convertDateToString } from "@/utils/dateTime";
+import { JOB_STATUS } from "@/types/type";
+import JobMenu from "@/components/elements/job/menu";
 
 export default function ExpiredJobs() {
   
@@ -27,7 +31,6 @@ export default function ExpiredJobs() {
   const fetchJobList = async () => {
     try {
       const response = await getJobByCompanyId({
-        isActive: 1,
         isExpired: 1,
       } as CompanyFilterJob);
       setJobList(response);
@@ -57,71 +60,82 @@ export default function ExpiredJobs() {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra');
     }
   };
+  const buttonAction = () => {
+    return (
+      <Button
+        className='text-[#451DA0] hover:text-[#451DA0] bg-[#EDECFF] hover:bg-[#EDECFF] rounded-none w-24'
+      >
+        Hết hạn
+      </Button>
+    );
+  }
 
+  const switchPublicJob = () => {
+    return <>
+      <Switch
+        disabled={true}
+        checked={false}
+      />
+      <Label className='text-xs text-[#2C95FF] flex justify-center w-full'>
+        Hết hạn
+      </Label>
+    </>
+  }
 
 
   return (
-    <Card className="w-full mt-2 mr-2">
-      {/* <CardHeader>
-        <CardTitle className="text-2xl font-bold text-gray-800 ">
-          DANH SÁCH TUYỂN DỤNG
-        </CardTitle>
-      </CardHeader> */}
-
-      <CardContent className="overflow-x-auto">
+    <Card className='w-full mt-4 mr-4 h-fit'>
+      <CardContent className='overflow-x-auto'>
         {loading ? (
-          <p className="text-center text-gray-600 py-12">Đang tải dữ liệu...</p>
+          <p className='text-center text-gray-600 py-12'>Đang tải dữ liệu...</p>
         ) : jobList.length === 0 ? (
-          <p className="text-center text-gray-600 py-12">
+          <p className='text-center text-gray-600 py-12'>
             Chưa có công việc nào được đăng tuyển.
           </p>
         ) : (
-          <Table className="min-w-[1000px] text-sm">
-            <TableHeader className=" bg-red-50">
-              <TableRow>
-                <TableHead className="px-4 py-2 text-left">Tên công việc</TableHead>
-                <TableHead className="px-4 py-2 text-center">CV</TableHead>
-                <TableHead className="px-4 py-2 text-center">Ngày đăng</TableHead>
-                <TableHead className="px-4 py-2 text-center">Đến hạn</TableHead>
-                <TableHead className="px-4 py-2 text-center">Hoạt động</TableHead>
-                <TableHead className="px-4 py-2 text-center">Điều chỉnh</TableHead>
+          <Table className=' text-sm'>
+            <TableHeader>
+                  <TableRow >
+                <TableHead className='text-gray-700 text-xs text-left pl-3'>Mã</TableHead>
+                <TableHead className='text-gray-700 text-xs text-left pl-3'>Tên công việc</TableHead>
+                <TableHead className='text-gray-700 text-xs text-center'>CV</TableHead>
+                <TableHead className='text-gray-700 text-xs text-center'>Thời hạn</TableHead>
+                <TableHead className='text-gray-700 text-xs text-center'>Hoạt động</TableHead>
+                <TableHead className='text-gray-700 text-xs text-center pr-3'>Hành động</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="z-1">
+            <TableBody className='z-1'>
               {jobList.map((job) => (
                 <TableRow
                   key={job.id}
-                  className="hover:bg-gray-100 transition-all cursor-pointer"
+                  className='hover:bg-gray-100 transition-all cursor-pointer group'
                 >
-                  <TableCell className="px-4 py-2 font-medium text-gray-900">
-                    <Button variant="link" className="p-0"
+                  <TableCell className='pl-3 text-gray-500'>
+                    {job.id}
+                  </TableCell>
+                  <TableCell >
+                    <Button variant='link' className='p-0 text-[#080808] group-hover:text-[#2C95FF] group-hover:underline'
                       onClick={() =>navigate(`/danh-cho-nha-tuyen-dung/danh-sach-ung-tuyen/${job.id}`)}
                     >
                       {job.name}
                     </Button>
                   </TableCell>
-                  <TableHead className="px-4 py-2 text-center font-bold">
-                    {job.applyJobs.length}
+                  <TableHead className=' text-center font-bold text-[#2C95FF]'>
+                    {job.applyJobs.length} cv
                   </TableHead>
-                  <TableCell className="px-4 py-2 text-center">
-                    {dayjs(job.createdAt).format("DD/MM/YYYY")}
+                  <TableCell className=' flex justify-center items-center flex-col gap-3'>
+                    <Label>{convertDateToString(job.createdAt)} -</Label>
+                    <Label>{convertDateToString(job.expiredAt)}</Label>
                   </TableCell>
-                  <TableCell className="px-4 py-2 text-center">
-                    {dayjs(job.expiredAt).format("DD/MM/YYYY")}
+
+                  <TableCell className='text-center'>
+                    {switchPublicJob()}
                   </TableCell>
-                  <TableCell className="px-4 py-2 text-center">
-                    <Switch
-                      disabled={true}
-                      checked={job.isShow === 1 ? true : false}
-                      className="text-red-400"
-                      onClick={() => handleToggleJobStatus(job.id, job.isShow)}
-                    />
-                  </TableCell>
-                  <TableCell className="px-4 py-2 flex justify-center">
-                    <Telescope
-                      className="w-6 h-6 text-gray-500 cursor-pointer hover:scale-110 transition-transform"
-                      onClick={() => navigate(`/danh-cho-nha-tuyen-dung/thong-tin-tuyen-dung/${job.id}`)}
-                    />
+                  <TableCell className=' text-center'>
+                    <div className='flex justify-center items-center'>
+                    {buttonAction()}
+                    <JobMenu job={job} />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

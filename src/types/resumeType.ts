@@ -48,7 +48,8 @@ export interface CreateResumeVersionDto {
   gender: string;
   location: string;
   dateOfBirth: string;
-  about: string;
+  typeJobId: number;
+  expectedSalary?: number| null;
   languageResumes: { languageId: number; level: number }[];
   education: number;
   level: number;
@@ -59,7 +60,6 @@ export interface CreateResumeVersionDto {
   avatar?: File | string;
   majors?: number[];
   cv?: File | null;
-  expectedSalary?: number;
 }
 export interface EducationResume {
   educationId: number;

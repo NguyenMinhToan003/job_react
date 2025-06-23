@@ -9,7 +9,6 @@ import JobDetail from '@/pages/candidate/JobDetail';
 import CompanyPage from '@/pages/candidate/EmployerPage';
 import OverViewCompany from '@/pages/employer/OverView';
 import IndexCompany from '@/pages/employer/IndexEmployer';
-import CompanyJob from '@/pages/employer/job/Job';
 import LocationCompany from '@/pages/employer/location/Location';
 import Experience from '@/pages/admin/experience/experience';
 import SkillPage from '@/pages/admin/skill/skill';
@@ -55,7 +54,8 @@ import DetailService from '@/pages/employer/servicePage/DetailService';
 import SearchJob from '@/pages/candidate/searchjob/SearchJob';
 import ViewResumeLastVersion from '@/pages/candidate/dashboard/resume/ViewResumeLastVersion';
 import ExpiredJobs from '@/pages/employer/job/ExpiredJobs';
-import PendingJobsList from '@/pages/employer/job/PendingJobsList';
+import EmployerJobList from '@/pages/employer/job/EmployerJobList';
+import TagResume from '@/pages/employer/tag-resume/TagResume';
 
 
 export default function AppRouter() {
@@ -124,9 +124,9 @@ export default function AppRouter() {
         <Route path='bang-gia' element={<Price />} />
         <Route path='tim-kiem-ung-vien' element={<SearchCandidate />} />
         <Route index element={<OverViewCompany />} />
-        <Route path='tuyen-dung' element={<CompanyJob />} />
+        <Route path='quan-ly-the' element={<TagResume />} />
+        <Route path='tuyen-dung' element={<EmployerJobList />} />
         <Route path='tuyen-dung/het-han' element={<ExpiredJobs />} />
-        <Route path='tuyen-dung/hang-doi' element={<PendingJobsList />} />
         <Route path='dich-vu' element={<Service />} />
         <Route path='dich-vu/:id' element={<DetailService />} />
         <Route path='dia-diem' element={<LocationCompany />} />

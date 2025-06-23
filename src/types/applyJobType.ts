@@ -7,6 +7,7 @@ import { City } from "./location";
 import { Major } from "./majorType";
 import { ResumeVersion } from "./resumeType";
 import { Skill } from "./SkillType";
+import { APPLY_JOB_STATUS } from "./type";
 
 export interface CreateApplyRequest {
   resumeId : number;
@@ -28,7 +29,7 @@ export interface ApplyJobResponse {
   id: number;
   jobId: number;
   note: string;
-  status: string;
+  status: APPLY_JOB_STATUS;
   replyTime: string;
   interviewTime: string;
   viewStatus: number;

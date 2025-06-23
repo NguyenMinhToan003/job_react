@@ -1,8 +1,9 @@
 export enum APPLY_JOB_STATUS {
-  PENDING = 'DANG_XU_LY',
-  INTERVIEW = 'PHONG_VAN',
-  ACCEPTED = 'NHAN',
-  REJECTED = 'HUY',
+  PROCESSING = 'DANG_XU_LY',
+  INTERVIEWING = 'DANG_PHONG_VAN',
+  QUALIFIED = 'PHU_HOP',
+  UNQUALIFIED = 'KHONG_PHU_HOP',
+  HIRED = 'DA_TUYEN',
 }
 
 export enum ROLE_LIST {
@@ -11,9 +12,10 @@ export enum ROLE_LIST {
   CANDIDATE = 'UNG_VIEN',
 }
 export enum JOB_STATUS {
-  PENDING = 0, // Chờ duyệt
-  ACTIVE = 1, // Đã duyệt
-  BLOCK = -1, // Bị khóa
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  BLOCK = 'BLOCK',
+  CREATE = 'CREATE',
 }
 export enum NOTI_TYPE {
   ACCEPTED = 'ACCEPTED',

@@ -4,10 +4,16 @@ import App from '@/App'
 import "tailwindcss";
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from './components/ui/sonner';
+import { LoadingProvider } from './providers/LoadingProvider';
+import { AlertDialogProvider } from './providers/AlertDialogProvider';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-    <App />
-    <Toaster richColors position='top-center'/>
+    <LoadingProvider>
+      <AlertDialogProvider>
+        <App />
+        <Toaster richColors position='top-center' />
+      </AlertDialogProvider>
+    </LoadingProvider>
   </BrowserRouter>
 )
