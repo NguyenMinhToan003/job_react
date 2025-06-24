@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { deleteJob, getJobByCompanyId, publishJob, toggleJobStatus } from '@/apis/jobAPI';
+import { getJobByCompanyId, publishJob, toggleJobStatus } from '@/apis/jobAPI';
 import { CompanyFilterJob, JobResponse } from '@/types/jobType';
 import {
   Table,
@@ -12,23 +12,19 @@ import {
 } from '@/components/ui/table';
 import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
-import { Copy, Edit, Eye, MoreHorizontal, RotateCcw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { JOB_STATUS } from '@/types/type';
-import { convertDateToString } from '@/utils/dateTime';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
 import JobMenu from '@/components/elements/job/menu';
+import { convertDateToString } from '@/utils/dateTime';
 
 export default function EmployerJobList() {
   
   const [jobList, setJobList] = useState<JobResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { showAlert } = useAlertDialog();
 
   const fetchJobList = async () => {
     try {
@@ -156,7 +152,7 @@ export default function EmployerJobList() {
 
 
   return (
-    <Card className='w-full mt-4 mr-4 h-fit'>
+    <Card className='w-full mt-4 mr-4 h-fit shadow-none border border-gray-200 rounded-xl'>
       <CardContent className='overflow-x-auto'>
         {loading ? (
           <p className='text-center text-gray-600 py-12'>Đang tải dữ liệu...</p>

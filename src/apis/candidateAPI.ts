@@ -1,4 +1,4 @@
-import { CandidateResponse } from "@/types/accountType"
+import { AdminFilterCandidateDto, CandidateResponse } from "@/types/accountType"
 import { axiosInstance } from "./index"
 import { CandidateRegisterRequest, SignInResponse, UpdateInfoCandidateRequest } from "@/types/authType"
  
@@ -38,5 +38,14 @@ export const registerCandidate = async (data: CandidateRegisterRequest) => {
     formData.append('location', data.location);
   }
   const response = await axiosInstance.post<SignInResponse>('/auth/register/candidate', formData);
+  return response.data;
+}
+
+export const allCandidate = async (params: AdminFilterCandidateDto) => {
+  const response = await axiosInstance.get<{
+    items: CandidateResponse[];
+    total: number;
+    totalPage: number;
+  }>('/candidate/all', { params });
   return response.data;
 }

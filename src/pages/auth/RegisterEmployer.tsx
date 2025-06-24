@@ -124,17 +124,8 @@ export default function CompanyRegistration() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-8 px-4">
     <div className="max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
-          <Building2 className="w-8 h-8 text-white" />
-        </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Đăng ký Doanh nghiệp</h1>
-        <p className="text-gray-600">Tạo tài khoản để bắt đầu đăng tin tuyển dụng</p>
-      </div>
 
       <div  className="space-y-6 bg-white p-4 rounded-lg shadow-lg">
-
         <div>
           <Label className=" text-sm font-medium text-[#2c95ff] mb-2">
             Logo công ty
@@ -434,7 +425,11 @@ export default function CompanyRegistration() {
               </>
             )}
           </Button>
-        </div>
+          </div>
+
+          <div className="text-sm text-gray-500 mt-4">
+            Nếu bạn đã có tài khoản, vui lòng <a href="/auth/login" className="text-blue-600 hover:underline">đăng nhập</a>.
+          </div>
       </div>
     </div>
   </div>

@@ -84,7 +84,7 @@ export default function ExpiredJobs() {
 
 
   return (
-    <Card className='w-full mt-4 mr-4 h-fit'>
+    <Card className='w-full mt-4 mr-4 h-fit shadow-none border border-gray-200 rounded-xl'>
       <CardContent className='overflow-x-auto'>
         {loading ? (
           <p className='text-center text-gray-600 py-12'>Đang tải dữ liệu...</p>

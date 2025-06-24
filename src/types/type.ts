@@ -32,3 +32,8 @@ export enum PAYMENT_STATUS {
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED',
 }
+export enum PackageType {
+  JOB = 'JOB',
+  EMPLOYER = 'EMPLOYER',
+  BANNER = 'BANNER',
+}

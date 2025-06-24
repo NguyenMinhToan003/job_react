@@ -1,4 +1,4 @@
-import { Employer, EmployerDetailResponse } from "@/types/companyType";
+import { AdminFilterEmployer, Employer, EmployerDetailResponse } from "@/types/companyType";
 import { axiosInstance } from "./index";
 import { EmployerRegisterRequest } from "@/types/authType";
 import { EmployerResponse } from "@/types/accountType";
@@ -57,5 +57,14 @@ export const updateMeEmployer = async (data: EmployerRegisterRequest) => {
     formData.append('introduction', data.introduction);
   }
   const response = await axiosInstance.patch<EmployerDetailResponse>('/employer/me', formData);
+  return response.data;
+}
+
+export const allEmployer = async (params: AdminFilterEmployer) => {
+  const response = await axiosInstance.get<{
+    items: EmployerDetailResponse[];
+    total: number;
+    totalPages: number;
+  }>('/employer/all', { params });
   return response.data;
 }

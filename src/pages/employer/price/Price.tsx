@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getPackagesBisiness } from '@/apis/paymentAPI';
+import { createPaymentUrl, getPackagesBisiness } from '@/apis/paymentAPI';
 import DialogCart, { CartItem } from '@/components/elements/cart/DialogCart';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -77,16 +77,29 @@ export default function Price() {
     return i.quantity * packages[index].price;
   }).reduce((i, next) => i + next, 0) : 0;
   
-
+  const handlePayment = async () => {
+    toast.success('Quá trình thanh toán đang được xử lý, vui lòng đợi trong giây lát.');
+    try {
+      const payment = await createPaymentUrl({
+        subscriptions: cartData,
+        transactionType: 'VNPAY',
+      })
+      
+      window.open(payment.paymentUrl, '_blank');
+    }
+    catch (error: any) {
+      toast.error(error.response?.data?.message || 'Lỗi không xác định');
+    }
+  }
   return (
-    <div className="w-full space-y-4 pb-24">
+    <div className="w-full space-y-4 mt-4 mr-4">
       <DialogCart open={showDialog} onClose={() => {
         setShowDialog(false)
         fetchPackages();
       }} />
       {packages.map((pkg, index) => (
-        <Card key={pkg.id} className="flex flex-col md:flex-row items-center p-4 bg-[#f9f9fb]">
-          <div className="w-full md:w-[260px] h-[150px] relative rounded-md overflow-hidden">
+        <Card key={pkg.id} className="flex flex-col md:flex-row items-center p-0 bg-[#f9f9fb]">
+          <div className="w-full md:w-[260px] h-[150px] relative rounded-sm overflow-hidden">
             <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover" />
           </div>
 
@@ -98,7 +111,7 @@ export default function Price() {
 
             <div className="flex flex-wrap md:flex-nowrap gap-6 items-center justify-between">
               <div className="flex flex-col gap-1">
-                <Label className="font-medium text-gray-600">Số lượng</Label>
+                <Label className="font-medium text-neutral-600">Số lượng</Label>
                 <div className="flex border rounded-md overflow-hidden">
                   <Button
                     variant="ghost"
@@ -125,19 +138,19 @@ export default function Price() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label className="font-medium text-gray-600">Thời lượng</Label>
+                <Label className="font-medium text-neutral-600">Thời lượng</Label>
                 <span className="font-semibold">{pkg.dayValue} ngày</span>
               </div>
 
               <div className="flex flex-col gap-1">
-                <Label className="font-medium text-gray-600">Giá bán</Label>
+                <Label className="font-medium text-neutral-600">Giá bán</Label>
                 <span className="text-[#451e99] text-lg font-bold">
                   <span className="underline align-text-bottom">đ</span>{' '}
                   {(pkg.price* 1.0).toLocaleString('vi-VN')}
                 </span>
               </div>
 
-              <div className="mt-3 md:mt-0">
+              <div className="mt-3 mr-3">
                 <Button
                   className="bg-[#6c43d3] hover:bg-[#5c39ba] text-white"
                   onClick={handleAddCart(index)}
@@ -163,7 +176,7 @@ export default function Price() {
         </Button>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-neutral-600">
             <strong className="text-gray-800">Tổng giá</strong>
           </span>
           <span className="text-xl font-bold text-[#451e99]">
@@ -171,7 +184,9 @@ export default function Price() {
           </span>
         </div>
 
-        <Button className="bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold px-6">
+        <Button className="bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-50 rounded-none h-12 "
+          onClick={handlePayment}
+        >
           Đặt mua
         </Button>
       </div>

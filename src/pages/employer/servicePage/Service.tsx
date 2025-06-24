@@ -43,9 +43,9 @@ export default function Service() {
   }
 
   return (
-    <div className="space-y-4 w-full mt-2">
+    <div className="space-y-4 w-full mt-2 mr-4">
       {transactions.map((transaction) => (
-        <Card key={transaction.id} className="border border-gray-200">
+        <Card key={transaction.id} className=" shadow-none border border-gray-200 rounded-xl">
           <CardHeader className="pb-3">
             <div className="flex justify-between items-start">
               <div>

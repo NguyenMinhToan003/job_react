@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';
+import { createEmployerNotiAPI } from '@/apis/notiAccountAPI';
 import { updateJobAdmin } from '@/apis/jobAPI';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';

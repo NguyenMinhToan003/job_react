@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getApplyByStatus, unApplyJob } from "@/apis/applyJobAPI";
+import { getApplyByStatus, getApplyJobByCandidateId, unApplyJob } from "@/apis/applyJobAPI";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApplyJobResponse } from "@/types/applyJobType";
 import { APPLY_JOB_STATUS } from "@/types/type";
 import { convertPrice } from "@/utils/convertPrice";
 import { convertDateToString } from "@/utils/dateTime";
+import { buttonAction } from "@/utils/renderButton";
 import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +17,7 @@ export default function ApplyJob() {
   const [applyJobs, setApplyJobs] = useState<ApplyJobResponse[]>([])
   const fetchApplyJobs = async () => {
     try {
-      const response = await getApplyByStatus(APPLY_JOB_STATUS.PROCESSING);
+      const response = await getApplyJobByCandidateId();
       setApplyJobs(response);
     }
     catch(error) {
@@ -31,6 +32,7 @@ export default function ApplyJob() {
     try {
       await unApplyJob(jobId);
       toast.success("Hủy ứng tuyển thành công");
+      fetchApplyJobs();
     }
     catch (error: any) {
       toast.error(error.response?.data?.message || "Lỗi không xác định");
@@ -79,13 +81,18 @@ export default function ApplyJob() {
                   <span className='text-[12px] text-gray-500 font-semibold'>Chưa xem</span>
                 )
               }
-              <Button variant={'destructive'}
-                className="w-full"
-                onClick={() => handleUnApplyJob(applyJob.job.id)}>
-                {
-                  applyJob.status
-                }
-              </Button>
+              {
+                applyJob.status == APPLY_JOB_STATUS.PROCESSING ? 
+                  <div
+                    onClick={() => handleUnApplyJob(applyJob.job.id)}
+                  >
+                    {buttonAction(applyJob.status)}
+                  </div>
+                  : <div
+                    onClick={() => handleUnApplyJob(applyJob.job.id)}>
+                     {buttonAction(applyJob.status)}
+                  </div>
+              }
               </div>
           </CardContent>
         </Card>

@@ -21,7 +21,7 @@ export const applyJobWithNewCv = async (jobId: number, data: CreateApplyRequest,
   formData.append('cv', cv);
   formData.append('username', data.username);
   formData.append('phone', data.phone);
-  formData.append('note', data.note);
+  formData.append('candidateNode', data.candidateNote);
   const response = await axiosInstance.post(`/apply-job/apply-new-cv/${jobId}`, formData);
   return response.data;
 }
@@ -42,5 +42,26 @@ export const analysResumeVersion = async (applyId: number) => {
 }
 export const updateApplyJobStatus = async (applyId: number, status: APPLY_JOB_STATUS) => {
   const response = await axiosInstance.post(`/apply-job/status/${applyId}`, { status });
+  return response.data;
+}
+export const addTagToApplyJob = async (applyId: number, tags: { tagIds: number[] }) => {
+  const response = await axiosInstance.post(`/apply-job/addTag/${applyId}`, tags);
+  return response.data;
+}
+export const removeTagToApplyJob = async (applyId: number, tags : { tagIds: number[] }) => {
+  const response = await axiosInstance.patch(`/apply-job/removeTag/${applyId}`, tags);
+  return response.data;
+}
+export const feedbackApplyJob = async (applyId: number, feedback: string) => {
+  const response = await axiosInstance.post(`/apply-job/feedback/${applyId}`, { feedback });
+  return response.data;
+}
+
+export const getApplyJobByCandidateId = async () => {
+  const response = await axiosInstance.get<ApplyJobResponse[]>(`/apply-job/candidate`);
+  return response.data;
+}
+export const sendEmailToCandidate = async (applyId: number, subject: string, content: string) => {
+  const response = await axiosInstance.post(`/apply-job/send-mail-to-candidate/${applyId}`, { subject, content });
   return response.data;
 }

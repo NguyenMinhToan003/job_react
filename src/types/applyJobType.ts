@@ -7,11 +7,13 @@ import { City } from "./location";
 import { Major } from "./majorType";
 import { ResumeVersion } from "./resumeType";
 import { Skill } from "./SkillType";
+import { TagResume } from "./tagResumeType";
 import { APPLY_JOB_STATUS } from "./type";
 
 export interface CreateApplyRequest {
   resumeId : number;
-  note: string;
+  candidateNote: string;
+  feedback: string| null;
   username: string;
   phone: string;
 }
@@ -19,7 +21,8 @@ export interface ApplyJob {
   id: number;
   userId: number;
   jobId: number;
-  note: string;
+  candidateNote: string;
+  feedback: string| null;
   status: number;
   replyTime: string;
   interviewTime: string;
@@ -28,7 +31,8 @@ export interface ApplyJob {
 export interface ApplyJobResponse {
   id: number;
   jobId: number;
-  note: string;
+  candidateNote: string;
+  feedback: string| null;
   status: APPLY_JOB_STATUS;
   replyTime: string;
   interviewTime: string;
@@ -38,14 +42,18 @@ export interface ApplyJobResponse {
   time: string;
   resumeVersion: ResumeVersion;
   matchingScore: number;
+  tagResumes: TagResume[];
+  feedback: string | null;
 }
 export interface ApplyJobByJobIdResponse {
   id: number;
   applyTime: string;
   status: string;
-  note: string;
+  candidateNote: string;
   viewStatus: number;
   job: JobResponse;
+  feedback: string | null;
+  tagResumes: TagResume[];
   resumeVersion: ResumeVersion;
   score: {
     skillScore: number,

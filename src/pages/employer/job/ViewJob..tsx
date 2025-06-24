@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
-import { createEmployerNotiAPI } from '@/apis/employerNotiAPI';
+import { createEmployerNotiAPI } from '@/apis/notiAccountAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
 import { updateJobAdmin, viewJobAPI } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';

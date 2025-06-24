@@ -753,7 +753,7 @@ export default function FormUpdateResume() {
           <div className="mt-4 flex justify-end">
             <Button
               onClick={() => setStatusAddSkill(false)}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+              className="bg-blue-600 "
             >
               Đóng
             </Button>
@@ -834,7 +834,7 @@ export default function FormUpdateResume() {
           <div className="mt-4 flex justify-end">
             <Button
               onClick={() => setStatusAddLanguage(false)}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+              className="bg-blue-600 "
             >
               Đóng
             </Button>
@@ -989,7 +989,7 @@ export default function FormUpdateResume() {
                   toast.error('Vui lòng điền đầy đủ thông tin kinh nghiệm làm việc');
                 }
               }}
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+              className="bg-blue-600 "
             >
               Lưu
             </Button>

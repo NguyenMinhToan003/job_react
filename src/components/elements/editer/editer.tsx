@@ -46,7 +46,7 @@ export default function Editer({
   if (!editor) return null;
 
   return (
-    <div className='border rounded-md flex flex-col'>
+    <div className='border rounded-sm flex flex-col border-[#2c95ff]'>
       <EditerMenu editor={editor} />
       <EditerInput editor={editor} />
     </div>

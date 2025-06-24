@@ -38,3 +38,11 @@ export interface Candidate {
   gender: number;
   phone: string;
 }
+
+export interface AdminFilterCandidateDto {
+  search?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}

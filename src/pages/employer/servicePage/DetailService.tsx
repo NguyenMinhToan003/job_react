@@ -48,8 +48,8 @@ export default function DetailService() {
   if (!transactionDetail) return null;
 
   return (
-    <div className="space-y-4 w-full mt-2">
-      <Card className="border border-gray-200">
+    <div className="space-y-4 w-full mt-2 mr-4">
+      <Card className=" shadow-none border border-gray-200 rounded-xl">
         <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
             <div>

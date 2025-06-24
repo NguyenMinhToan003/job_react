@@ -149,10 +149,7 @@ export default function AddMap() {
   }
 
   return (
-    <Card className='w-full pb-20'>
-      <CardHeader>
-        <CardTitle className='text-2xl font-semibold'>Quản lý địa điểm</CardTitle>
-      </CardHeader>
+    <Card className='w-full shadow-none border border-gray-200 rounded-xl mr-3'>
       <CardContent>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           {/* Form bên trái */}
@@ -242,7 +239,7 @@ export default function AddMap() {
           </div>
 
           {/* Map bên phải */}
-          <div className='w-full rounded-sm shadow-xl'>
+          <div className='w-full '>
             {map?.location ? (
               <iframe
                 src={`https://maps.google.com/maps?q=${map?.location?.lat},${map?.location?.lng}&hl=vi&z=14&output=embed`}

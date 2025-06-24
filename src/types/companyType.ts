@@ -39,3 +39,10 @@ export interface EmployerDetailResponse {
   isFollowed?: boolean;
   account: Account;
 }
+export interface AdminFilterEmployer {
+  search?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}

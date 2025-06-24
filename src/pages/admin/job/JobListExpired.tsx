@@ -11,14 +11,18 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { JobResponse } from "@/types/jobType";
+import { JobDetailResponse } from "@/types/jobType";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
+import { convertDateToString, convertRemainingTime } from "@/utils/dateTime";
+import { useNavigate } from "react-router-dom";
 
 export default function JobListExpired({ jobs, setJobs }: {
-  jobs: JobResponse[];
-  setJobs: React.Dispatch<React.SetStateAction<JobResponse[]>>;
+  jobs: JobDetailResponse[];
+  setJobs: React.Dispatch<React.SetStateAction<JobDetailResponse[]>>;
 }
 ) {
+  const navigate = useNavigate();
 
   return <>
     <Card>
@@ -57,8 +61,14 @@ export default function JobListExpired({ jobs, setJobs }: {
                   <Label>{convertDateToString(job.expiredAt)}</Label>
                 </TableCell>
                 <TableCell>
-                  <div className='text-center'>
-                    a
+                   <div className='text-center flex flex-col gap-1'>
+                    {
+                      job.employerSubscription.length > 0 && job.employerSubscription.map((sub) => (
+                        <span key={sub.id} className='text-xs text-neutral-600 font-semibold'>
+                          {sub.package.name} - {convertRemainingTime(sub.endDate)}
+                        </span>
+                      ))
+                    }
                   </div>
                 </TableCell>
                 <TableCell className='text-center'>

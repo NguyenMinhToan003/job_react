@@ -1,35 +1,51 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { analysResumeVersion } from '@/apis/applyJobAPI';
+import { addTagToApplyJob, analysResumeVersion, feedbackApplyJob, markViewed, removeTagToApplyJob } from '@/apis/applyJobAPI';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import ViewResumeVersion from '@/pages/candidate/dashboard/resume/ViewResumeVersion';
 import { ApplyJobByJobIdResponse } from '@/types/applyJobType';
 import { convertDateToString } from '@/utils/dateTime';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Eye, User, MapPin, Calendar, Trophy } from 'lucide-react';
+import { Eye, User, MapPin, Calendar, Trophy, LucidePhone, Mail, Briefcase, Tag, X, Settings, Send } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { TagResume } from '@/types/tagResumeType';
+import { getAllTagResumeAPI } from '@/apis/tagResumeAPI';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function ViewResumeVersionForJob() {
   const { applyId } = useParams();
   const [apply, setApply] = useState<ApplyJobByJobIdResponse>();
+  const [tagsMe, setTagsMe] = useState<TagResume[]>([]);
+  const [selectTags, setSelectTags] = useState<TagResume[]>([]);
+  const [feedback, setFeedback] = useState<string>('');
+  const navigate = useNavigate();
 
+  const fetchElement = async () => {
+    try {
+      const [applyData, tags] = await Promise.all([
+        analysResumeVersion(Number(applyId)),
+        getAllTagResumeAPI(),
+      ]);
+      setApply(applyData);
+      setTagsMe(tags);
+      setSelectTags(applyData.tagResumes || []);
+      setFeedback(applyData.feedback || '');
+      if (applyData.viewStatus === 0) {
+        await markViewed(Number(applyId));
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Lỗi khi lấy thông tin ứng tuyển');
+    }
+  };
   useEffect(() => {
     if (!applyId) return;
-    const fetchApply = async () => {
-      try {
-        const res = await analysResumeVersion(Number(applyId));
-        setApply(res);
-      } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Lỗi khi lấy thông tin ứng tuyển');
-      }
-    };
-    fetchApply();
+    fetchElement();
   }, [applyId]);
 
   const getScoreColor = (score: number) => {
@@ -43,10 +59,37 @@ export default function ViewResumeVersionForJob() {
     if (score >= 6) return 'bg-orange-50 text-orange-700 border-orange-200';
     return 'bg-red-50 text-red-700 border-red-200';
   };
+  const handleAddTag = async (tag: TagResume) => {
+    try {
+      await addTagToApplyJob(Number(applyId), { tagIds: [tag.id] });
+    }
+    catch(error: any){
+      toast.error(error?.response?.data?.message || 'Lỗi khi thêm thẻ');
+    }
+  }
+
+  const handleRemoveTag = async (tag: TagResume) => {
+    try {
+      await removeTagToApplyJob(Number(applyId), { tagIds: [tag.id] });
+    }
+    catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Lỗi khi xóa thẻ');
+    }
+  }
+
+  const handleFeedback = async () => {
+    try {
+      await feedbackApplyJob(Number(applyId), feedback);
+    }
+    catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Lỗi khi gửi phản hồi');
+    }
+  }
+        
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="w-6xl mx-auto">
+    <div className="min-h-screen p-4 flex w-full gap-3">
+      <div className="min-w-4xl max-w-4xl mx-auto">
         <Card className="w-full shadow-sm border">
           <CardHeader className="bg-white border-b">
             <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
@@ -261,16 +304,32 @@ export default function ViewResumeVersionForJob() {
 
                 {/* Thông tin cơ bản */}
                 <div className="bg-white p-4 rounded-lg border">
-                  <div className="flex items-start space-x-4 mb-4">
-                    <Avatar className="w-16 h-16">
-                      <AvatarImage src={apply?.resumeVersion.avatar} alt="Avatar" />
-                    </Avatar>
-                    <div className="space-y-1 flex-1">
-                      <div className="text-xl font-semibold text-gray-900">{apply?.resumeVersion.username}</div>
-                      <div className="text-sm text-gray-600">{apply?.resumeVersion.email}</div>
-                      <div className="text-sm text-gray-600">{apply?.resumeVersion.phone}</div>
-                    </div>
+                <div className="flex items-start mb-4 gap-3  bg-[#F6F6F6] p-4 rounded-md">
+                <Avatar className="w-20 h-20 mx-auto ">
+                  <AvatarImage
+                    src={apply?.resumeVersion?.avatar}
+                  />
+                </Avatar>
+                <div className=" flex-1 flex flex-col justify-start items-start gap-2">
+                  <div>
+                    <Label className="font-semibold text-neutral-800">
+                      {apply?.resumeVersion?.username}
+                    </Label>
                   </div>
+                  <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1">
+                    <Label className='text-neutral-700'>
+                      <LucidePhone className='h-3 w-3 text-neutral-700'/> {apply?.resumeVersion?.phone}
+                    </Label>
+                    <Label className='text-sm text-neutral-700'>
+                      <Mail className='h-3 w-3 text-neutral-700'/> {apply?.resumeVersion?.email}
+                    </Label>
+                  </div>
+                  <Label className="text-sm text-neutral-700">
+                    <Briefcase className="h-3 w-3 text-neutral-700" />{" "}
+                    {apply?.job?.name}
+                  </Label>
+                </div>
+              </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
@@ -290,7 +349,7 @@ export default function ViewResumeVersionForJob() {
                         value: apply?.resumeVersion.gender
                       }
                     ].map((item, i) => (
-                      <div key={i} className="bg-gray-50 p-3 rounded border">
+                      <div key={i} className="bg-[#F6F6F6] p-3 rounded border">
                         <div className="flex items-center gap-2 mb-1">
                           {item.icon}
                           <span className="font-medium text-gray-700 text-sm">{item.label}</span>
@@ -323,7 +382,7 @@ export default function ViewResumeVersionForJob() {
                   </div>
                 </div>
 
-                <div className="bg-white border p-4 rounded-lg text-center">
+                <div className="bg-[#F6F6F6] border p-4 rounded-lg text-center">
                   <Trophy className="w-6 h-6 mx-auto mb-2 text-gray-600" />
                   <div className="text-sm font-medium mb-1 text-gray-600">Xếp hạng</div>
                   <div className="text-2xl font-bold text-gray-900">{apply?.rank}</div>
@@ -339,6 +398,102 @@ export default function ViewResumeVersionForJob() {
           </CardContent>
         </Card>
       </div>
+      <Card className='w-full'>
+        <CardHeader>
+          <CardTitle className='flex justify-between items-center'>
+            <div className='text-neutral-700 flex items-center gap-2'>
+              <Tag className='w-4 h-4 text-neutral-600' />
+              <span>Thẻ ứng viên</span>
+            </div>
+            <Button
+              variant='link'
+              className='text-[#2c95ff] hover:text-[#2c95ff] flex items-center gap-2'
+              onClick={() => navigate('/danh-cho-nha-tuyen-dung/quan-ly-the')}
+            >
+              <Settings className='w-4 h-4 mr-2' />
+              Quản lý thẻ
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-3'>
+        <div className='space-y-3'>
+            <div className='flex-1 flex-wrap gap-2  flex '>
+              {
+                selectTags.length > 0  && selectTags.map(tag => (
+                  <Button
+                    variant='ghost'
+                    className='bg-transparent hover:bg-transparent cursor-pointer !p-0'
+                    key={tag.id}
+                    onClick={() => {
+                      setSelectTags(selectTags.filter(t => t.id !== tag.id));
+                      handleRemoveTag(tag);
+                    }}
+                  >
+                    <Label
+                    className='cursor-pointer px-2.5 py-1.5 rounded-xl  w-fit text-neutral-700 '
+                    style={{ backgroundColor: tag.color }}
+                  >
+                    <span>
+                      {tag.name}
+                      </span>
+                      <X className='w-3 h-3 ml-2 text-neutral-500' />
+                  </Label>
+                  </Button>
+                ))
+              }
+              </div>
+            </div>
+          <div >
+            <Label className='text-xs text-neutral-700'>Gợi ý thẻ</Label>
+            <div className='flex-1 flex-wrap gap-2 mt-2 flex '>
+              {
+                tagsMe.length > 0 && tagsMe.map(tag => (
+                  <Button
+                    variant='ghost'
+                    disabled={selectTags.some(t => t.id === tag.id)}
+                    onClick={() => {
+                      setSelectTags([...selectTags, tag]);
+                      handleAddTag(tag);
+                    }}
+                    className='bg-transparent hover:bg-transparent cursor-pointer !p-0'
+                    key={tag.id}>
+                    <Label
+                    className='cursor-pointer px-2.5 py-1.5 rounded-xl  w-fit text-neutral-700 '
+                    style={{ backgroundColor: tag.color }}
+                  >
+                    
+                    <span>
+                      {tag.name}
+                    </span>
+                  </Label>
+                  </Button>
+                ))
+              }
+              </div>
+          </div>
+          <div className='space-y-3'>
+            <Label>
+              Đánh giá ứng viên
+            </Label>
+            <Textarea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              placeholder='Thêm ghi chú'
+              className='w-full border border-[#2c95ff] min-h-50'
+              rows={4}
+            />
+            <div className='flex justify-between items-start gap-2'>
+              <Label className='text-xs'>Ứng viên sẽ không thấy ghi chú này của bạn</Label>
+              <Button
+                disabled={!feedback.trim()}
+                className='bg-[#2c95ff] text-white hover:bg-[#2c95ff] w-fit' onClick={handleFeedback}>
+                <Send/>
+              </Button>
+            </div>
+          </div>
+            
+        </CardContent>
+      </Card>
     </div>
   );
 }

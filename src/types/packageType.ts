@@ -1,4 +1,5 @@
 import { EmployerSub } from "./employerSubType";
+import { PackageType } from "./type";
 
 export interface PackageResponse {
   id: string;
@@ -12,3 +13,11 @@ export interface PackageResponse {
   sub_total?: number;
   sub_used?: number;
 }
+export interface CreatePackage {
+    name: string;
+    features: string;
+    price: number;
+    image?: File;
+    dayValue: number;
+    type: PackageType;
+  }

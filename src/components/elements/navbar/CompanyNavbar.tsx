@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { countUnreadAPI } from '@/apis/employerNotiAPI';
+import { countUnreadAPI } from '@/apis/notiAccountAPI';
 import clsx from 'clsx';
 import { useAccount } from '@/providers/UserProvider';
 import { Badge } from '@/components/ui/badge';

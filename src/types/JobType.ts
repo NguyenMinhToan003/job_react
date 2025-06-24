@@ -2,6 +2,7 @@ import { Benefit } from "./benefitType";
 import { Employer } from "./companyType";
 import { Cv } from "./cvType";
 import { Education } from "./educationType";
+import { EmployerSubResponse } from "./employerSubType";
 import { Experience } from "./experienceType";
 import { LanguageJob } from "./LanguageType";
 import { Level } from "./levelType";
@@ -131,6 +132,34 @@ export interface JobFilterResponse {
   distanceKm?: number | null;
   majors: Major[];
   isActiveSubscription?: boolean;
+}
+
+export interface JobDetailResponse {
+  id: number;
+  name: string;
+  description: string;
+  quantity: number;
+  requirement: string;
+  minSalary: number | null;
+  maxSalary: number | null;
+  createdAt: string;
+  isActive: number;
+  expiredAt: string;
+  benefits: Benefit[];
+  locations: LocationResponse[];
+  experience: Experience;
+  skills: Skill[];
+  levels: Level[];
+  typeJobs: TypeJob[];
+  employer: Employer;
+  isApplied: boolean;
+  isSaved: boolean;
+  languageJobs: LanguageJob[];
+  education: Education;
+  matchingWeights: MatchingWeightResponse | null;
+  distanceKm?: number | null;
+  majors: Major[];
+  employerSubscription: EmployerSubResponse[];
 }
 
 export interface UpdateJobAdminRequest {

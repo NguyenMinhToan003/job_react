@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import {
   MapPin,
   Heart,
-  HandCoins,
   ExternalLink,
   Book,
   Building2,

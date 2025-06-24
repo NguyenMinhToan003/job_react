@@ -5,6 +5,9 @@ import { registerCandidate } from '@/apis/candidateAPI';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { useNavigate } from 'react-router-dom';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { Button } from '@/components/ui/button';
 
 export default function CandidateRegisterForm() {
 
@@ -82,21 +85,13 @@ export default function CandidateRegisterForm() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl mb-4 shadow-lg">
-            <UserPlus className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Đăng ký Ứng viên</h1>
-          <p className="text-gray-600">Tạo tài khoản để tìm kiếm công việc mơ ước</p>
-        </div>
-
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           <div className="space-y-6">
             {/* Avatar Upload Section */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
                 Ảnh đại diện
-              </label>
+              </Label>
               <div className="flex items-center space-x-4">
                 {imagePreview ? (
                   <div className="relative">
@@ -120,20 +115,20 @@ export default function CandidateRegisterForm() {
                 )}
                 
                 <div className="flex-1">
-                  <input
+                  <Input
                     type="file"
                     id="avatar-upload"
                     accept="image/*"
                     onChange={handleImageSelect}
                     className="hidden"
                   />
-                  <label
+                  <Label
                     htmlFor="avatar-upload"
                     className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 cursor-pointer transition-colors"
                   >
                     <Upload className="w-4 h-4 mr-2" />
                     {selectedImage ? 'Thay đổi ảnh' : 'Chọn ảnh'}
-                  </label>
+                  </Label>
                   <p className="text-xs text-gray-500 mt-1">
                     PNG, JPG tối đa 5MB
                   </p>
@@ -143,17 +138,17 @@ export default function CandidateRegisterForm() {
 
             <div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Label className="block text-sm font-medium text-gray-700 mb-2">
                   Tên *
-                </label>
+                </Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                  <Input
                     type="text"
                     name="lastName"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors `}
+                    className={`w-full pl-10 pr-3 py-3 border  `}
                     placeholder="Nhập tên"
                   />
                 </div>
@@ -163,17 +158,17 @@ export default function CandidateRegisterForm() {
 
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
                 Email *
-              </label>
+              </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
+                <Input
                   type="email"
                   name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors `}
+                  className={`w-full pl-10 pr-3 py-3 border  `}
                   placeholder="Nhập email của bạn"
                 />
               </div>
@@ -183,17 +178,17 @@ export default function CandidateRegisterForm() {
             {/* Password Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Label className="block text-sm font-medium text-gray-700 mb-2">
                   Mật khẩu *
-                </label>
+                </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                  <Input
                     type={showPassword ? "text" : "password"}
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors `}
+                    className={`w-full pl-10 pr-12 py-3 border  `}
                     placeholder="Nhập mật khẩu"
                   />
                   <button
@@ -208,17 +203,17 @@ export default function CandidateRegisterForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Label className="block text-sm font-medium text-gray-700 mb-2">
                   Xác nhận mật khẩu *
-                </label>
+                </Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                  <Input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors `}
+                    className={`w-full pl-10 pr-12 py-3 border  `}
                     placeholder="Nhập lại mật khẩu"
                   />
                   <button
@@ -236,17 +231,17 @@ export default function CandidateRegisterForm() {
             {/* Phone and Date of Birth */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Label className="block text-sm font-medium text-gray-700 mb-2">
                   Số điện thoại *
-                </label>
+                </Label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                  <Input
                     type="tel"
                     name="phone"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors `}
+                    className={`w-full pl-10 pr-3 py-3 border  `}
                     placeholder="Nhập số điện thoại"
                   />
                 </div>
@@ -254,17 +249,17 @@ export default function CandidateRegisterForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <Label className="block text-sm font-medium text-gray-700 mb-2">
                   Ngày sinh *
-                </label>
+                </Label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <input
+                  <Input
                     type="date"
                     name="dateOfBirth"
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors `}
+                    className={`w-full pl-10 pr-3 py-3 border  `}
                   />
                 </div>
                 
@@ -273,16 +268,16 @@ export default function CandidateRegisterForm() {
 
             {/* Address Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
                 Địa chỉ *
-              </label>
+              </Label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                 <Textarea
                   name="address"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className={`w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors resize-none $`}
+                  className={`w-full pl-10 pr-3 py-3 border  resize-none $`}
                   placeholder="Nhập địa chỉ của bạn"
                 />
               </div>
@@ -290,7 +285,7 @@ export default function CandidateRegisterForm() {
             </div>
             
             {/* Register Button */}
-            <button
+            <Button
               type="button"
               onClick={handleSubmit}
               disabled={isLoading}
@@ -307,14 +302,14 @@ export default function CandidateRegisterForm() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </>
               )}
-            </button>
+            </Button>
           </div>
 
           {/* Login Link */}
           <div className="mt-6 text-center">
             <p className="text-gray-600">
               Đã có tài khoản?{' '}
-              <a href="#" className="text-green-600 hover:underline font-medium">
+              <a href="/auth/login" className="text-green-600 hover:underline font-medium">
                 Đăng nhập ngay
               </a>
             </p>

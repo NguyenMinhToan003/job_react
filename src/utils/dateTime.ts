@@ -30,3 +30,14 @@ export const dayRemaning = (date: string): number => {
   const now = dayjs();
   return time.diff(now, 'day');
 }
+export const convertRemainingTime = (date: string): string => {
+  const time = dayjs(date);
+  const now = dayjs();
+  const diffInSeconds = time.diff(now, 'second');
+  
+  if (diffInSeconds < 0) {
+    return 'Đã hết hạn';
+  }
+  const diffInDays = Math.floor(diffInSeconds / (24 * 3600));
+  return diffInDays > 0 ? `${diffInDays} ngày` : 'Hết hạn trong ngày';
+}

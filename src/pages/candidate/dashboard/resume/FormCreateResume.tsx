@@ -2,7 +2,7 @@
 import { Dialog } from '@radix-ui/react-dialog';
 import { DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -222,8 +222,8 @@ export default function FormCreateResume() {
   }, [citys, selectedCityId]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
+      <Card className="w-full max-w-5xl bg-white border border-gray-200 rounded-lg shadow-sm">
         <CardHeader className="border-b border-gray-200 p-6">
           <CardTitle className="text-lg font-semibold text-gray-900">Tạo Hồ Sơ</CardTitle>
         </CardHeader>
@@ -239,20 +239,20 @@ export default function FormCreateResume() {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <input
+                <Input
                   type="file"
                   id="avatar-upload"
                   accept="image/*"
                   onChange={handleImageSelect}
                   className="hidden"
                 />
-                <label
+                <Label
                   htmlFor="avatar-upload"
                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
                 >
                   <Upload className="w-4 h-4 mr-2 text-gray-500" />
                   {avatar ? 'Thay đổi ảnh' : 'Tải ảnh lên'}
-                </label>
+                </Label>
                 {avatar && (
                   <button
                     type="button"
@@ -286,13 +286,13 @@ export default function FormCreateResume() {
                   onChange={handlePdfSelect}
                   className="hidden"
                 />
-                <label
+                <Label
                   htmlFor="pdf-upload"
                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
                 >
                   <Upload className="w-4 h-4 mr-2 text-gray-500" />
                   {pdfFileName ? 'Thay đổi PDF' : 'Tải PDF lên'}
-                </label>
+                </Label>
                 {pdfFileName && (
                   <button
                     type="button"
@@ -599,7 +599,7 @@ export default function FormCreateResume() {
           <Button
             onClick={handleCreateResume}
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white text-sm font-medium py-2 rounded-md hover:bg-blue-700 disabled:bg-blue-400"
+            className="w-full disabled:bg-blue-400"
           >
             {isLoading ? 'Đang tạo...' : 'Tạo hồ sơ'}
           </Button>
@@ -639,7 +639,7 @@ export default function FormCreateResume() {
           </div>
           <Button
             onClick={() => setStatusAddSkill(false)}
-            className="mt-4 w-full bg-blue-600 text-white text-sm font-medium py-2 rounded-md hover:bg-blue-700"
+            className="mt-4 min-w-full"
           >
             Xong
           </Button>
@@ -703,7 +703,7 @@ export default function FormCreateResume() {
           </div>
           <Button
             onClick={() => setStatusAddLanguage(false)}
-            className="mt-4 w-full bg-blue-600 text-white text-sm font-medium py-2 rounded-md hover:bg-blue-700"
+            className="mt-4 w-full"
           >
             Xong
           </Button>

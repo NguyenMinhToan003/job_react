@@ -12,13 +12,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
-const NOTI_CONFIG = {
-  [NOTI_TYPE.ACCEPTED]: { label: 'Đã chấp nhận', color: 'bg-green-100 text-green-600 border-green-200' },
-  [NOTI_TYPE.REJECTED]: { label: 'Đã từ chối', color: 'bg-red-100 text-red-600 border-red-200' },
-  [NOTI_TYPE.DEFAULT]: { label: 'Thông báo', color: 'bg-blue-100 text-blue-600 border-blue-200' },
-};
+
 function NotificationItem({ noti }: { noti: NotiAccount }) {
-  const { label, color } = NOTI_CONFIG[noti.type || NOTI_TYPE.DEFAULT];
   const isRead = noti.isRead === 1;
   return (
     <Card
@@ -44,8 +39,8 @@ function NotificationItem({ noti }: { noti: NotiAccount }) {
           </div>
         </div>
         <div className='flex items-center gap-2'>
-          <Badge variant='outline' className={`text-xs font-semibold ${color}`}>
-            {label}
+          <Badge variant='outline' className={`text-xs font-semibold `}>
+            Thông báo
           </Badge>
           {noti.link && (
             <Button
@@ -72,8 +67,8 @@ function NotificationItem({ noti }: { noti: NotiAccount }) {
 }
 
 
-export default function EmployerNotification() {
-  const [notifications, setNotifications] = useState<EmployerNoti[]>([]);
+export default function CandidateNoti() {
+  const [notifications, setNotifications] = useState<NotiAccount[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchNotifications = async () => {

@@ -1,15 +1,45 @@
 import { EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionRequest } from "@/types/employerSubType"
 import { axiosInstance } from "."
-import { PackageResponse } from "@/types/packageType"
+import { CreatePackage, PackageResponse } from "@/types/packageType"
 
 export const getPackageAvailable = async () => {
   const response = await axiosInstance.get<PackageResponse[]>('/packages/available')
   return response.data
 }
+// get all packages for business
 export const getPackagesBisiness = async () => {
   const response = await axiosInstance.get<PackageResponse[]>('/packages')
   return response.data
 }
+
+export const getPackageAdmin = async () => {
+  const response = await axiosInstance.get<PackageResponse[]>('/packages/all')
+  return response.data
+}
+export const updatePackage = async (id: string, data: CreatePackage) => {
+}
+export const deletePackage = async (id: string) => {
+  const response = await axiosInstance.delete<PackageResponse>(`/packages/${id}`)
+  return response.data
+}
+export const createPackage = async (data: CreatePackage) => {
+  const formData = new FormData();
+  formData.append('name', data.name);
+  formData.append('features', data.features);
+  formData.append('price', data.price.toString());
+  formData.append('dayValue', data.dayValue.toString());
+  if (data.image) {
+    formData.append('image', data.image);
+  }
+  formData.append('type', data.type);
+  const response = await axiosInstance.post<PackageResponse>('/packages', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data
+}
+  
 
 export const getMyTransactions = async () => {
   const response = await axiosInstance.get<TransactionResponse[]>('/transaction/me')

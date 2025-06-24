@@ -10,6 +10,7 @@ import {
   Clock,
   HeartHandshake,
   Shapes,
+  Package,
 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
@@ -19,7 +20,8 @@ const userMenuItems = [
   { label: "Tổng quan", icon: <LayoutDashboard className="w-6 h-6" />, path: '' },
   { label: "Quản lý tuyển dụng", icon: <ClipboardList className="w-6 h-6" />, path: 'tuyen-dung' }, // thay Briefcase
   { label: "Quản lý Nhà tuyển dụng", icon: <Factory className="w-6 h-6" />, path: 'nha-tuyen-dung' }, // thay Building
-  { label: "Quản lý Người dùng", icon: <UserCog className="w-6 h-6" />, path: 'cong-viec-luu' }, // thay Users
+  { label: "Quản lý ứng viên", icon: <UserCog className="w-6 h-6" />, path: 'ung-vien' }, // thay Users
+  { label: "Quản lý gói dịch vụ", icon: <Package className="w-6 h-6" />, path: 'goi-dich-vu' }, // thay Briefcase
   { label: "Quản lý kĩ năng", icon: <Wand2 className="w-6 h-6" />, path: 'ki-nang' }, // thay BadgePlus
   { label: "Quản lý cấp bậc", icon: <BarChart2 className="w-6 h-6" />, path: 'cap-bac' },
   { label: "Quản lý kinh nghiệm", icon: <BadgeCheck className="w-6 h-6" />, path: 'kinh-nghiem' },

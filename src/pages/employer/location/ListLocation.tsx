@@ -53,10 +53,7 @@ export default function ListLocation() {
   }
 
   return (
-    <Card className="flex-1">
-      <CardHeader>
-        <CardTitle>Quản lý địa điểm</CardTitle>
-      </CardHeader>
+    <Card className="flex-1 shadow-none border border-gray-200 rounded-xl mr-4">
       <CardContent className="p-6 space-y-2">
         <Table className="w-full">
           <TableHeader>
