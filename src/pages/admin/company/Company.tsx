@@ -162,7 +162,6 @@ export default function CompanyListPage() {
                       {getSortIcon("name")}
                     </div>
                   </TableHead>
-                  <TableHead>Mô tả</TableHead>
                   <TableHead>Thông tin liên hệ</TableHead>
                   <TableHead>Quy mô</TableHead>
                   <TableHead>Lĩnh vực</TableHead>
@@ -205,9 +204,7 @@ export default function CompanyListPage() {
                           <div className="text-sm text-gray-500">MST: {company.taxCode}</div>
                         </div>
                       </TableCell>
-                      <TableCell className="max-w-xs">
-                        <div className="text-sm">{truncateText(company.description || "Chưa có mô tả", 100)}</div>
-                      </TableCell>
+                      
                       <TableCell>
                         <div className="space-y-1 text-sm">
                           {company.phone && (

@@ -92,3 +92,13 @@ export const getJobByLocation = async (map: {
   const response = await axiosInstance.post<JobFilterResponse[]>(`/job/job-map`, map);
   return response.data;
 }
+
+export const getCountJobDashboard = async () => {
+  const response = await axiosInstance.get<{
+    total: number,
+    active: number,
+    pending: number,
+    expired: number,
+  }>(`/job/dashboard/employer/count`);
+  return response.data;
+}

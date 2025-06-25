@@ -23,3 +23,7 @@ export const getViewJobByIdAPI = async (id: number) => {
   const response = await axiosInstance.get<number>(`/view-job/getViews/${id}`);
   return response.data;
 }
+export const getViewDashboardAPI = async () => {
+  const response = await axiosInstance.get<number>(`/view-job/dashboard/employer`);
+  return response.data;
+}

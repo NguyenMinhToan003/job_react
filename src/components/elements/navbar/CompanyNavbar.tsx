@@ -43,7 +43,7 @@ export default function CompanyNavbar() {
   }, []);
 
   const userMenuItems = [
-    { label: 'Tổng quan', icon: <LayoutDashboard className='w-6 h-6' />, path: '' },
+    { label: 'Tổng quan', icon: <LayoutDashboard className='w-6 h-6' />, path: '/danh-cho-nha-tuyen-dung' },
     {
       label: 'Quản lý tuyển dụng',
       icon: <ClipboardList className='w-6 h-6' />,
@@ -58,7 +58,7 @@ export default function CompanyNavbar() {
     { label: 'Dịch vụ', icon: <Package className='w-6 h-6' />, path: 'dich-vu' },
     { label: 'Bảng giá', icon: <DollarSign className='w-6 h-6' />, path: 'bang-gia' },
     { label: 'Tìm kiếm ứng viên', icon: <Search className='w-6 h-6' />, path: 'tim-kiem-ung-vien' },
-    { label: 'Blog', icon: <MessageCircle className='w-6 h-6' />, path: 'blog' },
+
     { label: 'Quản lý thông tin', icon: <MessageCircle className='w-6 h-6' />, path: 'quan-ly-thong-tin' },
     {
       label: (

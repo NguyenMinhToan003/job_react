@@ -19,10 +19,6 @@ import {
 } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import {
-  Pagination, PaginationContent, PaginationItem,
-  PaginationLink, PaginationNext, PaginationPrevious,
-} from '@/components/ui/pagination';
 import { Field, Major } from '@/types/majorType';
 import { getFieldList } from '@/apis/fieldAPI';
 import { Select } from '@radix-ui/react-select';
@@ -33,6 +29,7 @@ import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoreVertical } from 'lucide-react';
 import { getListMajorAPI } from '@/apis/majorAPI';
 import { useNavigate } from 'react-router-dom';
+import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
 
 export default function SkillPage() {
   const [skillList, setSkillList] = useState<SkillResponse[]>([]);
@@ -248,38 +245,11 @@ export default function SkillPage() {
           </Table>
         </CardContent>
       </Card>
-
-      <Pagination>
-        <PaginationContent className='list-none flex justify-center items-center gap-1'>
-          <PaginationPrevious
-            title='Trước'
-            className='cursor-pointer'
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          >
-            Trước
-          </PaginationPrevious>
-
-          {Array.from({ length: totalPages }, (_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
-                className={`cursor-pointer ${page === index + 1 ? 'bg-blue-500 text-white' : 'text-blue-500 hover:bg-blue-100'}`}
-                onClick={() => setPage(index + 1)}
-                isActive={page === index + 1}
-              >
-                {index + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-
-          <PaginationNext
-            title='Tiếp theo'
-            className='cursor-pointer'
-            onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))}
-          >
-            Tiếp theo
-          </PaginationNext>
-        </PaginationContent>
-      </Pagination>
+      <PaginationModel1
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+      />
       <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) resetForm(); }}>
               <DialogContent>
                 <DialogHeader>

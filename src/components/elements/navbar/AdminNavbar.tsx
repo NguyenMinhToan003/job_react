@@ -11,6 +11,7 @@ import {
   HeartHandshake,
   Shapes,
   Package,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
@@ -30,7 +31,7 @@ const userMenuItems = [
   { label: "Quản lý quyền lợi", icon: <HeartHandshake className="w-6 h-6" />, path: 'quyen-loi' }, // thay Map
   { label: "Quản lý lĩnh vực", icon: <Shapes className="w-6 h-6" />, path: 'linh-vuc' }, // thay Landmark
   { label: "Quốc gia", icon: <BarChart2 className="w-6 h-6" />, path: 'quoc-gia' }, // thay BarChart
-
+  { label: 'Blog', icon: <MessageCircle className='w-6 h-6' />, path: 'blog' },
 ];
 
 

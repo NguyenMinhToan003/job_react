@@ -13,6 +13,7 @@ import type { CandidateResponse } from "@/types/accountType"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Search, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
+import PaginationModel1 from "@/components/elements/pagination/PaginationModel1"
 
 export default function CandidateList() {
   const [candidates, setCandidates] = useState<CandidateResponse[]>([])
@@ -199,56 +200,11 @@ export default function CandidateList() {
             </Table>
           </div>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-6">
-              <div className="text-sm text-gray-500">
-                Hiển thị {(page - 1) * limit + 1} - {Math.min(page * limit, total)} của {total} ứng viên
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setPage(page - 1)} disabled={page === 1 || loading}>
-                  <ChevronLeft className="h-4 w-4" />
-                  Trước
-                </Button>
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum
-                    if (totalPages <= 5) {
-                      pageNum = i + 1
-                    } else if (page <= 3) {
-                      pageNum = i + 1
-                    } else if (page >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i
-                    } else {
-                      pageNum = page - 2 + i
-                    }
-
-                    return (
-                      <Button
-                        key={pageNum}
-                        variant={page === pageNum ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setPage(pageNum)}
-                        disabled={loading}
-                        className="w-8 h-8 p-0"
-                      >
-                        {pageNum}
-                      </Button>
-                    )
-                  })}
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPage(page + 1)}
-                  disabled={page === totalPages || loading}
-                >
-                  Sau
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
+          <PaginationModel1
+            page={page}
+            setPage={setPage}
+            totalPages={totalPages}
+          />
         </CardContent>
       </Card>
     </div>

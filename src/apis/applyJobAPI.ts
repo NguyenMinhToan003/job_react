@@ -65,3 +65,10 @@ export const sendEmailToCandidate = async (applyId: number, subject: string, con
   const response = await axiosInstance.post(`/apply-job/send-mail-to-candidate/${applyId}`, { subject, content });
   return response.data;
 }
+export const getApplyJobDashboard = async () => {
+  const response = await axiosInstance.get<{
+    totalApply: number,
+    notViewed: number,
+  }>(`/apply-job/dashboard/employer`);
+  return response.data;
+}

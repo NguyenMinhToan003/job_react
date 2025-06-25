@@ -83,7 +83,7 @@ export default function EmployerJobList() {
     else if (action === JOB_STATUS.CREATE) {
       return (
         <Button
-          className='text-[#451DA0] hover:text-[#451DA0] border border-[#451DA0] bg-white hover:bg-white rounded-sm w-24'
+          className='text-[#451DA0] hover:text-[#451DA0] border-2 border-[#451DA0] bg-white hover:bg-white rounded-sm w-24'
           onClick={() => handlePublicJob(jobId)}
         >
           Xuất bản
