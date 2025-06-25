@@ -115,7 +115,7 @@ export interface JobFilterResponse {
   minSalary: number | null;
   maxSalary: number | null;
   createdAt: string;
-  isActive: number;
+  isActive: JOB_STATUS;
   expiredAt: string;
   benefits: Benefit[];
   locations: LocationResponse[];
@@ -154,6 +154,7 @@ export interface JobDetailResponse {
   employer: Employer;
   isApplied: boolean;
   isSaved: boolean;
+  isShow: number;
   languageJobs: LanguageJob[];
   education: Education;
   matchingWeights: MatchingWeightResponse | null;
@@ -163,7 +164,7 @@ export interface JobDetailResponse {
 }
 
 export interface UpdateJobAdminRequest {
-  isActive: number;
+  isActive: JOB_STATUS;
 }
 
 export interface CompanyFilterJob {

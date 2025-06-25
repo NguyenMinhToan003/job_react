@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { convertDateToString } from "@/utils/dateTime";
 import { JOB_STATUS } from "@/types/type";
-import JobMenu from "@/components/elements/job/menu";
+import JobMenu from "@/components/elements/job/MenuMore";
 
 export default function ExpiredJobs() {
   

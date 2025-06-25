@@ -26,6 +26,9 @@ import {
   Zap,
   TargetIcon,
   CircleDollarSignIcon,
+  AlertTriangle,
+  Terminal,
+  AlertCircleIcon,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -34,10 +37,11 @@ import { JobFilterResponse } from '@/types/jobType';
 import { convertDateToDiffTime, convertDateToString, dayRemaning } from '@/utils/dateTime';
 import { saveJob } from '@/apis/saveJobAPI';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { ROLE_LIST } from '@/types/type';
+import { JOB_STATUS, ROLE_LIST } from '@/types/type';
 import { addViewJobAPI, getViewJobByIdAPI } from '@/apis/viewJobAPI';
 import JobItem from '@/components/elements/job/job-list/JobItem';
 import { convertPrice } from '@/utils/convertPrice';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -124,7 +128,16 @@ export default function JobDetail() {
 
   return (
     <div className='w-full mx-auto  min-h-screen'>
+      {
+          job?.isActive !== JOB_STATUS.ACTIVE && <>
+          <Alert variant='destructive' className='max-w-7xl mx-auto py-2 px-4 border-none'>
+            <AlertCircleIcon />
+            <AlertTitle>Công việc chưa được kiểm duyệt</AlertTitle>
+          </Alert>
+          </>
+      }
       <div className='bg-gradient-to-r from-[#121212] to-[#53151c] text-white sticky top-0 z-[99999999]'>
+
         <div className='max-w-7xl mx-auto py-2 px-4 flex items-center gap-6 shadow-lg'>
           <div className='bg-white rounded-md p-1 min-w-25 min-h-25 max-w-25 max-h-25 flex items-start justify-center'>
             <img src={job.employer.logo}  className='w-full h-full' />

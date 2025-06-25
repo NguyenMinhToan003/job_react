@@ -1,10 +1,11 @@
 import { Employer } from "./companyType";
+import { ACCOUNT_STATUS } from "./type";
 
 export interface Account {
   id: number;
   email: string;
   role: string;
-  status: number;
+  status: ACCOUNT_STATUS;
   candidate?: Candidate;
   employer?: Employer;
 }
@@ -12,7 +13,7 @@ export interface CandidateResponse {
   id: number;
   name: string;
   avatar: string;
-  gender: number;
+  gender: string;
   account: Account;
   phone: string;
 }
@@ -45,4 +46,8 @@ export interface AdminFilterCandidateDto {
   limit?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+}
+export interface ChangeStatusDto {
+  status: ACCOUNT_STATUS
+  accountId: number;
 }

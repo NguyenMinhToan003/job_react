@@ -9,7 +9,7 @@ import { TransactionDetailResponse } from "@/types/employerSubType";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { MarsStroke } from "lucide-react";
+import FormActiveServiceBanner from "@/components/elements/servicePage/FormActiveServiceBanner";
 
 export default function DetailService() {
   const { id } = useParams<{ id: string }>();
@@ -118,7 +118,7 @@ export default function DetailService() {
               <TableRow key={sub.id} className="font-medium hover:bg-transparent">
                 <TableCell>{sub.package?.name}</TableCell>
                 <TableCell className="text-purple-600 ">
-                  {sub?.job?.name} 
+                  <FormActiveServiceBanner employerSub={sub} />
                 </TableCell>
                 <TableCell>{sub.package?.dayValue} ngày</TableCell>
                 <TableCell className="text-emerald-600">

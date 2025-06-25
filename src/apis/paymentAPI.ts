@@ -1,4 +1,4 @@
-import { EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionRequest } from "@/types/employerSubType"
+import { EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionBannerRequest, UseSubscriptionRequest } from "@/types/employerSubType"
 import { axiosInstance } from "."
 import { CreatePackage, PackageResponse } from "@/types/packageType"
 
@@ -47,7 +47,12 @@ export const getMyTransactions = async () => {
 }
 
 export const subscriptionUseJob = async (data: UseSubscriptionRequest) => {
-  const response = await axiosInstance.post<EmployerSubResponse>('/employer-sub/use-subscription', data)
+  const response = await axiosInstance.post<EmployerSubResponse>('/employer-sub/use-subscription/job', data)
+  return response.data
+}
+
+export const subscriptionUseBanner = async (data: UseSubscriptionBannerRequest) => {
+  const response = await axiosInstance.post<EmployerSubResponse>('/employer-sub/use-subscription/banner', data)
   return response.data
 }
 

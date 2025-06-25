@@ -14,6 +14,7 @@ import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Search, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import PaginationModel1 from "@/components/elements/pagination/PaginationModel1"
+import { ACCOUNT_STATUS } from "@/types/type"
 
 export default function CandidateList() {
   const [candidates, setCandidates] = useState<CandidateResponse[]>([])
@@ -68,29 +69,31 @@ export default function CandidateList() {
     }
   }
 
-  const getGenderText = (gender: number) => {
+  const getGenderText = (gender: string) => {
     switch (gender) {
-      case 0:
+      case 'NAM':
         return "Nam"
-      case 1:
+      case 'NU':
         return "Nữ"
       default:
         return "Khác"
     }
   }
 
-  const getStatusBadge = (status: number) => {
+  const getStatusBadge = (status: ACCOUNT_STATUS) => {
     switch (status) {
-      case 1:
+      case ACCOUNT_STATUS.ACTIVE:
         return (
           <Badge variant="default" className="bg-green-500">
-            Hoạt động
+            Đã xét duyêt
           </Badge>
         )
-      case 0:
-        return <Badge variant="destructive">Không hoạt động</Badge>
-      default:
-        return <Badge variant="secondary">Không xác định</Badge>
+      case ACCOUNT_STATUS.CREATED:
+        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+          Chưa xét duyệt
+        </Badge>
+      case ACCOUNT_STATUS.BLOCKED:
+        return <Badge variant="secondary">Bị khóa</Badge>
     }
   }
 

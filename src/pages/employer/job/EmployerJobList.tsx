@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { getJobByCompanyId, publishJob, toggleJobStatus } from '@/apis/jobAPI';
+import { getJobByCompanyId, toggleJobStatus } from '@/apis/jobAPI';
 import { CompanyFilterJob, JobResponse } from '@/types/jobType';
 import {
   Table,
@@ -17,8 +17,9 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { JOB_STATUS } from '@/types/type';
 import { Label } from '@/components/ui/label';
-import JobMenu from '@/components/elements/job/menu';
+import JobMenu from '@/components/elements/job/MenuMore';
 import { convertDateToString } from '@/utils/dateTime';
+import FormPublish from '@/components/elements/job/FormPublich';
 
 export default function EmployerJobList() {
   
@@ -60,37 +61,19 @@ export default function EmployerJobList() {
     }
   };
 
-  const handlePublicJob = async (jobId: number) => {
-    try {
-      await publishJob(jobId);
-      await fetchJobList();
-      toast.success('Vui lòng chờ duyệt công việc');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi xuất bản công việc');
-    }
-  }
 
-  const buttonAction = (action: JOB_STATUS, jobId: number) => {
-    if (action === JOB_STATUS.ACTIVE) {
+  const buttonAction = (job: JobResponse) => {
+    if (job.isActive === JOB_STATUS.ACTIVE) {
       return (
-        <Button
-          className='text-[#451DA0] hover:text-[#451DA0] bg-[#EDECFF] hover:bg-[#EDECFF] rounded-none w-24'
-        >
-          Nâng cấp
-        </Button>
+        <FormPublish job={job} />
       );
     }
-    else if (action === JOB_STATUS.CREATE) {
+    else if (job.isActive === JOB_STATUS.CREATE) {
       return (
-        <Button
-          className='text-[#451DA0] hover:text-[#451DA0] border-2 border-[#451DA0] bg-white hover:bg-white rounded-sm w-24'
-          onClick={() => handlePublicJob(jobId)}
-        >
-          Xuất bản
-        </Button>
+        <FormPublish job={job} />
       );
     }
-    else if (action === JOB_STATUS.PENDING) {
+    else if (job.isActive === JOB_STATUS.PENDING) {
       return (
         <Button
           className='text-[#451DA0] hover:text-[#451DA0] bg-[#FFF7ED] hover:bg-[#FFF7ED] rounded-none w-24'
@@ -99,7 +82,7 @@ export default function EmployerJobList() {
         </Button>
       );
     }
-    else if (action === JOB_STATUS.BLOCK) {
+    else if (job.isActive === JOB_STATUS.BLOCK) {
       return (
         <Button
           className='text-red-500 hover:text-red-500 bg-red-50 hover:bg-red-50 rounded-none w-24'
@@ -163,7 +146,7 @@ export default function EmployerJobList() {
         ) : (
           <Table className=' text-sm'>
             <TableHeader>
-                  <TableRow >
+              <TableRow >
                 <TableHead className='text-gray-700 text-xs text-left pl-3'>Mã</TableHead>
                 <TableHead className='text-gray-700 text-xs text-left '>Tên công việc</TableHead>
                 <TableHead className='text-gray-700 text-xs text-center'>CV</TableHead>
@@ -201,7 +184,7 @@ export default function EmployerJobList() {
                   </TableCell>
                   <TableCell className=' text-center'>
                     <div className='flex justify-center items-center'>
-                    {buttonAction(job.isActive, job.id)}
+                    {buttonAction(job)}
                     <JobMenu job={job}/>
                     </div>
                   </TableCell>

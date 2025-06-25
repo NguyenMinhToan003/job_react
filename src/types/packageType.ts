@@ -8,7 +8,7 @@ export interface PackageResponse {
   price: number;
   image: string;
   dayValue: number;
-  type: string;
+  type: PackageType;
   employerSubscriptions: EmployerSub[]
   sub_total?: number;
   sub_used?: number;

@@ -64,7 +64,12 @@ export const allEmployer = async (params: AdminFilterEmployer) => {
   const response = await axiosInstance.get<{
     items: EmployerDetailResponse[];
     total: number;
-    totalPages: number;
+    totalPage: number;
   }>('/employer/all', { params });
+  return response.data;
+}
+export const getEmployerBanner = async () =>
+{
+  const response = await axiosInstance.get<Employer[]>(`/employer/banner`);
   return response.data;
 }

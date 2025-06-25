@@ -17,7 +17,7 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
       {children}
 
       {isLoading && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40'>
+        <div className='fixed inset-0 z-[9999999] flex items-center justify-center bg-black/40'>
           <div className='p-4 rounded-full bg-white shadow-md'>
             <LoaderCircle className='h-10 w-10 animate-spin text-[#2c95ff]' />
           </div>

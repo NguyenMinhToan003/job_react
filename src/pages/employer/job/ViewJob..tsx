@@ -116,6 +116,7 @@ export default function ViewJob() {
       setSelectMajors(response.majors.map((major) => major.id));
       const fieldSelect = fields.find((field) => field.id === response.majors[0]?.field.id);
       setSelectField(fieldSelect || null);
+      setEmployer(response.employer);
     }
     catch(error) {
       toast.error((error as any).response?.data?.message || 'Có lỗi xảy ra khi tải dữ liệu bài đăng');
@@ -159,8 +160,6 @@ export default function ViewJob() {
     fetchDataJob();
   }, [fields]);
 
-  const navigate = useNavigate();
-
   const handleActivateJob = async () => {
     try {
       if (employer?.id === -1) {
@@ -173,7 +172,7 @@ export default function ViewJob() {
       setIsActive(JOB_STATUS.ACTIVE);
       await createEmployerNotiAPI({
         content: `Công việc '${nameJob}' đã được duyệt.`,
-        receiverAccountId: employer?.id || -1,
+        receiverAccountId: employer.id || -1,
         title: 'Công việc đã được duyệt',
         link: `/danh-cho-nha-tuyen-dung/thong-tin-tuyen-dung/${id}`,
         type: NOTI_TYPE.ACCEPTED,

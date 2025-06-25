@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { convertDateToString } from "@/utils/dateTime";
 import { APPLY_JOB_STATUS } from "@/types/type";
 import { JobResponse } from "@/types/jobType";
-import JobMenu from "@/components/elements/job/menu";
+import JobMenu from "@/components/elements/job/MenuMore";
 import EmployerResumeMenu from "@/components/elements/applyJob/ApplyJobMenu";
 import { buttonAction } from "@/utils/renderButton";
 

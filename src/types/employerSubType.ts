@@ -32,6 +32,9 @@ export interface UseSubscriptionRequest {
   jobId: number;
   packageId: string;
 }
+export interface UseSubscriptionBannerRequest {
+  employerSubId: number;
+}
 export interface TransactionResponse {
   id: number;
   createdAt: string;
@@ -41,6 +44,7 @@ export interface TransactionResponse {
   transactionType: string;
   recordedAt: string;
   package: PackageResponse[];
+  note: string;
 }
 
 export interface TransactionDetailResponse {
@@ -52,4 +56,5 @@ export interface TransactionDetailResponse {
   transactionType: string;
   recordedAt: string;
   employerSubscriptions: EmployerSubResponse[];
+  note: string;
 }

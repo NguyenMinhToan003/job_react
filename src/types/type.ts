@@ -37,3 +37,8 @@ export enum PackageType {
   EMPLOYER = 'EMPLOYER',
   BANNER = 'BANNER',
 }
+export enum ACCOUNT_STATUS {
+  CREATED = 'CREATED',
+  ACTIVE = 'ACTIVE',
+  BLOCKED = 'BLOCKED',
+}

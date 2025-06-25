@@ -61,6 +61,7 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { useNavigate } from 'react-router-dom';
 import { saveJob } from '@/apis/saveJobAPI';
 import { toast } from 'sonner';
+import BannerEmployer from '@/components/elements/company/BannerEmployer';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -521,6 +522,8 @@ export default function Home() {
           </Carousel>
         </CardContent>
       </Card>
+
+      <BannerEmployer/>
     </div>
   );
 }

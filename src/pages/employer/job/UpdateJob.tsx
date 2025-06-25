@@ -10,7 +10,7 @@ import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
-import JobMenu from '@/components/elements/job/menu';
+import JobMenu from '@/components/elements/job/MenuMore';
 import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
 import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
 import EducationJonPopup from '@/components/elements/job/popup/EducationJobPopup';
