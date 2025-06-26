@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createPaymentUrl, getPackagesBisiness } from '@/apis/paymentAPI';
 import DialogCart, { CartItem } from '@/components/elements/cart/DialogCart';
+import TagPackage from '@/components/elements/packageCompo/TagPackage';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PackageResponse } from '@/types/packageType';
+import { PackageType } from '@/types/type';
 import { MinusIcon, PlusIcon, ShoppingCartIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -105,7 +108,9 @@ export default function Price() {
 
           <div className="flex-1 w-full mt-4 md:mt-0 md:ml-6 space-y-3">
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-semibold">{pkg.name}</h2>
+              <h2 className="text-lg font-semibold flex gap-4"><span className="text-[#451e99]">{pkg.name}</span>
+                <TagPackage type={pkg.type} />
+              </h2>
             </div>
             <p className="text-sm text-muted-foreground">{pkg.features}</p>
 

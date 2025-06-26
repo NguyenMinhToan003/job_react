@@ -38,6 +38,9 @@ export default function PaymentSuccess() {
 
   useEffect(() => {
     fetchData();
+    if (result !== PAYMENT_STATUS.SUCCESS || !transactionId) {
+      sessionStorage.removeItem('cart');
+    }
   }, []);
 
   // if (result !== PAYMENT_STATUS.SUCCESS || !transactionId) {

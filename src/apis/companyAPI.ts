@@ -1,4 +1,4 @@
-import { AdminFilterEmployer, Employer, EmployerDetailResponse } from "@/types/companyType";
+import { AdminFilterEmployer, Employer, EmployerDetailResponse, FilterEmployer } from "@/types/companyType";
 import { axiosInstance } from "./index";
 import { EmployerRegisterRequest } from "@/types/authType";
 import { EmployerResponse } from "@/types/accountType";
@@ -71,5 +71,13 @@ export const allEmployer = async (params: AdminFilterEmployer) => {
 export const getEmployerBanner = async () =>
 {
   const response = await axiosInstance.get<Employer[]>(`/employer/banner`);
+  return response.data;
+}
+export const filterEmployer = async (params: FilterEmployer) => {
+  const response = await axiosInstance.get<{
+    items: EmployerDetailResponse[];
+    total: number;
+    totalPage: number;
+  }>('/employer/filter/search', { params });
   return response.data;
 }

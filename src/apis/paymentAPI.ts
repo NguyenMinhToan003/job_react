@@ -1,14 +1,18 @@
 import { EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionBannerRequest, UseSubscriptionRequest } from "@/types/employerSubType"
 import { axiosInstance } from "."
-import { CreatePackage, PackageResponse } from "@/types/packageType"
+import { CreatePackage, FilterPackage, PackageResponse } from "@/types/packageType"
 
-export const getPackageAvailable = async () => {
-  const response = await axiosInstance.get<PackageResponse[]>('/packages/available')
+export const getPackageAvailable = async (data: FilterPackage) => {
+  const response = await axiosInstance.get<PackageResponse[]>('/packages/available', {
+    params: data
+  })
   return response.data
 }
 // get all packages for business
-export const getPackagesBisiness = async () => {
-  const response = await axiosInstance.get<PackageResponse[]>('/packages')
+export const getPackagesBisiness = async (filter?: FilterPackage) => {
+  const response = await axiosInstance.get<PackageResponse[]>('/packages', {
+    params: filter
+  })
   return response.data
 }
 
@@ -46,13 +50,8 @@ export const getMyTransactions = async () => {
   return response.data
 }
 
-export const subscriptionUseJob = async (data: UseSubscriptionRequest) => {
-  const response = await axiosInstance.post<EmployerSubResponse>('/employer-sub/use-subscription/job', data)
-  return response.data
-}
-
 export const subscriptionUseBanner = async (data: UseSubscriptionBannerRequest) => {
-  const response = await axiosInstance.post<EmployerSubResponse>('/employer-sub/use-subscription/banner', data)
+  const response = await axiosInstance.post<EmployerSubResponse>('/employer-sub/use-subscription/banner-employer', data)
   return response.data
 }
 

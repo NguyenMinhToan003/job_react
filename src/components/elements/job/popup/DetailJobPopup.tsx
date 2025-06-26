@@ -94,10 +94,12 @@ export default function DetailJobPopup({
             Bạn có thể sử dụng các định dạng văn bản như in đậm, in nghiêng, danh sách, và liên kết.
           </div>
 
+          <div className='h-[60vh] overflow-y-auto overflow-x-hidden'>
           <Editer
             text={text}
             setText={setText}
           />
+          </div>
 
           <DialogFooter className='mt-4'>
             <Button

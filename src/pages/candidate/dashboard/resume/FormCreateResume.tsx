@@ -1,66 +1,67 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dialog } from '@radix-ui/react-dialog';
-import { DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { getCityList } from '@/apis/cityAPI';
-import { getAllLanguages } from '@/apis/languageAPI';
-import { Language, LanguageResume } from '@/types/LanguageType';
-import { getSkillList } from '@/apis/skillAPI';
-import { Close } from '@radix-ui/react-dialog';
-import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
-import { City, District } from '@/types/location';
-import { Skill } from '@/types/SkillType';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { X, User, Upload, FileText } from 'lucide-react';
-import { Education } from '@/types/educationType';
-import { getAllEducations } from '@/apis/educationAPI';
-import { createResumeAPI } from '@/apis/resumeAPI';
-import { getListMajorAPI } from '@/apis/majorAPI';
-import { Major, MajorResponse } from '@/types/majorType';
-import { useAccount } from '@/providers/UserProvider';
-import { TypeJob } from '@/types/TypeJobType';
-import { getTypeJobList } from '@/apis/typeJobAPI';
-import DatePicker from 'react-datepicker';
-import { vi } from 'date-fns/locale';
+import { useEffect, useState } from "react";
+import { Dialog, DialogContent, Close } from "@radix-ui/react-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { X, User, Upload, FileText } from "lucide-react";
+import DatePicker from "react-datepicker";
+import { vi } from "date-fns/locale";
+import { toast } from "sonner";
+import { useAccount } from "@/providers/UserProvider";
+import { getCityList } from "@/apis/cityAPI";
+import { getAllLanguages } from "@/apis/languageAPI";
+import { getSkillList } from "@/apis/skillAPI";
+import { getAllEducations } from "@/apis/educationAPI";
+import { getListMajorAPI } from "@/apis/majorAPI";
+import { getTypeJobList } from "@/apis/typeJobAPI";
+import { createResumeAPI } from "@/apis/resumeAPI";
+import { City, District } from "@/types/location";
+import { Language, LanguageResume } from "@/types/LanguageType";
+import { Skill } from "@/types/SkillType";
+import { Education } from "@/types/educationType";
+import { Major, MajorResponse } from "@/types/majorType";
+import { TypeJob } from "@/types/TypeJobType";
 
 export default function FormCreateResume() {
   const { dataUser } = useAccount();
-  const [selectedCityId, setSelectedCityId] = useState<string>('');
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string>('');
+
+  // State declarations
+  const [selectedCityId, setSelectedCityId] = useState<string>("");
+  const [selectedDistrictId, setSelectedDistrictId] = useState<string>("");
   const [citys, setCitys] = useState<City[]>([]);
-  const [gender, setGender] = useState<string>('');
-  const [dateOfBirth, setDayOfBirth] = useState<string>('');
   const [districts, setDistricts] = useState<District[]>([]);
-  const [username, setUsername] = useState<string>(dataUser?.name || '');
-  const [phone, setPhone] = useState<string>(dataUser?.phone || '');
-  const [email, setEmail] = useState<string>('');
-  const [name, setName] = useState<string>('');
+  const [gender, setGender] = useState<string>("");
+  const [dateOfBirth, setDayOfBirth] = useState<string>("");
+  const [username, setUsername] = useState<string>(dataUser?.name || "");
+  const [phone, setPhone] = useState<string>(dataUser?.phone || "");
+  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
   const [skills, setSkills] = useState<Skill[]>([]);
   const [statusAddSkill, setStatusAddSkill] = useState<boolean>(false);
   const [selectedSkills, setSelectedSkills] = useState<Skill[]>([]);
-  const [location, setLocation] = useState<string>('');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [statusAddLanguage, setStatusAddLanguage] = useState<boolean>(false);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageResume[]>([]);
   const [educations, setEducations] = useState<Education[]>([]);
   const [selectEducation, setSelectEducation] = useState<Education>({} as Education);
-  const [avatar, setAvatar] = useState<File | string>(dataUser?.avatar || '');
+  const [avatar, setAvatar] = useState<File | string>(dataUser?.avatar || "");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [pdfFileName, setPdfFileName] = useState<string>('');
-  const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
+  const [pdfFileName, setPdfFileName] = useState<string>("");
   const [majors, setMajors] = useState<MajorResponse[]>([]);
+  const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
   const [typeJobs, setTypeJobs] = useState<TypeJob[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectTypeJob, setSelectTypeJob] = useState<TypeJob | null>(null);
   const [expectedSalary, setExpectedSalary] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Fetch initial data
   const fetchElements = async () => {
     try {
       const [cityList, skillList, languageList, educationList, majorsList, typejobList] = await Promise.all([
@@ -78,19 +79,20 @@ export default function FormCreateResume() {
       setMajors(majorsList);
       setTypeJobs(typejobList);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin');
+      toast.error(error.response?.data?.message || "Lỗi khi tải thông tin");
     }
   };
 
+  // Handle image selection
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Kích thước file không được vượt quá 5MB');
+        toast.error("Kích thước file không được vượt quá 5MB");
         return;
       }
-      if (!file.type.startsWith('image/')) {
-        toast.error('Vui lòng chọn file hình ảnh');
+      if (!file.type.startsWith("image/")) {
+        toast.error("Vui lòng chọn file hình ảnh");
         return;
       }
       setAvatar(file);
@@ -102,11 +104,12 @@ export default function FormCreateResume() {
     }
   };
 
+  // Handle PDF selection
   const handlePdfSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 4 * 1024 * 1024) {
-        toast.error('Kích thước file không được vượt quá 10MB');
+        toast.error("Kích thước file không được vượt quá 10MB");
         return;
       }
       setPdfFile(file);
@@ -114,64 +117,68 @@ export default function FormCreateResume() {
     }
   };
 
+  // Remove image
   const removeImage = () => {
-    setAvatar('');
+    setAvatar("");
     setImagePreview(null);
   };
 
+  // Remove PDF
   const removePdf = () => {
     setPdfFile(null);
-    setPdfFileName(null);
+    setPdfFileName("");
   };
 
+  // Validate form
   const validateForm = () => {
     if (!username) {
-      toast.error('Vui lòng nhập họ và tên');
+      toast.error("Vui lòng nhập họ và tên");
       return false;
     }
     if (!name) {
-      toast.error('Vui lòng nhập chức vụ');
+      toast.error("Vui lòng nhập chức vụ");
       return false;
     }
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      toast.error('Vui lòng nhập email hợp lệ');
+      toast.error("Vui lòng nhập email hợp lệ");
       return false;
     }
     if (!phone || !/^\d{10,11}$/.test(phone)) {
-      toast.error('Vui lòng nhập số điện thoại hợp lệ (10-11 số)');
+      toast.error("Vui lòng nhập số điện thoại hợp lệ (10-11 số)");
       return false;
     }
     if (!dateOfBirth) {
-      toast.error('Vui lòng chọn ngày sinh');
+      toast.error("Vui lòng chọn ngày sinh");
       return false;
     }
     if (!gender) {
-      toast.error('Vui lòng chọn giới tính');
+      toast.error("Vui lòng chọn giới tính");
       return false;
     }
     if (!selectedCityId) {
-      toast.error('Vui lòng chọn thành phố');
+      toast.error("Vui lòng chọn thành phố");
       return false;
     }
     if (!selectedDistrictId) {
-      toast.error('Vui lòng chọn quận/h');
+      toast.error("Vui lòng chọn quận/huyện");
       return false;
     }
     if (!location) {
-      toast.error('Vui lòng nhập địa chỉ chi tiết');
+      toast.error("Vui lòng nhập địa chỉ chi tiết");
       return false;
     }
     if (!selectEducation.id) {
-      toast.error('Chọn trình độ học vấn');
+      toast.error("Chọn trình độ học vấn");
       return false;
     }
     if (selectedMajors.length === 0) {
-      toast.error('Vui lòng chọn ít nhất một chuyên ngành');
+      toast.error("Vui lòng chọn ít nhất một chuyên ngành");
       return false;
     }
     return true;
   };
 
+  // Create resume
   const handleCreateResume = async () => {
     if (!validateForm()) return;
 
@@ -189,33 +196,35 @@ export default function FormCreateResume() {
         email,
         gender,
         location,
-        majors: selectedMajors.map(major => major.id),
+        majors: selectedMajors.map((major) => major.id),
         name,
-        skills: selectedSkills.map(skill => +skill.id),
+        skills: selectedSkills.map((skill) => +skill.id),
         level: 1,
-        languageResumes: selectedLanguage.map(lang => ({
+        languageResumes: selectedLanguage.map((lang) => ({
           languageId: lang.language.id,
           level: lang.level,
         })),
         cv: pdfFile,
       });
-      toast.success('Tạo hồ sơ thành công');
+      toast.success("Tạo hồ sơ thành công");
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Lỗi khi tạo hồ sơ, vui lòng thử lại sau');
+      toast.error(error.response?.data?.message || "Lỗi khi tạo hồ sơ, vui lòng thử lại sau");
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Fetch initial data on mount
   useEffect(() => {
     fetchElements();
   }, []);
 
+  // Update districts when city changes
   useEffect(() => {
     const selectedCity = citys.find((city) => city.id === selectedCityId);
     if (selectedCity) {
       setDistricts(selectedCity.districts);
-      setSelectedDistrictId('');
+      setSelectedDistrictId("");
     } else {
       setDistricts([]);
     }
@@ -233,7 +242,7 @@ export default function FormCreateResume() {
             <Label className="text-sm font-medium text-gray-700">Ảnh đại diện</Label>
             <div className="flex items-center space-x-4">
               <Avatar className="w-16 h-16">
-                <AvatarImage src={imagePreview || (typeof avatar === 'string' ? avatar : '')} alt="Avatar" />
+                <AvatarImage src={imagePreview || (typeof avatar === "string" ? avatar : "")} alt="Avatar" />
                 <AvatarFallback className="bg-gray-100">
                   <User className="w-6 h-6 text-gray-400" />
                 </AvatarFallback>
@@ -251,7 +260,7 @@ export default function FormCreateResume() {
                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
                 >
                   <Upload className="w-4 h-4 mr-2 text-gray-500" />
-                  {avatar ? 'Thay đổi ảnh' : 'Tải ảnh lên'}
+                  {avatar ? "Thay đổi ảnh" : "Tải ảnh lên"}
                 </Label>
                 {avatar && (
                   <button
@@ -291,7 +300,7 @@ export default function FormCreateResume() {
                   className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
                 >
                   <Upload className="w-4 h-4 mr-2 text-gray-500" />
-                  {pdfFileName ? 'Thay đổi PDF' : 'Tải PDF lên'}
+                  {pdfFileName ? "Thay đổi PDF" : "Tải PDF lên"}
                 </Label>
                 {pdfFileName && (
                   <button
@@ -302,7 +311,7 @@ export default function FormCreateResume() {
                     Xóa
                   </button>
                 )}
-                <p className="mt-1 text-xs text-gray-500">{pdfFileName || 'PDF tối đa 10MB'}</p>
+                <p className="mt-1 text-xs text-gray-500">{pdfFileName || "PDF tối đa 10MB"}</p>
               </div>
             </div>
           </div>
@@ -354,7 +363,7 @@ export default function FormCreateResume() {
                   <Label className="text-sm font-medium text-gray-700">Ngày sinh *</Label>
                   <DatePicker
                     selected={dateOfBirth ? new Date(dateOfBirth) : null}
-                    onChange={(date) => setDayOfBirth(date ? date.toISOString().split('T')[0] : '')}
+                    onChange={(date) => setDayOfBirth(date ? date.toISOString().split("T")[0] : "")}
                     locale={vi}
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Chọn ngày sinh"
@@ -467,7 +476,7 @@ export default function FormCreateResume() {
                       return;
                     }
                     if (selectedMajors.length >= 3) {
-                      toast.error('Bạn chỉ có thể chọn tối đa 3 chuyên ngành');
+                      toast.error("Bạn chỉ có thể chọn tối đa 3 chuyên ngành");
                       return;
                     }
                     setSelectedMajors((prev) => [...prev, selected]);
@@ -509,7 +518,7 @@ export default function FormCreateResume() {
               <div>
                 <Label className="text-sm font-medium text-gray-700">Loại công việc</Label>
                 <Select
-                  value={selectTypeJob?.id?.toString() || ''}
+                  value={selectTypeJob?.id?.toString() || ""}
                   onValueChange={(value) => {
                     const selected = typeJobs.find((job) => job.id.toString() === value);
                     setSelectTypeJob(selected || null);
@@ -532,7 +541,7 @@ export default function FormCreateResume() {
                 <div className="flex items-center space-x-2">
                   <Input
                     type="number"
-                    value={expectedSalary || ''}
+                    value={expectedSalary || ""}
                     onChange={(e) => setExpectedSalary(e.target.value ? +e.target.value : null)}
                     className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     placeholder="Nhập mức lương (triệu đồng)"
@@ -601,7 +610,7 @@ export default function FormCreateResume() {
             disabled={isLoading}
             className="w-full disabled:bg-blue-400"
           >
-            {isLoading ? 'Đang tạo...' : 'Tạo hồ sơ'}
+            {isLoading ? "Đang tạo..." : "Tạo hồ sơ"}
           </Button>
         </CardContent>
       </Card>
@@ -629,18 +638,15 @@ export default function FormCreateResume() {
                 }}
                 className={`text-xs font-medium px-2 py-1 rounded-full cursor-pointer ${
                   selectedSkills.some((s) => s.id === skill.id)
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? "bg-blue-100 text-blue-700"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
                 {skill.name}
               </Badge>
             ))}
           </div>
-          <Button
-            onClick={() => setStatusAddSkill(false)}
-            className="mt-4 min-w-full"
-          >
+          <Button onClick={() => setStatusAddSkill(false)} className="mt-4 w-full">
             Xong
           </Button>
         </DialogContent>
@@ -669,8 +675,8 @@ export default function FormCreateResume() {
                   }}
                   className={`text-sm font-medium cursor-pointer ${
                     selectedLanguage.some((l) => l.language.id === language.id)
-                      ? 'text-blue-700'
-                      : 'text-gray-700 hover:text-gray-900'
+                      ? "text-blue-700"
+                      : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   {language.name}
@@ -690,7 +696,7 @@ export default function FormCreateResume() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {[1, 2, 3, 4, 5].map((level) => (
+                      {[1, 2, 3].map((level) => (
                         <SelectItem key={level} value={level.toString()}>
                           {level}
                         </SelectItem>
@@ -701,10 +707,7 @@ export default function FormCreateResume() {
               </div>
             ))}
           </div>
-          <Button
-            onClick={() => setStatusAddLanguage(false)}
-            className="mt-4 w-full"
-          >
+          <Button onClick={() => setStatusAddLanguage(false)} className="mt-4 w-full">
             Xong
           </Button>
         </DialogContent>

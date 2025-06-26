@@ -7,7 +7,7 @@ import { Experience } from "./experienceType";
 import { LanguageJob } from "./LanguageType";
 import { Level } from "./levelType";
 import { LocationResponse } from "./location";
-import { Major, MajorResponse } from "./majorType";
+import { Major } from "./majorType";
 import { Skill } from "./SkillType";
 import { JOB_STATUS } from "./type";
 import { TypeJob } from "./TypeJobType";
@@ -143,7 +143,7 @@ export interface JobDetailResponse {
   minSalary: number | null;
   maxSalary: number | null;
   createdAt: string;
-  isActive: number;
+  isActive: JOB_STATUS;
   expiredAt: string;
   benefits: Benefit[];
   locations: LocationResponse[];

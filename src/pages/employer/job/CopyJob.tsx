@@ -8,7 +8,6 @@ import { createJob, createMatchingWeightJob, viewJobAPI } from '@/apis/jobAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
-import { getPackageAvailable, subscriptionUseJob } from '@/apis/paymentAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
@@ -39,7 +38,6 @@ import { Language, LanguageJob } from '@/types/LanguageType';
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
 import { Field } from '@/types/majorType';
-import { PackageResponse } from '@/types/packageType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
 import { RotateCcw } from 'lucide-react';
@@ -85,8 +83,6 @@ export default function CopyJob() {
   const [fields, setFields] = useState<Field[]>([]);
   const [selectField, setSelectField] = useState<Field[]>([]);
   const [selectMajors, setSelectMajors] = useState<number[]>([]);
-  const [packageAvailable, setPackageAvailable] = useState<PackageResponse[]>([]);
-  const [selectPackage, setSelectPackage] = useState<PackageResponse | null>(null);
 
   const handleUpdateJob = async () => {
     try {
@@ -121,12 +117,6 @@ export default function CopyJob() {
         educationWeight,
         levelWeight
       });
-      if (selectPackage) {
-        subscriptionUseJob({
-          jobId: create.id,
-          packageId: selectPackage.id,
-        });
-      }
       showAlert({
         title: 'Tạo tin tuyển dụng thành công',
         content: 'Tin tuyển dụng đã được tạo thành công bạn có thể xem danh sách công việc hoặc tạo thêm tin tuyển dụng mới.',
@@ -145,7 +135,7 @@ export default function CopyJob() {
 
   const fetchElements = async () => {
     try {
-      const [benefits, levels, experiences, types, locations, skills, educations,fieldList ,languages, packageAvai] = await Promise.all([
+      const [benefits, levels, experiences, types, locations, skills, educations,fieldList ,languages] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -155,7 +145,6 @@ export default function CopyJob() {
         getAllEducations(),
         getFieldList(),
         getAllLanguages(),
-        getPackageAvailable()
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -166,7 +155,6 @@ export default function CopyJob() {
       setEducationsList(educations);
       setLanguageList(languages)
       setFields(fieldList);
-      setPackageAvailable(packageAvai);
     }
     catch (error : any) {
       toast.error(error?.response.data.message)
@@ -236,11 +224,7 @@ export default function CopyJob() {
         <div className='flex flex-col md:flex-row gap-6'>
           {/* Left side: Job List */}
           <div className='flex-1'>
-          <SelectServiceJobPopup
-            selectPackage={selectPackage}
-            setSelectPackage={setSelectPackage}
-            packageAvailable={packageAvailable}
-          />
+
             <NameJobPopup
               nameJob={nameJob}
               setNameJob={setNameJob}

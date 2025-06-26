@@ -80,10 +80,12 @@ export default function RequirementPopup({
           <DialogHeader>
             <DialogTitle>YÊU CẦU CÔNG VIỆC</DialogTitle>
           </DialogHeader>
-          <Editer
-            text={text}
-            setText={setText}
-          />
+          <div className='h-[60vh] overflow-y-auto overflow-x-hidden'>
+            <Editer
+              text={text}
+              setText={setText}
+            />
+          </div>
           <div className="text-right text-xs text-muted-foreground mt-2">
             {text.length}/2500 characters
           </div>

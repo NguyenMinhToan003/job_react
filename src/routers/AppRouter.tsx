@@ -59,6 +59,7 @@ import CandidateList from '@/pages/admin/candidate/CandidateList';
 import Packages from '@/pages/admin/package/Packages';
 import Dashboard from '@/pages/employer/Dashboard';
 import CandidateNoti from '@/pages/candidate/dashboard/CandidateNoti';
+import EmployerList from '@/pages/candidate/search-employer/EmployerList';
 
 
 export default function AppRouter() {
@@ -73,6 +74,7 @@ export default function AppRouter() {
       <Route path='/nha-tuyen-dung/dang-ky' element={<RegisterEmployer />} />
       <Route path='dang-ky' element={<RegisterCandidate />} />
       <Route path='/' element={<Index />}>
+        <Route path='nha-tuyen-dung-tiem-nang' element={<EmployerList />} />
         <Route path='login-success' element={<LoginSuccess />} />
         <Route path='cong-viec/:id' element={<JobDetail />} />
         <Route path='tim-theo-vi-tri' element={<SearchJobInLocation />} />

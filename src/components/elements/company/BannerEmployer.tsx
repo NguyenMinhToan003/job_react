@@ -1,12 +1,16 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight, ExternalLink, Users, Globe } from "lucide-react"
+import { ChevronLeft, ChevronRight, ExternalLink, Users, Globe, Briefcase, CupSoda } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Employer } from "@/types/companyType"
 import { getEmployerBanner } from "@/apis/companyAPI"
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { Label } from "@/components/ui/label"
+import PaginationModel1 from "../pagination/PaginationModel1"
 
 
 
@@ -32,33 +36,6 @@ export default function BannerEmployer() {
     fetchEmployers()
   }, [])
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setItemsPerView(1)
-      } else if (window.innerWidth < 1024) {
-        setItemsPerView(2)
-      } else {
-        setItemsPerView(3)
-      }
-    }
-
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
-
-  const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + itemsPerView >= employers.length ? 0 : prevIndex + 1))
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? Math.max(0, employers.length - itemsPerView) : prevIndex - 1))
-  }
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index)
-  }
 
   if (isLoading) {
     return (
@@ -86,108 +63,46 @@ export default function BannerEmployer() {
     )
   }
 
-  return (
-    <div className="w-full py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Nhà Tuyển Dụng Hàng Đầu</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Khám phá cơ hội nghề nghiệp tại các công ty uy tín và phát triển sự nghiệp của bạn
-          </p>
-        </div>
-
-        {/* Carousel Container */}
-        <div className="relative">
-          {/* Navigation Buttons */}
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-gray-50 -ml-4"
-            onClick={prevSlide}
-            disabled={currentIndex === 0}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-
-          <Button
-            variant="outline"
-            size="icon"
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg hover:bg-gray-50 -mr-4"
-            onClick={nextSlide}
-            disabled={currentIndex + itemsPerView >= employers.length}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-
-          {/* Carousel Content */}
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
-                width: `${(employers.length / itemsPerView) * 100}%`,
-              }}
-            >
-{employers.map((employer) => (
-  <div
-    key={employer.id}
-    className="px-2"
-    style={{ width: `${100 / employers.length}%` }}
-  >
-    <Card className="h-full bg-white rounded-xl border shadow-sm hover:shadow-md transition duration-300 flex flex-col items-center text-center py-6 px-4 w-44">
-      {/* Logo */}
-      <div className="w-20 h-20 mb-4 overflow-hidden">
-        <img
-          src={employer.logo || "/placeholder.svg"}
-          alt={employer.name}
-          className="w-full h-full object-contain"
-        />
-      </div>
-
-      {/* Tên công ty */}
-      <h3 className="text-sm font-medium text-gray-800 truncate">{employer.name}</h3>
-
-      {/* Số vị trí đang tuyển (giả định có sẵn trường này) */}
-      <p className="text-sm text-blue-600 mt-1 flex items-center justify-center gap-1">
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-          <path d="M4 4h16v16H4z" stroke="none" />
-          <path d="M3 3h18v18H3z" />
-          <path d="M7 8h10M7 12h4m1 8v-4a2 2 0 012-2h6" />
-        </svg>
-        {employer.totalJobs || 0} vị trí đang tuyển
-      </p>
-    </Card>
-  </div>
-))}
-
-            </div>
-          </div>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center mt-8 gap-2">
-            {Array.from({ length: Math.ceil(employers.length / itemsPerView) }).map((_, index) => (
-              <button
-                key={index}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  Math.floor(currentIndex / itemsPerView) === index
-                    ? "bg-blue-600 w-8"
-                    : "bg-gray-300 hover:bg-gray-400"
-                }`}
-                onClick={() => goToSlide(index * itemsPerView)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center mt-12">
-          <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-            Xem Tất Cả Nhà Tuyển Dụng
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+  return <Carousel className="pb-40">
+    <div>
+      <div className="flex items-center justify-between w-7xl mx-auto px-4 py-4">
+        <h2 className="text-xl font-semibold">Nhà tuyển dụng nổi bật</h2>
       </div>
     </div>
-  )
+    <CarouselContent className="w-7xl mx-auto px-4 py-8">
+      <CarouselItem className="grid grid-cols-3 gap-4">
+      {
+        employers.map((employer) => (
+          <Card key={employer.id} className="flex flex-col rounded-[8px] bg-white border border-[#E7E7E8] hover:border-[#2C95FF] p-4 gap-1 shadow-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-101 relative">
+            <CardContent className="flex  items-start text-center gap-3 p-0">
+              <Avatar  className="w-16 h-16 rounded-sm">
+                <AvatarImage src={employer.logo} alt={employer.name} />
+              </Avatar>
+              <div className="space-y-2">
+                <Label className="text-start line-clamp-2 text-md">{employer.name}</Label>
+                <span className="text-xs text-gray-500 flex items-center gap-1">
+                  <Avatar className="w-4 h-4 mr-1 ">
+                    <AvatarImage src={employer.country.flag} className="object-cover" />
+                  </Avatar>
+                  {employer.country.name}
+                </span>
+                <span className="text-xs text-[#8B5CF6] bg-[#F3E8FF] px-1 rounded-full flex items-center gap-1 w-fit">
+                  {employer.jobsCount.active + employer.jobsCount.pending} công việc đang tuyển
+                </span>
+                <span className="text-xs text-gray-500 flex items-center gap-1">
+                  {employer.employeeScale.name} | {employer.businessType.name }
+                </span>
+             </div>
+            </CardContent>
+          </Card>
+        ))
+      }
+      </CarouselItem>
+    </CarouselContent>
+    <PaginationModel1
+      page={1}
+      totalPages={4}
+      setPage={() => { }}
+    />
+  </Carousel>
 }

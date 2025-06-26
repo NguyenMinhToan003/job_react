@@ -15,6 +15,12 @@ export interface Employer {
   businessType: string;
   countryId: number;
   phone: string;
+  jobsCount: {
+    total: number,
+    active: number,
+    pending: number,
+    expired: number,
+  }
 }
 
 export interface EmployerDetailResponse {
@@ -45,4 +51,12 @@ export interface AdminFilterEmployer {
   limit?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+}
+export interface FilterEmployer {
+  search?: string;
+  page?: number;
+  limit?: number;
+  employeeScaleId?: number;
+  businessTypeId?: number;
+  countryId?: number;
 }

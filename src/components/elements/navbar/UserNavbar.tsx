@@ -47,18 +47,17 @@ export default function UserNavbar() {
       <div className='flex h-16 items-center justify-between px-4'>
         {/* Left section */}
         <div className='flex items-center gap-1'>
-          <Avatar className=' border border-[#f5f3f4]'>
-            <AvatarImage src={dataUser?.avatar|| dataUser?.logo} />
-          </Avatar>
-          <Button className='text-white' variant='link'>
+
+          <Button className='text-white' variant='link'
+            onClick={() => navigate('/')}>
             <span>
-              <NavLink to='/'>
-                <span className='text-white font-semibold'>Tìm việc</span>
-              </NavLink>
+              Tìm việc làm 
             </span>
             <ChevronDown className='h-5 w-5' />
           </Button>
-          <Button className='text-white' variant='link'>
+          <Button className='text-white' variant='link'
+            onClick={() => navigate('/nha-tuyen-dung-tiem-nang')}
+          >
             <span>Tìm Công ty</span>
             <ChevronDown className='h-5 w-5' />
           </Button>

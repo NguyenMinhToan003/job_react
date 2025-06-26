@@ -107,57 +107,13 @@ export default function CompanyPage() {
               >
                 Giới thiệu
               </TabsTrigger>
-              <TabsTrigger
-                value='danh-gia'
-                className='max-w-fit px-7 py-4 h-16 mr-1.5 text-lg font-semibold rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none'
-              >
-                Đánh giá
-                <Badge className='ml-2 bg-gray-200 text-gray-800'>53</Badge>
-              </TabsTrigger>
-              <TabsTrigger
-                value='bai-viet'
-                className='max-w-fit px-7 py-4 h-16 mr-1.5 text-lg font-semibold rounded-none border-b-2 shadow-none text-gray-800 data-[state=active]:text-[#ed1b2f] data-[state=active]:border-b-[#ed1b2f] data-[state=active]:shadow-none'
-              >
-                Bài viết
-                <Badge className='ml-2 bg-gray-200 text-gray-800'>2</Badge>
-              </TabsTrigger>
+
             </TabsList>
 
             <TabsContent value='gioi-thieu' >
               <ViewCompany/>
             </TabsContent>
 
-            <TabsContent value='danh-gia'>
-              <Card className='text-center py-16 text-gray-500 w-full'>
-                <CardContent>
-                  <span className='font-bold text-2xl'>Đánh giá công ty</span>
-                  <div className='w-full h-[1px] bg-gray-200 my-4'></div>
-                  <p className='text-gray-700 mb-4 font-semibold space-x-1'>Chưa có đánh giá nào</p>
-                  <Button
-                    variant='destructive'
-                    className='bg-red-600 hover:bg-red-700 rounded-[2px] w-40 h-14 text-md font-bold'
-                  >
-                    Viết đánh giá
-                  </Button>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value='bai-viet'>
-              <Card className='text-center py-16 text-gray-500 w-full'>
-                <CardContent>
-                  <span className='font-bold text-2xl'>Bài viết</span>
-                  <div className='w-full h-[1px] bg-gray-200 my-4'></div>
-                  <p className='text-gray-700 mb-4 font-semibold space-x-1'>Chưa có bài viết nào</p>
-                  <Button
-                    variant='destructive'
-                    className='bg-red-600 hover:bg-red-700 rounded-[2px] w-40 h-14 text-md font-bold'
-                  >
-                    Viết bài
-                  </Button>
-                </CardContent>
-              </Card>
-            </TabsContent>
           </Tabs>
         </div>
 

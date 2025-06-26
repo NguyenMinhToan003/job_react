@@ -20,4 +20,8 @@ export interface CreatePackage {
     image?: File;
     dayValue: number;
     type: PackageType;
-  }
+}
+export interface FilterPackage {
+    type?: PackageType[];
+    mini?: boolean;// filter for packages that have not been used
+}

@@ -44,27 +44,21 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { City } from '@/types/location';
 import { Level } from '@/types/levelType';
-import { JobFilterResponse } from '@/types/jobType';
 import { Experience } from '@/types/experienceType';
 import { TypeJob } from '@/types/typeJobType';
 import { Benefit } from '@/types/benefitType';
 import { getBenefit } from '@/apis/benefitAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { Skill } from '@/types/skillType';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field } from '@/types/majorType';
 import { getFieldList } from '@/apis/fieldAPI';
-import { convertDateToDiffTime } from '@/utils/dateTime';
-import { convertPrice } from '@/utils/convertPrice';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { useNavigate } from 'react-router-dom';
 import { saveJob } from '@/apis/saveJobAPI';
 import { toast } from 'sonner';
 import BannerEmployer from '@/components/elements/company/BannerEmployer';
+import JobBanner from '@/components/elements/job/job-list/JobBanner';
 
 export default function Home() {
-  const navigate = useNavigate();
 
   const [cityOptions, setCityOptions] = useState<City[]>([]);
   const [citySelected, setSelectedCity] = useState<City>();
@@ -87,7 +81,7 @@ export default function Home() {
   const [search, setSearch] = useState<string>('');
   const [fields, setFields] = useState<Field[]>([]);
 
-  const [jobsBanner, setJobsBanner] = useState<JobFilterResponse[]>([]);
+
 
   useEffect(() => {
     fetchInitialData();
@@ -95,7 +89,7 @@ export default function Home() {
 
   const fetchInitialData = async () => {
     try {
-      const [cities, levels, types, experiences, benefits, skills, fields, jobsBanner] = await Promise.all([
+      const [cities, levels, types, experiences, benefits, skills, fields] = await Promise.all([
         getCityList(),
         getLevelList(),
         getTypeJobList(),
@@ -103,7 +97,7 @@ export default function Home() {
         getBenefit(),
         getSkillList(),
         getFieldList(),
-        getJobBanner(),
+
       ]);
       setCityOptions(cities);
       setLevelOptions(levels);
@@ -112,7 +106,7 @@ export default function Home() {
       setBenefitOptions(benefits);
       setSkillOptions(skills);
       setFields(fields);
-      setJobsBanner(jobsBanner);
+
     } catch (error) {
       console.error('Error fetching initial data:', error);
     }
@@ -122,15 +116,6 @@ export default function Home() {
     window.location.href = `/tim-kiem-cong-viec?search=${encodeURIComponent(search)}&city=${citySelected ? citySelected.id : ''}&levels=${selectLevels.join(',')}&experience=${selectExperience.join(',')}&typeJobs=${selectType.join(',')}&skills=${selectSkills.join(',')}&benefits=${selectBenefits.join(',')}`;
 
   };
-
-  const handleSaveJob = async (jobId: number) => {
-    try {
-      await saveJob(jobId);
-      toast.success('Lưu việc làm thành công');
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Lỗi không xác định');
-    }
-  }
 
   const toggleType = (id: number) => {
     if (selectType.includes(id)) {
@@ -176,16 +161,9 @@ export default function Home() {
     setSelectSkills([]);
   };
 
-  function chunkArray<T>(array: T[], size: number): T[][] {
-    const result: T[][] = [];
-    for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
-    }
-    return result;
-  }
 
   return (
-    <div className='bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 min-h-screen '>
+    <div className='bg-gradient-to-br bg-[#F6F9FF] min-h-screen '>
       <div className='w-full '>
         <img 
           src='https://vieclam24h.vn/_next/image?url=https%3A%2F%2Fcdn1.vieclam24h.vn%2Fimages%2Fseeker-banner%2F2025%2F05%2F16%2Fbanner-cts-timdungviec-pc_174740689238.jpg&w=1920&q=75'
@@ -281,7 +259,7 @@ export default function Home() {
 
       <div className='rounded-md p-4 bg-white flex justify-between items-center shadow-xl w-7xl mx-auto'>
         <NavigationMenu>
-          <NavigationMenuList>
+          <NavigationMenuList>  
             {/* Cấp bậc */}
             <NavigationMenuItem>
               <NavigationMenuTrigger className="flex items-center gap-2">
@@ -439,89 +417,19 @@ export default function Home() {
           <span>Đặt lại bộ lọc</span>
         </Button>
       </div>
-      <Card className="w-full py-20 px-6 shadow-none bg-transparent">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-red-500 flex justify-center items-center gap-2">
-            <FlameIcon className="text-red-500 w-10 h-10" />
-            Việc làm tuyển gấp
-          </CardTitle>
-          <CardTitle className="text-lg text-gray-600 font-semibold mt-2">
-            Những công việc đang cần tuyển gấp, hãy nhanh tay ứng tuyển để không bỏ lỡ cơ hội!
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6 ">
-          <Carousel>
-            <CarouselContent className='w-7xl mx-auto p-2'>
-              {jobsBanner.length > 0 &&
-                chunkArray(jobsBanner, 9).map((jobGroup, index) => (
-                  <CarouselItem key={index} className="w-full">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {jobGroup.map((job) => (
-                        <Card
-                          onClick={() => navigate(`/cong-viec/${job.id}`)}
-                          key={job.id}
-                          className="flex flex-col rounded-[8px] bg-white border border-[#E7E7E8] hover:border-[#2C95FF] p-2 gap-1 shadow-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-101"
-                        >
-                          {/* Tiêu đề công việc */}
-                          <CardHeader className='p-1 flex items-center justify-between'>
-                            <CardTitle className="font-semibold text-gray-800 line-clamp-1">
-                              {job.name}
-                            </CardTitle>
-                            <Button
-                              variant="ghost"
-                              className=" hover:bg-[#eeeaff]"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSaveJob(job.id);
-                              }}
-                            >
-                              <Heart className="w-5 h-5 text-[#2c95ff] shadow-xl" />
-                            </Button>
-                          </CardHeader>
-                          <CardContent className="flex-1 p-1 space-y-2">
-                            {/* Logo + thông tin */}
-                            <div className="flex items-start gap-3 mb-2">
-                              {/* Logo */}
-                              <Avatar className='bg-white box-border rounded-md w-[64px] min-w-[64px] h-[64px] min-h-[64px]'>
-                                <AvatarImage
-                                  src={job.employer.logo || 'https://via.placeholder.com/40'}
-                                  alt={job.employer.name}
-                                />
-                              </Avatar>
-                              {/* Thông tin công ty + lương + địa điểm */}
-                              <div className="flex flex-col gap-2">
-                                <div className="text-xs font-semibold text-[#a2a1a3] line-clamp-1">
-                                  {job.employer.name}
-                                </div>
-                                <div className="flex items-center gap-1 text-sm text-[#2c95ff] font-semibold">
-                                  <DollarSignIcon className="w-4 h-4 text-gray-400" />
-                                  <Label>{convertPrice(job.minSalary, job.maxSalary)}</Label>
-                                </div>
-                                <div className="flex items-center gap-1 text-sm text-gray-700">
-                                  <MapPin className="w-4 h-4 text-gray-400" />
-                                  <Label className='text-[#060607] text-xs'>
-                                    {job.locations?.[0]?.district?.city?.name || 'Không rõ địa điểm'}
-                                  </Label>
-                                </div>
-                              </div>
-                            </div>
-                            <hr className="my-2 border-gray-200" />
-                            <div className="flex items-center gap-1 text-xs text-gray-500 font-semibold justify-end">
-                              <Clock className="w-4 h-4" />
-                              <span>{convertDateToDiffTime(job.createdAt)}</span>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </CarouselItem>
-                ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext ref={nextRef} />
-          </Carousel>
-        </CardContent>
-      </Card>
+      <Card className="w-full my-10 px-6 shadow-none bg-transparent">
+  <CardHeader className="text-center space-y-2">
+    <CardTitle className="text-2xl font-bold text-gray-800">
+      Tìm kiếm việc làm nhanh chóng và hiệu quả
+    </CardTitle>
+    <p className="text-gray-600">
+      Hàng triệu công việc đang chờ bạn khám phá
+    </p>
+  </CardHeader>
+  <CardContent className="p-6 pt-2">
+    <JobBanner />
+  </CardContent>
+</Card>
 
       <BannerEmployer/>
     </div>

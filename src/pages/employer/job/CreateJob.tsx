@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getBenefit } from '@/apis/benefitAPI';
 import { getAllEducations } from '@/apis/educationAPI';
-import { getPackageAvailable, subscriptionUseJob } from '@/apis/paymentAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
 import { getFieldList } from '@/apis/fieldAPI';
 import { createJob, createMatchingWeightJob } from '@/apis/jobAPI';
@@ -83,8 +82,6 @@ export default function CreateJob() {
   const [levelWeight, setLevelWeight] = useState(15);
   const [languageList, setLanguageList] = useState<Language[]>([]);
   const [languageIds, setLanguageIds] = useState<LanguageJob[]>([]);
-  const [packageAvailable, setPackageAvailable] = useState<PackageResponse[]>([]);
-  const [selectPackage, setSelectPackage] = useState<PackageResponse | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
   const [selectField, setSelectField] = useState<Field | null>(null);
   const [selectMajors, setSelectMajors] = useState<number[]>([]);
@@ -124,12 +121,6 @@ export default function CreateJob() {
         educationWeight: educationWeight,
         levelWeight: levelWeight,
       })
-      if (selectPackage) {
-        subscriptionUseJob({
-          jobId: create.id,
-          packageId: selectPackage.id,
-        });
-      }
       showAlert({
         title: 'Tạo tin tuyển dụng thành công',
         content: 'Tin tuyển dụng đã được tạo thành công bạn có thể xem danh sách công việc hoặc tạo thêm tin tuyển dụng mới.',
@@ -159,7 +150,6 @@ export default function CreateJob() {
         getAllEducations(),
         getAllLanguages(),
         getFieldList(),
-        getPackageAvailable()
       ]);
       setBenefitList(benefits);
       setLevelList(levels);
@@ -170,7 +160,6 @@ export default function CreateJob() {
       setEducationList(educations);
       setLanguageList(languages);
       setFields(fieldlist);
-      setPackageAvailable(packageAvailables);
     }
     catch (error : any) {
       toast.error(error.response?.data?.message || 'Đã sảy ra lỗi khi tải dữ liệu');
@@ -203,11 +192,6 @@ export default function CreateJob() {
       <CardContent>
         <div className='flex flex-col md:flex-row gap-6'>
           <div className='flex-1'>
-            <SelectServiceJobPopup
-              selectPackage={selectPackage}
-              setSelectPackage={setSelectPackage}
-              packageAvailable={packageAvailable}
-            />
             <NameJobPopup
               nameJob={nameJob}
               setNameJob={setNameJob}
