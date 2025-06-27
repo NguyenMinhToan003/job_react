@@ -1,4 +1,4 @@
-import { EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionBannerRequest, UseSubscriptionRequest } from "@/types/employerSubType"
+import { EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionBannerRequest } from "@/types/employerSubType"
 import { axiosInstance } from "."
 import { CreatePackage, FilterPackage, PackageResponse } from "@/types/packageType"
 

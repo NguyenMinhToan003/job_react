@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { getJobByCompanyId, toggleJobStatus } from '@/apis/jobAPI';
-import { CompanyFilterJob, JobResponse } from '@/types/jobType';
+import { CompanyFilterJob, JobDetailResponse } from '@/types/jobType';
 import {
   Table,
   TableBody,
@@ -20,12 +20,14 @@ import { Label } from '@/components/ui/label';
 import JobMenu from '@/components/elements/job/MenuMore';
 import { convertDateToString } from '@/utils/dateTime';
 import FormPublish from '@/components/elements/job/FormPublich';
+import { getViewJobByIdAPI } from '@/apis/viewJobAPI';
 
 export default function EmployerJobList() {
   
-  const [jobList, setJobList] = useState<JobResponse[]>([]);
+  const [jobList, setJobList] = useState<JobDetailResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
 
   const fetchJobList = async () => {
     try {
@@ -47,6 +49,7 @@ export default function EmployerJobList() {
     fetchJobList();
   }, []);
 
+
   const handleToggleJobStatus = async (jobId: number, isShow: number) => {
     try {
       
@@ -62,35 +65,17 @@ export default function EmployerJobList() {
   };
 
 
-  const buttonAction = (job: JobResponse) => {
-    if (job.isActive === JOB_STATUS.ACTIVE) {
-      return (
-        <FormPublish job={job} />
-      );
-    }
-    else if (job.isActive === JOB_STATUS.CREATE) {
-      return (
-        <FormPublish job={job} />
-      );
-    }
-    else if (job.isActive === JOB_STATUS.PENDING) {
-      return (
-        <Button
-          className='text-[#451DA0] hover:text-[#451DA0] bg-[#FFF7ED] hover:bg-[#FFF7ED] rounded-none w-24'
-        >
-          Đang duyệt
-        </Button>
-      );
-    }
-    else if (job.isActive === JOB_STATUS.BLOCK) {
+  const buttonAction = (job: JobDetailResponse) => {
+ if (job.isActive === JOB_STATUS.BLOCK) {
       return (
         <Button
           className='text-red-500 hover:text-red-500 bg-red-50 hover:bg-red-50 rounded-none w-24'
         >
-          Bị từ chối
+          Bị khóa
         </Button>
       );
     }
+    else return  <FormPublish job={job} />
   }
 
   const switchPublicJob = (jobId: number, isShow: number, status: JOB_STATUS) => {
@@ -149,7 +134,8 @@ export default function EmployerJobList() {
               <TableRow >
                 <TableHead className='text-gray-700 text-xs text-left pl-3'>Mã</TableHead>
                 <TableHead className='text-gray-700 text-xs text-left '>Tên công việc</TableHead>
-                <TableHead className='text-gray-700 text-xs text-center'>CV</TableHead>
+                    <TableHead className='text-gray-700 text-xs text-center'>CV</TableHead>
+                    <TableHead className='text-gray-700 text-xs text-center'>Lượt xem</TableHead>
                 <TableHead className='text-gray-700 text-xs text-center'>Thời hạn</TableHead>
                 <TableHead className='text-gray-700 text-xs text-center'>Hoạt động</TableHead>
                 <TableHead className='text-gray-700 text-xs text-center pr-3'>Hành động</TableHead>
@@ -171,9 +157,12 @@ export default function EmployerJobList() {
                       {job.name}
                     </Button>
                   </TableCell>
-                  <TableHead className=' text-center font-bold text-[#2C95FF]'>
+                  <TableCell className=' text-center font-bold text-[#2C95FF]'>
                     {job.applyJobs.length} cv
-                  </TableHead>
+                  </TableCell>
+                  <TableCell className='text-center'>
+
+                  </TableCell>
                   <TableCell className=' flex justify-center items-center flex-col gap-3'>
                     <Label>{convertDateToString(job.createdAt)} -</Label>
                     <Label>{convertDateToString(job.expiredAt)}</Label>

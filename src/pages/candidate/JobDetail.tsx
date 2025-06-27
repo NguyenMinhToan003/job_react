@@ -153,11 +153,6 @@ export default function JobDetail() {
           </div>
         </div>
       </div>
-
-      {/* Job Info Card */}
-      {/* --- Use components like JobDetailCard, LocationList, SkillRequirementTable etc to clean this up if needed --- */}
-
-      {/* Suggestion Section */}
       <div className='max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 mt-5'>
         <div className='lg:col-span-2 space-y-6'>
           <JobElementDetail job={job} />

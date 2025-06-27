@@ -9,7 +9,7 @@ export const createJob = async (data: CreateJobRequest) => {
 }
 
 export const getJobByCompanyId = async (data: CompanyFilterJob) => {
-  const response = await axiosInstance.post<JobResponse[]>('/job/employer', data);
+  const response = await axiosInstance.post<JobDetailResponse[]>('/job/employer', data);
   return response.data;
 }
 

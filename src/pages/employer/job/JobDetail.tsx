@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { convertDateToString } from "@/utils/dateTime";
-import { APPLY_JOB_STATUS } from "@/types/type";
 import { JobResponse } from "@/types/jobType";
 import JobMenu from "@/components/elements/job/MenuMore";
 import EmployerResumeMenu from "@/components/elements/applyJob/ApplyJobMenu";
@@ -48,7 +47,9 @@ export default function JobDetailCompany() {
       <CardHeader>
         <CardTitle className="text-2xl font-bold flex justify-between items-center">
           <span>Danh sách ứng tuyển</span>
-          <JobMenu job={job} />
+          {
+            job && <JobMenu job={job} />
+          }
         </CardTitle>
       </CardHeader>
 

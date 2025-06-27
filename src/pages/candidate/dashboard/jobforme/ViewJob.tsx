@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllViewJobsAPI, getRecomendedViewJobAPI } from "@/apis/viewJobAPI";
 import JobList from "@/components/elements/job/job-list/JobItem";
+import PaginationModel1 from "@/components/elements/pagination/PaginationModel1";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
@@ -97,45 +98,11 @@ export default function ViewJob() {
         </Card>
       ))
     }
-    <Pagination className=' w-full bg-white py-2'>
-        <PaginationContent className='list-none flex justify-center items-center gap-1'>
-          <Button
-            variant='ghost'
-            title='Trước'
-            className='cursor-pointer'
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-        >
-            <ChevronLeft className='w-4 h-4' />
-            Trước
-          </Button>
-
-          {Array.from({ length: totalPages }, (_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
-                className={`cursor-pointer ${
-                  page === index + 1
-                    ? 'bg-blue-500 text-white'
-                    : 'text-blue-500 hover:bg-blue-100'
-                }`}
-                onClick={() => setPage(index + 1)}
-                isActive={page === index + 1}
-              >
-                {index + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-
-          <Button
-            variant='ghost'
-            title='Tiếp theo'
-            className='cursor-pointer ml-5'
-            onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))}
-          >
-          Tiếp theo
-            <ChevronRight className='w-4 h-4' />
-          </Button>
-        </PaginationContent>
-    </Pagination>
+      <PaginationModel1
+        page={page}
+        setPage={setPage}
+        totalPages={totalPages}
+      />
     
     <Card className='mt-4'>
             <CardHeader className='text-center text-gray-800 font-bold'>

@@ -29,7 +29,7 @@ export default function JobElementDetail({
   const navigate = useNavigate();
   const filterMajor = (majorId: number) => navigate(`/tim-kiem-cong-viec?majorId=${majorId}`);
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-fit">
       {/* Tổng quan công việc */}
       <Card className="grid grid-cols-1 md:grid-cols-2 gap-1 p-4">
         <div className="flex items-start gap-3 p-3 bg-[#f5f3ff]">
@@ -178,11 +178,11 @@ export default function JobElementDetail({
       </Card>
       <Card className="p-4">
         <h2 className="text-lg text-[#000209] font-semibold mb-4">Mô tả công việc</h2>
-        <div className="text-[#857876] prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: job.description }} />
+        <div  dangerouslySetInnerHTML={{ __html: job.description }} />
       </Card>
       <Card className="p-4">
         <h2 className="text-lg text-[#000209] font-semibold mb-4">Yêu cầu công việc</h2>
-        <div className="text-[#857876] prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: job.requirement }} />
+        <div  dangerouslySetInnerHTML={{ __html: job.requirement }} />
       </Card>
     </div>
   );

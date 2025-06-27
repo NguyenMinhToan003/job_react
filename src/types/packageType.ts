@@ -1,4 +1,4 @@
-import { EmployerSub } from "./employerSubType";
+import { EmployerSub, EmployerSubResponse } from "./employerSubType";
 import { PackageType } from "./type";
 
 export interface PackageResponse {
@@ -12,6 +12,7 @@ export interface PackageResponse {
   employerSubscriptions: EmployerSub[]
   sub_total?: number;
   sub_used?: number;
+  sub_using?: EmployerSubResponse[];
 }
 export interface CreatePackage {
     name: string;

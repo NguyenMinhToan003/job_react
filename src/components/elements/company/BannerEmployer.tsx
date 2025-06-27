@@ -1,24 +1,20 @@
-"use client"
 
 import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight, ExternalLink, Users, Globe, Briefcase, CupSoda } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Employer } from "@/types/companyType"
 import { getEmployerBanner } from "@/apis/companyAPI"
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Label } from "@/components/ui/label"
 import PaginationModel1 from "../pagination/PaginationModel1"
+import { useNavigate } from "react-router-dom"
 
 
 
 export default function BannerEmployer() {
   const [employers, setEmployers] = useState<Employer[]>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(true)
-  const [itemsPerView, setItemsPerView] = useState(3)
 
   const fetchEmployers = async () => {
     try {
@@ -73,7 +69,9 @@ export default function BannerEmployer() {
       <CarouselItem className="grid grid-cols-3 gap-4">
       {
         employers.map((employer) => (
-          <Card key={employer.id} className="flex flex-col rounded-[8px] bg-white border border-[#E7E7E8] hover:border-[#2C95FF] p-4 gap-1 shadow-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-101 relative">
+          <Card key={employer.id} className="flex flex-col rounded-[8px] bg-white border border-[#E7E7E8] hover:border-[#2C95FF] p-4 gap-1 shadow-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-101 relative"
+            onClick={() => navigate(`/nha-tuyen-dung/${employer.id}`)}
+          >
             <CardContent className="flex  items-start text-center gap-3 p-0">
               <Avatar  className="w-16 h-16 rounded-sm">
                 <AvatarImage src={employer.logo} alt={employer.name} />

@@ -16,18 +16,22 @@ export default function JobList({ jobs,loading , page, setPage, totalPages }: {
   const [selectedJob, setSelectedJob] = useState<JobFilterResponse>({} as JobFilterResponse);
   const loadingRef = useRef(null);
   useEffect(() => {
+
+   if(jobs.length > 0) {
+     setSelectedJob(jobs[0]);
+   }
+    else setSelectedJob({} as JobFilterResponse);
+
+  }, [jobs])
+  
+  useEffect(() => {
     if (loadingRef.current) {
       window.scrollTo({
         top: loadingRef?.current?.offsetTop - 20 || 0,
         behavior: 'smooth',
       });
     }
-   if(jobs.length > 0) {
-     setSelectedJob(jobs[0]);
-   }
-    else setSelectedJob({} as JobFilterResponse);
-
-  },[jobs])
+  }, [page, jobs])
   return (
     <div ref={loadingRef} className=' grid grid-cols-1 md:grid-cols-5 gap-4 mt-4 w-7xl mx-auto min-h-[70vh] p-2'>
       <div className='col-span-2 space-y-4'>
