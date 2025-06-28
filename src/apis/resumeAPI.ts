@@ -36,6 +36,8 @@ export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersion
       formData.append(`languageResumes[${index}][level]`, lang.level.toString());
     });
   }
+  formData.append('expectedSalary', dto?.expectedSalary?.toString());
+  formData.append('typeJobId', dto.typeJobId?.toString());
   dto.skills.forEach((skill, idx) => {
     formData.append(`skills[${idx}]`, skill?.toString());
   });

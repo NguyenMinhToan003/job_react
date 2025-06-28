@@ -93,7 +93,6 @@ export default function CompanyNavbar() {
                 src={dataUser?.logo}
                 alt='Company Logo'
               />
-              <AvatarFallback>{dataUser?.name[0]}</AvatarFallback>
             </Avatar>
             {dataUser?.name || 'Công ty'}
           </div>
