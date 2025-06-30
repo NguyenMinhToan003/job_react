@@ -1,12 +1,11 @@
 import { getCityList } from '@/apis/cityAPI';
-import { createLocationAPI, locationAutoCompleteAPI, locationGetMapAPI } from '@/apis/locationAPI';
-import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+  createLocationAPI,
+  locationAutoCompleteAPI,
+  locationGetMapAPI,
+} from '@/apis/locationAPI';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -15,30 +14,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { City, CreateLocationRequest, District, LocationAutoComplate, LocationMapResponse } from '@/types/location';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  City,
+  CreateLocationRequest,
+  District,
+  LocationAutoComplate,
+  LocationMapResponse,
+} from '@/types/location';
 import { Loader2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-
 export default function AddMap() {
-
   const [map, setMap] = useState<LocationMapResponse>();
-
   const [cities, setCities] = useState<City[]>([]);
   const [selectedCityId, setSelectedCityId] = useState('');
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedDistrictId, setSelectedDistrictId] = useState('');
 
   const [address, setAddress] = useState('');
-
-  const [debouncedAddress, setDebouncedAddress] = useState('');
   const [suggestions, setSuggestions] = useState<LocationAutoComplate[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [selectedFromSuggestion, setSelectedFromSuggestion] = useState(false);
-
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -63,65 +61,35 @@ export default function AddMap() {
     setSelectedDistrictId(districtId);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAddress(e.target.value);
-    setSelectedFromSuggestion(false);
-  };
-
-  useEffect(() => {
-    if (selectedFromSuggestion) {
-      setIsLoading(false);
-      setShowSuggestions(false);
-      return;
-    }
-
-    if (address.trim() === '') {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setDebouncedAddress(address);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [address, selectedFromSuggestion]);
-
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (debouncedAddress.length > 3) {
-        try {
-          const res = await locationAutoCompleteAPI(debouncedAddress);
-          setSuggestions(res || []);
-          setShowSuggestions(true);
-        } catch (error) {
-          console.error('Failed to fetch location suggestions', error);
-          setSuggestions([]);
-          setShowSuggestions(false);
-        }
-      } else {
+      if (address.trim().length < 4) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const res = await locationAutoCompleteAPI(address);
+        setSuggestions(res || []);
+        setShowSuggestions(true);
+      } catch (error) {
+        console.error('Failed to fetch suggestions', error);
         setSuggestions([]);
         setShowSuggestions(false);
       }
       setIsLoading(false);
     };
 
-    if (debouncedAddress) {
-      fetchSuggestions();
-    } else {
-      setIsLoading(false);
-      setShowSuggestions(false);
-    }
-  }, [debouncedAddress]);
+    fetchSuggestions();
+  }, [address]);
 
   const handleSelectSuggestion = async (suggestion: LocationAutoComplate) => {
     setAddress(suggestion.name);
     setSuggestions([]);
     setShowSuggestions(false);
-    setSelectedFromSuggestion(true);
     setIsLoading(true);
     try {
       const data = await locationGetMapAPI(suggestion);
@@ -143,18 +111,16 @@ export default function AddMap() {
         lng: map?.location.lng || 0,
       } as CreateLocationRequest);
       toast.success('Thêm địa điểm thành công');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Thêm địa điểm thất bại');
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Thêm địa điểm thất bại');
     }
-  }
+  };
 
   return (
     <Card className='w-full shadow-none border border-gray-200 rounded-xl mr-3'>
       <CardContent>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-          {/* Form bên trái */}
           <div className='space-y-4'>
-            {/* Thành phố */}
             <div>
               <label className='block text-sm font-medium mb-2'>Thành phố</label>
               <Select onValueChange={handleCityChange} value={selectedCityId}>
@@ -171,7 +137,6 @@ export default function AddMap() {
               </Select>
             </div>
 
-            {/* Quận/Huyện */}
             <div>
               <label className='block text-sm font-medium mb-2'>Quận / Huyện</label>
               <Select
@@ -192,17 +157,15 @@ export default function AddMap() {
               </Select>
             </div>
 
-            {/* Địa chỉ chi tiết */}
             <div className='relative'>
               <label className='block text-sm font-medium mb-2'>Địa điểm chi tiết</label>
               <Input
                 placeholder='Nhập địa chỉ chi tiết'
                 value={address}
-                onChange={handleInputChange}
+                onChange={(e) => setAddress(e.target.value)}
                 className='p-6 border-2 border-gray-300 rounded-md w-full'
               />
 
-              {/* Spinner or clear icon */}
               {isLoading ? (
                 <div className='absolute right-3 top-10'>
                   <Loader2 className='animate-spin w-5 h-5 text-gray-500' />
@@ -216,7 +179,7 @@ export default function AddMap() {
               )}
 
               {address && showSuggestions && suggestions.length > 0 && (
-                <div className='absolute w-full mt-1 z-50 rounded-md border bg-white shadow-lg overflow-auto'>
+                <div className='absolute w-full mt-1 z-50 rounded-md border bg-white shadow-lg overflow-auto max-h-60'>
                   {suggestions.map((s) => (
                     <div
                       key={s.placeId}
@@ -230,19 +193,20 @@ export default function AddMap() {
               )}
             </div>
 
-            {/* Nút lưu */}
             <div className='text-right'>
-              <Button className='bg-red-600 text-white px-8 py-3 hover:bg-red-700' onClick={handleAddLocation}>
+              <Button
+                className='text-[#451DA0] hover:text-[#451DA0] bg-[#EDECFF] hover:bg-[#EDECFF] rounded-none w-24'
+                onClick={handleAddLocation}
+              >
                 LƯU
               </Button>
             </div>
           </div>
 
-          {/* Map bên phải */}
-          <div className='w-full '>
+          <div className='w-full'>
             {map?.location ? (
               <iframe
-                src={`https://maps.google.com/maps?q=${map?.location?.lat},${map?.location?.lng}&hl=vi&z=14&output=embed`}
+                src={`https://maps.google.com/maps?q=${map.location.lat},${map.location.lng}&hl=vi&z=14&output=embed`}
                 width='100%'
                 height='400'
                 style={{ border: 0 }}
@@ -250,12 +214,12 @@ export default function AddMap() {
               ></iframe>
             ) : (
               <div className='flex items-center justify-center h-[400px]'>
-                <p className='text-gray-500'>Vui lòng chọn địa điểm để xem bản đồ</p>
+                <Skeleton className='w-full h-full' />
               </div>
             )}
           </div>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

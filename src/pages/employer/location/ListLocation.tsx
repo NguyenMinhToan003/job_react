@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { deleteLocationAPI, getLocationByCompanyAPI, toggleEnableLocationAPI } from "@/apis/locationAPI";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -14,9 +14,13 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { useAlertDialog } from "@/providers/AlertDialogProvider";
+import FormUpdateLocation from "@/components/elements/location/FormUpdateLocation";
 
 export default function ListLocation() {
   const [locationList, setLocationList] = useState<LocationResponse[]>([]);
+  const [isChanged, setIsChanged] = useState(false);
+  const { showAlert } = useAlertDialog();
 
   const fetchLocationList = async () => {
     try {
@@ -31,9 +35,16 @@ export default function ListLocation() {
     fetchLocationList();
   }, []);
 
-  const handleToggle = async (id: number, enabled: number) => {
+  useEffect(() => {
+    if (isChanged) {
+      fetchLocationList();
+      setIsChanged(false);
+    }
+  }
+  , [isChanged]);
+
+  const handleToggle = async (id: number) => {
     try {
-      console.log(id, enabled);
       await toggleEnableLocationAPI(id)
       fetchLocationList()
     }
@@ -76,16 +87,27 @@ export default function ListLocation() {
                 <TableCell>
                   <Switch
                     checked={item.enabled===1}
-                    onClick={() => handleToggle(item.id, item.enabled)}
+                    onClick={() => handleToggle(item.id)}
                   />
                 </TableCell>
                 <TableCell className="flex items-center space-x-2">
-                  <Button variant="outline" className="mr-2">
-                    Sửa
-                  </Button>
+
+                  <FormUpdateLocation
+                    location={item}
+                    setIsChanged={setIsChanged}
+                  />
                   <Button
                     variant="destructive"
-                    onClick={() =>handleDelete(item.id)}
+                    className="text-red-500 hover:text-red-500 bg-red-50 hover:bg-red-50 rounded-sm w-24"
+                    onClick={() => showAlert({
+                      title: "Xác nhận xóa",
+                      content: "Bạn có chắc chắn muốn xóa địa điểm này?",
+                      confirmText: "Xóa địa điểm",
+                      cancelText: "Hủy bỏ",
+                      handleConfirm() {
+                        handleDelete(item.id);
+                      },
+                    })}
                   >Xóa</Button>
                 </TableCell>
               </TableRow>
