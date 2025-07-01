@@ -19,6 +19,7 @@ import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
 import { JobFilterResponse } from '@/types/jobType';
 import { useNavigate } from 'react-router-dom';
+import { iconMap } from '@/utils/SetListIcon';
 
 export default function JobElementDetail({
   job,
@@ -169,8 +170,8 @@ export default function JobElementDetail({
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {job.benefits.map((benefit) => (
-            <div key={benefit.id} className="flex items-start gap-3 p-3 bg-green-50">
-              <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
+            <div key={benefit.id} className="flex items-start gap-3 p-3">
+              {iconMap[benefit.icon] ?? <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />}
               <span className="text-[#000209] font-semibold">{benefit.name}</span>
             </div>
           ))}

@@ -42,10 +42,7 @@ export default function AdminNavbar() {
   };
   return (
     <Card className="w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-0 z-10">
-      <CardHeader>
-        <p className="text-sm text-muted-foreground">👋 Xin chào</p>
-        <CardTitle className="text-2xl font-semibold">Toan</CardTitle>
-      </CardHeader>
+
       <CardContent className="text-base space-y-2 p-0">
         {userMenuItems.map((item) => (
           <Button
