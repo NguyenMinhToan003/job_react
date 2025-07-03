@@ -4,13 +4,14 @@ import JobListActive from './JobListActive';
 import JobListExpired from './JobListExpired';
 import JobListBlock from './JobListBlock';
 import { useEffect, useState } from 'react';
-import { filterJobAdmin } from '@/apis/jobAPI';
+import { filterJobAdmin, refreshJobInPackage } from '@/apis/jobAPI';
 import { JOB_STATUS } from '@/types/type';
 import { toast } from 'sonner';
 import { JobDetailResponse } from '@/types/jobType';
 import { Activity, AlertTriangle, Badge, Clock, Lock } from 'lucide-react';
 import JobListPendding from './JobListPending';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 
 
@@ -56,6 +57,15 @@ export default function JobListPage() {
     return <div>{count}</div>
   }
 
+  const refreshJobs = async () => {
+    try {
+      await refreshJobInPackage();
+    }
+    catch (error) {
+      toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi làm mới danh sách công việc');
+    }
+  }
+
 
   const tabData = [
     {
@@ -87,6 +97,13 @@ export default function JobListPage() {
 
   return (
     <div className="p-6 w-full">
+      <Button
+        variant="outline"
+        className="mb-4"
+        onClick={refreshJobs}
+      >
+        Thao tác thủ công làm mới danh sách công việc dịch vụ
+      </Button>
       <Tabs defaultValue="pending" className="mb-8">
         <TabsList className="border-b w-full justify-start rounded-sm h-auto p-0 mb-6 bg-white shadow-sm border-b-gray-200">
           {tabData.map((tab) => {

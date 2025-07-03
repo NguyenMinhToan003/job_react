@@ -23,6 +23,7 @@ export default function JobDetailCompany() {
   const [list, setList] = useState<ApplyJobResponse[]>([]);
   const [job, setJob] = useState<JobResponse>();
   const [loading, setLoading] = useState(true);
+  const [isChange, setIsChange] = useState(false);
 
   // Fetch ứng viên đã apply vào job
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function JobDetailCompany() {
       }
     };
     fetchData();
-  }, [jobId]);
+  }, [jobId, isChange]);
 
 
   return (
@@ -123,7 +124,10 @@ export default function JobDetailCompany() {
                   <TableCell>
                     <div className="flex justify-end items-center gap-1">
                       {buttonAction(item.status)}
-                      <EmployerResumeMenu applyJob={item} />
+                      <EmployerResumeMenu
+                        applyJob={item}
+                        setIsChange={setIsChange}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

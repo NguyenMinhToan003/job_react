@@ -11,7 +11,10 @@ import { FormChangeStatusApplyJob } from "./FormChangeStatusApplyJob";
 import { useNavigate } from "react-router-dom";
 
 
-export default function ApplyJobMenu({ applyJob }: { applyJob: ApplyJobResponse, }) {
+export default function ApplyJobMenu({ applyJob, setIsChange }: {
+  applyJob: ApplyJobResponse,
+  setIsChange?: (isChange: boolean) => void;
+ }) {
   const [openStatus, setOpenStatus] = useState(false);
   const [isSendEmail, setIsSendEmail] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +23,7 @@ export default function ApplyJobMenu({ applyJob }: { applyJob: ApplyJobResponse,
   }
   return <>
     <FormChangeStatusApplyJob setOpen={setOpenStatus} open={openStatus} applyJob={applyJob}
-      isOpenSendEmail={isSendEmail}
+      isOpenSendEmail={isSendEmail} setIsChange={setIsChange}
     />
     <Popover>
       <PopoverTrigger>

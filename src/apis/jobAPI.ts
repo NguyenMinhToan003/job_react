@@ -108,3 +108,11 @@ export const getCountJobDashboard = async () => {
   }>(`/job/dashboard/employer/count`);
   return response.data;
 }
+export const extendJob = async (jobId: number, expiredAt: Date) => {
+  const response = await axiosInstance.patch<JobResponse>(`/job/extend/${jobId}`, { expiredAt });
+  return response.data;
+}
+export const refreshJobInPackage = async () => {
+  const response = await axiosInstance.post('/job/refresh-job');
+  return response.data;
+}

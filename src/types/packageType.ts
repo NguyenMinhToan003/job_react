@@ -13,6 +13,7 @@ export interface PackageResponse {
   sub_total?: number;
   sub_used?: number;
   sub_using?: EmployerSubResponse[];
+  status: boolean;
 }
 export interface CreatePackage {
     name: string;

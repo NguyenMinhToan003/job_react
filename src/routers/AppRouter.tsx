@@ -60,6 +60,8 @@ import Packages from '@/pages/admin/package/Packages';
 import Dashboard from '@/pages/employer/Dashboard';
 import CandidateNoti from '@/pages/candidate/dashboard/CandidateNoti';
 import EmployerList from '@/pages/candidate/search-employer/EmployerList';
+import TransactionsPageAdmin from '@/pages/admin/package/TransactionsPageAdmin';
+import DetailTransactionAdmin from '@/pages/admin/package/DetailTransactionAdmin';
 
 
 export default function AppRouter() {
@@ -108,6 +110,8 @@ export default function AppRouter() {
       <Route path='/admin' element={<IndexAdmin />}>
         <Route index element={<OverViewAdmin />} />
         <Route path='goi-dich-vu' element={<Packages />} />
+        <Route path='giao-dich' element={<TransactionsPageAdmin />} />
+        <Route path='giao-dich/:id' element={<DetailTransactionAdmin />} />
         <Route path='quyen-loi' element={<BenefitPage />} />
         <Route path='kinh-nghiem' element={<Experience />} />
         <Route path='ki-nang' element={<SkillPage />} />

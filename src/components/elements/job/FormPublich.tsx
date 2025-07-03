@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
-
 import {
   AlertDialog,
   AlertDialogContent,
@@ -32,8 +30,12 @@ import { JOB_STATUS, PackageType } from '@/types/type'
 import { jobUseSubscription, publishJob } from '@/apis/jobAPI'
 import { EmployerSubResponse } from '@/types/employerSubType'
 import JobItem from './job-list/JobItem'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
-export default function FormPublish({ job }: { job: JobDetailResponse }) {
+export default function FormPublish({ job, setIsChange }: {
+  job: JobDetailResponse,
+  setIsChange?: (isChange: boolean) => void
+ }) {
   const [isOpen, setIsOpen] = useState(false)
   const { setLoading } = useLoading()
   const [usedPackage, setUsedPackage] = useState<EmployerSubResponse[]>()
@@ -42,15 +44,19 @@ export default function FormPublish({ job }: { job: JobDetailResponse }) {
   const [packagesJobAvailable, setPackagesJobAvailable] = useState<PackageResponse[]>([])
   const [packagesBannerAvailable, setPackagesBannerAvailable] = useState<PackageResponse[]>([])
   const [jobCustomer, setJobCustomer] = useState<JobDetailResponse>(job)
+  const [packagesRefreshAvailable, setPackagesRefreshAvailable] = useState<PackageResponse[]>([])
+  const [selectedRefreshPackage, setSelectedRefreshPackage] = useState<PackageResponse>()
 
   const fetchPackages = async () => {
     try {
-      const [banner, jobPack] = await Promise.all([
+      const [banner, jobPack,freshPack] = await Promise.all([
         getPackageAvailable({ type: [PackageType.BANNER], mini: true }),
         getPackageAvailable({ type: [PackageType.JOB], mini: true }),
+        getPackageAvailable({ type: [PackageType.REFRESH], mini: true }),
       ])
       setPackagesBannerAvailable(banner)
       setPackagesJobAvailable(jobPack)
+      setPackagesRefreshAvailable(freshPack)
       setUsedPackage(jobCustomer.employerSubscription || [])
 
       jobCustomer.employerSubscription?.forEach((item) => {
@@ -66,24 +72,28 @@ export default function FormPublish({ job }: { job: JobDetailResponse }) {
 
   useEffect(() => {
     fetchPackages()
-  }, [])
+  }, [job])
 
   const handlePublish = async () => {
     try {
       setLoading(true)
-
       if (selectedBannerPackage) {
         await jobUseSubscription({ jobId: jobCustomer.id, packageId: selectedBannerPackage.id })
       }
-
       if (selectedJobPackage) {
         await jobUseSubscription({ jobId: jobCustomer.id, packageId: selectedJobPackage.id })
       }
-
-      if (!selectedBannerPackage && !selectedJobPackage) {
+      if (selectedRefreshPackage) {
+        await jobUseSubscription({ jobId: jobCustomer.id, packageId: selectedRefreshPackage.id })
+      }
+      if (!selectedBannerPackage && !selectedJobPackage && !selectedRefreshPackage) {
         await publishJob(jobCustomer.id)
       }
-
+      setIsChange?.(true)
+      setIsOpen(false)
+      setSelectedBannerPackage(undefined)
+      setSelectedJobPackage(undefined)
+      
       toast.success('Tin đăng đã được xuất bản thành công')
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi xuất bản tin đăng')
@@ -117,6 +127,13 @@ export default function FormPublish({ job }: { job: JobDetailResponse }) {
     }
   }
 
+  const handleClose = () => {
+    setIsOpen(false)
+    setSelectedBannerPackage(undefined)
+    setSelectedJobPackage(undefined)
+    setSelectedRefreshPackage(undefined)
+  }
+
   const handleSelectBannerPackage = (pkg: PackageResponse) => {
     const check = usedPackage?.find((item) => {
       const diffEndDate = dayjs(item.endDate).diff(dayjs(), 'day')
@@ -141,53 +158,72 @@ export default function FormPublish({ job }: { job: JobDetailResponse }) {
     setSelectedJobPackage((prev) => (prev?.id === pkg.id ? undefined : pkg))
     setJobCustomer((prev) => ({ ...prev, isActiveSubscription: !jobCustomer.isActiveSubscription }))
   }
+  const handleSelectRefreshPackage = (pkg: PackageResponse) => {
+    const check = usedPackage?.find((item) => {
+      const diffEndDate = dayjs(item.endDate).diff(dayjs(), 'day')
+      return item.package.type === PackageType.REFRESH && diffEndDate > 0
+    })
+    if (check) {
+      toast.error(`Bạn đã sử dụng gói ${check.package.name} và còn ${dayjs(check.endDate).diff(dayjs(), 'day')} ngày sử dụng`)
+      return
+    }
+    setSelectedRefreshPackage((prev) => (prev?.id === pkg.id ? undefined : pkg))
+  }
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>{renderButtonAction()}</AlertDialogTrigger>
 
-      <AlertDialogContent className='min-w-7xl max-w-7xl min-h-200 max-h-200 overflow-hidden'>
-        <div className='flex h-full'>
-          <div className='flex-1 overflow-y-auto'>
-            <AlertDialogHeader className='mb-6'>
-              <div className='flex items-center justify-between'>
-                <AlertDialogTitle className='text-xl font-semibold text-neutral-700'>
-                  Xuất bản tin đăng - <span className='text-gray-600'>{jobCustomer.name}</span>
-                </AlertDialogTitle>
-              </div>
+      <AlertDialogContent className="min-w-7xl max-w-7xl min-h-180 max-h-180 overflow-hidden">
+        <div className="flex h-full">
+          {/* LEFT SIDE */}
+          <div className="flex-1 overflow-hidden">
+            <AlertDialogHeader className="mb-6 px-6 pt-6">
+              <AlertDialogTitle className="text-xl font-semibold text-neutral-700">
+                Xuất bản tin đăng - <span className="text-gray-600">{jobCustomer.name}</span>
+              </AlertDialogTitle>
             </AlertDialogHeader>
 
-            <AlertDialogDescription className='space-y-3 h-140 overflow-y-auto p-4'>
-              <Accordion type='multiple' defaultValue={['package']} className='space-y-4 w-full'>
-                <AccordionItem value='package' className='border border-neutral-200 rounded-md'>
-                  <AccordionTrigger className='text-sm font-bold px-4 pt-4'>
-                    <div className='flex items-center gap-2'>
-                      <DollarSign className='w-4 h-4 text-[#451DA0]' /> Tin đăng
+            {/* ScrollArea toàn phần bên trái */}
+            <ScrollArea className="h-130 px-6 pb-6">
+              <Accordion type="multiple" className="space-y-4 w-full">
+                {/* --- Tin đăng --- */}
+                <AccordionItem value="package" className="border border-neutral-200 rounded-md">
+                  <AccordionTrigger className="text-sm font-bold px-4 pt-4">
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="w-4 h-4 text-[#451DA0]" /> Tin đăng
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className='pb-0'>
+                  <AccordionContent className="pb-4">
                     {packagesBannerAvailable.length > 0 ? (
-                      <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4'>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
                         {packagesBannerAvailable.map((pkg) => (
                           <div
                             key={pkg.id}
-                            className={`p-3 border rounded-md cursor-pointer hover:bg-gray-50 transition-colors ${selectedBannerPackage?.id === pkg.id ? 'bg-gray-100 border-[#451DA0]' : 'border-gray-200'}`}
+                            className={`p-3 border rounded-md cursor-pointer hover:bg-gray-50 transition-colors ${
+                              selectedBannerPackage?.id === pkg.id
+                                ? 'bg-gray-100 border-[#451DA0]'
+                                : 'border-gray-200'
+                            }`}
                             onClick={() => handleSelectBannerPackage(pkg)}
                           >
-                            <div className='flex items-center gap-3 mb-2'>
-                              <Avatar className='h-10 w-10 rounded-none'>
+                            <div className="flex items-center gap-3 mb-2">
+                              <Avatar className="h-10 w-10 rounded-none">
                                 <AvatarImage src={pkg.image} alt={pkg.name} />
                               </Avatar>
-                              <div className='flex-1'>
-                                <Label className='text-sm font-semibold'>
-                                  {pkg.name} <span className='text-xs text-gray-500'>X {pkg.sub_total - pkg.sub_used}</span>
+                              <div className="flex-1">
+                                <Label className="text-sm font-semibold">
+                                  {pkg.name}{' '}
+                                  <span className="text-xs text-gray-500">
+                                    x {pkg.sub_total - pkg.sub_used}
+                                  </span>
                                 </Label>
-                                <p className='text-xs text-gray-500'>{pkg.features}</p>
+                                <p className="text-xs text-gray-500">{pkg.features}</p>
                               </div>
                             </div>
-                            <div className='text-xs text-gray-600'>
+                            <div className="text-xs text-gray-600">
                               {pkg.dayValue} ngày | dự kiến tới{' '}
-                              <span className='text-[#451DA0]'>
+                              <span className="text-[#451DA0]">
                                 {dayjs().add(pkg.dayValue, 'day').format('DD/MM/YYYY')}
                               </span>
                             </div>
@@ -195,37 +231,82 @@ export default function FormPublish({ job }: { job: JobDetailResponse }) {
                         ))}
                       </div>
                     ) : (
-                      <p className='text-sm text-gray-500'>Không có gói dịch vụ nào khả dụng</p>
+                      <p className="text-sm text-gray-500 px-4">Không có gói dịch vụ nào khả dụng</p>
                     )}
                   </AccordionContent>
                 </AccordionItem>
 
-                <AccordionItem value='effects' className='border border-neutral-200 rounded-md'>
-                  <AccordionTrigger className='text-sm font-bold px-4 py-2'>
-                    <div className='flex items-center gap-2'>
-                      <TrendingUp className='w-4 h-4 text-[#451DA0]' /> Hiệu ứng nổi bật
+                {/* --- Hiệu ứng nổi bật --- */}
+                <AccordionItem value="effects" className="border border-neutral-200 rounded-md">
+                  <AccordionTrigger className="text-sm font-bold px-4 py-2">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-[#451DA0]" /> Hiệu ứng nổi bật
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className='px-4 pb-4'>
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-2'>
+                  <AccordionContent className="px-4 pb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                       {packagesJobAvailable.map((pkg) => (
                         <div
                           key={pkg.id}
-                          className={`p-3 border rounded-md cursor-pointer hover:bg-gray-50 transition-colors ${selectedJobPackage?.id === pkg.id ? 'bg-gray-100 border-[#451DA0]' : 'border-gray-200'}`}
+                          className={`p-3 border rounded-md cursor-pointer hover:bg-gray-50 transition-colors ${
+                            selectedJobPackage?.id === pkg.id
+                              ? 'bg-gray-100 border-[#451DA0]'
+                              : 'border-gray-200'
+                          }`}
                           onClick={() => handleSelectJobPackage(pkg)}
                         >
-                          <div className='flex items-center gap-3 mb-2'>
-                            <Avatar className='h-10 w-10 rounded-none'>
+                          <div className="flex items-center gap-3 mb-2">
+                            <Avatar className="h-10 w-10 rounded-none">
                               <AvatarImage src={pkg.image} alt={pkg.name} />
                             </Avatar>
-                            <div className='flex-1'>
-                              <Label className='text-sm font-semibold'>{pkg.name}</Label>
-                              <p className='text-xs text-gray-500'>{pkg.features}</p>
+                            <div className="flex-1">
+                              <Label className="text-sm font-semibold">{pkg.name}</Label>
+                              <p className="text-xs text-gray-500">{pkg.features}</p>
                             </div>
                           </div>
-                          <div className='text-xs text-gray-600'>
+                          <div className="text-xs text-gray-600">
                             {pkg.dayValue} ngày | dự kiến tới{' '}
-                            <span className='text-[#451DA0]'>
+                            <span className="text-[#451DA0]">
+                              {dayjs().add(pkg.dayValue, 'day').format('DD/MM/YYYY')}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* --- Làm mới tin --- */}
+                <AccordionItem value="refresh" className="border border-neutral-200 rounded-md">
+                  <AccordionTrigger className="text-sm font-bold px-4 py-2">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-[#451DA0]" /> Làm mới tin đăng
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                      {packagesRefreshAvailable.map((pkg) => (
+                        <div
+                          key={pkg.id}
+                          className={`p-3 border rounded-md cursor-pointer hover:bg-gray-50 transition-colors ${
+                            selectedRefreshPackage?.id === pkg.id
+                              ? 'bg-gray-100 border-[#451DA0]'
+                              : 'border-gray-200'
+                          }`}
+                          onClick={() => handleSelectRefreshPackage(pkg)}
+                        >
+                          <div className="flex items-center gap-3 mb-2">
+                            <Avatar className="h-10 w-10 rounded-none">
+                              <AvatarImage src={pkg.image} alt={pkg.name} />
+                            </Avatar>
+                            <div className="flex-1">
+                              <Label className="text-sm font-semibold">{pkg.name}</Label>
+                              <p className="text-xs text-gray-500">{pkg.features}</p>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            {pkg.dayValue} ngày | dự kiến tới{' '}
+                            <span className="text-[#451DA0]">
                               {dayjs().add(pkg.dayValue, 'day').format('DD/MM/YYYY')}
                             </span>
                           </div>
@@ -235,80 +316,89 @@ export default function FormPublish({ job }: { job: JobDetailResponse }) {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            </AlertDialogDescription>
+            </ScrollArea>
           </div>
 
-          <div className='flex-1 bg-gray-50 p-6 border-l'>
-            <div className='h-160 overflow-y-auto space-y-2 px-2'>
-              <h3 className='font-semibold text-lg mb-4'>Xem trước</h3>
-              <div className='sticky top-0 z-[999]'>
-                <JobItem job={jobCustomer} />
-              </div>
-
-
-              {[selectedBannerPackage, selectedJobPackage].map(
-                (pkg, i) =>
-                  pkg && (
-                    <div key={pkg.id} className='mb-6 flex items-start gap-3'>
-                      <Avatar className='h-20 w-28 rounded-none'>
-                        <AvatarImage src={pkg.image} alt={pkg.name} />
-                      </Avatar>
-                      <div className='ml-2 flex-1 space-y-2'>
-                        <Label className='text-sm font-semibold'>{pkg.name}</Label>
-                        <Label className='text-xs text-gray-500'>{pkg.features}</Label>
-                        <Label className='text-xs'>
-                          <span>{pkg.dayValue} ngày | dự kiến tới </span>
-                          <span className='text-[#451DA0]'>
-                            {dayjs().add(pkg.dayValue, 'day').format('DD/MM/YYYY')}
-                          </span>
-                        </Label>
-                      </div>
-                    </div>
-                  )
-              )}
-              
-
-              <Separator className='my-4' />
-
-              <div className='space-y-4'>
-                <Label className='font-semibold mb-2'>Gói dịch vụ đã sử dụng</Label>
-                <div className='space-y-2 '>
-                  {usedPackage && usedPackage.length > 0 ? (
-                    usedPackage.map((pkg) => (
-                      <div key={pkg.id} className='flex items-start gap-3 opacity-70 border border-dotted border-gray-300'>
-                        <Avatar className='h-20 w-28 rounded-none'>
-                          <AvatarImage src={pkg.package.image} alt={pkg.package.name} />
-                        </Avatar>
-                        <div className='ml-2 flex-1 space-y-2'>
-                          <Label className='text-sm font-semibold'>{pkg.package.name}</Label>
-                          <Label className='text-xs text-gray-500'>{pkg.package.features}</Label>
-                          <Label className='text-xs'>
-                            <span>{pkg.package.dayValue} ngày | dự kiến tới </span>
-                            <span className='text-[#451DA0]'>
-                              {dayjs(pkg.endDate).format('DD/MM/YYYY')}
-                            </span>
-                          </Label>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className='text-sm text-gray-500'>Bạn chưa sử dụng gói dịch vụ nào</p>
-                  )}
-                </div>
-              </div>
+          {/* RIGHT SIDE: Preview + Packages used */}
+          <ScrollArea className="flex-1 bg-gray-50 p-6 border-l overflow-y-auto h-145">
+            <h3 className="font-semibold text-lg mb-4">Xem trước</h3>
+            <div className="sticky top-0 z-[999] bg-gray-50 p-4">
+              <JobItem
+                job={jobCustomer}
+                selectedJob={{} as JobDetailResponse}
+                setSelectedJob={() => {}}
+              />
             </div>
-          </div>
+
+            {[selectedBannerPackage, selectedJobPackage, selectedRefreshPackage].map(
+              (pkg) =>
+                pkg && (
+                  <div key={pkg.id} className="mb-6 flex items-start gap-3">
+                    <Avatar className="h-20 w-28 rounded-none">
+                      <AvatarImage src={pkg.image} alt={pkg.name} />
+                    </Avatar>
+                    <div className="ml-2 flex-1 space-y-2">
+                      <Label className="text-sm font-semibold">{pkg.name}</Label>
+                      <Label className="text-xs text-gray-500">{pkg.features}</Label>
+                      <Label className="text-xs">
+                        {pkg.dayValue} ngày | dự kiến tới{' '}
+                        <span className="text-[#451DA0]">
+                          {dayjs().add(pkg.dayValue, 'day').format('DD/MM/YYYY')}
+                        </span>
+                      </Label>
+                    </div>
+                  </div>
+                )
+            )}
+
+            <Separator className="my-4" />
+
+            <Label className="font-semibold mb-2 block">Gói dịch vụ đã sử dụng</Label>
+            {usedPackage && usedPackage.length > 0 ? (
+              usedPackage.map((pkg) => (
+                <div
+                  key={pkg.id}
+                  className="mb-4 flex items-start gap-3 opacity-70 border border-dotted border-gray-300"
+                >
+                  <Avatar className="h-20 w-28 rounded-none">
+                    <AvatarImage src={pkg.package.image} alt={pkg.package.name} />
+                  </Avatar>
+                  <div className="ml-2 flex-1 space-y-2">
+                    <Label className="text-sm font-semibold">{pkg.package.name}</Label>
+                    <Label className="text-xs text-gray-500">{pkg.package.features}</Label>
+                    <Label className="text-xs">
+                      {pkg.package.dayValue} ngày | dự kiến tới{' '}
+                      <span className="text-[#451DA0]">
+                        {dayjs(pkg.endDate).format('DD/MM/YYYY')}
+                      </span>
+                    </Label>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">Bạn chưa sử dụng gói dịch vụ nào</p>
+            )}
+          </ScrollArea>
         </div>
 
-        <AlertDialogFooter className='flex justify-end p-4'>
-          <Button variant='outline' className='mr-2 rounded-none h-12' onClick={() => setIsOpen(false)}>
+        {/* Footer */}
+        <AlertDialogFooter className="flex justify-end p-4">
+          <Button
+            variant="outline"
+            className="mr-2 rounded-none h-12"
+            onClick={() => handleClose()}
+          >
             Hủy bỏ
           </Button>
-          <Button className='bg-[#451DA0] hover:bg-[#3a1580] text-white rounded-none w-40 h-12' onClick={handlePublish}>
+          <Button
+            className="bg-[#451DA0] hover:bg-[#3a1580] text-white rounded-none w-40 h-12"
+            onClick={handlePublish}
+          >
             Xuất bản
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
+
     </AlertDialog>
   )
 }

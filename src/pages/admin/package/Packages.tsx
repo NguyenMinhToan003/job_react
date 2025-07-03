@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type React from 'react'
-
 import { useEffect, useState } from 'react'
-import { getPackageAdmin, deletePackage } from '@/apis/paymentAPI'
-import type {  CreatePackage, PackageResponse } from '@/types/packageType'
+import { getPackageAdmin, deletePackage, changeStatusPackage } from '@/apis/paymentAPI'
+import type { PackageResponse } from '@/types/packageType'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
@@ -25,62 +23,51 @@ import { toast } from 'sonner'
 import { PackageType } from '@/types/type'
 import { useAlertDialog } from '@/providers/AlertDialogProvider'
 import FormCreatePackage from '@/components/elements/job/package-component/FormCreatePackage'
+import { convertPrice } from '@/utils/convertPrice'
+import { Switch } from '@/components/ui/switch'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function PackagesAdmin() {
   const [packages, setPackages] = useState<PackageResponse[]>([])
-  const [filteredPackages, setFilteredPackages] = useState<PackageResponse[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [search, setSearch] = useState<string>('')
   const [typeFilter, setTypeFilter] = useState<string>('all')
-  const {showAlert} = useAlertDialog()
+  const { showAlert } = useAlertDialog()
+  const [isChange, setIsChange] = useState<boolean>(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
+    setLoading(true)
     fetchPackages()
+    setLoading(false)
   }, [])
-
   useEffect(() => {
-    filterPackages()
-  }, [packages, search, typeFilter])
+    if (isChange) {
+      fetchPackages()
+      setIsChange(false)
+    }
+  }, [isChange])
 
   const fetchPackages = async () => {
     try {
-      setLoading(true)
       const data = await getPackageAdmin()
       setPackages(data)
     } catch (error) {
       console.error('Lỗi khi lấy danh sách gói:', error)
       toast.error('Có lỗi xảy ra khi tải danh sách gói dịch vụ')
-    } finally {
-      setLoading(false)
     }
   }
 
-  const filterPackages = () => {
-    let filtered = packages
-
-    if (search) {
-      filtered = filtered.filter(
-        (pkg) =>
-          pkg.name.toLowerCase().includes(search.toLowerCase()) ||
-          pkg.type.toLowerCase().includes(search.toLowerCase()),
-      )
+  const handleToggleStatus = async (pkg: PackageResponse) => {
+    try {
+      await changeStatusPackage(pkg.id)
+      setIsChange(true)
     }
-
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter((pkg) => pkg.type.toLowerCase() === typeFilter.toLowerCase())
+    catch (error: any) {
+      toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi thay đổi trạng thái gói dịch vụ')
     }
-
-    setFilteredPackages(filtered)
   }
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
-    }).format(price)
-  }
-
 
   const handleDelete = async (id: string) => {
     try {
@@ -102,11 +89,11 @@ export default function PackagesAdmin() {
   const getPackageTypeName = (type: string) => {
     switch (type) {
       case PackageType.JOB:
-        return 'Gói đăng tin'
+        return 'Gói hiệu ứng tin tuyển dụng'
       case PackageType.EMPLOYER:
         return 'Gói nhà tuyển dụng'
       case PackageType.BANNER:
-        return 'Gói quảng cáo'
+        return 'Gói công việc gấp'
       default:
         return type
     }
@@ -142,7 +129,7 @@ export default function PackagesAdmin() {
             <DollarSign className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
-            <div className='text-2xl font-bold'>{formatPrice(totalRevenue)}</div>
+            <div className='text-2xl font-bold'>{convertPrice(totalRevenue, null)}</div>
             <p className='text-xs text-muted-foreground'>Từ tất cả gói dịch vụ</p>
           </CardContent>
         </Card>
@@ -164,7 +151,9 @@ export default function PackagesAdmin() {
         <CardHeader>
           <div className='flex items-center justify-between'>
             <CardTitle>Quản lý gói dịch vụ</CardTitle>
-            <FormCreatePackage/>
+            <FormCreatePackage
+              setIsChange={setIsChange}
+            />
           </div>
         </CardHeader>
         <CardContent>
@@ -188,6 +177,7 @@ export default function PackagesAdmin() {
                 <SelectItem value={PackageType.JOB}>Gói đăng tin</SelectItem>
                 <SelectItem value={PackageType.EMPLOYER}>Gói nhà tuyển dụng</SelectItem>
                 <SelectItem value={PackageType.BANNER}>Gói quảng cáo</SelectItem>
+                <SelectItem value={PackageType.REFRESH}>Gói làm mới</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -216,17 +206,18 @@ export default function PackagesAdmin() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : filteredPackages.length === 0 ? (
+                ) : packages.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className='text-center py-8 text-gray-500'>
                       Không có gói dịch vụ nào
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredPackages.map((pkg) => (
+                  packages.map((pkg) => (
                     <TableRow key={pkg.id}>
                       <TableCell>
                         <div className='flex items-center gap-3'>
+
                           <Avatar className='h-10 w-10'>
                             <AvatarImage src={pkg.image || '/placeholder.svg'} alt={pkg.name} />
                             <AvatarFallback>
@@ -242,7 +233,7 @@ export default function PackagesAdmin() {
                       <TableCell>
                         <Badge variant='outline'>{getPackageTypeName(pkg.type)}</Badge>
                       </TableCell>
-                      <TableCell className='font-medium'>{formatPrice(pkg.price)}</TableCell>
+                      <TableCell className='font-medium'>{convertPrice(pkg.price,null)}</TableCell>
                       <TableCell>
                         <div className='flex items-center gap-1'>
                           <Calendar className='h-4 w-4 text-gray-400' />
@@ -256,10 +247,28 @@ export default function PackagesAdmin() {
                         </div>
                       </TableCell>
                       <TableCell className='font-medium'>
-                        {formatPrice(pkg.price * (pkg.employerSubscriptions?.length || 0))}
+                        {convertPrice(pkg.price * (pkg.employerSubscriptions?.length || 0),null)}
                       </TableCell>
                       <TableCell className='text-right'>
                         <div className='flex items-center justify-end gap-2'>
+                          <Switch
+                            checked={pkg.status}
+                            onCheckedChange={() => handleToggleStatus(pkg)}
+                          />
+                          <Button
+                            variant='outline'
+                            size='sm'
+                            onClick={() => navigate(`/admin/goi-dich-vu/${pkg.id}`)}
+                          >
+                            <span className='flex items-center gap-1'>
+                              <Users className='h-4 w-4' />
+                              Xem đăng ký
+                            </span>
+                          </Button>
+                          <FormCreatePackage
+                            setIsChange={setIsChange}
+                            package={pkg}
+                          />
                           <Button variant='ghost' size='sm' onClick={() => showAlert({
                             title: 'Xác nhận xóa gói dịch vụ',
                             content: `Bạn có chắc chắn muốn xóa gói dịch vụ "${pkg.name}"?`,

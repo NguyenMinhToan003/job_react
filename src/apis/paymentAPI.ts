@@ -8,6 +8,23 @@ export const getPackageAvailable = async (data: FilterPackage) => {
   })
   return response.data
 }
+export const updatePackageAPI = async (id: string, data: CreatePackage) => {
+  const formData = new FormData();
+  formData.append('name', data.name);
+  formData.append('features', data.features);
+  formData.append('price', data.price.toString());
+  formData.append('dayValue', data.dayValue.toString());
+  if (data.image) {
+    formData.append('image', data.image);
+  }
+  formData.append('type', data.type);
+  const response = await axiosInstance.patch<PackageResponse>(`/packages/${id}`, formData);
+  return response.data
+}
+export const changeStatusPackage = async (id: string) => {
+  const response = await axiosInstance.post<PackageResponse>(`/packages/change-status/${id}`)
+  return response.data
+}
 // get all packages for business
 export const getPackagesBisiness = async (filter?: FilterPackage) => {
   const response = await axiosInstance.get<PackageResponse[]>('/packages', {
@@ -70,5 +87,14 @@ export const createPaymentUrl = async (data: TransactionRequest) => {
 
 export const checkoutPayment = async (transactionId: number) => {
   const response = await axiosInstance.get<TransactionResponse>(`/transaction/checkout/${transactionId}`)
+  return response.data
+}
+
+export const getEmployerSubInPackage = async (packageId: string) => {
+  const response = await axiosInstance.get<EmployerSubResponse[]>(`/employer-sub/get-all-in-package/${packageId}`)
+  return response.data
+}
+export const getAllTransactionsAdmin = async () => {
+  const response = await axiosInstance.get<TransactionDetailResponse[]>('/transaction/admin/get-all')
   return response.data
 }

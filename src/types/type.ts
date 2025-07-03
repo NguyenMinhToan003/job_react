@@ -36,6 +36,7 @@ export enum PackageType {
   JOB = 'JOB',
   EMPLOYER = 'EMPLOYER',
   BANNER = 'BANNER',
+  REFRESH = 'REFRESH',
 }
 export enum ACCOUNT_STATUS {
   CREATED = 'CREATED',

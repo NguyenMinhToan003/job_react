@@ -40,12 +40,14 @@ export const FormChangeStatusApplyJob = ({
   setOpen,
   applyJob,
   isOpenSendEmail,
+  setIsChange
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
     applyJob: ApplyJobResponse;
     isOpenSendEmail: boolean;
     setSendEmail?: (sendEmail: boolean) => void;
+    setIsChange?: (isChange: boolean) => void;
 }) => {
   const [selectedStatus, setSelectedStatus] = useState<APPLY_JOB_STATUS>(applyJob.status);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(isOpenSendEmail);
@@ -74,7 +76,7 @@ export const FormChangeStatusApplyJob = ({
       await updateApplyJobStatus(applyJob.id, selectedStatus);
       toast.success("Cập nhật trạng thái thành công");
       setOpen(false);
-      window.location.reload();
+      setIsChange?.(true);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Cập nhật trạng thái thất bại");
     }

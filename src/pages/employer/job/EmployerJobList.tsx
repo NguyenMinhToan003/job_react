@@ -26,6 +26,8 @@ export default function EmployerJobList() {
   
   const [jobList, setJobList] = useState<JobDetailResponse[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isChange, setIsChange] = useState(false);
+  const [viewCounts, setViewCounts] = useState<Record<number, number>>({});
   const navigate = useNavigate();
 
 
@@ -36,6 +38,12 @@ export default function EmployerJobList() {
         isExpired: 0,
       } as CompanyFilterJob);
       setJobList(response);
+      const newCounts: Record<number, number> = {};
+      for (const job of response) {
+        const res = await getViewJobByIdAPI(job.id);
+        newCounts[job.id] = res || 0;
+      }
+      setViewCounts(newCounts);
     } catch (error) {
       toast.error(
         (error as any).response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc'
@@ -48,7 +56,12 @@ export default function EmployerJobList() {
   useEffect(() => {
     fetchJobList();
   }, []);
-
+  useEffect(() => {
+    if (isChange) {
+      fetchJobList();
+      setIsChange(false);
+    }
+  }, [isChange, setIsChange]);
 
   const handleToggleJobStatus = async (jobId: number, isShow: number) => {
     try {
@@ -75,7 +88,10 @@ export default function EmployerJobList() {
         </Button>
       );
     }
-    else return  <FormPublish job={job} />
+ else return <FormPublish
+   job={job}
+  setIsChange={setIsChange}
+ />
   }
 
   const switchPublicJob = (jobId: number, isShow: number, status: JOB_STATUS) => {
@@ -104,9 +120,19 @@ export default function EmployerJobList() {
         );
       case JOB_STATUS.PENDING:
         return (
+          <>
+          <Switch
+            checked={
+              status !== JOB_STATUS.PENDING ? false:
+              isShow === 1 ? true : false
+            }
+            className='text-red-400'
+            onClick={() => handleToggleJobStatus(jobId, isShow)}
+          />
           <Label className='text-xs text-gray-400 flex justify-center w-full'>
             Đang duyệt
           </Label>
+        </>
         );
       case JOB_STATUS.BLOCK:
         return (
@@ -161,7 +187,7 @@ export default function EmployerJobList() {
                     {job.applyJobs.length} cv
                   </TableCell>
                   <TableCell className='text-center'>
-
+                    {viewCounts[job.id] ? viewCounts[job.id] : 0}
                   </TableCell>
                   <TableCell className=' flex justify-center items-center flex-col gap-3'>
                     <Label>{convertDateToString(job.createdAt)} -</Label>
@@ -174,7 +200,10 @@ export default function EmployerJobList() {
                   <TableCell className=' text-center'>
                     <div className='flex justify-center items-center'>
                     {buttonAction(job)}
-                    <JobMenu job={job}/>
+                      <JobMenu
+                        job={job}
+                        setIsChange={setIsChange}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

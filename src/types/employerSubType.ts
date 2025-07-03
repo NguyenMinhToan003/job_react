@@ -1,3 +1,4 @@
+import { Employer } from "./companyType";
 import { JobResponse } from "./jobType";
 import { PackageResponse } from "./packageType";
 
@@ -8,7 +9,7 @@ export interface EmployerSubResponse {
   endDate: string;
   status: string;
   createdAt: string;
-  package: PackageResponse;
+  employer: Employer;
   job: JobResponse | null;
 }
 export interface EmployerSub {
