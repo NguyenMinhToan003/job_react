@@ -8,7 +8,7 @@ export default function IndexEmployer() {
   return (
     <>
       <UserNavbar/>
-      <div className="min-h-screen flex gap-6 bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50">
+      <div className="min-h-screen flex gap-6 bg-[#F6F6F6]">
         <CompanyNavbar />
         <Outlet />
       </div>

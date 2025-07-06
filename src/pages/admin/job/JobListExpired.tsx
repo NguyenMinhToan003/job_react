@@ -1,8 +1,6 @@
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import {
   Table,
@@ -23,14 +21,25 @@ import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import { useEffect, useState } from 'react';
+import { filterJobAdmin } from '@/apis/jobAPI';
+import { JOB_STATUS } from '@/types/type';
+import { toast } from 'sonner';
 
-export default function JobListExpired({ jobs, setJobs }: {
-  jobs: JobDetailResponse[];
-  setJobs: React.Dispatch<React.SetStateAction<JobDetailResponse[]>>;
-}
-) {
-  const navigate = useNavigate();
-
+export default function JobListExpired() {
+  const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
+  const fetchJobs = async () => {
+    try {
+     const response = await filterJobAdmin({ isActive: [JOB_STATUS.ACTIVE], isExpired: 0})
+     setJobs(response.data);
+    }
+    catch (error: any) {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');
+    }
+  }
+  useEffect(() => {
+    fetchJobs();
+  }, []);
   return <>
     <div className="space-y-6">
       <Card>

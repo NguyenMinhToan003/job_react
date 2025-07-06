@@ -34,7 +34,12 @@ export default function EmployerJobList() {
   const fetchJobList = async () => {
     try {
       const response = await getJobByCompanyId({
-        isActive: [JOB_STATUS.ACTIVE, JOB_STATUS.CREATE, JOB_STATUS.PENDING, JOB_STATUS.BLOCK],
+        isActive: [
+          JOB_STATUS.ACTIVE,
+          JOB_STATUS.CREATE,
+          JOB_STATUS.PENDING,
+          JOB_STATUS.BLOCK
+        ],
         isExpired: 0,
       } as CompanyFilterJob);
       setJobList(response);

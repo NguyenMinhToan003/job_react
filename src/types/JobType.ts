@@ -104,6 +104,10 @@ export interface JobFilterAdminRequest {
   isActive?: JOB_STATUS[];
   isShow?: number;
   isExpired?: number;
+  limit?: number;
+  page?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface JobFilterResponse {

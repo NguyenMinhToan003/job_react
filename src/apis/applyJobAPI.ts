@@ -12,8 +12,10 @@ export const getApplyByStatus = async (status: string) => {
   return response.data;
 }
 
-export const getApplyJobByJobId = async (jobId: number) => {
-  const response = await axiosInstance.get<ApplyJobResponse[]>(`/apply-job/employer/job/${jobId}`);
+export const getApplyJobByJobId = async (jobId?: number) => {
+  const response = await axiosInstance.get<ApplyJobResponse[]>(`/apply-job/employer/job`, {
+    params: { jobId }
+  });
   return response.data;
 }
 export const applyJobWithNewCv = async (jobId: number, data: CreateApplyRequest, cv: File ) => {
@@ -69,6 +71,10 @@ export const getApplyJobDashboard = async () => {
   const response = await axiosInstance.get<{
     totalApply: number,
     notViewed: number,
+    penddingApply: number,
+    hiredApply: number,
+    interviewApply: number,
+    qualifiedApply: number
   }>(`/apply-job/dashboard/employer`);
   return response.data;
 }

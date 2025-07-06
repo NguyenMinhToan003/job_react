@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useEffect, useState } from 'react'
-import { DollarSign, TrendingUp } from 'lucide-react'
+import { DollarSign, Flame, TrendingUp } from 'lucide-react'
 import type { JobDetailResponse } from '@/types/jobType'
 import { PackageResponse } from '@/types/packageType'
 import { getPackageAvailable } from '@/apis/paymentAPI'
@@ -214,7 +214,7 @@ export default function FormPublish({ job, setIsChange }: {
                               <div className="flex-1">
                                 <Label className="text-sm font-semibold">
                                   {pkg.name}{' '}
-                                  <span className="text-xs text-gray-500">
+                                  <span className="text-xs text-red-500">
                                     x {pkg.sub_total - pkg.sub_used}
                                   </span>
                                 </Label>
@@ -238,7 +238,7 @@ export default function FormPublish({ job, setIsChange }: {
 
                 {/* --- Hiệu ứng nổi bật --- */}
                 <AccordionItem value="effects" className="border border-neutral-200 rounded-md">
-                  <AccordionTrigger className="text-sm font-bold px-4 py-2">
+                  <AccordionTrigger className="text-sm font-bold px-4 py-4">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="w-4 h-4 text-[#451DA0]" /> Hiệu ứng nổi bật
                     </div>
@@ -260,7 +260,12 @@ export default function FormPublish({ job, setIsChange }: {
                               <AvatarImage src={pkg.image} alt={pkg.name} />
                             </Avatar>
                             <div className="flex-1">
-                              <Label className="text-sm font-semibold">{pkg.name}</Label>
+                            <Label className="text-sm font-semibold">
+                                  {pkg.name}{' '}
+                                  <span className="text-xs text-red-500">
+                                    x {pkg.sub_total - pkg.sub_used}
+                                  </span>
+                                </Label>
                               <p className="text-xs text-gray-500">{pkg.features}</p>
                             </div>
                           </div>
@@ -278,7 +283,7 @@ export default function FormPublish({ job, setIsChange }: {
 
                 {/* --- Làm mới tin --- */}
                 <AccordionItem value="refresh" className="border border-neutral-200 rounded-md">
-                  <AccordionTrigger className="text-sm font-bold px-4 py-2">
+                  <AccordionTrigger className="text-sm font-bold px-4 py-4">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="w-4 h-4 text-[#451DA0]" /> Làm mới tin đăng
                     </div>
@@ -300,8 +305,15 @@ export default function FormPublish({ job, setIsChange }: {
                               <AvatarImage src={pkg.image} alt={pkg.name} />
                             </Avatar>
                             <div className="flex-1">
-                              <Label className="text-sm font-semibold">{pkg.name}</Label>
-                              <p className="text-xs text-gray-500">{pkg.features}</p>
+                            <Label className="text-sm font-semibold">
+                                  {pkg.name}{' '}
+                                  <span className="text-xs text-red-500">
+                                    x {pkg.sub_total - pkg.sub_used}
+                                  </span>
+                                </Label>
+                              <p className="text-xs text-gray-500">                        <div
+                          dangerouslySetInnerHTML={{ __html: pkg.features }}
+                          /></p>
                             </div>
                           </div>
                           <div className="text-xs text-gray-600">
@@ -320,26 +332,30 @@ export default function FormPublish({ job, setIsChange }: {
           </div>
 
           {/* RIGHT SIDE: Preview + Packages used */}
-          <ScrollArea className="flex-1 bg-gray-50 p-6 border-l overflow-y-auto h-145">
-            <h3 className="font-semibold text-lg mb-4">Xem trước</h3>
-            <div className="sticky top-0 z-[999] bg-gray-50 p-4">
+          <ScrollArea className="flex-1 bg-gray-50 p-3 border-l overflow-y-auto h-145">
+            <div className="sticky top-0 z-[999] bg-gray-50 p-1 mb-3 ">
               <JobItem
                 job={jobCustomer}
                 selectedJob={{} as JobDetailResponse}
                 setSelectedJob={() => {}}
               />
             </div>
-
+            <Separator className="my-4" />
+            <Label className="font-semibold mb-2 block">Gói dịch vụ đã chọn</Label>
             {[selectedBannerPackage, selectedJobPackage, selectedRefreshPackage].map(
               (pkg) =>
                 pkg && (
-                  <div key={pkg.id} className="mb-6 flex items-start gap-3">
+                  <div key={pkg.id} className="mb-6 flex items-start gap-3 border">
                     <Avatar className="h-20 w-28 rounded-none">
                       <AvatarImage src={pkg.image} alt={pkg.name} />
                     </Avatar>
                     <div className="ml-2 flex-1 space-y-2">
                       <Label className="text-sm font-semibold">{pkg.name}</Label>
-                      <Label className="text-xs text-gray-500">{pkg.features}</Label>
+                      <Label className="text-xs text-gray-500">
+                        <div
+                          dangerouslySetInnerHTML={{ __html: pkg.features }}
+                          />
+                      </Label>
                       <Label className="text-xs">
                         {pkg.dayValue} ngày | dự kiến tới{' '}
                         <span className="text-[#451DA0]">
@@ -365,7 +381,11 @@ export default function FormPublish({ job, setIsChange }: {
                   </Avatar>
                   <div className="ml-2 flex-1 space-y-2">
                     <Label className="text-sm font-semibold">{pkg.package.name}</Label>
-                    <Label className="text-xs text-gray-500">{pkg.package.features}</Label>
+                    <Label className="text-xs text-gray-500">
+                      <div
+                        dangerouslySetInnerHTML={{ __html: pkg.package.features }}
+                        />
+                    </Label>
                     <Label className="text-xs">
                       {pkg.package.dayValue} ngày | dự kiến tới{' '}
                       <span className="text-[#451DA0]">

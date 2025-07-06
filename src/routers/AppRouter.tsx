@@ -62,6 +62,7 @@ import CandidateNoti from '@/pages/candidate/dashboard/CandidateNoti';
 import EmployerList from '@/pages/candidate/search-employer/EmployerList';
 import TransactionsPageAdmin from '@/pages/admin/package/TransactionsPageAdmin';
 import DetailTransactionAdmin from '@/pages/admin/package/DetailTransactionAdmin';
+import ServiceMe from '@/pages/employer/servicePage/ServiceMe';
 
 
 export default function AppRouter() {
@@ -139,8 +140,9 @@ export default function AppRouter() {
         <Route path='quan-ly-the' element={<TagResume />} />
         <Route path='tuyen-dung' element={<EmployerJobList />} />
         <Route path='tuyen-dung/het-han' element={<ExpiredJobs />} />
-        <Route path='dich-vu' element={<Service />} />
-        <Route path='dich-vu/:id' element={<DetailService />} />
+        <Route path='dich-vu-cua-toi' element={<ServiceMe />} />
+        <Route path='lich-su-mua-hang' element={<Service />} />
+        <Route path='lich-su-mua-hang/:id' element={<DetailService />} />
         <Route path='dia-diem' element={<LocationCompany />} />
         <Route path='cap-nhat-tuyen-dung/:id' element={<UpdateJob />} />
         <Route path='dang-tin-tuyen-dung' element={<CreateJob />} />
@@ -150,6 +152,7 @@ export default function AppRouter() {
         <Route path='danh-gia-ho-so-cong-viec/:applyId'
           element={<ViewResumeVersionForJob />} />
         <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
+        <Route path='ung-vien' element={<JobDetailCompany />} />
         <Route path='thong-bao' element={<EmployerNotification />} />
         <Route path='*' element={<Dashboard />} />
       </Route>

@@ -24,7 +24,13 @@ export const jobUseSubscription = async (data: UseSubscriptionRequest) => {
 }
 
 export const filterJobAdmin = async (filter: JobFilterAdminRequest) => {
-  const response = await axiosInstance.post<JobDetailResponse[]>('/job/admin/filter', filter);
+  const response = await axiosInstance.post<{
+    total: number;
+    data: JobDetailResponse[];
+    page: number;
+    limit: number;
+    totalPages: number;
+  }>('/job/admin/filter', filter);
   return response.data;
 }
 
@@ -114,5 +120,15 @@ export const extendJob = async (jobId: number, expiredAt: Date) => {
 }
 export const refreshJobInPackage = async () => {
   const response = await axiosInstance.post('/job/refresh-job');
+  return response.data;
+}
+export const adminGetDashboardData = async () => {
+  const response = await axiosInstance.get<{
+    totalJobs: number;
+    activeJobs: number;
+    pendingJobs: number;
+    expiredJobs: number;
+    blockedJobs: number;
+  }>('/job/admin/get-dashboard');
   return response.data;
 }

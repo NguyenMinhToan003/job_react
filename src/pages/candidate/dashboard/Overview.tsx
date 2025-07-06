@@ -83,7 +83,7 @@ export default function Overview() {
             <h2 className='font-bold text-lg uppercase'>{dataUser?.name}</h2>
             <Button variant='outline' className='flex items-center gap-2 mt-1' disabled>
               <Mail />
-              <p className='text-sm text-muted-foreground'>{dataUser?.account.email}</p>
+              <p className='text-sm text-muted-foreground'>{dataUser?.account?.email}</p>
             </Button>
             <Button variant='ghost' className='mt-2 flex items-center gap-2'
               onClick={() => navigate('/tong-quat-ho-so/cap-nhat-thong-tin')}>

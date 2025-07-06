@@ -8,50 +8,14 @@ import { filterJobAdmin, refreshJobInPackage } from '@/apis/jobAPI';
 import { JOB_STATUS } from '@/types/type';
 import { toast } from 'sonner';
 import { JobDetailResponse } from '@/types/jobType';
-import { Activity, AlertTriangle, Badge, Clock, Lock } from 'lucide-react';
+import { Activity, AlertTriangle, Clock, Lock } from 'lucide-react';
 import JobListPendding from './JobListPending';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 
 
-export default function JobListPage() {
-  const [jobsPending, setJobsPending] = useState<JobDetailResponse[]>([]);
-  const [jobsExpired, setJobsExpired] = useState<JobDetailResponse[]>([]);
-  const [jobsActive, setJobsActive] = useState<JobDetailResponse[]>([]);
-  const [jobsBlock, setJobsBlock] = useState<JobDetailResponse[]>([]);
-  const [totalPagePending, setTotalPagePending] = useState(0);
-  const [totalPageActive, setTotalPageActive] = useState(0);
-  const [totalPageExpired, setTotalPageExpired] = useState(0);
-  const [totalPageBlock, setTotalPageBlock] = useState(0);
-  const [pagePending, setPagePending] = useState(1);
-  const [pageActive, setPageActive] = useState(1);
-  const [pageExpired, setPageExpired] = useState(1);
-  const [pageBlock, setPageBlock] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [sortType, setSortType] = useState('createdAt');
-  const [sortOrder, setSortOrder] = useState('desc');
-  
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const [jobsPending, jobsActive, jobsExpired, jobsBlock] = await Promise.all([
-          filterJobAdmin({ isActive: [JOB_STATUS.PENDING] }),
-          filterJobAdmin({ isActive: [JOB_STATUS.ACTIVE], isExpired: 0}),
-          filterJobAdmin({ isActive: [JOB_STATUS.ACTIVE], isExpired: 1 }),
-          filterJobAdmin({ isActive: [JOB_STATUS.BLOCK] }),
-        ])
-        setJobsPending(jobsPending);
-        setJobsActive(jobsActive);
-        setJobsExpired(jobsExpired);
-        setJobsBlock(jobsBlock);
-      } catch (err : any) {
-        toast.error(err.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');
-      }
-    };
-    fetchJobs();
-  }, []);
-
+export default function JobListPage() {  
   const getTabBadge = (count: number) => {
     if (count === 0) return null
     return <div>{count}</div>
@@ -72,25 +36,25 @@ export default function JobListPage() {
       value: "pending",
       label: "Chờ duyệt",
       icon: Clock,
-      count: jobsPending.length,
+      count: 3,
     },
     {
       value: "active",
       label: "Đang hoạt động",
       icon: Activity,
-      count: jobsActive.length,
+      count: 4,
     },
     {
       value: "expired",
       label: "Đã hết hạn",
       icon: AlertTriangle,
-      count: jobsExpired.length,
+      count: 4,
     },
     {
       value: "blocked",
       label: "Bị khóa",
       icon: Lock,
-      count: jobsBlock.length,
+      count: 6,
     },
   ]
 
@@ -124,70 +88,21 @@ export default function JobListPage() {
           })}
         </TabsList>
         <TabsContent value="pending" className="mt-0">
-          <JobListPendding jobs={jobsPending} setJobs={setJobsPending} />
+          <JobListPendding/>
         </TabsContent>
 
         <TabsContent value="active" className="mt-0">
-          <JobListActive jobs={jobsActive} setJobs={setJobsActive} />
+          <JobListActive/>
         </TabsContent>
 
         <TabsContent value="expired" className="mt-0">
-          <JobListExpired jobs={jobsExpired} setJobs={setJobsExpired} />
+          <JobListExpired/>
         </TabsContent>
 
         <TabsContent value="blocked" className="mt-0">
-          <JobListBlock jobs={jobsBlock} setJobs={setJobsBlock} />
+          <JobListBlock/>
         </TabsContent>
       </Tabs>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-        <Card className=" h-fit border-l-4 border-l-yellow-500">
-          <CardContent className="">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Chờ duyệt</p>
-                <p className="text-2xl font-bold text-yellow-600">{jobsPending.length}</p>
-              </div>
-              <Clock className="h-8 w-8 text-yellow-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className=" h-fit border-l-4 border-l-green-500">
-          <CardContent className="">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Đang hoạt động</p>
-                <p className="text-2xl font-bold text-green-600">{jobsActive.length}</p>
-              </div>
-              <Activity className="h-8 w-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className=" h-fit border-l-4 border-l-red-500">
-          <CardContent className="">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Đã hết hạn</p>
-                <p className="text-2xl font-bold text-red-600">{jobsExpired.length}</p>
-              </div>
-              <AlertTriangle className="h-8 w-8 text-red-500" />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className=" h-fit border-l-4 border-l-gray-500">
-          <CardContent className="">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Bị khóa</p>
-                <p className="text-2xl font-bold text-gray-600">{jobsBlock.length}</p>
-              </div>
-              <Lock className="h-8 w-8 text-gray-500" />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }

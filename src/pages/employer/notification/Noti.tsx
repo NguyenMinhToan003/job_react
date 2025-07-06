@@ -11,6 +11,7 @@ import { NotiAccount } from '@/types/eployerNotiType';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
 
 const NOTI_CONFIG = {
   [NOTI_TYPE.ACCEPTED]: { label: 'Đã chấp nhận', color: 'bg-green-100 text-green-600 border-green-200' },
@@ -22,7 +23,7 @@ function NotificationItem({ noti }: { noti: NotiAccount }) {
   const isRead = noti.isRead === 1;
   return (
     <Card
-      className={`w-full p-4 border ${isRead ? 'bg-white' : 'bg-gray-50'} hover:shadow-md transition-shadow duration-200 cursor-pointer`}
+      className={`w-full p-4 border ${isRead ? 'bg-white' : 'bg-gray-50'} hover:bg-neutral-200 duration-200 cursor-pointer shadow-none border-gray-200 rounded-lg`}
     >
       <div className='flex justify-between items-start gap-4'>
         <div className='flex items-start gap-3'>
@@ -73,14 +74,21 @@ function NotificationItem({ noti }: { noti: NotiAccount }) {
 
 
 export default function EmployerNotification() {
-  const [notifications, setNotifications] = useState<EmployerNoti[]>([]);
+  const [notifications, setNotifications] = useState<NotiAccount[]>([]);
   const [loading, setLoading] = useState(true);
+  const [totalPage, setTotalPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const limit = 7;
 
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const data = await getMeNotificationAPI();
-      setNotifications(Array.isArray(data) ? data : [data]);
+      const data = await getMeNotificationAPI({
+        page,
+        limit,
+      });
+      setNotifications(data.items);
+      setTotalPage(data.totalPage);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Lỗi khi tải thông báo');
     } finally {
@@ -90,7 +98,8 @@ export default function EmployerNotification() {
 
   useEffect(() => {
     fetchNotifications();
-  }, []);
+  }, [page]);
+
 
   return (
     <Card className='w-full mt-2 mr-4 h-fit shadow-none border border-gray-200 rounded-xl'>
@@ -130,6 +139,11 @@ export default function EmployerNotification() {
             ))}
           </div>
         )}
+        <PaginationModel1
+          totalPages={totalPage}
+          page={page}
+          setPage={setPage}
+        />
       </CardContent>
     </Card>
   );

@@ -8,6 +8,11 @@ export interface CreateNotiAccountRequest {
   receiverAccountId: number;
   title?: string;
 }
+export interface FilterNotiAccountDto {
+  type?: NOTI_TYPE;
+  page?: number;
+  limit?: number;
+}
 export interface NotiAccount {
   id: number;
   content: string;

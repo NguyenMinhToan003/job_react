@@ -16,18 +16,47 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Label } from '@/components/ui/label';
 import { convertDateToString, convertRemainingTime } from '@/utils/dateTime';
 import { useNavigate } from 'react-router-dom';
-import { ArrowUpDown, Badge, Briefcase, Building2, Calendar, CheckCircle, Clock, Eye, Package, Search } from 'lucide-react';
+import { ArrowUpDown, Briefcase, Building2, Calendar, CheckCircle, Clock, Eye, Package, Search } from 'lucide-react';
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import { useEffect, useState } from 'react';
+import { filterJobAdmin } from '@/apis/jobAPI';
+import { toast } from 'sonner';
+import { JOB_STATUS } from '@/types/type';
+import { Badge } from '@/components/ui/badge';
 
-export default function JobListBlock({ jobs, setJobs }: {
-  jobs: JobDetailResponse[];
-  setJobs: React.Dispatch<React.SetStateAction<JobDetailResponse[]>>;
-}
-) {
+export default function JobListBlock() {
   const navigate = useNavigate();
+    const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [page, setPage] = useState<number>(1);
+    const [limit, setLimit] = useState<number>(20);
+    const [sortBy, setSortBy] = useState<string>('createdAt');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+    const [search, setSearch] = useState<string>('');
+    const fetchJobs = async () => {
+      try {
+        const response = await filterJobAdmin({
+          isActive: [JOB_STATUS.BLOCK],
+          isExpired: 0,
+          limit,
+          page,
+          sortBy,
+          sortOrder,
+        })
+        setJobs(response.data);
+        setTotalPages(response.totalPages);
+      }
+      catch (error: any) {
+        toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');
+      }
+    }
+    useEffect(() => {
+      fetchJobs();
+    }, [page, limit, sortBy, sortOrder]);
+  
   return <>
     <div className="space-y-6">
       <Card>
@@ -40,7 +69,12 @@ export default function JobListBlock({ jobs, setJobs }: {
               <Input placeholder="Tìm kiếm theo tên công việc, công ty, kỹ năng..." className="pl-10" />
             </div>
             <Button>Tìm kiếm</Button>
-            <Select defaultValue="10">
+            <Select defaultValue={limit.toString()}
+              onValueChange={(value) => {
+                setLimit(Number(value));
+                setPage(1);
+              }}
+            >
               <SelectTrigger className="w-32">
                 <SelectValue />
               </SelectTrigger>

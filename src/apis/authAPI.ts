@@ -11,3 +11,10 @@ export const changeStatus = async (data: ChangeStatusDto) =>{
   const response = await axiosInstance.patch('/account/change-status', data);
   return response.data;
 }
+export const adminGetAccountDashboardData = async () => {
+  const response = await axiosInstance.get<{
+    employers: number;
+    candidates: number;
+  }>('/account/admin/get-dashboard-data');
+  return response.data;
+}

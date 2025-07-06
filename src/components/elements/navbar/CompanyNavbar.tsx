@@ -53,9 +53,16 @@ export default function CompanyNavbar() {
         { label: 'Tạo mới', path: 'dang-tin-tuyen-dung' },
       ],
     },
+    { label: 'Quản lý ứng viên', icon: <Search className='w-6 h-6' />, path: 'ung-vien' },
     { label: 'Quản lý địa điểm', icon: <MapPin className='w-6 h-6' />, path: 'dia-diem' },
     { label: 'Quản lý thẻ', icon: <ClipboardList className='w-6 h-6' />, path: 'quan-ly-the' },
-    { label: 'Dịch vụ', icon: <Package className='w-6 h-6' />, path: 'dich-vu' },
+    {
+      label: 'Dịch vụ', icon: <Package className='w-6 h-6' />,
+      children: [
+        { label: 'Dịch vụ của tôi', path: 'dich-vu-cua-toi' },
+        { label: 'Lịch sử giao dịch', path: 'lich-su-mua-hang' },
+      ],
+     },
     { label: 'Bảng giá', icon: <DollarSign className='w-6 h-6' />, path: 'bang-gia' },
     { label: 'Tìm kiếm ứng viên', icon: <Search className='w-6 h-6' />, path: 'tim-kiem-ung-vien' },
 

@@ -1,4 +1,4 @@
-import { CreateNotiAccountRequest, NotiAccount } from '@/types/eployerNotiType';
+import { CreateNotiAccountRequest, FilterNotiAccountDto, NotiAccount } from '@/types/eployerNotiType';
 import { axiosInstance } from './index';
 
 export const createEmployerNotiAPI = async (data: CreateNotiAccountRequest)=>{
@@ -6,8 +6,15 @@ export const createEmployerNotiAPI = async (data: CreateNotiAccountRequest)=>{
   return response.data;
 }
 
-export const getMeNotificationAPI = async () => {
-  const response = await axiosInstance.get<NotiAccount[]>('/noti-account/me');
+export const getMeNotificationAPI = async (filter : FilterNotiAccountDto) => {
+  const response = await axiosInstance.get<{
+    items: NotiAccount[];
+    total: number;
+    totalPage: number;
+    unreadCount: number;
+  }>('/noti-account/me', {
+    params: filter
+  });
   return response.data;
 }
 export const markAllAsReadAPI = async () => {

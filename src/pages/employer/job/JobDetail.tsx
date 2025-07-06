@@ -27,10 +27,17 @@ export default function JobDetailCompany() {
 
   // Fetch ứng viên đã apply vào job
   useEffect(() => {
-    if (!jobId) return;
     const fetchData = async () => {
       try {
-        const res = await getApplyJobByJobId(Number(jobId));
+        const res = [];
+        if (jobId) {
+          const response = await getApplyJobByJobId(parseInt(jobId));
+          res.push(...response);
+        }
+        else {
+          const response = await getApplyJobByJobId();
+          res.push(...response);
+        }
         setList(res);
         setJob(res[0]?.job);
       } catch (error) {

@@ -2,8 +2,6 @@
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import {
   Table,
@@ -24,14 +22,45 @@ import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import { useEffect, useState } from 'react';
+import { filterJobAdmin } from '@/apis/jobAPI';
+import { JOB_STATUS } from '@/types/type';
+import { toast } from 'sonner';
 
 
-export default function JobListPendding({ jobs, setJobs }: {
-  jobs: JobDetailResponse[];
-  setJobs: React.Dispatch<React.SetStateAction<JobDetailResponse[]>>;
-}
-) {
+export default function JobListPendding() {
   const navigate = useNavigate();
+  const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [page, setPage] = useState<number>(1);
+    const [limit, setLimit] = useState<number>(20);
+    const [sortBy, setSortBy] = useState<string>('createdAt');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+    const [search, setSearch] = useState<string>('');
+    const fetchJobs = async () => {
+      try {
+        const response = await filterJobAdmin({
+          isActive: [JOB_STATUS.PENDING],
+          page,
+          limit,
+          sortBy,
+          sortOrder,
+          search,
+         })
+       setJobs(response.data);
+      }
+      catch (error: any) {
+        toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');
+      }
+    }
+    useEffect(() => {
+      fetchJobs();
+    }, [page, limit, sortBy, sortOrder]);
+  
+  const handleSearch = () => {
+    setPage(1);
+    fetchJobs();
+  }
 
   return <>
     <div className="space-y-6">
@@ -42,10 +71,24 @@ export default function JobListPendding({ jobs, setJobs }: {
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input placeholder="Tìm kiếm theo tên công việc, công ty, kỹ năng..." className="pl-10" />
+              <Input placeholder="Tìm kiếm theo tên công việc, công ty, kỹ năng..." className="pl-10"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+
+                }}  
+              />
             </div>
-            <Button>Tìm kiếm</Button>
-            <Select defaultValue="10">
+            <Button
+              onClick={handleSearch}
+              className="flex items-center gap-2"
+            >Tìm kiếm</Button>
+            <Select defaultValue={limit.toString()}
+              onValueChange={(value) => {
+                setLimit(Number(value));
+                setPage(1);
+              }}
+            >
               <SelectTrigger className="w-32">
                 <SelectValue />
               </SelectTrigger>
