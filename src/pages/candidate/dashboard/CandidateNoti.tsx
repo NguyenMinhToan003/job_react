@@ -5,12 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Bell, LinkIcon, CheckCircle2, Clock, CircleAlert } from 'lucide-react';
-import { NOTI_TYPE } from '@/types/type';
 import { convertDateToString } from '@/utils/dateTime';
 import { NotiAccount } from '@/types/eployerNotiType';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
 
 
 function NotificationItem({ noti }: { noti: NotiAccount }) {
@@ -70,12 +70,16 @@ function NotificationItem({ noti }: { noti: NotiAccount }) {
 export default function CandidateNoti() {
   const [notifications, setNotifications] = useState<NotiAccount[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 6;
 
   const fetchNotifications = async () => {
     setLoading(true);
     try {
-      const data = await getMeNotificationAPI();
-      setNotifications(Array.isArray(data) ? data : [data]);
+      const data = await getMeNotificationAPI({});
+      setNotifications(data.items);
+      setTotalPages(data.totalPage);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Lỗi khi tải thông báo');
     } finally {
@@ -125,6 +129,11 @@ export default function CandidateNoti() {
             ))}
           </div>
         )}
+        <PaginationModel1
+          totalPages={totalPages}
+          page={page}
+          setPage={setPage}
+        />
       </CardContent>
     </Card>
   );

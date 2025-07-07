@@ -57,7 +57,7 @@ export default function JobListPendding() {
       fetchJobs();
     }, [page, limit, sortBy, sortOrder]);
   
-  const handleSearch = () => {
+  const handleSearch = async() => {
     setPage(1);
     fetchJobs();
   }
@@ -110,14 +110,24 @@ export default function JobListPendding() {
                     <div className="flex items-center gap-2">
                       <Briefcase className="h-4 w-4" />
                       Tên công việc
-                      <ArrowUpDown className="h-4 w-4" />
+                      <ArrowUpDown className="h-4 w-4"
+                        onClick={() => {
+                          setSortBy('name');
+                          setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                        }}
+                      />
                     </div>
                   </TableHead>
                   <TableHead className="cursor-pointer hover:bg-gray-50">
                     <div className="flex items-center gap-2 justify-center">
                       <Calendar className="h-4 w-4" />
                       Thời hạn
-                      <ArrowUpDown className="h-4 w-4" />
+                      <ArrowUpDown className="h-4 w-4"
+                        onClick={() => {
+                          setSortBy('createdAt');
+                          setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+                        }}
+                      />
                     </div>
                   </TableHead>
                   <TableHead className="text-center">
@@ -227,9 +237,9 @@ export default function JobListPendding() {
           </div>
 
           <PaginationModel1
-            page={1}
-            setPage={() => { }}
-            totalPages={10}
+            page={page}
+            setPage={setPage}
+            totalPages={totalPages}
           />
         </CardContent>
       </Card>

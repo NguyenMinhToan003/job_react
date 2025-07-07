@@ -3,19 +3,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import JobListActive from './JobListActive';
 import JobListExpired from './JobListExpired';
 import JobListBlock from './JobListBlock';
-import { useEffect, useState } from 'react';
-import { filterJobAdmin, refreshJobInPackage } from '@/apis/jobAPI';
-import { JOB_STATUS } from '@/types/type';
+import { adminGetDashboardData, getCountJobDashboard, refreshJobInPackage } from '@/apis/jobAPI';
 import { toast } from 'sonner';
-import { JobDetailResponse } from '@/types/jobType';
 import { Activity, AlertTriangle, Clock, Lock } from 'lucide-react';
 import JobListPendding from './JobListPending';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 
 
 
-export default function JobListPage() {  
+export default function JobListPage() {
+  const [jobCount, setJobCount] = useState({
+    pending: 0,
+    active: 0,
+    expired: 0,
+    blocked: 0,
+  });
   const getTabBadge = (count: number) => {
     if (count === 0) return null
     return <div>{count}</div>
@@ -29,6 +32,24 @@ export default function JobListPage() {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi làm mới danh sách công việc');
     }
   }
+  const getJobCount =async() => {
+    try {
+      const response = await adminGetDashboardData();
+      setJobCount({
+        pending: response.pendingJobs,
+        active: response.activeJobs,
+        expired: response.expiredJobs,
+        blocked: response.blockedJobs,
+      });
+    }
+    catch (error) {
+      toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi lấy số lượng công việc');
+    }
+  }
+
+  useEffect(() => {
+    getJobCount();
+  }, []);
 
 
   const tabData = [
@@ -36,25 +57,25 @@ export default function JobListPage() {
       value: "pending",
       label: "Chờ duyệt",
       icon: Clock,
-      count: 3,
+      count: jobCount.pending,
     },
     {
       value: "active",
       label: "Đang hoạt động",
       icon: Activity,
-      count: 4,
+      count: jobCount.active,
     },
     {
       value: "expired",
       label: "Đã hết hạn",
       icon: AlertTriangle,
-      count: 4,
+      count: jobCount.expired,
     },
     {
       value: "blocked",
       label: "Bị khóa",
       icon: Lock,
-      count: 6,
+      count: jobCount.blocked,
     },
   ]
 

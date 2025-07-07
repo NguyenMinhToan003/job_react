@@ -74,7 +74,6 @@ export default function Price() {
   const totalItems = itemCart.length;
   const totalPrice = cartData.length > 0 ? cartData.map(i => {
     const index = packages.findIndex(e => e.id === i.packageId);
-    console.log(packages[index]);
     return i.quantity * packages[index]?.price;
   }).reduce((i, next) => i + next, 0) : 0;
   

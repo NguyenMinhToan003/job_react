@@ -103,14 +103,14 @@ export default function EmployerDashboard() {
   return (
     <div className='container mx-auto p-6 space-y-6 w-full'>
                 {/* Gói dịch vụ hiện có */}
-                <div className='flex items-center mb-4 gap-6 overflow-hidden'>
-        {packagesAvailable.map((pkg) => {
+                <div className='flex items-center mb-4 gap-6 overflow-hidden w-7xl'>
+        {packagesAvailable.slice(0,4).map((pkg) => {
           const usagePercentage = pkg.sub_total
             ? ((pkg.sub_used || 0) / pkg.sub_total) * 100
             : 0
 
           return (
-            <Card key={pkg.id} className='group hover:shadow-lg transition-shadow duration-300 w-100'>
+            <Card key={pkg.id} className='group hover:shadow-lg transition-shadow duration-300 min-w-100'>
               <CardHeader>
                 <div className='space-y-3'>
                   <div className='relative overflow-hidden bg-gray-50 rounded-lg'>
@@ -163,7 +163,7 @@ export default function EmployerDashboard() {
           variant='outline'
           size='sm'
           className='text-[#451DA0] hover:text-[#451DA0] bg-white hover:bg-white rounded-sm'
-          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/dich-vu`)}
+          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/dich-vu-cua-toi`)}
         >
           Xem tất cả gói dịch vụ
         </Button>

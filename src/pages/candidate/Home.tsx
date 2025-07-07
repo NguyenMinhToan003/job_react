@@ -57,6 +57,7 @@ import { saveJob } from '@/apis/saveJobAPI';
 import { toast } from 'sonner';
 import BannerEmployer from '@/components/elements/company/BannerEmployer';
 import JobBanner from '@/components/elements/job/job-list/JobBanner';
+import JobRecommendFollows from '@/components/elements/job/job-list/JobRecomendFollows';
 
 export default function Home() {
 
@@ -427,10 +428,10 @@ export default function Home() {
     </p>
   </CardHeader>
   <CardContent className="p-6 pt-2">
-    <JobBanner />
+          <JobBanner />
   </CardContent>
-</Card>
-
+      </Card>
+      
       <BannerEmployer/>
     </div>
   );

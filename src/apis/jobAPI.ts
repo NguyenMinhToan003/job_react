@@ -132,3 +132,7 @@ export const adminGetDashboardData = async () => {
   }>('/job/admin/get-dashboard');
   return response.data;
 }
+export const getRecommendJobsByFollowedEmployers = async () => {
+  const response = await axiosInstance.get<JobFilterResponse[]>('/job/recommend-jobs-by-followed-employers');
+  return response.data;
+}

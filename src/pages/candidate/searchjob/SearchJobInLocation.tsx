@@ -84,6 +84,11 @@ export default function SearchJobInLocation() {
             Việc làm gần vị trí của bạn
           </CardTitle>
           <p className="text-sm text-gray-500">Dựa trên vị trí hiện tại của bạn</p>
+          <p>
+            chúng tôi tìm thấy {jobs.length} việc làm trong bán kính {radius} km.
+            <br />
+            Nếu bạn không thấy việc làm nào, hãy thử thay đổi bán kính tìm kiếm hoặc đảm bảo rằng bạn đã cấp quyền truy cập vị trí cho trình duyệt của mình.
+          </p>
         </CardHeader>
       </Card>
 

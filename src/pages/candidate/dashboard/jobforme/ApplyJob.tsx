@@ -28,16 +28,16 @@ export default function ApplyJob() {
     fetchApplyJobs();
   }, [])
 
-  const handleUnApplyJob = async (jobId: number) => {
-    try {
-      await unApplyJob(jobId);
-      toast.success("Hủy ứng tuyển thành công");
-      fetchApplyJobs();
-    }
-    catch (error: any) {
-      toast.error(error.response?.data?.message || "Lỗi không xác định");
-    }
-  }
+  // const handleUnApplyJob = async (jobId: number) => {
+  //   try {
+  //     await unApplyJob(jobId);
+  //     toast.success("Hủy ứng tuyển thành công");
+  //     fetchApplyJobs();
+  //   }
+  //   catch (error: any) {
+  //     toast.error(error.response?.data?.message || "Lỗi không xác định");
+  //   }
+  // }
   return <>
     <Card className="rounded-none shadow-none hover:shadow-2xl">
       <CardHeader>
@@ -84,12 +84,12 @@ export default function ApplyJob() {
               {
                 applyJob.status == APPLY_JOB_STATUS.PROCESSING ? 
                   <div
-                    onClick={() => handleUnApplyJob(applyJob.job.id)}
+                    
                   >
                     {buttonAction(applyJob.status)}
                   </div>
                   : <div
-                    onClick={() => handleUnApplyJob(applyJob.job.id)}>
+                  >
                      {buttonAction(applyJob.status)}
                   </div>
               }

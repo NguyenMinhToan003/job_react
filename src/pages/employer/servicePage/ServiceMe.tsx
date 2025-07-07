@@ -124,7 +124,7 @@ export default function ServiceMe() {
         return (
           <Card
             key={pkg.id}
-            className='group hover:shadow-lg transition-shadow duration-300'
+            className='group hover:shadow-lg transition-shadow duration-300 max-h-fit'
           >
             <CardHeader>
               <div className='space-y-3'>

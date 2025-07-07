@@ -15,7 +15,6 @@ import { JobDetailResponse } from '@/types/jobType';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Label } from '@/components/ui/label';
 import { convertDateToString, convertRemainingTime } from '@/utils/dateTime';
-import { useNavigate } from 'react-router-dom';
 import { ArrowUpDown, Badge, Briefcase, Building2, Calendar, CheckCircle, Clock, Eye, Package, Search } from 'lucide-react';
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -30,7 +29,7 @@ export default function JobListExpired() {
   const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
   const fetchJobs = async () => {
     try {
-     const response = await filterJobAdmin({ isActive: [JOB_STATUS.ACTIVE], isExpired: 0})
+     const response = await filterJobAdmin({ isActive: [JOB_STATUS.ACTIVE], isExpired: 1})
      setJobs(response.data);
     }
     catch (error: any) {

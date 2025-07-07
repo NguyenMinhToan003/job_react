@@ -266,7 +266,6 @@ export default function SearchJob() {
           defaultValue={selectedFieldId?.toString()
             ? selectedFieldId?.toString() : 'undefinded'}
           onValueChange={value => {
-            console.log('Selected field value:', value);
             setSelectedFieldId(value === 'undefinded' ? undefined : +value);
             if (value === 'undefinded') {
               setSelectedFieldId(undefined);

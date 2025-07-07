@@ -12,8 +12,9 @@ import { JobFilterResponse } from '@/types/jobType';
 
 import { toast } from 'sonner';
 import ViewCompany from '@/components/elements/company/ViewCompany';
-import { followEmployerAPI } from '@/apis/followEmployerAPI';
+import { followEmployerAPI, unfollowEmployerAPI } from '@/apis/followEmployerAPI';
 import JobItem from '@/components/elements/job/job-list/JobItem';
+import { set } from 'date-fns';
 
 export default function CompanyPage() {
   const { id = -1 } = useParams();
@@ -32,10 +33,39 @@ export default function CompanyPage() {
   const handleFollow = async () => {
     try {
       await followEmployerAPI(+id);
+      setCompany((prev) => {
+        if (prev) {
+          return {
+            ...prev,
+            isFollowed: true,
+            countFollows: prev.countFollows + 1,
+          };
+        }
+        return prev;
+      });
       toast.success('Theo dõi công ty thành công');
     }
     catch (error: any) {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi theo dõi công ty');
+    }
+  }
+  const handleUnFollow = async () => {
+    try {
+      await unfollowEmployerAPI(+id);
+      setCompany((prev) => {
+        if (prev) {
+          return {
+            ...prev,
+            isFollowed: false,
+            countFollows: prev.countFollows - 1,
+          };
+        }
+        return prev;
+      });
+      toast.success('Bỏ theo dõi công ty thành công');
+    }
+    catch (error: any) {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi bỏ theo dõi công ty');
     }
   }
 
@@ -76,10 +106,10 @@ export default function CompanyPage() {
               variant='destructive'
               className='bg-red-600 hover:bg-red-700 rounded-[2px] w-40 h-14 text-md font-bold'
             >
-              Viết đánh giá
+              {employer.countFollows} người theo dõi
             </Button>
             {
-              employer.isFollowed ? <>
+              !employer.isFollowed ? <>
                 <Button className='bg-white hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
               onClick={handleFollow}>
               Theo dõi
@@ -87,9 +117,9 @@ export default function CompanyPage() {
               </>
                 : 
                 <>
-                  <Button className='bg-gray-200 hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
-                  onClick={handleFollow}>
-                    Đã theo dõi
+                <Button className='bg-gray-200 hover:bg-gray-100 rounded-[2px] w-40 h-14 text-md font-bold border-red-500 border text-red-500'
+                  onClick={handleUnFollow}>
+                  Bỏ theo dõi
                   </Button>
                 </>
             }

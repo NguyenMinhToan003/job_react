@@ -69,12 +69,14 @@ export default function ViewCompany() {
               </p>
             </div>
             <div>
-              <h3 className="text-md text-gray-400 mb-1 font-semibold">Thời gian làm việc</h3>
-              <p className="font-medium">{'Chưa có dữ liệu'}</p>
+              <h3 className="text-md text-gray-400 mb-1 font-semibold">Mã số thuế</h3>
+              <p className="font-medium">
+                {employer.taxCode}
+              </p>
             </div>
             <div>
-              <h3 className="text-md text-gray-400 mb-1 font-semibold">Làm việc ngoài giờ</h3>
-              <p className="font-medium">{'Chưa có dữ liệu'}</p>
+              <h3 className="text-md text-gray-400 mb-1 font-semibold">Website</h3>
+              <p className="font-medium">{employer.website}</p>
             </div>
           </div>
         </CardContent>

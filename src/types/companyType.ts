@@ -33,6 +33,7 @@ export interface EmployerDetailResponse {
   website?: string;
   countryId: number;
   phone: string;
+  countFollows: number;
   jobs: JobResponse[];
   country: {
     id: number;

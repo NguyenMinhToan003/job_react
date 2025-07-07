@@ -1,12 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Bell, ChevronDown, MapIcon, Menu } from 'lucide-react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Bell, ChevronDown, LogOut, MapIcon, Menu } from 'lucide-react';
 import { useAccount } from '@/providers/UserProvider';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getMeNotificationAPI } from '@/apis/notiAccountAPI';
 
 export default function UserNavbar() {
   const navigate = useNavigate();
+  const [countNoti, setCountNoti] = useState(0);
   const { dataUser } = useAccount();
 
   const navItems = [
@@ -32,8 +35,11 @@ export default function UserNavbar() {
     {
       label: null,
       path: null,
-      icon: <Button variant={'ghost'} className='hover:text-gray-500 hover:bg-black' >
+      icon: <Button variant={'ghost'} className='hover:text-gray-500 hover:bg-black relative' >
         <Bell className='h-5 w-5 text-[#f5f3f4]' />
+        {countNoti > 0 && (
+          <span className='absolute top-2 right-2 inline-flex h-2.5 w-2.5 translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500' />
+        )}
       </Button>,
     },
   ];
@@ -41,6 +47,24 @@ export default function UserNavbar() {
   const handleClick = (path: string | null) => {
     if (path) navigate(path);
   };
+  const handleLogout = () => {
+    sessionStorage.removeItem('cart');
+    navigate('/auth/login');
+  }
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
+      try {
+        // Replace with actual API call to get notification count
+        const response = await getMeNotificationAPI({});
+        setCountNoti(response.unreadCount);
+      } catch (error) {
+        console.error('Error fetching notification count:', error);
+      }
+    };
+
+    fetchNotificationCount();
+  }
+  , []);  
 
   return (
     <div className='sticky top-0 z-50 w-full border-b border-[#6136c6] shadow-sm bg-[#451da1]'>
@@ -84,6 +108,7 @@ export default function UserNavbar() {
                     {item.label}
                   </Button>
                 ))}
+                
               </div>
             </SheetContent>
           </Sheet>
@@ -102,6 +127,12 @@ export default function UserNavbar() {
               {item.label && <span className='ml-1'>{item.label}</span>}
             </Button>
           ))}
+            <Button
+            variant={'ghost'} className='hover:text-gray-500 hover:bg-black'
+            onClick={handleLogout}
+            >
+              <LogOut className='h-5 w-5 text-[#f5f3f4]' />
+            </Button>
         </div>
       </div>
     </div>

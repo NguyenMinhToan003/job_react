@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, Close } from "@radix-ui/react-dialog";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -26,6 +26,9 @@ import { Skill } from "@/types/SkillType";
 import { Education } from "@/types/educationType";
 import { Major, MajorResponse } from "@/types/majorType";
 import { TypeJob } from "@/types/TypeJobType";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function FormCreateResume() {
   const { dataUser } = useAccount();
@@ -616,16 +619,16 @@ export default function FormCreateResume() {
       </Card>
 
       {/* Skills Dialog */}
-      <Dialog open={statusAddSkill} onOpenChange={setStatusAddSkill}>
-        <DialogContent className="max-w-md p-6 rounded-md border border-gray-200">
+      <AlertDialog open={statusAddSkill} onOpenChange={setStatusAddSkill}>
+        <AlertDialogContent className="w-3xl  p-6 rounded-md border border-gray-200">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-sm font-medium text-gray-700">Chọn kỹ năng</h3>
-            <Close
+            <X
               onClick={() => setStatusAddSkill(false)}
               className="w-4 h-4 text-gray-500 hover:text-gray-700 cursor-pointer"
             />
           </div>
-          <div className="flex flex-wrap gap-2">
+          <ScrollArea className="flex flex-wrap gap-2 h-[70vh] overflow-y-auto">
             {skills.map((skill) => (
               <Badge
                 key={skill.id}
@@ -645,19 +648,19 @@ export default function FormCreateResume() {
                 {skill.name}
               </Badge>
             ))}
-          </div>
+          </ScrollArea>
           <Button onClick={() => setStatusAddSkill(false)} className="mt-4 w-full">
             Xong
           </Button>
-        </DialogContent>
-      </Dialog>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Languages Dialog */}
       <Dialog open={statusAddLanguage} onOpenChange={setStatusAddLanguage}>
         <DialogContent className="max-w-md p-6 rounded-md border border-gray-200">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-sm font-medium text-gray-700">Chọn ngôn ngữ</h3>
-            <Close
+            <X
               onClick={() => setStatusAddLanguage(false)}
               className="w-4 h-4 text-gray-500 hover:text-gray-700 cursor-pointer"
             />

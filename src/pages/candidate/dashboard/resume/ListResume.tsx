@@ -110,7 +110,7 @@ export default function ListResume() {
                       </div>
                       <div className='flex-1'>
                         <CardTitle className='text-lg font-semibold flex items-center gap-2'>
-                          {resume.name}
+                          <span className='line-clamp-1'>{resume.name}</span>
                           {resume.isDefault && (
                             <span className='bg-white text-blue-700 px-2 py-0.5 rounded-full text-xs flex items-center gap-1'>
                               <Star className='w-3 h-3' /> Chính

@@ -94,6 +94,8 @@ export default function PackagesAdmin() {
         return 'Gói nhà tuyển dụng'
       case PackageType.BANNER:
         return 'Gói công việc gấp'
+      case PackageType.REFRESH:
+        return 'Gói làm mới tin tuyển dụng'
       default:
         return type
     }
@@ -218,7 +220,7 @@ export default function PackagesAdmin() {
                       <TableCell>
                         <div className='flex items-center gap-3'>
 
-                          <Avatar className='h-10 w-10'>
+                          <Avatar className='h-10 w-15 rounded-none'>
                             <AvatarImage src={pkg.image || '/placeholder.svg'} alt={pkg.name} />
                             <AvatarFallback>
                               <Package className='h-5 w-5' />
@@ -258,7 +260,7 @@ export default function PackagesAdmin() {
                           <Button
                             variant='outline'
                             size='sm'
-                            onClick={() => navigate(`/admin/goi-dich-vu/${pkg.id}`)}
+                            onClick={() => navigate(`/admin/giao-dich`)}
                           >
                             <span className='flex items-center gap-1'>
                               <Users className='h-4 w-4' />

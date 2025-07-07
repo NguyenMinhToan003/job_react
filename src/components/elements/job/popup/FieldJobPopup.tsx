@@ -30,7 +30,6 @@ export default function FieldJobPopup({
   setSelectMajors?: (majors: number[]) => void;
   notEdit?: boolean;
   }) {
-  console.log('selectField', selectField);
   return (
     <Card className="rounded-sm border-none shadow-md mb-4">
       <CardHeader>
