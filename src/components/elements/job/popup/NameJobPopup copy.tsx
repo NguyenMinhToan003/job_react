@@ -4,6 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 export default function NameJobPopup({
   nameJob,
@@ -21,21 +22,21 @@ export default function NameJobPopup({
         <CardHeader>
           <CardTitle className="text-lg font-bold text-start">
             <div className="flex items-center gap-2">
-              <div className="flex-1">TÊN CÔNG VIỆC</div>
+              <div className="flex-1 ">TÊN CÔNG VIỆC</div>
               
             </div>
             <div className="w-full h-[1px] bg-gray-200 mt-4" />
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6 space-y-2">
-          <input
-            disabled={notEdit}
-            type="text"
-            className="w-full bg-transparent text-gray-800 placeholder-gray-500 text font-medium focus:outline-none border-b border-gray-300 focus:border-gray-500"
+          <Input
             placeholder="VD: Lập trình viên React, Trưởng phòng Marketing..."
-            maxLength={200}
             value={nameJob}
-            onChange={(e) => setNameJob(e.target.value)}
+            className="w-full bg-[#EDECFF] border-none hover:bg-[#EDECFF] focus:bg-[#EDECFF] text-[#451DA0] hover:text-[#451DA0] focus:text-[#451DA0] rounded-none font-semibold"
+            onChange={(e) => {
+              if (notEdit) return;
+              setNameJob(e.target.value);
+            }}
             required
           />
         </CardContent>

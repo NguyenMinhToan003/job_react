@@ -36,17 +36,19 @@ export default function EducationJonPopup({
       </CardHeader>
       <CardContent className='p-6'>
         <Select
-          disabled={notEdit}
           value={educationId?.toString() || ''}
-          onValueChange={(value) => setEducationId(Number(value))}
+          onValueChange={(value) => {
+            if (notEdit) return;
+            setEducationId(Number(value))
+          }}
         >
-          <SelectTrigger className='w-full bg-orange-100 text-red-800 font-bold'>
+          <SelectTrigger className='w-full bg-[#EDECFF] border-none hover:bg-[#EDECFF] focus:bg-[#EDECFF] text-[#451DA0] hover:text-[#451DA0] focus:text-[#451DA0] rounded-none font-semibold'>
             <SelectValue placeholder='-- Chọn bằng cấp --' />
           </SelectTrigger>
           <SelectContent>
             {educationList.map((exp) => (
               <SelectItem key={exp.id} value={exp.id.toString()}
-                className='text-red-800 '>
+                className=''>
                 {exp.name}
               </SelectItem>
             ))}

@@ -12,6 +12,7 @@ export interface PackageResponse {
   employerSubscriptions: EmployerSub[]
   sub_total?: number;
   sub_used?: number;
+  sub_pending?: EmployerSubResponse;
   sub_using?: EmployerSubResponse[];
   status: boolean;
 }

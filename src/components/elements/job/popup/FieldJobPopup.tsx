@@ -41,22 +41,21 @@ export default function FieldJobPopup({
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        {/* Select Field */}
         <Select
-          disabled={notEdit}
           defaultValue={selectField?.id?.toString() || ''}
           value={selectField?.id?.toString() || ''}
           onValueChange={(value) => {
+            if (notEdit) return;
             const selectedField = fields.find(
               (field) => field.id.toString() === value
             );
             if (selectedField) {
               setSelectField(selectedField);
-              setSelectMajors([]); // Reset majors on field change
+              setSelectMajors([]);
             }
           }}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full bg-[#EDECFF] border-none hover:bg-[#EDECFF] focus:bg-[#EDECFF] text-[#451DA0] hover:text-[#451DA0] focus:text-[#451DA0] rounded-none font-semibold">
             <SelectValue placeholder="-- Chọn ngành nghề --">
               {selectField ? selectField.name : '-- Chọn ngành nghề --'}
             </SelectValue>
@@ -75,14 +74,16 @@ export default function FieldJobPopup({
           {selectField && selectField?.majors?.length > 0 ? (
             selectField?.majors?.map((major) => {
               const isChecked = selectMajors.includes(major.id);
-              const isDisabled =
-                !isChecked && selectMajors.length >= 3;
+
               return (
                   <Label key={major.id} className="ml-2 text-sm text-gray-700 mt-2 flex gap-2 items-center">
                   <Checkbox
-                    disabled={notEdit || isDisabled}
                     checked={isChecked}
                     onCheckedChange={(checked) => {
+                      if (notEdit) return;
+                      if (selectMajors.length >= 3 && checked) {
+                        return;
+                      }
                       if (checked) {
                         setSelectMajors([...selectMajors, major.id]);
                       } else {

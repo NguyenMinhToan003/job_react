@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { useNavigate } from 'react-router-dom'
 
 export default function CompanyListPage() {
   const [companies, setCompanies] = useState<EmployerDetailResponse[]>([])
@@ -30,6 +31,7 @@ export default function CompanyListPage() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [totalPages, setTotalPages] = useState(0)
   const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const fetchCompanies = async () => {
     try {
@@ -38,8 +40,7 @@ export default function CompanyListPage() {
       setCompanies(data.items)
       setTotalPages(data.totalPage)
     } catch (err) {
-      console.error('Fetch error:', err)
-      toast.error('Không thể tải danh sách công ty')
+      toast.error(err?.response?.data?.message || 'Lỗi khi tải danh sách công ty')
     } finally {
       setLoading(false)
     }
@@ -200,7 +201,7 @@ export default function CompanyListPage() {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className='flex  items-center gap-2'>
                       <Select
                         value={company.account.status}
                         onValueChange={(value: ACCOUNT_STATUS) =>
@@ -216,6 +217,13 @@ export default function CompanyListPage() {
                           <SelectItem value={ACCOUNT_STATUS.BLOCKED}>Đã khóa</SelectItem>
                         </SelectContent>
                       </Select>
+                      <Button
+                        variant='link'
+                        className='text-xs mt-1'
+                        onClick={() => navigate('/admin/nha-tuyen-dung/' + company.id)}
+                      >
+                        Xem chi tiết
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

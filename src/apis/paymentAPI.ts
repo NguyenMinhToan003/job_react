@@ -1,4 +1,4 @@
-import { EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionBannerRequest } from "@/types/employerSubType"
+import { AdminFilterTransaction, EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionBannerRequest } from "@/types/employerSubType"
 import { axiosInstance } from "."
 import { CreatePackage, FilterPackage, PackageResponse } from "@/types/packageType"
 
@@ -94,7 +94,13 @@ export const getEmployerSubInPackage = async (packageId: string) => {
   const response = await axiosInstance.get<EmployerSubResponse[]>(`/employer-sub/get-all-in-package/${packageId}`)
   return response.data
 }
-export const getAllTransactionsAdmin = async () => {
-  const response = await axiosInstance.get<TransactionDetailResponse[]>('/transaction/admin/get-all')
+export const getAllTransactionsAdmin = async (filter: AdminFilterTransaction) => {
+  const response = await axiosInstance.get<{
+    items: TransactionDetailResponse[],
+    total: number,
+    totalPages: number
+  }>('/transaction/admin/get-all', {
+    params: filter
+  })
   return response.data
 }

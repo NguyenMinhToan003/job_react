@@ -37,14 +37,12 @@ import { LocationResponse } from '@/types/location';
 import { Field } from '@/types/majorType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
-import { CirclePlus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { PackageResponse } from '@/types/packageType';
-import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
 import { useNavigate } from 'react-router-dom';
 import { useLoading } from '@/providers/LoadingProvider';
 import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { Plus } from 'lucide-react';
 
 export default function CreateJob() {
 
@@ -140,7 +138,7 @@ export default function CreateJob() {
   }
   const fetchListElements = async () => {
     try {
-      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages, fieldlist, packageAvailables] = await Promise.all([
+      const [benefits, levels, experiences, typeJobs, locations, skills, educations, languages, fieldlist] = await Promise.all([
         getBenefit(),
         getLevelList(),
         getExperienceList(),
@@ -185,9 +183,9 @@ export default function CreateJob() {
   }
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax]);
   return <>
-    <Card className='w-full bg-transparent border-none shadow-none p-0'>
+    <Card className='w-full bg-transparent border-none shadow-none p-0 mt-10'>
       <CardHeader>
-        <CardTitle className='font-bold text-2xl text-red-600'>TẠO TIN TUYỂN DỤNG</CardTitle>
+        <CardTitle className='font-bold text-2xl text-[#451da1]'>TẠO TIN TUYỂN DỤNG</CardTitle>
       </CardHeader>
       <CardContent>
         <div className='flex flex-col md:flex-row gap-6'>
@@ -280,25 +278,22 @@ export default function CreateJob() {
               setLevelWeight={setLevelWeight}
             />
           </div>
-          {/* Right side: Add Button */}
-          <div className='w-full md:w-[300px] sticky top-20 h-56 flex flex-col gap-4'>
-            
-            <Card className='shadow-md border-dashed border-2 border-gray-300 p-4 h-full flex flex-col justify-center items-center'>
-              <div>
-                <div className='text-sm text-gray-500 text-center font-bold'>
-                  Bạn đã hoàn tất  {checkField}/ 8 trường thông tin.
-                </div>
-              </div>
-              <Button
-                className='w-full h-16 bg-[#ed1b2f] text-base mt-4 cursor-pointer'
-                onClick={handleCreateJob}
-                disabled={checkField < 6}
-              >
-                <CirclePlus className='mr-2' />
-                Thêm công việc
-              </Button>
-            </Card>
-          </div>
+          <div className='w-[300px] sticky top-20 h-fit'>
+  <Card className='shadow-md border-dashed border- p-4 flex flex-col items-center relative'>
+
+
+    <div id="update" className='w-full'>
+      <Button
+        className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
+        onClick={handleCreateJob}
+        disabled={checkField < 7}
+      >
+        <Plus className='mr-2' />
+        Tạo tin tuyển dụng
+      </Button>
+    </div>
+  </Card>
+</div>
         </div>
       </CardContent>
     </Card>

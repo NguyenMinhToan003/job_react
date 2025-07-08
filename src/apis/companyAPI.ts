@@ -41,6 +41,11 @@ export const getMeEmployer = async () => {
   const response = await axiosInstance.get<EmployerDetailResponse>('/employer/me');
   return response.data;
 }
+export const adminGetEmployer = async (id: string) => {
+  const response = await axiosInstance.get<EmployerDetailResponse>(`/employer/${id
+}`);
+  return response.data;
+}
 export const updateMeEmployer = async (data: EmployerRegisterRequest) => {
   const formData = new FormData();
   if (data.logo) {
@@ -65,12 +70,12 @@ export const allEmployer = async (params: AdminFilterEmployer) => {
     items: EmployerDetailResponse[];
     total: number;
     totalPage: number;
-  }>('/employer/all', { params });
+  }>('/employer/admin/all', { params });
   return response.data;
 }
 export const getEmployerBanner = async () =>
 {
-  const response = await axiosInstance.get<Employer[]>(`/employer/banner`);
+  const response = await axiosInstance.get<Employer[]>(`/employer/banner/view`);
   return response.data;
 }
 export const filterEmployer = async (params: FilterEmployer) => {

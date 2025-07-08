@@ -38,10 +38,10 @@ export default function BenefitJobPopup({
           benefitList.map((benefit) => (
             <div key={benefit.id} className="flex items-center gap-2">
               <Checkbox
-                disabled={notEdit}
                 id={`benefit-${benefit.id}`}
                 checked={benefitIds.some(item => item.toString() === benefit.id)}
                 onCheckedChange={(checked) => {
+                  if (notEdit) return;
                   if (checked) {
                     setBenefitIds([
                       ...benefitIds, benefit.id]);

@@ -19,7 +19,6 @@ import { convertDateToString } from '@/utils/dateTime';
 export default function SearchJobInLocation() {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [jobs, setJobs] = useState<JobFilterResponse[]>([]);
-
   const [radius, setRadius] = useState(10);
   const [tempRadius, setTempRadius] = useState(radius);
   const [loading, setLoading] = useState(true);
@@ -77,23 +76,23 @@ export default function SearchJobInLocation() {
   }, [location, radius]);
 
   return (
-    <div className="p-4  w-7xl mx-auto">
-      <Card className="rounded-none shadow-none mb-4">
+    <div className="p-4 max-w-7xl mx-auto">
+      <Card className="rounded-md shadow-sm mb-4">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-gray-800">
             Việc làm gần vị trí của bạn
           </CardTitle>
           <p className="text-sm text-gray-500">Dựa trên vị trí hiện tại của bạn</p>
           <p>
-            chúng tôi tìm thấy {jobs.length} việc làm trong bán kính {radius} km.
-            <br />
-            Nếu bạn không thấy việc làm nào, hãy thử thay đổi bán kính tìm kiếm hoặc đảm bảo rằng bạn đã cấp quyền truy cập vị trí cho trình duyệt của mình.
+            Tìm thấy {jobs.length} việc làm trong bán kính {radius} km.
           </p>
         </CardHeader>
       </Card>
 
       <div className="mb-6">
-        <p className="text-sm text-gray-700 font-medium mb-1">Chọn bán kính tìm kiếm: {radius} km</p>
+        <p className="text-sm text-gray-700 font-medium mb-1">
+          Chọn bán kính tìm kiếm: {radius} km
+        </p>
         <Slider
           value={[tempRadius]}
           min={1}
@@ -105,36 +104,26 @@ export default function SearchJobInLocation() {
       </div>
 
       {loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 w-7xl mx-auto gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <Card key={i} className="shadow-md p-4 space-y-4">
-              <div className="flex items-center space-x-4">
-                <Skeleton className="w-12 h-12 rounded-full" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-5/6" />
-                <Skeleton className="h-3 w-1/2" />
-              </div>
-              <div className="flex justify-end">
-                <Skeleton className="h-6 w-16 rounded" />
-              </div>
+              <Skeleton className="w-12 h-12 rounded-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-3 w-1/2" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-5/6" />
+              <Skeleton className="h-3 w-1/2" />
+              <Skeleton className="h-6 w-16 rounded" />
             </Card>
           ))}
         </div>
       )}
 
-
       {error && <p className="text-red-600 text-center mt-4">{error}</p>}
 
       {!loading && !error && (
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {jobs.map((job) => (
-            
             <Card key={job.id} className="shadow-md">
               <CardHeader>
                 <div className="flex items-center space-x-4">
@@ -158,29 +147,40 @@ export default function SearchJobInLocation() {
               <CardContent>
                 <div
                   onClick={() => navigate(`/cong-viec/${job.id}`)}
-                  className="p-2 border rounded hover:bg-muted transition cursor-pointer space-y-1 "
+                  className="p-2 border rounded hover:bg-muted transition cursor-pointer space-y-1"
                 >
-                  <div className="font-medium ">{job.name}</div>
+                  <div className="font-medium">{job.name}</div>
                   <div className="text-sm text-muted-foreground font-semibold">
                     {convertPrice(job.minSalary, job.maxSalary)}
                   </div>
-
                   <div className="text-xs text-gray-500 font-semibold">
                     {job.locations.map((loc) => loc.name).join(', ')}
                   </div>
-                  <div className="text-xs text-gray-500">
                   <div className="text-xs text-gray-500 font-semibold">
                     Hạn: {convertDateToString(job.expiredAt)}
                   </div>
-                  <div>
-                    <MapPinnedIcon className="h-4 w-4 text-gray-500 inline-block mr-1" />
-                    <span className="text-xs text-blue-500">Xem đường đi</span>
+                  <div className="text-xs text-gray-500 font-semibold">                   
+                    <Button
+                      variant="link"
+                      size="sm"
+                      className="text-blue-600 hover:underline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (location) {
+                          const origin = `${location.latitude},${location.longitude}`;
+                          const destination = `${job.locations[0].lat},${job.locations[0].lng}`;
+                          const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+                          window.open(mapsUrl, '_blank');
+                        }
+                      }}
+                    >
+                      <MapPinnedIcon/>
+                      Xem đường đi
+                    </Button>
                   </div>
-                  </div>
-                  </div>
-
-                  <div className="mt-4 text-end bg-[#fbfaff] p-2 rounded">
-                  <Button variant="secondary" size="sm" className='text-[#2c95ff]'>
+                </div>
+                <div className="mt-4 text-end bg-[#fbfaff] p-2 rounded">
+                  <Button variant="secondary" size="sm" className="text-[#2c95ff]">
                     {job.distanceKm} km
                   </Button>
                 </div>

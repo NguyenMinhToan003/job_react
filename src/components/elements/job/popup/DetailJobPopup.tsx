@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Editer from '../../editer/editer';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function DetailJobPopup({
   description,
@@ -48,12 +49,12 @@ export default function DetailJobPopup({
                 <>
                   {description.trim() === '' ? (
                     <CirclePlus
-                      className='w-6 h-6 text-red-600 cursor-pointer'
+                      className='w-6 h-6 text-[#451da1] cursor-pointer'
                       onClick={() => setOpenPopup(true)}
                     />
                   ) : (
                     <SquarePen
-                      className='w-6 h-6 text-red-600 cursor-pointer'
+                      className='w-6 h-6 text-[#451da1] cursor-pointer'
                       onClick={() => setOpenPopup(true)}
                     />
                   )}
@@ -72,7 +73,7 @@ export default function DetailJobPopup({
               </div>
             ) : (
               <div
-                className='font-semibold text-gray-800'
+                className='text-neutral-700'
                 dangerouslySetInnerHTML={{ __html: description }}
               />
             )
@@ -82,24 +83,19 @@ export default function DetailJobPopup({
 
       <Dialog open={openPopup} onOpenChange={setOpenPopup}>
         <DialogContent
-          className='max-w-2xl max-h-[90vh] overflow-hidden'
+          className='w-2xl h-[85vh] '
           onInteractOutside={(e) => e.preventDefault()}
         >
           <DialogHeader>
             <DialogTitle>Thêm mô tả công việc</DialogTitle>
           </DialogHeader>
 
-          <div className='text-sm mb-2'>
-            <span className='text-orange-600 font-semibold'>Tips:</span>{' '}
-            Bạn có thể sử dụng các định dạng văn bản như in đậm, in nghiêng, danh sách, và liên kết.
-          </div>
-
-          <div className='h-[60vh] overflow-y-auto overflow-x-hidden'>
-          <Editer
-            text={text}
-            setText={setText}
-          />
-          </div>
+          <ScrollArea  className='h-[65vh] overflow-y-auto overflow-x-hidden'>
+            <Editer
+              text={text}
+              setText={setText}
+            />
+          </ScrollArea>
 
           <DialogFooter className='mt-4'>
             <Button
@@ -112,7 +108,7 @@ export default function DetailJobPopup({
               Cancel
             </Button>
             <Button
-              className='bg-red-600 text-white'
+              className='bg-[#451DA0] hover:bg-[#451DA0] text-white rounded-none w-40'
               onClick={() => {
                 setDescription(text.trim());
                 setOpenPopup(false);

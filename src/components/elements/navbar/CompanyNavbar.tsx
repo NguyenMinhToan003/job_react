@@ -20,7 +20,7 @@ import clsx from 'clsx';
 import { useAccount } from '@/providers/UserProvider';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 export default function CompanyNavbar() {
   const navigate = useNavigate();
@@ -90,21 +90,6 @@ export default function CompanyNavbar() {
 
   return (
     <Card className='min-w-[300px] max-w-[300px] h-fit p-0 rounded-sm px-2 py-4 shadow-xl sticky top-18'>
-      <CardHeader>
-        <CardTitle className='text-2xl font-semibold'>
-          <div className='flex items-center gap-2'>
-            <Avatar
-              className='border border-gray-300 w-20 h-20 rounded-sm'
-            >
-              <AvatarImage
-                src={dataUser?.logo}
-                alt='Company Logo'
-              />
-            </Avatar>
-            {dataUser?.name || 'Công ty'}
-          </div>
-        </CardTitle>
-      </CardHeader>
 
       <CardContent className='text-base space-y-2 p-0'>
         {userMenuItems.map((item, index) => {

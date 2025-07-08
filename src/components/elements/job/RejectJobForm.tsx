@@ -2,12 +2,12 @@
 import { createEmployerNotiAPI } from '@/apis/notiAccountAPI';
 import { updateJobAdmin } from '@/apis/jobAPI';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
 import { JOB_STATUS, NOTI_TYPE } from '@/types/type';
-import { DialogTitle } from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Editer from '../editer/editer';
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function RejectJobForm({ id, employerId }: { id: string; employerId: number }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,14 +32,13 @@ export default function RejectJobForm({ id, employerId }: { id: string; employer
         toast.error('Không tìm thấy nhà tuyển dụng liên kết với công việc này');
         return;
       }
-      await createEmployerNotiAPI({
+      createEmployerNotiAPI({
         content: reason,
         title: 'Thông báo từ chối đăng tuyển công việc',
         receiverAccountId: employerId,
         link: `/danh-cho-nha-tuyen-dung/thong-tin-tuyen-dung/${id}`,
         type: NOTI_TYPE.REJECTED,
-      })
-      window.location.reload();
+      });
     }
     catch(error: any) {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi gửi thông báo');
@@ -51,38 +50,41 @@ export default function RejectJobForm({ id, employerId }: { id: string; employer
     handleCloseDialog();
   };
   return <>
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>
-      <Button className='cursor-pointer mt-2'>
-        TỪ CHỐI CÔNG VIỆC
-      </Button>
-      </DialogTrigger>
-      <DialogContent>
-      <DialogHeader>
-        <DialogTitle className='text-xl font-bold text-red-700'>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+      <AlertDialogTrigger className='w-full'>
+        <Button className='text-red-500 hover:text-red-500 bg-red-50 hover:bg-red-50 min-w-full border border-red-100 rounded-none h-12 mt-2'>
+          Từ chối đăng tuyển công việc
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle className='text-xl font-bold'>
           TỪ CHỐI ĐĂNG TUYỂN CÔNG VIỆC
-        </DialogTitle>
-      </DialogHeader>
-        <p className='text-sm text-gray-500 mt-2'>
+        </AlertDialogTitle>
+      </AlertDialogHeader>
+        <AlertDialogDescription>
+        <p className=''>
           Lý do từ chối đăng tuyển công việc sẽ được gửi đến nhà tuyển dụng.
         </p>
-        <Textarea
-          placeholder='Thông báo từ chối đăng tuyển công việc'
-          className='w-full h-90 rounded-sm border-2 border-red-400 focus:border-red-400 mt-4'
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          rows={5}
-        />
-        <div className='mt-4'>
-          <Button className='bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700'
+        <ScrollArea className='mt-4 h-[60vh] overflow-y-auto w-full'>
+          <Editer
+            text={reason}
+            setText={setReason}
+          />
+        </ScrollArea>
+        </AlertDialogDescription>
+        <AlertDialogFooter className='mt-4'>
+          <Button className='bg-[#451DA0] hover:bg-[#451DA0] text-white rounded-none w-40'
             onClick={handleSubmit}>
-            Từ chối
+            Từ chối đăng tuyển
           </Button>
-          <Button className='ml-2 bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400'>
+          <Button
+            variant='outline'
+            onClick={handleCloseDialog}>
             Hủy
           </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </>
 }

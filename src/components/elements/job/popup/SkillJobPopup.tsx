@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/card';
 import { Skill } from '@/types/skillType';
 import { Button } from '@/components/ui/button';
+import clsx from 'clsx';
 
 export default function SkillJobPopup({
   skillList,
@@ -43,10 +44,12 @@ export default function SkillJobPopup({
           const isSelected = selectedSkills.some((s) => s === skill.id);
           return (
             <Button
-              disabled={notEdit}
               key={skill.id}
               variant={isSelected ? 'default' : 'outline'}
-              className="w-full text-start"
+              className={clsx(
+                'w-full h-10 justify-start text-left',
+                isSelected ? 'text-[#451DA0] hover:text-[#451DA0] bg-[#EDECFF] hover:bg-[#EDECFF] rounded-none' : 'text-gray-700',
+              )}
               onClick={() => toggleSkill(skill)}
             >
               {skill.name}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import dayjs from "dayjs"
@@ -6,9 +7,7 @@ import { getPackageAvailable } from "@/apis/paymentAPI"
 import { PackageResponse } from "@/types/packageType"
 import { convertDateToString, convertRemainingTime } from "@/utils/dateTime"
 
-
 import {
-  AlertTriangle,
   Calendar,
   Clock,
 } from "lucide-react"
@@ -16,13 +15,14 @@ import { Label } from "@/components/ui/label"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { EmployerSubResponse } from "@/types/employerSubType"
 
 
 
 // Component hiển thị thông tin thời gian dịch vụ
-const ServiceTimeDisplay = ({ subUsing }: { subUsing: any[] }) => {
+const ServiceTimeDisplay = ({ subUsing, subPending }: { subUsing: EmployerSubResponse[], subPending: EmployerSubResponse[] }) => {
 
-  const processTime = (startDate: number, endDate: number): number => {
+  const processTime = (startDate: string, endDate: string): number => {
     const now = dayjs().diff(dayjs(startDate), "day")
     const total = dayjs(endDate).diff(dayjs(startDate), "day")
     return Math.round((now / total) * 100)
@@ -35,7 +35,24 @@ const ServiceTimeDisplay = ({ subUsing }: { subUsing: any[] }) => {
             <Clock className='w-4 h-4 inline mr-1' />
             Dịch vụ đang hoạt động
           </Label>
-          <div className='space-y-2'>
+        <div className='space-y-2'>
+          {
+            subPending.map((item, index) => (
+              <div key={index} className='p-3 rounded-lg border border-yellow-200 bg-yellow-50'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center space-x-2'>
+                    <Calendar className='w-4 h-4 text-muted-foreground' />
+                    <span className='text-sm font-medium line-clamp-1'>
+                      {item?.job?.name}
+                    </span>
+                  </div>
+                </div>
+                <div className='mt-2 text-xs text-yellow-700'>
+                  Dịch vụ đang chờ kích hoạt
+                </div>
+              </div>
+            ))
+            }
             {subUsing.map((item, index) => {
               const daysRemaining = convertRemainingTime(item.endDate)
               const isExpiringSoon = daysRemaining <= 7
@@ -54,8 +71,8 @@ const ServiceTimeDisplay = ({ subUsing }: { subUsing: any[] }) => {
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center space-x-2'>
                             <Calendar className='w-4 h-4 text-muted-foreground' />
-                            <span className='text-sm font-medium'>
-                              {convertDateToString(item.endDate)}
+                            <span className='text-sm font-medium line-clamp-1'>
+                              {item?.job?.name}
                             </span>
                           </div>
                         </div>
@@ -81,9 +98,7 @@ const ServiceTimeDisplay = ({ subUsing }: { subUsing: any[] }) => {
                           <strong>Ngày kết thúc:</strong>{" "}
                           {convertDateToString(item.endDate)}
                         </p>
-                        <p>
-                          <strong>Trạng thái:</strong> {item.status}
-                        </p>
+                        
                       </div>
                     </TooltipContent>
                   </Tooltip>
@@ -115,7 +130,7 @@ export default function ServiceMe() {
   }, [])
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full p-6'>
       {packagesAvailable.map((pkg) => {
         const usagePercentage = pkg.sub_total
           ? ((pkg.sub_used || 0) / pkg.sub_total) * 100
@@ -132,7 +147,7 @@ export default function ServiceMe() {
                   <img
                     src={pkg.image || "/placeholder.svg?height=128&width=300"}
                     alt={pkg.name}
-                    className='w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105'
+                    className='w-full h-46 object-cover transition-transform duration-300 group-hover:scale-105'
                   />
                   <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
                 </div>
@@ -153,7 +168,10 @@ export default function ServiceMe() {
                 <Progress value={usagePercentage} className='h-2' />
               </div>
 
-              <ServiceTimeDisplay subUsing={pkg.sub_using || []} />
+              <ServiceTimeDisplay
+                subUsing={pkg.sub_using || []}
+                subPending={pkg.sub_pending || []}
+              />
             </CardContent>
           </Card>
         )

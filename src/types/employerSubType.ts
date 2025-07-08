@@ -1,6 +1,7 @@
 import { Employer } from "./companyType";
 import { JobResponse } from "./jobType";
 import { PackageResponse } from "./packageType";
+import { PAYMENT_STATUS } from "./type";
 
 export interface EmployerSubResponse {
   id: number;
@@ -58,4 +59,13 @@ export interface TransactionDetailResponse {
   recordedAt: string;
   employerSubscriptions: EmployerSubResponse[];
   note: string;
+}
+export interface AdminFilterTransaction {
+  status?: PAYMENT_STATUS;
+  vnp_TxnRef?: string;
+  employerId?: number;
+  sortBy?: 'createdAt' | 'amount';
+  sortOrder?: 'asc' | 'desc';
+  page?: number;
+  limit?: number;
 }

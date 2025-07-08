@@ -27,8 +27,10 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { filterJobAdmin } from '@/apis/jobAPI'
 import { JOB_STATUS } from '@/types/type'
+import { useNavigate } from 'react-router-dom'
 
 export default function JobListActive() {
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [page, setPage] = useState<number>(1);
@@ -36,8 +38,10 @@ export default function JobListActive() {
   const [sortBy, setSortBy] = useState<string>('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [search, setSearch] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const fetchJobs = async () => {
     try {
+      setIsLoading(true);
       const response = await filterJobAdmin({
         isActive: [JOB_STATUS.ACTIVE],
         isExpired: 0,
@@ -51,6 +55,9 @@ export default function JobListActive() {
     }
     catch (error: any) {
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');
+    }
+    finally {
+      setIsLoading(false);
     }
   }
   useEffect(() => {
@@ -138,7 +145,19 @@ export default function JobListActive() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {jobs.length === 0 ? (
+                {
+                  isLoading && (
+                    <TableRow>
+                      <TableCell colSpan={5} className='text-center py-8'>
+                        <div className='flex justify-center items-center gap-2'>
+                          <span>Đang tải dữ liệu...</span>
+                          <div className='animate-spin rounded-full h-6 w-6 border-t-2 border-blue-500'></div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )
+                }
+                {!isLoading && jobs.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className='text-center py-8 text-gray-500'>
                       Không có công việc nào.
@@ -226,7 +245,8 @@ export default function JobListActive() {
                         }
                       </TableCell>
                       <TableCell className='text-center'>
-                        <Button variant='outline' size='sm' className='flex items-center gap-2'>
+                        <Button variant='outline' size='sm' className='flex items-center gap-2'
+                          onClick={() => {navigate(`/admin/tuyen-dung/review/${job.id}`)}}>
                           <Eye className='h-4 w-4' />
                           Xem chi tiết
                         </Button>

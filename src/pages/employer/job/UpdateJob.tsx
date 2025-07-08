@@ -212,7 +212,7 @@ export default function UpdateJob() {
     <Card className='w-full bg-transparent shadow-none border-none  '>
       <CardHeader>
         <CardTitle className='font-bold text-2xl flex justify-between items-center'>
-          <div>CẬP NHẬT BÀI ĐĂNG TUYỂN DỤNG</div>
+          <div className='text-[#451e99]'>CẬP NHẬT BÀI ĐĂNG TUYỂN DỤNG</div>
           {
             job && <JobMenu job={job}/> 
           }
@@ -318,23 +318,23 @@ export default function UpdateJob() {
             />
           </div>
           {/* Right side: Add Button */}
-          <div className='w-full md:w-[300px] sticky top-20 h-56'>
-            <Card className='shadow-md border-dashed border-2 border-gray-300 p-4 h-full flex flex-col justify-center items-center'>
-              <div>
-                <div className='text-sm text-gray-500 text-center font-bold'>
-                  Bạn đã hoàn tất  {checkField}/ 8 trường thông tin.
-                </div>
-              </div>
-              <Button
-                className='w-full h-16 bg-[#ed1b2f] text-base mt-4 cursor-pointer'
-                onClick={handleUpdateJob}
-                disabled={checkField < 7}
-              >
-                <RotateCcw className='mr-2' />
-                CẬP NHẬT
-              </Button>
-            </Card>
-          </div>
+          <div className='w-[300px] sticky top-20 h-fit'>
+  <Card className='shadow-md border-dashed border- p-4 flex flex-col items-center relative'>
+
+
+    <div id="update" className='w-full'>
+      <Button
+        className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
+        onClick={handleUpdateJob}
+        disabled={checkField < 7}
+      >
+        <RotateCcw className='mr-2' />
+        CẬP NHẬT
+      </Button>
+    </div>
+  </Card>
+</div>
+
         </div>
       </CardContent>
     </Card>

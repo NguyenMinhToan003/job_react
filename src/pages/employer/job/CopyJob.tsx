@@ -40,7 +40,7 @@ import { LocationResponse } from '@/types/location';
 import { Field } from '@/types/majorType';
 import { Skill } from '@/types/SkillType';
 import { TypeJob } from '@/types/TypeJobType';
-import { RotateCcw } from 'lucide-react';
+import { Plus, RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -314,24 +314,22 @@ export default function CopyJob() {
               jobId={+id}
             />
           </div>
-          {/* Right side: Add Button */}
-          <div className='w-full md:w-[300px] sticky top-20 h-56'>
-            <Card className='shadow-md border-dashed border-2 border-gray-300 p-4 h-full flex flex-col justify-center items-center'>
-              <div>
-                <div className='text-sm text-gray-500 text-center font-bold'>
-                  Bạn đã hoàn tất  {checkField}/ 8 trường thông tin.
-                </div>
-              </div>
-              <Button
-                className='w-full h-16 bg-[#ed1b2f] text-base mt-4 cursor-pointer'
-                onClick={handleUpdateJob}
-                disabled={checkField < 7}
-              >
-                <RotateCcw className='mr-2' />
-                Tạo bài đăng
-              </Button>
-            </Card>
-          </div>
+          <div className='w-[300px] sticky top-20 h-fit'>
+  <Card className='shadow-md border-dashed border- p-4 flex flex-col items-center relative'>
+
+
+    <div id="update" className='w-full'>
+      <Button
+        className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
+        onClick={handleUpdateJob}
+        disabled={checkField < 7}
+      >
+        <Plus className='mr-2' />
+        Tạo tin tuyển dụng
+      </Button>
+    </div>
+  </Card>
+</div>
         </div>
       </CardContent>
     </Card>

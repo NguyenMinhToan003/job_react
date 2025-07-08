@@ -45,9 +45,6 @@ export default function OverViewAdmin() {
   useEffect(() => {
     fetchDashboardData();
   }, []);
-
-
-
   return (
     <div className='min-h-screen bg-[#F6F6F6]'>
       <div className='p-6 -mt-8 relative z-10'>

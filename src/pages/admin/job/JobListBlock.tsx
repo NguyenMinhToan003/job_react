@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Card,
   CardContent,
@@ -29,6 +30,7 @@ import { Badge } from '@/components/ui/badge';
 
 export default function JobListBlock() {
   const navigate = useNavigate();
+  
     const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [page, setPage] = useState<number>(1);
@@ -66,9 +68,22 @@ export default function JobListBlock() {
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input placeholder="Tìm kiếm theo tên công việc, công ty, kỹ năng..." className="pl-10" />
+              <Input placeholder="Tìm kiếm theo tên công việc, công ty, kỹ năng..." className="pl-10"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    fetchJobs();
+                  }
+                }}
+              />
             </div>
-            <Button>Tìm kiếm</Button>
+            <Button
+              onClick={() => {
+                fetchJobs();
+              }}
+              className="flex items-center gap-2"
+            >Tìm kiếm</Button>
             <Select defaultValue={limit.toString()}
               onValueChange={(value) => {
                 setLimit(Number(value));
@@ -210,7 +225,9 @@ export default function JobListBlock() {
                         }
                       </TableCell>
                       <TableCell className="text-center">
-                        <Button variant="outline" size="sm" className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" className="flex items-center gap-2"
+                          onClick={() => navigate(`/admin/tuyen-dung/review/${job.id}`)}
+                        >
                           <Eye className="h-4 w-4" />
                           Xem chi tiết
                         </Button>
@@ -223,9 +240,9 @@ export default function JobListBlock() {
           </div>
 
           <PaginationModel1
-            page={1}
-            setPage={() => { }}
-            totalPages={10}
+            page={page}
+            setPage={setPage}
+            totalPages={totalPages}
           />
         </CardContent>
       </Card>

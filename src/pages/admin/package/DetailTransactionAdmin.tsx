@@ -37,6 +37,7 @@ import {
   Table,
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
+import { convertPrice } from "@/utils/convertPrice"
 
 export default function DetailTransactionAdmin() {
   const { id } = useParams<{ id: string }>()
@@ -155,7 +156,7 @@ export default function DetailTransactionAdmin() {
                 <div>
                   <p className="text-sm text-muted-foreground">Số tiền</p>
                   <p className="text-lg font-bold text-green-700">
-                    {transaction.amount.toLocaleString("vi-VN")} VNĐ
+                    {convertPrice(transaction.amount,null)} VNĐ
                   </p>
                 </div>
               </div>

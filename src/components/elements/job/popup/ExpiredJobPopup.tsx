@@ -37,7 +37,7 @@ export default function ExpiredJobPopup({
           }}
           dateFormat="dd/MM/yyyy"
           locale={vi}
-          className="mt-2 w-full rounded-md border px-3 py-2 text-sm"
+          className="mt-2 w-full rounded-md border px-3 py-2 border-[#2c95ff]"
           disabled={isEdit}
           placeholderText="Chọn ngày"
         />

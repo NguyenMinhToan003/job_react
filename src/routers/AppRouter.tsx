@@ -63,6 +63,7 @@ import EmployerList from '@/pages/candidate/search-employer/EmployerList';
 import TransactionsPageAdmin from '@/pages/admin/package/TransactionsPageAdmin';
 import DetailTransactionAdmin from '@/pages/admin/package/DetailTransactionAdmin';
 import ServiceMe from '@/pages/employer/servicePage/ServiceMe';
+import DetailCompany from '@/pages/admin/company/DetailCompany';
 
 
 export default function AppRouter() {
@@ -125,6 +126,7 @@ export default function AppRouter() {
         <Route path='linh-vuc/:fieldId' element={<FieldDetail />} />
         <Route path='chuyen-nganh/:majorId' element={<Major />} />
         <Route path='nha-tuyen-dung' element={<CompanyListPage />} />
+        <Route path='nha-tuyen-dung/:id' element={<DetailCompany />} />
         <Route path='*' element={<OverViewAdmin />} />
         <Route path='tuyen-dung'>
           <Route index element={<JobListPage />} />

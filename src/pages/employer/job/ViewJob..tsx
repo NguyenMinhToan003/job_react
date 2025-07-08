@@ -38,13 +38,9 @@ import { JOB_STATUS, NOTI_TYPE, ROLE_LIST } from '@/types/type';
 import { TypeJob } from '@/types/TypeJobType';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { MoreVertical } from 'lucide-react';
 import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
 import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
 import { Field } from '@/types/majorType';
-import { get } from 'http';
 import { getFieldList } from '@/apis/fieldAPI';
 import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
 
@@ -170,9 +166,9 @@ export default function ViewJob() {
         isActive: JOB_STATUS.ACTIVE,
       });
       setIsActive(JOB_STATUS.ACTIVE);
-      await createEmployerNotiAPI({
+      createEmployerNotiAPI({
         content: `Công việc '${nameJob}' đã được duyệt.`,
-        receiverAccountId: employer.id || -1,
+        receiverAccountId: employer?.id || -1,
         title: 'Công việc đã được duyệt',
         link: `/danh-cho-nha-tuyen-dung/thong-tin-tuyen-dung/${id}`,
         type: NOTI_TYPE.ACCEPTED,
@@ -258,32 +254,34 @@ export default function ViewJob() {
           </div>
 
           {/* Right side: Action Buttons */}
-          <div className='w-full md:w-[300px] sticky top-20 h-56'>
-            <Card className='shadow-md border-dashed border-2 border-gray-300 p-4 h-full flex flex-col justify-center items-center'>
-              <div>
-                <div className='text-sm text-gray-500 text-center font-bold flex flex-col items-center gap-3'>
-                  {isActive === JOB_STATUS.PENDING ? (
-                    role === ROLE_LIST.ADMIN ? (
-                      <>
-                        <Button variant='destructive' className='cursor-pointer w-full' onClick={handleActivateJob}>
-                          DUYỆT CÔNG VIỆC
-                        </Button>
-                        <RejectJobForm
-                          id={id}
-                          employerId={employer?.id || -1}
-                        />
-                       
-                      </>
-                    ) : (
-                      <div>Hãy chờ đến khi công việc được duyệt.</div>
-                    )
-                  ) : isActive === JOB_STATUS.ACTIVE ? (
-                    <div className='text-green-600'>Công việc đã được duyệt</div>
-                  ) : isActive === JOB_STATUS.BLOCK ? (
-                    <div className='text-red-600'>Công việc đã bị từ chối</div>
-                  ) : null}
-                </div>
-              </div>
+          <div className='w-[300px] sticky top-20 h-56'>
+            <Card className=''>
+              <CardHeader>
+                <CardTitle className='text-lg font-bold text-start'>HÀNH ĐỘNG</CardTitle>
+                <div className='w-full h-[1px] bg-gray-200 mt-4' />
+                 Trạng thái hiện tại 
+                <span className='text-[#451DA0] font-semibold'>
+                  {isActive === JOB_STATUS.ACTIVE ? 'Đã kích hoạt' :
+                      isActive === JOB_STATUS.BLOCK ? 'Đã từ chối' :
+                    isActive === JOB_STATUS.PENDING ? 'Đang chờ duyệt' :
+                        isActive === JOB_STATUS.CREATE ? 'Đang tạo' : null}
+                </span>
+              </CardHeader>
+              {
+                role === ROLE_LIST.ADMIN && <CardContent>
+                <Button
+                  className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12 mt-4'
+                  onClick={handleActivateJob}
+                  disabled={isActive === JOB_STATUS.ACTIVE}
+                >
+                  Kích hoạt công việc
+                </Button>
+                <RejectJobForm
+                  employerId={employer?.id || -1}
+                  id={id}
+                />
+              </CardContent>
+              }
             </Card>
           </div>
         </div>

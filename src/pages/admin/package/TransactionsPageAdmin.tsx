@@ -34,22 +34,36 @@ import {
   Eye,
 } from "lucide-react"
 import { toast } from "sonner"
+import { PAYMENT_STATUS } from "@/types/type"
+import { convertPrice } from "@/utils/convertPrice"
+import PaginationModel1 from "@/components/elements/pagination/PaginationModel1"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function TransactionsPageAdmin() {
   const navigate = useNavigate()
   const [transaction, setTransactions] = useState<TransactionDetailResponse[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [search, setSearch] = useState<string>("")
+  const [page, setPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
+  const [limit, setLimit] = useState<number>(10)
+  const [status, setStatus] = useState<PAYMENT_STATUS | null>(null)
 
   useEffect(() => {
     fetchSubscriptions()
-  }, [])
+  }, [page, limit])
 
   const fetchSubscriptions = async () => {
     try {
       setLoading(true)
-      const response = await getAllTransactionsAdmin()
-      setTransactions(response)
+      const response = await getAllTransactionsAdmin({
+        page,
+        limit,
+        vnp_TxnRef: search,
+        status: status || undefined,
+      })
+      setTransactions(response.items)
+      setTotalPages(response.totalPages)
     } catch (error: any) {
       console.error("Error fetching transaction:", error)
       toast.error("Có lỗi xảy ra khi tải danh sách đăng ký")
@@ -66,27 +80,64 @@ export default function TransactionsPageAdmin() {
         </Button>
         <h1 className="text-xl font-semibold">Danh sách giao dịch</h1>
       </div>
-
-      <div className="mb-4 flex items-center gap-2 max-w-sm">
-        <Search className="w-4 h-4 text-muted-foreground" />
-        <Input
-          placeholder="Tìm kiếm theo mã giao dịch..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
       <Card>
         <CardHeader>
           <CardTitle>Danh sách giao dịch</CardTitle>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <p>Đang tải...</p>
-          ) : (
+          
+              <>
+                <div className="flex flex-col sm:flex-row gap-4 mb-6">
+                            <div className="flex-1 relative">
+                              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                              <Input
+                                placeholder="Tìm kiếm theo tên, email..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="pl-10"
+                              />
+                            </div>
+                  <Button onClick={
+                    () => {
+                      setPage(1)
+                      fetchSubscriptions()
+                    }
+                            } disabled={loading}>
+                              Tìm kiếm
+                            </Button>
+                            <Select value={limit.toString()} onValueChange={(value) => setLimit(Number(value))}>
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="5">5 / trang</SelectItem>
+                                <SelectItem value="10">10 / trang</SelectItem>
+                                <SelectItem value="20">20 / trang</SelectItem>
+                                <SelectItem value="50">50 / trang</SelectItem>
+                              </SelectContent>
+              </Select>
+              <Select
+                value={status || ""}
+                onValueChange={(value) => {
+                  setStatus(value as PAYMENT_STATUS)
+                  setPage(1)
+                  fetchSubscriptions()
+                }}
+              >
+                            <SelectTrigger className="w-32">
+                              <SelectValue placeholder="Trạng thái" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value={PAYMENT_STATUS.SUCCESS}>Thành công</SelectItem>
+                              <SelectItem value={PAYMENT_STATUS.PENDING}>Chờ xử lý</SelectItem>
+                              <SelectItem value={PAYMENT_STATUS.FAILED}>Thất bại</SelectItem>
+                            </SelectContent>
+              </Select>
+                          </div>
             <Table>
-              <TableHeader>
-                <TableRow>
+                <TableHeader>
+                  <TableRow>
+                    
                   <TableHead>
                     <div className="flex items-center gap-1">
                       <Receipt className="w-4 h-4 text-muted-foreground" />
@@ -108,7 +159,7 @@ export default function TransactionsPageAdmin() {
                   <TableHead>
                     <div className="flex items-center gap-1">
                       <Activity className="w-4 h-4 text-muted-foreground" />
-                      Số tiền
+                        Số tiền
                     </div>
                   </TableHead>
                   <TableHead>
@@ -127,10 +178,25 @@ export default function TransactionsPageAdmin() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transaction
-                  .filter((item) =>
-                    item.vnp_TxnRef.toLowerCase().includes(search.toLowerCase())
-                  )
+                {
+                  loading ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8">
+                        <div className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+                          <span className="ml-2">Đang tải...</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : transaction.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                        Không có giao dịch nào
+                      </TableCell>
+                    </TableRow>
+                  ) : null
+                }
+                {!loading && transaction
                   .map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>{item.vnp_TxnRef}</TableCell>
@@ -163,7 +229,7 @@ export default function TransactionsPageAdmin() {
                       </TableCell>
                       <TableCell>
                         <span className="font-semibold text-green-700">
-                          {item.amount.toLocaleString("vi-VN")}₫
+                          {convertPrice(item.amount,null)}
                         </span>
                       </TableCell>
                       <TableCell>
@@ -172,12 +238,12 @@ export default function TransactionsPageAdmin() {
                       <TableCell>
                         <Badge
                           variant={
-                            item.status === "SUCCESS"
-                              ? "success"
-                              : item.status === "PENDING"
-                              ? "secondary"
+                            item.status === PAYMENT_STATUS.SUCCESS
+                              ? "default"
+                              : item.status === PAYMENT_STATUS.PENDING
+                              ? "outline"
                               : "destructive"
-                          }
+                          } 
                         >
                           {item.status}
                         </Badge>
@@ -196,8 +262,13 @@ export default function TransactionsPageAdmin() {
                     </TableRow>
                   ))}
               </TableBody>
-            </Table>
-          )}
+                </Table>
+                </>
+          <PaginationModel1
+            page={page}
+            setPage={setPage}
+            totalPages={totalPages}
+          />
         </CardContent>
       </Card>
     </div>

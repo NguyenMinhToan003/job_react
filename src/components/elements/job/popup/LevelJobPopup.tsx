@@ -40,17 +40,19 @@ export default function LevelJobPopup({
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-4 gap-4">
           {levelList.length >0 &&levelList.map((level) => {
             const isChecked = levelIds.some((i)=> i === level.id);
             return (
               <div key={level.id} className="flex items-center gap-2">
                 <Checkbox
-                  disabled={notEdit}
                   id={`level-job-${level.id}`}
                   checked={isChecked}
                   onCheckedChange={(checked) =>
-                    handleCheckboxChange(level, Boolean(checked))
+                    {
+                      if (notEdit) return;
+                      handleCheckboxChange(level, Boolean(checked))
+                    }
                   }
                 />
                 <Label htmlFor={`level-job-${level.id}`} className="cursor-pointer">

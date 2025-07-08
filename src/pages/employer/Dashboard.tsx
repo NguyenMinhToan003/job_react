@@ -21,6 +21,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import BarChartCompo from '@/components/elements/charts/BarChartCompo'
 import { getMeNotificationAPI } from '@/apis/notiAccountAPI'
 import { Label } from '@/components/ui/label'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function EmployerDashboard() {
   const [loading, setLoading] = useState(false)
@@ -102,20 +103,20 @@ export default function EmployerDashboard() {
 
   return (
     <div className='container mx-auto p-6 space-y-6 w-full'>
-                {/* Gói dịch vụ hiện có */}
-                <div className='flex items-center mb-4 gap-6 overflow-hidden w-7xl'>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         {packagesAvailable.slice(0,4).map((pkg) => {
           const usagePercentage = pkg.sub_total
             ? ((pkg.sub_used || 0) / pkg.sub_total) * 100
             : 0
 
           return (
-            <Card key={pkg.id} className='group hover:shadow-lg transition-shadow duration-300 min-w-100'>
+            <Card key={pkg.id} className='group hover:shadow-lg transition-shadow duration-300 '>
               <CardHeader>
                 <div className='space-y-3'>
                   <div className='relative overflow-hidden bg-gray-50 rounded-lg'>
                     <img
-                      src={pkg.image || '/placeholder.svg?height=128&width=300'}
+                      src={pkg.image}
                       alt={pkg.name}
                       className='w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105'
                     />
@@ -157,7 +158,7 @@ export default function EmployerDashboard() {
             </Card>
           )
         })}
-      </div>
+        </div>
       <div className='flex justify-end mb-4'> 
         <Button
           variant='outline'

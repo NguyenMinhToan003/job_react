@@ -41,14 +41,13 @@ export default function LanguageJobPopup({
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6">
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {languageList.map((language) => {
             const isChecked = languageIds.some((item) =>
               item.languageId === Number(language.id))
             return (
               <div key={language.id} className="flex items-center gap-2">
                 <Checkbox
-                  disabled={notEdit}
                   id={`language-${language.id}`}
                   checked={isChecked}
                   onCheckedChange={(checked) =>

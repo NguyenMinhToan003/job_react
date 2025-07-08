@@ -4,6 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 export default function QuantityJobPopup({
   quantityJob,
@@ -28,13 +29,13 @@ export default function QuantityJobPopup({
           </CardTitle>
         </CardHeader>
         <CardContent className='p-6 space-y-2'>
-          <input
-            disabled={notEdit}
+          <Input
             type='number'
-            className='mt-4 w-full border-b-2 border-gray-300 bg-transparent text-gray-800 placeholder-gray-500 font-medium focus:border-gray-500 focus:outline-none'
+            className='w-full bg-[#EDECFF] border-none hover:bg-[#EDECFF] focus:bg-[#EDECFF] text-[#451DA0] hover:text-[#451DA0] focus:text-[#451DA0] rounded-none font-semibold'
             placeholder='Nhập số lượng tuyển dụng'
             value={quantityJob}
             onChange={(e) => {
+              if (notEdit) return;
               const value = e.target.value
               setQuantityJob(value === '' ? 0 : parseInt(value) || 0)
             }}

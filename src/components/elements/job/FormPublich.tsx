@@ -5,7 +5,6 @@ import {
   AlertDialogTrigger,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogDescription,
   AlertDialogFooter,
 } from '@/components/ui/alert-dialog'
 import {
@@ -17,7 +16,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useEffect, useState } from 'react'
-import { DollarSign, Flame, TrendingUp } from 'lucide-react'
+import { DollarSign, TrendingUp } from 'lucide-react'
 import type { JobDetailResponse } from '@/types/jobType'
 import { PackageResponse } from '@/types/packageType'
 import { getPackageAvailable } from '@/apis/paymentAPI'
