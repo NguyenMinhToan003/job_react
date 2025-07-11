@@ -16,6 +16,8 @@ export interface CandidateResponse {
   gender: string;
   account: Account;
   phone: string;
+  birthday: string;
+  location: string;
 }
 export interface EmployerResponse {
   id: number;

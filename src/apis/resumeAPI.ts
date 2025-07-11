@@ -33,7 +33,6 @@ export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersion
   if (dto.languageResumes?.length > 0) {
     dto.languageResumes.forEach((lang, index) => {
       formData.append(`languageResumes[${index}][languageId]`, lang.languageId.toString());
-      formData.append(`languageResumes[${index}][level]`, lang.level.toString());
     });
   }
   formData.append('expectedSalary', dto?.expectedSalary?.toString());
@@ -71,7 +70,6 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   if (dto.languageResumes?.length > 0) {
     dto.languageResumes.forEach((lang, index) => {
       formData.append(`languageResumes[${index}][languageId]`, lang.languageId.toString());
-      formData.append(`languageResumes[${index}][level]`, lang.level.toString());
     });
   }
   dto.skills.forEach((skill, idx) => {

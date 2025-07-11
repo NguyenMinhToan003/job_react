@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { viewResumeAPI } from '@/apis/resumeAPI';
+import { deleteResumeAPI, viewResumeAPI } from '@/apis/resumeAPI';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { useAlertDialog } from '@/providers/AlertDialogProvider';
 import { ResumeVersion } from '@/types/resumeType';
 import { convertDateToString } from '@/utils/dateTime';
 import {
@@ -15,6 +17,9 @@ import {
   Globe,
   Edit,
   Eye,
+  Trash2,
+  ArrowLeft,
+  DollarSign,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -24,6 +29,7 @@ export default function ViewResumeLastVersion() {
   const [resume, setResume] = useState<ResumeVersion>();
   const { resumeId } = useParams<{ resumeId: string }>();
   const navigate = useNavigate();
+  const { showAlert } = useAlertDialog()
 
   const fetchResume = async () => {
     try {
@@ -39,6 +45,23 @@ export default function ViewResumeLastVersion() {
       fetchResume();
     }
   }, []);
+  const handleDeleteResume = async (resumeId: number) => {
+    showAlert({
+      title: 'Xóa hồ sơ',
+      content: 'Bạn có chắc chắn muốn xóa hồ sơ này không?',
+      confirmText: 'Xóa',
+      cancelText: 'Hủy',
+      handleConfirm: async () => {
+        try {
+          await deleteResumeAPI(resumeId);
+          toast.success('Đã xóa hồ sơ thành công');
+          navigate('/tong-quat-ho-so');
+        } catch (error: any) {
+          toast.error(error?.response?.data?.message || 'Lỗi khi xóa hồ sơ');
+        }
+      },
+    })
+  };
 
   if (!resume) {
     return (
@@ -55,8 +78,15 @@ export default function ViewResumeLastVersion() {
   return (
     <div className="min-h-screen p-4">
       <div className="max-w-6xl mx-auto">
-        <Card className="w-full shadow-sm border">
-          <CardHeader className="bg-white border-b">
+        <Card className="w-full shadow-none border border-gray-200 bg-white rounded-xl">
+          <CardHeader className="bg-white border-b  ">
+            <Button
+              variant="outline"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Quay lại
+            </Button>
             <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
               <User className="w-5 h-5" />
               Xem Hồ sơ
@@ -69,15 +99,23 @@ export default function ViewResumeLastVersion() {
               <div className="xl:col-span-3 space-y-4">
                 <div className="flex items-center justify-between bg-gray-50 p-4 rounded-lg border">
                   <h2 className="text-lg font-medium text-gray-900">Thông tin cá nhân</h2>
+                  <div className="flex gap-2" >
                   <Button
-                    size="sm"
                     variant="outline"
-                    className="border-gray-300 hover:bg-gray-50"
+                    className="border-gray-300 hover:bg-gray-50 "
                     onClick={() => navigate(`/tong-quat-ho-so/chinh-sua-ho-so/${resume.resume.id}`)}
                   >
                     <Edit className="w-4 h-4 mr-2" />
                     Chỉnh sửa
                   </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {handleDeleteResume(resume.resume.id)}}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Xóa
+                  </Button>
+                  </div>
                 </div>
 
                 <div className="bg-white p-4 rounded-lg border">
@@ -155,11 +193,22 @@ export default function ViewResumeLastVersion() {
                 <div className="bg-white p-4 rounded-lg border">
                   <h2 className="text-lg font-medium text-gray-900 mb-4">Trình độ học vấn</h2>
                   <div className="space-y-2 text-sm text-gray-600">
-                    <div>Chuyên ngành: {resume.majors?.length > 0 ? resume.majors.map((m) => m.name).join(', ') : 'Chưa cập nhật'}</div>
-                    <div>Trình độ học vấn: {resume.education?.name || 'Chưa cập nhật'}</div>
-                    <div>Cấp bậc: {resume.level?.name || 'Chưa cập nhật'}</div>
+                    <Label>Chuyên ngành: {resume.majors?.length > 0 ? resume.majors.map((m) => m.name).join(', ') : 'Chưa cập nhật'}</Label>
+                    <Label>Trình độ học vấn: {resume.education?.name || 'Chưa cập nhật'}</Label>
+                    <Label>Cấp bậc: {resume.level?.name || 'Chưa cập nhật'}</Label>
                   </div>
                 </div>
+                {resume.expectedSalary !== null && (
+  <div className="bg-gray-50 p-3 rounded border">
+    <div className="flex items-center gap-2 mb-1">
+      <DollarSign className="w-4 h-4 text-gray-500" />
+      <span className="font-medium text-gray-700 text-sm">Mức lương mong muốn</span>
+    </div>
+    <div className="text-sm text-gray-600">
+      {resume.expectedSalary.toLocaleString()} Triệu Đồng
+    </div>
+  </div>
+)}
 
                 {/* Skills */}
                 <div className="bg-white p-4 rounded-lg border">
@@ -167,9 +216,9 @@ export default function ViewResumeLastVersion() {
                   <div className="flex flex-wrap gap-2">
                     {resume.skills.length > 0 ? (
                       resume.skills.map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
+                        <Button key={index} variant="secondary" className="text-xs">
                           {skill.name}
-                        </Badge>
+                        </Button>
                       ))
                     ) : (
                       <p className="text-gray-600">Chưa cập nhật</p>
@@ -183,9 +232,9 @@ export default function ViewResumeLastVersion() {
                   <div className="flex flex-wrap gap-2">
                     {resume.languageResumes.length > 0 ? (
                       resume.languageResumes.map((language, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {language.language.name} - {language.level}
-                        </Badge>
+                        <Button key={index} variant="secondary" className="text-xs">
+                          {language.language.name}
+                        </Button>
                       ))
                     ) : (
                       <p className="text-gray-600">Chưa cập nhật</p>
@@ -199,7 +248,7 @@ export default function ViewResumeLastVersion() {
 
             {/* PDF Viewer */}
             <div className="mt-6">
-              <Card className="bg-white border rounded-lg">
+              <Card className="shadow-none bg-white border rounded-lg">
                 <CardHeader className="border-b">
                   <CardTitle className="text-lg font-medium text-gray-900 flex items-center gap-2">
                     <Eye className="w-5 h-5" />
@@ -209,7 +258,7 @@ export default function ViewResumeLastVersion() {
                 <CardContent className="p-4">
                   <iframe
                     src={resume.urlPdf}
-                    className="w-full h-[600px] border rounded-md"
+                    className="w-full h-[700px] border rounded-md"
                     title="Resume PDF"
                   ></iframe>
                 </CardContent>

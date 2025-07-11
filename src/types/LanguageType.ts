@@ -8,7 +8,6 @@ export interface LanguageJob {
 }
 export interface LanguageResume {
   id?: number;
-  level: number;
   language: Language;
   languageId: number;
 }

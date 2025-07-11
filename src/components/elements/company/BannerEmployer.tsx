@@ -68,7 +68,7 @@ export default function BannerEmployer() {
     <CarouselContent className="w-7xl mx-auto px-4 py-8">
       <CarouselItem className="grid grid-cols-3 gap-4">
       {
-        employers.map((employer) => (
+        employers.slice(0,6).map((employer) => (
           <Card key={employer.id} className="flex flex-col rounded-[8px] bg-white border border-[#E7E7E8] hover:border-[#2C95FF] p-4 gap-1 shadow-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-101 relative"
             onClick={() => navigate(`/nha-tuyen-dung/${employer.id}`)}
           >
@@ -97,10 +97,5 @@ export default function BannerEmployer() {
       }
       </CarouselItem>
     </CarouselContent>
-    <PaginationModel1
-      page={1}
-      totalPages={4}
-      setPage={() => { }}
-    />
   </Carousel>
 }

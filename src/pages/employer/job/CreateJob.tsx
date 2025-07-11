@@ -286,7 +286,6 @@ export default function CreateJob() {
       <Button
         className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
         onClick={handleCreateJob}
-        disabled={checkField < 7}
       >
         <Plus className='mr-2' />
         Tạo tin tuyển dụng

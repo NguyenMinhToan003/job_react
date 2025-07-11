@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, Calendar, ArrowRight, UserPlus, Upload, X } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Phone, MapPin, Calendar, ArrowRight, Upload, X } from 'lucide-react';
 import { registerCandidate } from '@/apis/candidateAPI';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';

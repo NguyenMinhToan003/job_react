@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import ViewCompany from '@/components/elements/company/ViewCompany';
 import { followEmployerAPI, unfollowEmployerAPI } from '@/apis/followEmployerAPI';
 import JobItem from '@/components/elements/job/job-list/JobItem';
-import { set } from 'date-fns';
+import BannerEmployer from '@/components/elements/company/BannerEmployer';
 
 export default function CompanyPage() {
   const { id = -1 } = useParams();
@@ -87,17 +87,12 @@ export default function CompanyPage() {
           </div>
           <div className='flex-1'>
             <h1 className='text-2xl font-bold'>{employer.name}</h1>
-            <div className='flex items-center mt-2 gap-4'>
+            <div className='flex  mt-2 gap-4 flex-col justify-start items-start'>
               <div className='flex items-center gap-1'>
-                <MapPin className='w-5 h-5' />
+                <MapPin className='w-5 h-5 text-green-500' />
                 {employer.locations.length > 0 && (
                   <Badge className='bg-gray-200 text-gray-800'>{employer.locations[0].name}</Badge>
                 )}
-              </div>
-              <div className='flex items-center gap-1'>
-                <Button variant='link' className='text-green-500 p-0'>
-                  {employer.jobs.length} việc làm đang tuyển dụng
-                </Button>
               </div>
             </div>
           </div>
@@ -169,6 +164,7 @@ export default function CompanyPage() {
           </CardContent>
         </Card>
       </div>
+      <BannerEmployer />
     </div>
   );
 }

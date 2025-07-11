@@ -24,8 +24,7 @@ export interface ResumeVersion {
   phone: string;
   email: string;
   about: string;
-  expectedSalaryMin: number;
-  expectedSalaryMax: number;
+  expectedSalary: number | null;
   status: number;
   createdAt: Date;
   updatedAt: Date;
@@ -50,7 +49,7 @@ export interface CreateResumeVersionDto {
   dateOfBirth: string;
   typeJobId: number;
   expectedSalary?: number| null;
-  languageResumes: { languageId: number; level: number }[];
+  languageResumes: { languageId: number}[];
   education: number;
   level: number;
   district: string;

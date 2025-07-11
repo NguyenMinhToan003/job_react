@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { getCityList } from '@/apis/cityAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
@@ -16,7 +14,7 @@ import { getListMajorAPI } from '@/apis/majorAPI';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { X, User, Briefcase, Book, Upload, FileText, Calendar, MapPin, Mail, Phone } from 'lucide-react';
+import { X, User,  Upload, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { City, District } from '@/types/location';
@@ -25,11 +23,14 @@ import { Language, LanguageResume } from '@/types/LanguageType';
 import { Education } from '@/types/educationType';
 import { Level } from '@/types/levelType';
 import { Major, MajorResponse } from '@/types/majorType';
-import { ResumeVersion, ResumeVersionExp } from '@/types/resumeType';
+import { ResumeVersion } from '@/types/resumeType';
 import { TypeJob } from '@/types/TypeJobType';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import DatePicker from 'react-datepicker';
 import { vi } from 'date-fns/locale';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
+import dayjs from 'dayjs';
 
 export default function FormUpdateResume() {
   const { resumeId } = useParams<{ resumeId: string }>();
@@ -63,13 +64,13 @@ export default function FormUpdateResume() {
   const [selectedLevel, setSelectedLevel] = useState<Level>({} as Level);
   const [majors, setMajors] = useState<MajorResponse[]>([]);
   const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
-  const [selectedResumeVersionExps, setSelectedResumeVersionExps] = useState<ResumeVersionExp[]>([]);
   const [typeJobs, setTypeJobs] = useState<TypeJob[]>([]);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [pdfFileName, setPdfFileName] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectTypeJob, setSelectTypeJob] = useState<TypeJob | null>(null);
-  const [expectedSalary, setExpectedSalary] = useState<string>('');
+  const [expectedSalary, setExpectedSalary] = useState<number>(0);
+  const [dateOfBirth, setDateOfBirth] = useState<string | null>(null);
 
 
   // Fetch initial data
@@ -118,9 +119,11 @@ export default function FormUpdateResume() {
       setSelectedLevel(response.level || {});
       setSelectedMajors(response.majors || []);
       setSelectTypeJob(response.typeJob || null);
-      setExpectedSalary(response.expectedSalary || '');
+      setExpectedSalary(response.expectedSalary || 0);
       setAvatar(response.avatar || '');
       setImagePreview(response.avatar || null);
+      setDateOfBirth(response.dateOfBirth);
+      setSelectTypeJob(response.typeJob || null);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin hồ sơ');
     }
@@ -176,63 +179,8 @@ export default function FormUpdateResume() {
     setPdfFileName('');
   };
 
-  // Validate form
-  const validateForm = () => {
-    if (!username) {
-      toast.error('Vui lòng nhập họ và tên');
-      return false;
-    }
-    if (!name) {
-      toast.error('Vui lòng nhập chức vụ');
-      return false;
-    }
-    if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      toast.error('Vui lòng nhập email hợp lệ');
-      return false;
-    }
-    if (!phone || !/^\d{10,11}$/.test(phone)) {
-      toast.error('Vui lòng nhập số điện thoại hợp lệ (10-11 số)');
-      return false;
-    }
-    if (!dayOfBirth) {
-      toast.error('Vui lòng chọn ngày sinh');
-      return false;
-    }
-    if (!gender) {
-      toast.error('Vui lòng chọn giới tính');
-      return false;
-    }
-    if (!selectedCityId) {
-      toast.error('Vui lòng chọn thành phố');
-      return false;
-    }
-    if (!selectedDistrictId) {
-      toast.error('Vui lòng chọn quận/huyện');
-      return false;
-    }
-    if (!location) {
-      toast.error('Vui lòng nhập địa chỉ chi tiết');
-      return false;
-    }
-    if (!selectEducation.id) {
-      toast.error('Vui lòng chọn trình độ học vấn');
-      return false;
-    }
-    if (selectedMajors.length === 0) {
-      toast.error('Vui lòng chọn ít nhất một chuyên ngành');
-      return false;
-    }
-    if (!selectedLevel.id) {
-      toast.error('Vui lòng chọn trình độ');
-      return false;
-    }
-    return true;
-  };
-
   // Handle resume update
   const handleUpdateResume = async () => {
-    if (!validateForm()) return;
-
     setIsLoading(true);
     try {
       await updateResumeAPI(Number(resumeId), {
@@ -251,10 +199,9 @@ export default function FormUpdateResume() {
         level: selectedLevel.id,
         languageResumes: selectedLanguage.map((lang) => ({
           languageId: lang.language.id,
-          level: lang.level,
         })),
         avatar: avatar instanceof File ? avatar : resumeVer.avatar,
-        typeJobId: selectTypeJob?.id || null,
+        typeJobId: selectTypeJob?.id || 0,
         expectedSalary: expectedSalary || null,
         cv: pdfFile,
       });
@@ -281,451 +228,394 @@ export default function FormUpdateResume() {
     }
   }, [selectedCityId, citys]);
 
+  const handleClickLanguage = (language: Language) => {
+    if (selectedLanguage.some((l) => l.language.id === language.id)) {
+      setSelectedLanguage((prev) =>
+        prev.filter((l) => l.language.id !== language.id)
+      );
+    } else {
+      setSelectedLanguage((prev) => [
+        ...prev,
+        { languageId: language.id, language },
+      ]);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl bg-white rounded-2xl shadow-xl border border-gray-100">
-        <CardHeader className="p-6">
-          <CardTitle className="text-2xl font-bold text-gray-900 text-center">Cập nhật hồ sơ xin việc</CardTitle>
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
+      <Card className="w-3xl border-gray-300 border shadow-none rounded-lg">
+        <CardHeader className=" border-gray-200">
+          <CardTitle className="text-lg font-semibold text-gray-900">Tạo Hồ Sơ</CardTitle>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          {/* Avatar Upload */}
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              {imagePreview || resumeVer.avatar ? (
-                <Avatar className="w-20 h-20">
-                  <AvatarImage src={imagePreview || resumeVer.avatar} alt="Avatar" />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                </Avatar>
-              ) : (
-                <Avatar className="w-20 h-20 bg-gray-100 border-2 border-dashed border-gray-300">
-                  <AvatarFallback>
-                    <User className="w-8 h-8 text-gray-400" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-gray-700">Ảnh đại diện</Label>
+              <div className="flex items-center space-x-4">
+                <Avatar className="w-16 h-16">
+                  <AvatarImage src={imagePreview || (typeof avatar === "string" ? avatar : "")} alt="Avatar" />
+                  <AvatarFallback className="bg-gray-100">
+                    <User className="w-6 h-6 text-gray-400" />
                   </AvatarFallback>
                 </Avatar>
-              )}
-            </div>
-            <div className="flex-1">
-              <input
-                type="file"
-                id="avatar-upload"
-                accept="image/*"
-                onChange={handleImageSelect}
-                className="hidden"
-              />
-              <label
-                htmlFor="avatar-upload"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-colors"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                {avatar || resumeVer.avatar ? 'Thay đổi ảnh' : 'Tải lên ảnh'}
-              </label>
-              <p className="text-xs text-gray-500 mt-1">PNG, JPG tối đa 5MB</p>
-            </div>
-          </div>
-
-          {/* PDF Upload */}
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              {pdfFileName ? (
-                <div className="flex items-center space-x-2">
-                  <FileText className="w-8 h-8 text-blue-600" />
-                  <span className="text-sm text-gray-700 truncate max-w-xs">{pdfFileName}</span>
-                  <button
-                    type="button"
-                    onClick={removePdf}
-                    className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                <div>
+                  <Input
+                    type="file"
+                    id="avatar-upload"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="hidden"
+                  />
+                  <Label
+                    htmlFor="avatar-upload"
+                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
                   >
-                    <X className="w-3 h-3" />
-                  </button>
+                    <Upload className="w-4 h-4 mr-2 text-gray-500" />
+                    {avatar ? "Thay đổi ảnh" : "Tải ảnh lên"}
+                  </Label>
+                  {avatar && (
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="ml-2 text-sm text-gray-500 hover:text-red-600"
+                    >
+                      Xóa
+                    </button>
+                  )}
+                
                 </div>
-              ) : (
-                <div className="w-20 h-20 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
-                  <FileText className="w-8 h-8 text-gray-400" />
-                </div>
-              )}
+              </div>
             </div>
-            <div className="flex-1">
-              <input
-                type="file"
-                id="pdf-upload"
-                accept="application/pdf"
-                onChange={handlePdfSelect}
-                className="hidden"
-              />
-              <label
-                htmlFor="pdf-upload"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer transition-colors"
-              >
-                <Upload className="w-4 h-4 mr-2" />
-                {pdfFileName ? 'Thay đổi PDF' : 'Tải lên file PDF'}
-              </label>
-              <p className="text-xs text-gray-500 mt-1">PDF tối đa 10MB</p>
+
+            {/* PDF Upload */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-gray-700">File CV (PDF)</Label>
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 flex items-center justify-center bg-gray-100 border border-gray-200 rounded-md">
+                  {pdfFileName ? (
+                    <FileText className="w-6 h-6 text-blue-600" />
+                  ) : (
+                    <FileText className="w-6 h-6 text-gray-400" />
+                  )}
+                </div>
+                <div>
+                  <input
+                    type="file"
+                    id="pdf-upload"
+                    accept="application/pdf"
+                    onChange={handlePdfSelect}
+                    className="hidden"
+                  />
+                  <Label
+                    htmlFor="pdf-upload"
+                    className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
+                  >
+                    <Upload className="w-4 h-4 mr-2 text-gray-500" />
+                    {pdfFileName ? "Thay đổi PDF" : "Tải PDF lên"}
+                  </Label>
+                  {pdfFileName && (
+                    <button
+                      type="button"
+                      onClick={removePdf}
+                      className="ml-2 text-sm text-gray-500 hover:text-red-600"
+                    >
+                      Xóa
+                    </button>
+                  )}
+                  
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Basic Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Họ và tên *</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          {/* Personal Information */}
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium text-gray-700">Thông tin cá nhân</h3>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Họ và tên *</Label>
                 <Input
-                  id="user-name"
-                  autoFocus
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Nhập họ và tên"
                 />
               </div>
-            </div>
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Chức vụ *</Label>
-              <div className="relative">
-                <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Chức vụ *</Label>
                 <Input
-                  id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Vị trí công việc mong muốn"
                 />
               </div>
-            </div>
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Email *</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="Nhập email"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Email *</Label>
+                  <Input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Nhập email"
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Số điện thoại *</Label>
+                  <Input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Nhập số điện thoại"
+                  />
+                </div>
               </div>
-            </div>
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Số điện thoại *</Label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  id="phone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  placeholder="Nhập số điện thoại"
-                />
-              </div>
-            </div>
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Ngày sinh *</Label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <DatePicker
-                  selected={dayOfBirth ? new Date(dayOfBirth) : null}
-                  onChange={(date) => setDayOfBirth(date ? date.toISOString().split('T')[0] : '')}
-                  locale={vi}
-                  dateFormat="dd/MM/yyyy"
-                  placeholderText="Chọn ngày sinh"
-                  maxDate={new Date()}
-                  showYearDropdown
-                  scrollableMonthYearDropdown
-                  yearDropdownItemNumber={100}
-                  showMonthDropdown
-                  dropdownMode="select"
-                  className="w-full pl-10 pr-3 py-3 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-              </div>
-            </div>
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Giới tính *</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Select value={gender} onValueChange={setGender}>
-                  <SelectTrigger className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <SelectValue placeholder="Chọn giới tính" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="NAM">Nam</SelectItem>
-                    <SelectItem value="NU">Nữ</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Ngày sinh *</Label>
+                  <DatePicker
+                    selected={dateOfBirth ? new Date(dateOfBirth) : null}
+                    onChange={(date) => setDayOfBirth(date ? date.toISOString().split("T")[0] : "")}
+                    locale={vi}
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText="Chọn ngày sinh"
+                    maxDate={dayjs().year(dayjs().year() - 18).toDate()}
+                    showYearDropdown
+                    scrollableMonthYearDropdown
+                    yearDropdownItemNumber={100}
+                    showMonthDropdown
+                    dropdownMode="select"
+                    className="min-w-full  border border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-md p-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Giới tính *</Label>
+                  <Select value={gender} onValueChange={setGender}>
+                    <SelectTrigger className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
+                      <SelectValue placeholder="Chọn giới tính" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="NAM">Nam</SelectItem>
+                      <SelectItem value="NU">Nữ</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Location */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Thành phố *</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Select value={selectedCityId} onValueChange={setSelectedCityId}>
-                  <SelectTrigger className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <SelectValue placeholder="Chọn thành phố" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {citys.map((city) => (
-                      <SelectItem key={city.id} value={city.id}>
-                        {city.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium text-gray-700">Địa chỉ</h3>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Thành phố *</Label>
+                  <Select value={selectedCityId} onValueChange={setSelectedCityId}>
+                    <SelectTrigger className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
+                      <SelectValue placeholder="Chọn thành phố" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {citys.map((city) => (
+                        <SelectItem key={city.id} value={city.id}>
+                          {city.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium text-gray-700">Quận/Huyện *</Label>
+                  <Select value={selectedDistrictId} onValueChange={setSelectedDistrictId}>
+                    <SelectTrigger className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
+                      <SelectValue placeholder="Chọn quận/huyện" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {districts.map((district) => (
+                        <SelectItem key={district.id} value={district.id}>
+                          {district.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
-            <div>
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Quận/Huyện *</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Select value={selectedDistrictId} onValueChange={setSelectedDistrictId}>
-                  <SelectTrigger className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <SelectValue placeholder="Chọn quận/huyện" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {districts.map((district) => (
-                      <SelectItem key={district.id} value={district.id}>
-                        {district.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="col-span-2">
-              <Label className="block text-sm font-medium text-gray-700 mb-2">Địa chỉ chi tiết *</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Địa chỉ chi tiết *</Label>
                 <Input
-                  id="address"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                  className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                   placeholder="Nhập địa chỉ chi tiết"
                 />
               </div>
             </div>
           </div>
 
-          {/* About */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Giới thiệu bản thân</Label>
-            <div className="relative">
-              <Book className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-              <Textarea
-                id="description"
-                value={about}
-                onChange={(e) => setAbout(e.target.value)}
-                className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none min-h-[120px]"
-                placeholder="Mô tả về bản thân, kỹ năng, sở thích..."
-              />
-            </div>
-          </div>
-
-          {/* Majors */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Chuyên ngành *</Label>
-            <div className="relative">
-              <Book className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Select
-                onValueChange={(value) => {
-                  const selected = majors.find((major) => major.id.toString() === value);
-                  if (!selected) return;
-                  if (selectedMajors.find((m) => m.id === +value)) {
-                    setSelectedMajors((prev) => prev.filter((m) => m.id !== +value));
-                    return;
-                  }
-                  if (selectedMajors.length >= 3) {
-                    toast.error('Bạn chỉ có thể chọn tối đa 3 ngành nghề');
-                    return;
-                  }
-                  setSelectedMajors((prev) => [...prev, selected]);
-                }}
-              >
-                <SelectTrigger className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                  <SelectValue placeholder="Chọn chuyên ngành" />
-                </SelectTrigger>
-                <SelectContent>
-                  {majors.map((major) => (
-                    <SelectItem key={major.id} value={major.id.toString()}>
-                      {major.name}
-                      {selectedMajors.some((m) => m.id === major.id) && (
-                        <X
-                          className="ml-2 inline cursor-pointer text-red-600"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedMajors((prev) => prev.filter((m) => m.id !== major.id));
-                          }}
-                        />
-                      )}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex gap-2 flex-wrap mt-2">
-              {selectedMajors.map((major) => (
-                <Badge
-                  key={major.id}
-                  className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium"
+          {/* Education and Majors */}
+          <div className="space-y-4">
+           
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Trình độ học vấn *</Label>
+                <Select
+                  value={selectEducation.id?.toString()}
+                  onValueChange={(value) => {
+                    const select = educations.find((edu) => edu.id === +value);
+                    if (select) setSelectEducation(select);
+                  }}
                 >
-                  {major.name}
-                  <X
-                    className="ml-2 w-4 h-4 text-red-600 cursor-pointer"
-                    onClick={() => setSelectedMajors((prev) => prev.filter((m) => m.id !== major.id))}
+                  <SelectTrigger className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
+                    <SelectValue placeholder="Chọn trình độ học vấn" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {educations.map((education) => (
+                      <SelectItem key={education.id} value={education.id.toString()}>
+                        {education.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Chuyên ngành * (Tối đa 3)</Label>
+                <Select
+                  onValueChange={(value) => {
+                    const selected = majors.find((major) => major.id.toString() === value);
+                    if (!selected) return;
+                    if (selectedMajors.find((m) => m.id === +value)) {
+                      return;
+                    }
+                    if (selectedMajors.length >= 3) {
+                      toast.error("Bạn chỉ có thể chọn tối đa 3 chuyên ngành");
+                      return;
+                    }
+                    setSelectedMajors((prev) => [...prev, selected]);
+                  }}
+                >
+                  <SelectTrigger className="mt-1 text-sm border-gray-300 w-full">
+                    <SelectValue placeholder="--Chọn chuyên ngành--" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {majors.map((major) => (
+                      <SelectItem key={major.id} value={major.id.toString()}>
+                        {major.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {selectedMajors.map((major) => (
+                    <Button
+                      variant="outline"
+                      className="text-xs font-medium bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200"
+                      key={major.id}
+                      onClick={() =>
+                        setSelectedMajors(selectedMajors.filter((m) => m.id !== major.id))
+                      }
+                    >
+                      {major.name}
+                      
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Job Preferences */}
+          <div className="space-y-4">
+
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Loại công việc mong muốn</Label>
+                <Select
+                  value={selectTypeJob?.id?.toString() || ""}
+                  onValueChange={(value) => {
+                    const selected = typeJobs.find((job) => job.id.toString() === value);
+                    setSelectTypeJob(selected || null);
+                  }}
+                >
+                  <SelectTrigger className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
+                    <SelectValue placeholder="Chọn loại công việc" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {typeJobs.map((job) => (
+                      <SelectItem key={job.id} value={job.id.toString()}>
+                        {job.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-sm font-medium text-gray-700">Mức lương mong muốn</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="number"
+                    value={expectedSalary || ""}
+                    onChange={(e) => setExpectedSalary(e.target.value ? +e.target.value : null)}
+                    className="mt-1 w-50 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Nhập mức lương"
                   />
-                </Badge>
-              ))}
+                  <span className="text-sm text-gray-500">Triệu đồng</span>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Education */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Trình độ học vấn *</Label>
-            <div className="relative">
-              <Book className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Select
-                value={selectEducation.id?.toString()}
-                onValueChange={(value) => {
-                  const select = educations.find((edu) => edu.id === +value);
-                  if (select) setSelectEducation(select);
-                }}
-              >
-                <SelectTrigger className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                  <SelectValue placeholder="Chọn trình độ học vấn" />
-                </SelectTrigger>
-                <SelectContent>
-                  {educations.map((education) => (
-                    <SelectItem key={education.id} value={education.id.toString()}>
-                      {education.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Level */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Trình độ *</Label>
-            <div className="relative">
-              <Book className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Select
-                value={selectedLevel.id?.toString()}
-                onValueChange={(value) => {
-                  const select = levels.find((level) => level.id === +value);
-                  if (select) setSelectedLevel(select);
-                }}
-              >
-                <SelectTrigger className="pl-10 pr-3 py-3 text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                  <SelectValue placeholder="Chọn trình độ" />
-                </SelectTrigger>
-                <SelectContent>
-                  {levels.map((level) => (
-                    <SelectItem key={level.id} value={level.id.toString()}>
-                      {level.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-                    <div className="space-y-4">
-                      <h3 className="text-sm font-medium text-gray-700">Thông tin công việc</h3>
-                      <div className="space-y-4">
-                        <div>
-                          <Label className="text-sm font-medium text-gray-700">Loại công việc</Label>
-                          <Select
-                            value={selectTypeJob?.id?.toString() || ""}
-                            onValueChange={(value) => {
-                              const selected = typeJobs.find((job) => job.id.toString() === value);
-                              setSelectTypeJob(selected || null);
-                            }}
-                          >
-                            <SelectTrigger className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500">
-                              <SelectValue placeholder="Chọn loại công việc" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {typeJobs.map((job) => (
-                                <SelectItem key={job.id} value={job.id.toString()}>
-                                  {job.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label className="text-sm font-medium text-gray-700">Mức lương mong muốn</Label>
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              type="number"
-                              value={expectedSalary || ""}
-                              onChange={(e) => setExpectedSalary(e.target.value ? +e.target.value : null)}
-                              className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                              placeholder="Nhập mức lương (triệu đồng)"
-                            />
-                            <span className="text-sm text-gray-500">Triệu đồng</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
 
           {/* Skills */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Kỹ năng</Label>
-            <div className="flex gap-2 flex-wrap">
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium text-gray-700">Kỹ năng</h3>
+            <div className="flex flex-wrap gap-2">
               {selectedSkills.map((skill) => (
-                <Badge
+                <Button
                   key={skill.id}
-                  className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium"
+                  variant="outline"
+                  className="text-xs font-medium bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200"
+                  onClick={() =>
+                    setSelectedSkills(selectedSkills.filter((s) => s.id !== skill.id))
+                  }
                 >
                   {skill.name}
-                  <X
-                    className="ml-2 w-4 h-4 text-red-600 cursor-pointer"
-                    onClick={() => setSelectedSkills(selectedSkills.filter((s) => s.id !== skill.id))}
-                  />
-                </Badge>
+                  
+                </Button>
               ))}
-              <Badge
+              <Button
+                variant="link"
                 onClick={() => setStatusAddSkill(true)}
-                className="px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium hover:bg-green-200 cursor-pointer"
+                className="text-xs font-medium text-blue-600 hover:text-blue-700"
               >
                 + Thêm kỹ năng
-              </Badge>
+              </Button>
             </div>
           </div>
 
           {/* Languages */}
-          <div>
-            <Label className="block text-sm font-medium text-gray-700 mb-2">Ngôn ngữ</Label>
-            <div className="flex gap-2 flex-wrap">
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium text-gray-700">Ngôn ngữ</h3>
+            <div className="flex flex-wrap gap-2">
               {selectedLanguage.map((language) => (
-                <Badge
+                <Button
                   key={language.language.id}
-                  className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium"
+                  variant="outline"
+                  className="text-xs font-medium bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200"
+                  onClick={() =>
+                    setSelectedLanguage(
+                      selectedLanguage.filter((l) => l.language.id !== language.language.id)
+                    )
+                  }
                 >
-                  {language.language.name} - {language.level}
-                  <X
-                    className="ml-2 w-4 h-4 text-red-600 cursor-pointer"
-                    onClick={() =>
-                      setSelectedLanguage(selectedLanguage.filter((l) => l.language.id !== language.language.id))
-                    }
-                  />
-                </Badge>
+                  {language.language.name}
+                </Button>
               ))}
-              <Badge
+              <Button
+                variant="link"
                 onClick={() => setStatusAddLanguage(true)}
-                className="px-3 py-1 rounded-full bg-green-100 text-green-700 font-medium hover:bg-green-200 cursor-pointer"
+                className="text-xs font-medium text-blue-600 hover:text-blue-700"
               >
                 + Thêm ngôn ngữ
-              </Badge>
+              </Button>
             </div>
           </div>
 
@@ -733,49 +623,33 @@ export default function FormUpdateResume() {
           <Button
             onClick={handleUpdateResume}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
           >
-            {isLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Đang cập nhật...
-              </>
-            ) : (
-              'Cập nhật hồ sơ'
-            )}
+            {isLoading ? "Đang tạo..." : "Tạo hồ sơ"}
           </Button>
         </CardContent>
       </Card>
 
       {/* Skills Dialog */}
-      <Dialog open={statusAddSkill} onOpenChange={setStatusAddSkill}>
-        <DialogContent className="max-w-2xl p-6 rounded-2xl">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Chọn kỹ năng</h2>
-            <DialogClose className="w-5 h-5 text-gray-500 cursor-pointer hover:text-gray-700">
-              <X />
-            </DialogClose>
+      <AlertDialog open={statusAddSkill} onOpenChange={setStatusAddSkill}>
+        <AlertDialogContent className="w-4xl  p-6 rounded-md border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-sm font-medium text-gray-700">Chọn kỹ năng</h3>
+            <X
+              onClick={() => setStatusAddSkill(false)}
+              className="w-4 h-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+            />
           </div>
-          <div className="flex gap-2 flex-wrap mb-4">
-            {selectedSkills.map((skill) => (
-              <Badge
-                key={skill.id}
-                className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium"
-              >
-                {skill.name}
-                <X
-                  className="ml-2 w-4 h-4 text-red-600 cursor-pointer"
-                  onClick={() => setSelectedSkills(selectedSkills.filter((s) => s.id !== skill.id))}
-                />
-              </Badge>
-            ))}
-          </div>
-          <hr className="my-4" />
-          <div className="grid grid-cols-3 gap-4">
+          <ScrollArea className="flex flex-wrap  h-[70vh] overflow-y-auto w-full">
             {skills.map((skill) => (
-              <Badge
+              <Button
                 key={skill.id}
-                variant={selectedSkills.some((s) => s.id === skill.id) ? 'default' : 'outline'}
+                variant="outline"
+                className={`m-1 text-xs font-medium ${
+                  selectedSkills.some((s) => s.id === skill.id)
+                    ? "bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200"
+                    : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
+                }`}
                 onClick={() => {
                   if (selectedSkills.some((s) => s.id === skill.id)) {
                     setSelectedSkills(selectedSkills.filter((s) => s.id !== skill.id));
@@ -783,107 +657,56 @@ export default function FormUpdateResume() {
                     setSelectedSkills([...selectedSkills, skill]);
                   }
                 }}
-                className="px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors duration-200"
               >
                 {skill.name}
-                {selectedSkills.some((s) => s.id === skill.id) && (
-                  <X className="ml-2 w-4 h-4 text-red-600" />
-                )}
-              </Badge>
+              </Button>
             ))}
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button
-              onClick={() => setStatusAddSkill(false)}
-              className="bg-blue-600 "
-            >
-              Đóng
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </ScrollArea>
+          <Button onClick={() => setStatusAddSkill(false)} className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'>
+            Xong
+          </Button>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Languages Dialog */}
-      <Dialog open={statusAddLanguage} onOpenChange={setStatusAddLanguage}>
-        <DialogContent className="max-w-2xl p-6 rounded-2xl">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">Chọn ngôn ngữ</h2>
-            <DialogClose className="w-5 h-5 text-gray-500 cursor-pointer hover:text-gray-700">
-              <X />
-            </DialogClose>
-          </div>
-          <div className="flex gap-2 flex-wrap mb-4">
-            {selectedLanguage.map((language) => (
-              <Badge
-                key={language.language.id}
-                className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-medium"
-              >
-                {language.language.name} - {language.level}
-                <X
-                  className="ml-2 w-4 h-4 text-red-600 cursor-pointer"
-                  onClick={() =>
-                    setSelectedLanguage(selectedLanguage.filter((l) => l.language.id !== language.language.id))
-                  }
-                />
-              </Badge>
-            ))}
-          </div>
-          <hr className="my-4" />
-          <div className="grid grid-cols-3 gap-4">
-            {languages.map((language) => (
-              <div key={language.id} className="flex items-center gap-2">
-                <Badge
-                  onClick={() => {
-                    if (selectedLanguage.some((l) => l.language.id === language.id)) {
-                      setSelectedLanguage(selectedLanguage.filter((l) => l.language.id !== language.id));
-                    } else {
-                      setSelectedLanguage([...selectedLanguage, { languageId: language.id, language, level: 1 }]);
-                    }
-                  }}
-                  className="px-3 py-1 rounded-full text-sm font-medium cursor-pointer transition-colors duration-200 flex-1"
-                >
-                  {language.name}
-                  {selectedLanguage.some((l) => l.language.id === language.id) && (
-                    <X className="ml-2 w-4 h-4 text-red-600" />
-                  )}
-                </Badge>
-                {selectedLanguage.some((l) => l.language.id === language.id) && (
-                  <Select
-                    onValueChange={(value) =>
-                      setSelectedLanguage(
-                        selectedLanguage.map((l) =>
-                          l.language.id === language.id ? { ...l, level: +value } : l
-                        )
-                      )
-                    }
-                    defaultValue="1"
-                  >
-                    <SelectTrigger className="w-20">
-                      <SelectValue placeholder="Level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {[1, 2, 3, 4, 5].map((level) => (
-                        <SelectItem key={level} value={level.toString()}>
-                          {level}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button
+      <AlertDialog open={statusAddLanguage} onOpenChange={setStatusAddLanguage}>
+        
+        <AlertDialogContent className="max-w-md p-6 rounded-md border border-gray-200">
+        <AlertDialogHeader>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-sm font-medium text-gray-700">Chọn ngôn ngữ</h3>
+            <X
               onClick={() => setStatusAddLanguage(false)}
-              className="bg-blue-600 "
-            >
-              Đóng
-            </Button>
+              className="w-4 h-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+            />
           </div>
-        </DialogContent>
-      </Dialog>
-
+        </AlertDialogHeader>
+          <AlertDialogDescription className="space-y-2">
+            {languages.map((language) => (
+              <Button
+                key={language.id}
+                variant="outline"
+                className={`w-full text-xs font-medium ${
+                  selectedLanguage.some((l) => l.language.id === language.id)
+                    ? "bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200"
+                    : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
+                }`}
+                onClick={() => {
+                  handleClickLanguage(language);
+                }}
+              >
+                {language.name}
+              </Button>
+            ))}
+          </AlertDialogDescription>
+          <AlertDialogFooter>
+            <Button onClick={() => setStatusAddLanguage(false)}
+              className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'>
+              Xong
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
