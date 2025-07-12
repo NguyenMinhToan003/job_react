@@ -52,8 +52,8 @@ export default function ViewCompany() {
               <p className="font-medium">{employer?.businessType?.name || 'Chưa có dữ liệu'}</p>
             </div>
             <div>
-              <h3 className="text-md text-gray-400 mb-1 font-semibold">Lĩnh vực công ty</h3>
-              <p className="font-medium">{'Chưa có dữ liệu'}</p>
+              <h3 className="text-md text-gray-400 mb-1 font-semibold">Số điện thoại</h3>
+              <p className="font-medium">{employer?.phone}</p>
             </div>
             <div>
               <h3 className="text-md text-gray-400 mb-1 font-semibold">Quy mô công ty</h3>

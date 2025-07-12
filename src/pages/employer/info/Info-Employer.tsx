@@ -193,7 +193,8 @@ export default function InfoEmployer() {
                     <Hash className="w-4 h-4 inline  text-[#9277f2]" />
                     Mã số thuế *
                   </Label>
-                  <Input
+                <Input
+                    disabled={true}
                     type="text"
                     name="taxCode"
                     value={taxCode}
