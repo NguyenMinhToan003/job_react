@@ -115,7 +115,7 @@ export default function ViewResumeVersionForJob() {
                        Đánh giá ứng viên
                       </Button>
                     </SheetTrigger>
-                    <SheetContent className="min-w-3xl z-[99999] h-[100vh] overflow-y-auto p-2 bg-gray-50">
+                    <SheetContent className="min-w-5xl z-[99999] h-[100vh] overflow-y-auto p-2 bg-gray-50">
                       <div className="mt-8">
                         <div className="bg-white border-b p-4">
                           <h2 className="text-lg font-medium text-gray-900">So sánh các thuộc tính</h2>
@@ -126,8 +126,8 @@ export default function ViewResumeVersionForJob() {
                             <TableHeader>
                               <TableRow className="bg-gray-50">
                                 <TableHead className="w-32 font-medium text-gray-700">Tiêu chí</TableHead>
-                                <TableHead className="font-medium text-gray-700">Công việc</TableHead>
-                                <TableHead className="font-medium text-gray-700">Ứng viên</TableHead>
+                                <TableHead className="font-medium text-gray-700 min-w-full">Công việc</TableHead>
+                                <TableHead className="font-medium text-gray-700 min-w-full">Ứng viên</TableHead>
                                 <TableHead className="w-32 text-center font-medium text-gray-700">Điểm</TableHead>
                               </TableRow>
                             </TableHeader>
@@ -174,7 +174,7 @@ export default function ViewResumeVersionForJob() {
                                 </TableCell>
                                 <TableCell>
                                   <Badge variant="outline" className="text-xs">
-                                    {apply?.resumeVersion.district.city.name}
+                                    {apply?.resumeVersion.district.name}, {apply?.resumeVersion.district.city.name}
                                   </Badge>
                                 </TableCell>
                                 <TableCell className="text-center">
@@ -491,6 +491,17 @@ export default function ViewResumeVersionForJob() {
               </Button>
             </div>
           </div>
+          {
+            apply?.candidateNote &&<div className='space-y-3'>
+            <Label>Thư gửi nhà tuyển dụng</Label>
+            <Textarea
+              value={apply?.candidateNote || ''}
+              readOnly
+              className='w-full border border-[#2c95ff] min-h-50'
+              rows={4}
+            />
+          </div>
+          }
             
         </CardContent>
       </Card>

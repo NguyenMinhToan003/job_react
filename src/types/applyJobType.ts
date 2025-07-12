@@ -1,7 +1,7 @@
 import { CvResponse } from "./cvType";
 import { Education } from "./educationType";
 import { JobResponse } from "./jobType";
-import { LanguageJob, LanguageResume } from "./LanguageType";
+import { LanguageResume } from "./LanguageType";
 import { Level } from "./levelType";
 import { City } from "./location";
 import { Major } from "./majorType";

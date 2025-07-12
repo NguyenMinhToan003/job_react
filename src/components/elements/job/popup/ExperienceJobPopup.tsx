@@ -36,9 +36,11 @@ export default function ExperienceJonPopup({
       </CardHeader>
       <CardContent className='p-6'>
         <Select
-          disabled={notEdit}
           value={experienceId?.toString() || ''}
-          onValueChange={(value) => setExperienceId(Number(value))}
+          onValueChange={(value) => {
+            if (notEdit) return;
+            setExperienceId(Number(value));
+          }}
         >
           <SelectTrigger className='w-full'>
             <SelectValue placeholder='-- Chọn kinh nghiệm --' />

@@ -28,13 +28,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Language, LanguageJob } from '@/types/LanguageType';
 import { Benefit } from '@/types/benefitType';
-import { Employer } from '@/types/companyType';
 import { Education } from '@/types/educationType';
 import { Experience } from '@/types/experienceType';
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
 import { Skill } from '@/types/SkillType';
-import { JOB_STATUS, NOTI_TYPE, ROLE_LIST } from '@/types/type';
+import { ACCOUNT_STATUS, JOB_STATUS, NOTI_TYPE, ROLE_LIST } from '@/types/type';
 import { TypeJob } from '@/types/TypeJobType';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -43,11 +42,15 @@ import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
 import { Field } from '@/types/majorType';
 import { getFieldList } from '@/apis/fieldAPI';
 import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
+import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
+import { Label } from '@/components/ui/label';
+import { EmployerResponse } from '@/types/accountType';
 
 export default function ViewJob() {
   const url = window.location.href;
   const id = url.substring(url.lastIndexOf('/') + 1);
-  const [employer, setEmployer] = useState<Employer>();
+  const [employer, setEmployer] = useState<EmployerResponse>();
   const [nameJob, setNameJob] = useState('');
   const [quantityJob, setQuantityJob] = useState(1);
   const [description, setDescription] = useState('');
@@ -83,6 +86,7 @@ export default function ViewJob() {
   const [selectMajors, setSelectMajors] = useState<number[]>([]);
   const [fields, setFields] = useState<Field[]>([]);
   const role = localStorage.getItem('role');
+  const navigate = useNavigate()
 
 
   const fetchDataJob = async () => {
@@ -113,6 +117,8 @@ export default function ViewJob() {
       const fieldSelect = fields.find((field) => field.id === response.majors[0]?.field.id);
       setSelectField(fieldSelect || null);
       setEmployer(response.employer);
+      setIsActive(response.isActive);
+      setLocationList(response.locations);
     }
     catch(error) {
       toast.error((error as any).response?.data?.message || 'Có lỗi xảy ra khi tải dữ liệu bài đăng');
@@ -260,12 +266,39 @@ export default function ViewJob() {
                 <CardTitle className='text-lg font-bold text-start'>HÀNH ĐỘNG</CardTitle>
                 <div className='w-full h-[1px] bg-gray-200 mt-4' />
                  Trạng thái hiện tại 
-                <span className='text-[#451DA0] font-semibold'>
+                <Label className='text-[#451DA0] font-semibold'>
                   {isActive === JOB_STATUS.ACTIVE ? 'Đã kích hoạt' :
                       isActive === JOB_STATUS.BLOCK ? 'Đã từ chối' :
                     isActive === JOB_STATUS.PENDING ? 'Đang chờ duyệt' :
                         isActive === JOB_STATUS.CREATE ? 'Đang tạo' : null}
-                </span>
+                </Label>
+                {
+                  role === ROLE_LIST.ADMIN && <>
+                  <div className='w-full h-[1px] bg-gray-200 mt-4' />
+                <Label
+                  className={clsx(
+                  'text-[#451DA0] font-semibold',
+                  employer?.account?.status === ACCOUNT_STATUS.ACTIVE && 'text-green-500',
+                  employer?.account?.status === ACCOUNT_STATUS.BLOCKED && 'text-red-500',
+                  employer?.account?.status === ACCOUNT_STATUS.CREATED && 'text-yellow-500'
+
+                  )}>
+                  Tài khoản {' '}
+                  {
+                    employer?.account?.status === ACCOUNT_STATUS.ACTIVE ? 'Đã kiểm duyệt' :
+                    employer?.account?.status === ACCOUNT_STATUS.BLOCKED ? 'Đã khóa' :
+                    employer?.account?.status === ACCOUNT_STATUS.CREATED ? 'Chưa kiểm duyệt ' : null
+                  }
+                    </Label>
+                     <Button
+                  variant={'link'}
+                  onClick={() => navigate(`/admin/nha-tuyen-dung/ ${employer?.id}`)}
+                >
+                  Xem trang nhà tuyển dụng
+                </Button>
+                  </>
+                }
+               
               </CardHeader>
               {
                 role === ROLE_LIST.ADMIN && <CardContent>
@@ -280,6 +313,7 @@ export default function ViewJob() {
                   employerId={employer?.id || -1}
                   id={id}
                 />
+
               </CardContent>
               }
             </Card>

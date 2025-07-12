@@ -1,3 +1,4 @@
+import { EmployerResponse } from "./accountType";
 import { Benefit } from "./benefitType";
 import { Employer } from "./companyType";
 import { Cv } from "./cvType";
@@ -68,7 +69,7 @@ export interface JobResponse {
   skills: Skill[];
   levels: Level[];
   typeJobs: TypeJob[];
-  employer: Employer;
+  employer: EmployerResponse;
   applyJobs: Cv[];
   education: Education;
   languageJobs: LanguageJob[];

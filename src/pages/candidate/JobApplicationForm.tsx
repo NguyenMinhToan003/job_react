@@ -28,7 +28,7 @@ export default function JobApplicationForm() {
   const [job, setJob] = useState<JobFilterResponse>();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState<string>('');
   const [resumes, setResumes] = useState<Resume[]>([]);
 
   const fetchJob = async () => {
@@ -76,7 +76,8 @@ export default function JobApplicationForm() {
         Number(jobId),
         {
           resumeId: Number(cvOption),
-          note,
+          candidateNote: note,
+          feedback: '',
           username: name,
           phone,
         }

@@ -15,6 +15,7 @@ import { toast } from "sonner"
 import { Search, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import PaginationModel1 from "@/components/elements/pagination/PaginationModel1"
 import { ACCOUNT_STATUS } from "@/types/type"
+import { changeStatus } from "@/apis/authAPI"
 
 export default function CandidateList() {
   const [candidates, setCandidates] = useState<CandidateResponse[]>([])
@@ -58,6 +59,21 @@ export default function CandidateList() {
   const handleSearch = () => {
     setPage(1)
     fetchListCandidate()
+  }
+  const handleChangeStatus = async (id: number, status: ACCOUNT_STATUS) => {
+    try {
+      setLoading(true)
+      await changeStatus({
+        status,
+        accountId: id,
+      })
+      toast.success("Cập nhật trạng thái thành công")
+    }
+    catch (error: any) {
+      toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi cập nhật trạng thái")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSort = (column: string) => {
@@ -195,7 +211,23 @@ export default function CandidateList() {
                       <TableCell>
                         <Badge variant="outline">{candidate.account.role}</Badge>
                       </TableCell>
-                      <TableCell>{getStatusBadge(candidate.account.status)}</TableCell>
+                      <TableCell>
+                        <Select
+                          value={candidate.account.status}
+                          onValueChange={(value: ACCOUNT_STATUS) =>
+                            handleChangeStatus(candidate.id, value)
+                          }
+                        >
+                          <SelectTrigger className='w-[140px] h-8 text-xs'>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={ACCOUNT_STATUS.CREATED}>Chưa xét duyệt</SelectItem>
+                            <SelectItem value={ACCOUNT_STATUS.ACTIVE}>Đã xét duyệt</SelectItem>
+                            <SelectItem value={ACCOUNT_STATUS.BLOCKED}>Đã khóa</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
                     </TableRow>
                   ))
                 )}

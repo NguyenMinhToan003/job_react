@@ -30,6 +30,8 @@ export default function LocationJobPopup({
           <div className="flex items-center gap-2">
             <div className="flex-1 text-neutral-600">ĐỊA ĐIỂM</div>
             {
+              !notEdit && <>
+              {
               locationList?.length === 0 ? <>
                 <CirclePlus
                   className="cursor-pointer text-[#451da1]"
@@ -43,6 +45,8 @@ export default function LocationJobPopup({
                   size={20}
                   onClick={() => navigate('/danh-cho-nha-tuyen-dung/dia-diem')}
                 />
+                }
+              </>
             }
           </div>
           <div className="w-full h-[1px] bg-gray-200 mt-4" />
