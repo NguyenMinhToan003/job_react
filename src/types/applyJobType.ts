@@ -43,7 +43,6 @@ export interface ApplyJobResponse {
   resumeVersion: ResumeVersion;
   matchingScore: number;
   tagResumes: TagResume[];
-  feedback: string | null;
 }
 export interface ApplyJobByJobIdResponse {
   id: number;
@@ -74,4 +73,9 @@ export interface ApplyJobByJobIdResponse {
     language: LanguageResume[];
   }
   rank: number;
+}
+export interface GetApplyJobByTags {
+  jobId?: number | undefined;
+  tagIds?: number[];
+  status?: APPLY_JOB_STATUS;
 }

@@ -16,7 +16,6 @@ export default function JobItem({
   job: JobFilterResponse;
   selectedJob: JobFilterResponse;
   setSelectedJob: (job: JobFilterResponse) => void;
-  isPrev?: boolean;
   }) {
   if (!job) return null;
   return (

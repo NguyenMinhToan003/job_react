@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllViewJobsAPI, getRecomendedViewJobAPI } from "@/apis/viewJobAPI";
+import JobItem from "@/components/elements/job/job-list/JobItem";
 import JobList from "@/components/elements/job/job-list/JobItem";
 import PaginationModel1 from "@/components/elements/pagination/PaginationModel1";
 import { Button } from "@/components/ui/button";
@@ -110,11 +111,11 @@ export default function ViewJob() {
                 Gợi ý công việc dựa trên công việc đã xem
               </CardTitle>
             </CardHeader>
-            <CardContent className='text-center text-gray-500 font-semibold grid grid-cols-2 gap-4'>
+            <CardContent className='text-center text-gray-500 font-semibold grid grid-cols-3 gap-4'>
               {
                 recomendedJobs.length > 0 ? (
                   recomendedJobs.map((job: JobFilterResponse) => (
-                    <JobList
+                    <JobItem
                       key={job.id}
                       job={job}
                       selectedJob={{} as JobFilterResponse}

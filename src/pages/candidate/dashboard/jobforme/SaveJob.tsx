@@ -1,4 +1,5 @@
-import { getRecomendedSaveJobAPI, getSaveJobAPI } from '@/apis/saveJobAPI';
+import { deleteSaveJobAPI, getRecomendedSaveJobAPI, getSaveJobAPI } from '@/apis/saveJobAPI';
+import JobItem from '@/components/elements/job/job-list/JobItem';
 import JobList from '@/components/elements/job/job-list/JobItem';
 import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import { convertPrice } from '@/utils/convertPrice';
 import { ChevronLeft, ChevronRight, HandCoins } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export default function SaveJob() {
   const navigate = useNavigate();
@@ -51,6 +53,16 @@ export default function SaveJob() {
     fetchApplyJobs();
   }, [page, limit]);
 
+  const deleteSaveJob = async (jobId: number) => {
+    try {
+      await deleteSaveJobAPI(jobId);
+      toast.success('Xoá công việc lưu thành công');
+    }
+    catch (error) {
+      toast.error(error.response?.data?.message || 'Xoá công việc lưu thất bại');
+    }
+  };
+    
 
   return (
     <>
@@ -106,6 +118,13 @@ export default function SaveJob() {
                 >
                   Ứng tuyển công việc
                 </Button>
+                <Button
+                  variant={'outline'}
+                  className='cursor-pointer text-sm font-semibold h-10  bg-gray-200'
+                  onClick={() => deleteSaveJob(savejob.job.id)}
+                >
+                  Xoá công việc lưu
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -126,11 +145,11 @@ export default function SaveJob() {
             <p>Dựa trên công việc bạn lưu mà chúng tôi tìm thấy <strong>{recomendedJobs.length}</strong> công việc tương tự</p>
           </CardTitle>
         </CardHeader>
-        <CardContent className='text-center text-gray-500 font-semibold  grid grid-cols-2 gap-4 p-0'>
+        <CardContent className='text-center text-gray-500 font-semibold  grid grid-cols-3  gap-4 p-0'>
           {
             recomendedJobs.length > 0 ? (
               recomendedJobs.map((job: JobFilterResponse) => (
-                <JobList
+                <JobItem
                   key={job.id}
                   job={job}
                   selectedJob={{} as JobFilterResponse}

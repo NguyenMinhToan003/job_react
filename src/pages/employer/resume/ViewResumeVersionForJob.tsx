@@ -12,11 +12,13 @@ import { AvatarImage } from '@radix-ui/react-avatar';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Eye, User, MapPin, Calendar, Trophy, LucidePhone, Mail, Briefcase, Tag, X, Settings, Send } from 'lucide-react';
+import { Eye, User, MapPin, Calendar, Trophy, LucidePhone, Mail, Briefcase, Tag, X, Settings, Send, HandCoins } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { TagResume } from '@/types/tagResumeType';
 import { getAllTagResumeAPI } from '@/apis/tagResumeAPI';
 import { Textarea } from '@/components/ui/textarea';
+import dayjs from 'dayjs';
+import { convertPrice } from '@/utils/convertPrice';
 
 export default function ViewResumeVersionForJob() {
   const { applyId } = useParams();
@@ -334,20 +336,36 @@ export default function ViewResumeVersionForJob() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {[
                       {
+                        label: 'Chức danh',
+                        icon: <Tag className="w-4 h-4 text-gray-500" />,
+                        value: apply?.resumeVersion.resume.name
+                      },
+                      {
                         label: 'Địa chỉ',
                         icon: <MapPin className="w-4 h-4 text-gray-500" />,
-                        value: apply?.resumeVersion.location
+                        value: apply?.resumeVersion.district.name + ', ' + apply?.resumeVersion.district.city.name
                       },
                       {
                         label: 'Ngày sinh',
                         icon: <Calendar className="w-4 h-4 text-gray-500" />,
-                        value: convertDateToString(apply?.resumeVersion.dateOfBirth)
+                        value: `${convertDateToString(apply?.resumeVersion.dateOfBirth)}
+                         (${dayjs().year()- dayjs(apply?.resumeVersion.dateOfBirth).year()} tuổi)`
                       },
                       {
                         label: 'Giới tính',
                         icon: <User className="w-4 h-4 text-gray-500" />,
                         value: apply?.resumeVersion.gender
-                      }
+                      },
+                      {
+                        label: 'Chuyên ngành',
+                        icon: <Briefcase className="w-4 h-4 text-gray-500" />,
+                        value: apply?.resumeVersion.majors.map(m => m.name).join(', ')
+                      },
+                      {
+                        label: 'Cấp bậc',
+                        icon: <Briefcase className="w-4 h-4 text-gray-500" />,
+                        value: apply?.resumeVersion.level.name
+                      },
                     ].map((item, i) => (
                       <div key={i} className="bg-[#F6F6F6] p-3 rounded border">
                         <div className="flex items-center gap-2 mb-1">

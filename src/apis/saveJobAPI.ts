@@ -21,3 +21,7 @@ export const getRecomendedSaveJobAPI = async () => {
   const response = await axiosInstance.get<JobFilterResponse[]>(`/save-job/recommended`);
   return response.data;
 }
+export const deleteSaveJobAPI = async (jobId: number) => {
+  const response = await axiosInstance.delete(`/save-job/${jobId}`);
+  return response.data;
+}

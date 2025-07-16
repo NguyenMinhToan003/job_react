@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/button';
+import DatePicker from 'react-datepicker';
+import dayjs from 'dayjs';
 
 export default function CandidateRegisterForm() {
 
@@ -254,12 +256,18 @@ export default function CandidateRegisterForm() {
                 </Label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="date"
-                    name="dateOfBirth"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                    className={`w-full pl-10 pr-3 py-3 border  `}
+<DatePicker
+                    selected={dateOfBirth ? new Date(dateOfBirth) : null}
+                    onChange={(date: Date | null) => {
+                      setDateOfBirth(date ? dayjs(date).format('YYYY-MM-DD') : '');
+                    }}
+                    showYearDropdown
+                    showMonthDropdown
+                    maxDate={dayjs().year(dayjs().year() - 15).toDate()}
+                    placeholderText="Chọn ngày sinh"
+                    dateFormat="dd/MM/yyyy"
+                    showPopperArrow={false}
+                    customInput={<Input className="w-full pl-10 " />}
                   />
                 </div>
                 

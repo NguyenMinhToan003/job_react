@@ -71,6 +71,7 @@ export default function AppRouter() {
   useEffect(() => {
     updateDataUser()
   }, [])
+
   return (<>
     <Routes>
       <Route path='/payment-result' element={<PaymentSuccess/>}/>

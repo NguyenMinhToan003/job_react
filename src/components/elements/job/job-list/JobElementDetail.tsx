@@ -30,7 +30,7 @@ export default function JobElementDetail({
   const navigate = useNavigate();
   const filterMajor = (majorId: number) => navigate(`/tim-kiem-cong-viec?majorId=${majorId}`);
   return (
-    <div className="space-y-6 h-fit">
+    <div className="space-y-6">
       {/* Tổng quan công việc */}
       <Card className="grid grid-cols-1 md:grid-cols-2 gap-1 p-4">
         <div className="flex items-start gap-3 p-3 bg-[#f5f3ff]">

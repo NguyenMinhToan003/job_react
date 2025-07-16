@@ -13,8 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { MapPinnedIcon } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { convertPrice } from '@/utils/convertPrice';
-import { convertDateToString } from '@/utils/dateTime';
+import JobItem from '@/components/elements/job/job-list/JobItem';
 
 export default function SearchJobInLocation() {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -23,7 +22,6 @@ export default function SearchJobInLocation() {
   const [tempRadius, setTempRadius] = useState(radius);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const navigate = useNavigate();
 
   const getCurrentLocation = () => {
@@ -124,62 +122,35 @@ export default function SearchJobInLocation() {
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {jobs.map((job) => (
-            <Card key={job.id} className="shadow-md">
-              <CardHeader>
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={job.employer.logo}
-                    alt={job.employer.name}
-                    className="w-12 h-12 object-cover rounded-full"
-                  />
-                  <div>
-                    <CardTitle
-                      className="hover:underline cursor-pointer text-lg font-semibold text-gray-800"
-                      onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
+            <Card key={job.id} className="shadow-none border-gray-200 border rounded-2xl">
+              <CardContent
+                onClick={() => navigate(`/cong-viec/${job.id}`)}
+              >
+                <JobItem
+                  job={job}
+                  selectedJob={job}
+                  setSelectedJob={() => { }}
+                  isPrev={false}
+                />
+                <div className="mt-4 flex justify-between items-center">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="text-[#2c95ff] mr-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (location) {
+                        const origin = `${location.latitude},${location.longitude}`;
+                        const destination = `${job.locations[0].lat},${job.locations[0].lng}`;
+                        const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
+                        window.open(mapsUrl, '_blank');
+                      }
+                    }}
                     >
-                      {job.employer.name}
-                    </CardTitle>
-                    <p className="text-sm font-semibold">{job.employer.businessType}</p>
-                  </div>
-                </div>
-              </CardHeader>
-
-              <CardContent>
-                <div
-                  onClick={() => navigate(`/cong-viec/${job.id}`)}
-                  className="p-2 border rounded hover:bg-muted transition cursor-pointer space-y-1"
-                >
-                  <div className="font-medium">{job.name}</div>
-                  <div className="text-sm text-muted-foreground font-semibold">
-                    {convertPrice(job.minSalary, job.maxSalary)}
-                  </div>
-                  <div className="text-xs text-gray-500 font-semibold">
-                    {job.locations.map((loc) => loc.name).join(', ')}
-                  </div>
-                  <div className="text-xs text-gray-500 font-semibold">
-                    Hạn: {convertDateToString(job.expiredAt)}
-                  </div>
-                  <div className="text-xs text-gray-500 font-semibold">                   
-                    <Button
-                      variant="link"
-                      size="sm"
-                      className="text-blue-600 hover:underline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (location) {
-                          const origin = `${location.latitude},${location.longitude}`;
-                          const destination = `${job.locations[0].lat},${job.locations[0].lng}`;
-                          const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}`;
-                          window.open(mapsUrl, '_blank');
-                        }
-                      }}
-                    >
-                      <MapPinnedIcon/>
+                      <MapPinnedIcon className="w-4 h-4 mr-1" />
                       Xem đường đi
                     </Button>
-                  </div>
-                </div>
-                <div className="mt-4 text-end bg-[#fbfaff] p-2 rounded">
+
                   <Button variant="secondary" size="sm" className="text-[#2c95ff]">
                     {job.distanceKm} km
                   </Button>

@@ -1,4 +1,5 @@
 import { getPaginatedFollowsAPI } from "@/apis/followEmployerAPI";
+import PaginationModel1 from "@/components/elements/pagination/PaginationModel1";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
@@ -46,7 +47,7 @@ export default function Follows() {
               </div>
               <div className="flex-1 flex-col gap-1">
                   <div className='text-gray-600 font-bold hover:underline'>{follow.employer?.name}</div>
-                  <div className='text-[12px] text-gray-500 font-semibold  hover:underline'>{follow.employer?.businessType}</div>
+                  <div className='text-[12px] text-gray-500 font-semibold  hover:underline'>{follow.employer?.businessType?.name}</div>
                   <div className='text-[12px] text-gray-500 font-semibold  hover:underline'>
                     <img src={follow.employer?.country.flag} alt={follow.employer?.country.name} className='inline-block w-4 h-4 mr-1 rounded-full' />
                     {follow.employer?.country.name}</div>
@@ -68,40 +69,10 @@ export default function Follows() {
           <p className="text-center text-gray-500">Bạn chưa theo dõi nhà tuyển dụng nào.</p>
         )
     }
-       <Pagination className=' w-full bg-white py-2'>
-        <PaginationContent className='list-none flex justify-center items-center gap-1'>
-          <PaginationPrevious
-            title='Trước'
-            className='cursor-pointer'
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          >
-            Trước
-          </PaginationPrevious>
-
-          {Array.from({ length: totalPages }, (_, index) => (
-            <PaginationItem key={index}>
-              <PaginationLink
-                className={`cursor-pointer ${
-                  page === index + 1
-                    ? 'bg-blue-500 text-white'
-                    : 'text-blue-500 hover:bg-blue-100'
-                }`}
-                onClick={() => setPage(index + 1)}
-                isActive={page === index + 1}
-              >
-                {index + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-
-          <PaginationNext
-            title='Tiếp theo'
-            className='cursor-pointer'
-            onClick={() => setPage((prev) => (prev < totalPages ? prev + 1 : prev))}
-          >
-            Tiếp theo
-          </PaginationNext>
-        </PaginationContent>
-    </Pagination>
+    <PaginationModel1
+      page={page}
+      totalPages={totalPages}
+      setPage={setPage}
+    />
   </div>
 }

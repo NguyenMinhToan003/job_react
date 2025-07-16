@@ -21,17 +21,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { TAG_COLORS } from '@/utils/colorArray';
-import clsx from 'clsx';
 import { NewTagForm } from '@/components/elements/tag/TagForm';
+import { useNavigate } from 'react-router-dom';
 
 export default function TagResume() {
   const [tagResumes, setTagResumes] = useState<TagResumeResponse[]>([]);
   const { showAlert } = useAlertDialog();
-  const [name, setName] = useState('');
-  const [color, setColor] = useState(TAG_COLORS[0].color);
+  const navigate = useNavigate();
   const fetchTagResumes = async () => {
     try {
       const response = await getAllTagResumeAPI();
@@ -40,6 +37,9 @@ export default function TagResume() {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách thẻ hồ sơ');
     }
   };
+  const handleFilterTagResumes = (tagId: number) => {
+    navigate(`/danh-cho-nha-tuyen-dung/ung-vien?tagIds=${tagId}`);
+  }
 
   useEffect(() => {
     fetchTagResumes();
@@ -152,8 +152,17 @@ export default function TagResume() {
                   </Button>
                 </TableCell>
 
-                <TableCell className=' text-center font-semibold text-[#2C95FF]'>
-                  {tagResume?.applyJobs?.length} hồ sơ
+                <TableCell className=' text-center font-semibold text-[#2C95FF]'
+                  onClick={() => handleFilterTagResumes(tagResume.id)}
+                >
+                  <Button
+                    variant={'link'}
+                    className='text-xs cursor-pointer'
+                    style={{ color: '#2C95FF' }}
+                  >
+                    <Ticket className='w-4 h-4 inline-block mr-1' />
+                    {tagResume.applyJobs?.length} hồ sơ
+                  </Button>
                 </TableCell>
 
                 <TableCell className='text-center pr-3'>

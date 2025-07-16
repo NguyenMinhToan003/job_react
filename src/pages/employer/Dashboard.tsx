@@ -21,7 +21,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import BarChartCompo from '@/components/elements/charts/BarChartCompo'
 import { getMeNotificationAPI } from '@/apis/notiAccountAPI'
 import { Label } from '@/components/ui/label'
-import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function EmployerDashboard() {
   const [loading, setLoading] = useState(false)
@@ -103,7 +102,6 @@ export default function EmployerDashboard() {
 
   return (
     <div className='container mx-auto p-6 space-y-6 w-full'>
-
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
         {packagesAvailable.slice(0,4).map((pkg) => {
           const usagePercentage = pkg.sub_total
@@ -141,7 +139,7 @@ export default function EmployerDashboard() {
                     variant='outline'
                     size='sm'
                     className='flex-1 text-[#451DA0] hover:text-[#451DA0] bg-white hover:bg-white rounded-sm'
-                    onClick={() => navigate(`/danh-cho-nha-tuyen-dung/dich-vu`)}
+                    onClick={() => navigate(`/danh-cho-nha-tuyen-dung/dich-vu-cua-toi`)}
                   >
                     Xem chi tiết
                   </Button>
@@ -149,7 +147,7 @@ export default function EmployerDashboard() {
                     size='sm'
                     className='flex-1 text-[#451DA0] hover:text-[#451DA0] bg-[#EDECFF] hover:bg-[#EDECFF] rounded-none'
                     disabled={usagePercentage >= 100}
-                    onClick={() => navigate(`/danh-cho-nha-tuyen-dung/dang-tin-tuyen-dung`)}
+                    onClick={() => navigate(`/danh-cho-nha-tuyen-dung/tuyen-dung`)}
                   >
                     Sử dụng
                   </Button>
