@@ -1,4 +1,5 @@
 import { Education } from "./educationType";
+import { Experience } from "./experienceType";
 import { LanguageResume } from "./LanguageType";
 import { Level } from "./levelType";
 import { DistrictResponse } from "./location";
@@ -24,6 +25,7 @@ export interface ResumeVersion {
   phone: string;
   email: string;
   about: string;
+  experience: Experience;
   expectedSalary: number | null;
   status: number;
   createdAt: Date;
@@ -53,12 +55,14 @@ export interface CreateResumeVersionDto {
   education: number;
   level: number;
   district: string;
+  experienceId: number;
   email: string;
   name: string;
   skills: number[];
   avatar?: File | string;
   majors?: number[];
   cv?: File | null;
+  about: string;
 }
 export interface EducationResume {
   educationId: number;

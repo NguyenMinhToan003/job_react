@@ -27,10 +27,15 @@ import {
   FileText,
   Edit,
   Star,
+  BookOpen,
+  GraduationCap,
+  BarChart,
+  Briefcase,
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { convertDateToString } from '@/utils/dateTime';
 
 export default function ListResume() {
   const [listResume, setListResume] = useState<Resume[]>([]);
@@ -58,16 +63,6 @@ export default function ListResume() {
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Lỗi khi đặt hồ sơ làm chính');
     }
-  };
-
- 
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN');
-  };
-
-  const getGenderDisplay = (gender: string) => {
-    return gender === 'NAM' ? 'Nam' : 'Nữ';
   };
 
   return (
@@ -108,7 +103,7 @@ export default function ListResume() {
                           )}
                         </CardTitle>
                         <p className='text-xs text-white/80'>
-                          Cập nhật: {formatDate(resume.updatedAt)}
+                          Cập nhật: {convertDateToString(latestVersion.updatedAt)}
                         </p>
                       </div>
                     </div>
@@ -117,35 +112,41 @@ export default function ListResume() {
                   <CardContent className='p-4'>
                     {latestVersion ? (
                       <div className='space-y-2 text-sm'>
-                        <div className='flex items-center gap-2 text-gray-700'>
-                          <User className='w-4 h-4 text-[#451e99]' />
-                          <span className='font-medium'>{latestVersion.username}</span>
-                        </div>
-                        <div className='flex items-center gap-2 text-gray-600'>
-                          <Phone className='w-4 h-4 text-green-600' />
-                          <span className='font-semibold'>{latestVersion.phone}</span>
-                        </div>
-                        <div className='flex items-center gap-2 text-gray-600'>
-                          <Mail className='w-4 h-4 text-red-500' />
-                          <span className='font-semibold'>{latestVersion.email}</span>
-                        </div>
-                        <div className='flex items-center gap-2 text-gray-600'>
-                          <MapPin className='w-4 h-4 text-purple-600' />
-                          <span className='font-semibold'>{latestVersion.location}</span>
-                        </div>
-                        <div className='flex items-center gap-2 text-gray-600'>
-                          <Calendar className='w-4 h-4 text-[#451e99]' />
-                          <span className='font-semibold'>
-                            {formatDate(latestVersion.dateOfBirth)} - {getGenderDisplay(latestVersion.gender)}
-                          </span>
-                        </div>
-                        {latestVersion.about && (
-                          <div className='mt-3 p-2 bg-gray-100 rounded-md'>
-                            <p className='text-xs text-gray-600 line-clamp-2'>
-                              {latestVersion.about}
-                            </p>
-                          </div>
-                        )}
+                        {
+                          [
+                            {
+                              icon: <BookOpen className='w-4 h-4 text-gray-500' />,
+                              label: 'Chuyên ngành',
+                              value: latestVersion.majors.map((major) => major.name).join(', ') || 'Chưa cập nhật',
+                            },
+                            {
+                              label: 'Trình độ',
+                              value: latestVersion.level?.name || 'Chưa cập nhật',
+                              icon: <GraduationCap className='w-4 h-4 text-gray-500' />,
+                            },
+                            {
+                              label: 'Cấp bậc',
+                              value: latestVersion.education?.name || 'Chưa cập nhật',
+                              icon: <BarChart className='w-4 h-4 text-gray-500' />,
+                            },
+                            {
+                              icon: <MapPin className='w-4 h-4 text-gray-500' />,
+                              label: 'Địa điểm',
+                              value: latestVersion.district.name + ', ' + latestVersion.district.city.name,
+                            },
+                            {
+                              label: 'Kinh nghiệm',
+                              value: latestVersion.experience?.name || 'Chưa cập nhật',
+                              icon: <Briefcase className='w-4 h-4 text-gray-500' />,
+                            }
+                          ].map(item => (
+                            <div key={item.label} className='flex items-center gap-2'>
+                              {item.icon}
+                              <span className='text-gray-700'>{item.value}</span>
+                            </div>
+                          ))
+
+                        }
                       </div>
                     ) : (
                       <div className='text-center py-4'>

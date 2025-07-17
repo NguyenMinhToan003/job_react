@@ -1,16 +1,16 @@
 export interface Level {
-  id: string;
+  id: number;
   name: string;
   status?: number;
 
 }
 export interface CreateLevelRequest {
-  name: string;
+  name: number;
   status?: number;
 }
 
 export interface UpdateLevelRequest {
-  id: string;
+  id: number;
   name?: string;
   status?: number;
 }

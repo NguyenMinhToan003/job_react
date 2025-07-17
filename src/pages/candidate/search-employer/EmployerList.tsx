@@ -6,10 +6,12 @@ import { CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Label } from "@/components/ui/label";
 import { EmployerResponse } from "@/types/accountType";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function EmployerList() {
   const [employerList, setEmployerList] = useState<EmployerResponse[]>([]);
+  const navigate = useNavigate();
   const fetchEmployers = async () => {
     try {
       const response = await filterEmployer({});
@@ -32,7 +34,9 @@ export default function EmployerList() {
     <div className="w-7xl mx-auto px-4 py-8 grid grid-cols-3 gap-4 mb-40">
     {
            employerList.map((employer) => (
-              <Card key={employer.id} className="flex flex-col rounded-[8px] bg-white border border-[#E7E7E8] hover:border-[#2C95FF] p-4 gap-1 shadow-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-101 relative">
+             <Card key={employer.id}
+               onClick={() => navigate(`/nha-tuyen-dung/${employer.id}`)}
+               className="flex flex-col rounded-[8px] bg-white border border-[#E7E7E8] hover:border-[#2C95FF] p-4 gap-1 shadow-none cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-101 relative">
                 <CardContent className="flex  items-start text-center gap-3 p-0">
                   <Avatar  className="w-16 h-16 rounded-sm">
                     <AvatarImage src={employer.logo} alt={employer.name} />

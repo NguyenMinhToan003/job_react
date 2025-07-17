@@ -13,6 +13,7 @@ import {
   TargetIcon,
   AlertCircleIcon,
   MapPin,
+  Facebook,
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -29,6 +30,9 @@ import Map from './Map';
 import { LocationResponse } from '@/types/location';
 import JobBanner from '@/components/elements/job/job-list/JobBanner';
 import clsx from 'clsx';
+import Footer from '@/components/elements/footer/Footer';
+import { convertDateToString } from '@/utils/dateTime';
+import { Label } from '@/components/ui/label';
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -121,7 +125,7 @@ export default function JobDetail() {
           <div className='bg-white rounded-sm p-1 min-w-25 min-h-25 max-w-25 max-h-25 flex items-start justify-center'>
             <img src={job.employer.logo} className='w-full h-full rounded-sm' />
           </div>
-          <div className='flex-1'>
+          <div className='flex-1 space-y-2'>
             <div className='text-2xl font-bold'>{job.name}</div>
             <div
               className='flex font-semibold items-center mt-2 gap-4 text-[#fbfaff] cursor-pointer hover:underline'
@@ -129,7 +133,10 @@ export default function JobDetail() {
             >
               {job.employer.name}
             </div>
-            <div className='text-xs font-semibold'>{view} lượt xem</div>
+            <Label className='text-xs font-semibold'>{view} lượt xem</Label>
+            <Label className='text-xs font-semibold text-gray-300'>
+              Cập nhật gần nhất : {convertDateToString(job.updatedAt)}
+            </Label>
           </div>
           <div className='flex gap-4'>
             <Button
@@ -149,6 +156,7 @@ export default function JobDetail() {
               <Heart className='w-5 h-5 mr-2 fill-current' />
               {job.isSaved ? 'Đã lưu' : 'Lưu công việc'}
             </Button>
+            
           </div>
         </div>
       </div>
@@ -211,6 +219,7 @@ export default function JobDetail() {
       </div>
       <JobBanner/>
       <BannerEmployer />
+      <Footer />
     </div>
   );
 }

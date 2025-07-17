@@ -22,6 +22,7 @@ export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersion
   formData.append('location', dto.location);
   formData.append('dateOfBirth', dto.dateOfBirth);
   formData.append('about', dto.about);
+  formData.append('experience', dto.experienceId?.toString() || '');
   formData.append('education', dto.education?.toString());
   formData.append('level', dto.level?.toString());
   formData.append('district', dto.district);
@@ -60,11 +61,13 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   formData.append('dateOfBirth', dto.dateOfBirth);
   formData.append('education', dto.education?.toString());
   formData.append('level', dto.level?.toString());
+  formData.append('about', dto.about);
   formData.append('district', dto.district);
   formData.append('email', dto.email);
   formData.append('name', dto.name);
   formData.append('cv', dto.cv ? dto.cv : '');
   formData.append('avatar', dto.avatar as Blob);
+  formData.append('experience', dto.experienceId);
   formData.append('expectedSalary', dto?.expectedSalary?.toString());
   formData.append('typeJobId', dto.typeJobId?.toString());
   if (dto.languageResumes?.length > 0) {

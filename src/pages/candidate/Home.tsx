@@ -58,6 +58,7 @@ import { toast } from 'sonner';
 import BannerEmployer from '@/components/elements/company/BannerEmployer';
 import JobBanner from '@/components/elements/job/job-list/JobBanner';
 import JobRecommendFollows from '@/components/elements/job/job-list/JobRecomendFollows';
+import Footer from '@/components/elements/footer/Footer';
 
 export default function Home() {
 
@@ -432,7 +433,8 @@ export default function Home() {
   </CardContent>
       </Card>
       
-      <BannerEmployer/>
+      <BannerEmployer />
+      <Footer />
     </div>
   );
 }

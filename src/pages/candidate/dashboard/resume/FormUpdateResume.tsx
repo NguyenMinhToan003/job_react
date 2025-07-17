@@ -31,6 +31,9 @@ import { vi } from 'date-fns/locale';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
 import dayjs from 'dayjs';
+import { Experience } from '@/types/experienceType';
+import { getExperienceList } from '@/apis/experienceAPI';
+import Editer from '@/components/elements/editer/editer';
 
 export default function FormUpdateResume() {
   const { resumeId } = useParams<{ resumeId: string }>();
@@ -71,12 +74,15 @@ export default function FormUpdateResume() {
   const [selectTypeJob, setSelectTypeJob] = useState<TypeJob | null>(null);
   const [expectedSalary, setExpectedSalary] = useState<number>(0);
   const [dateOfBirth, setDateOfBirth] = useState<string | null>(null);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [selectExperience, setSelectExperience] = useState<Experience | null>(null);
+
 
 
   // Fetch initial data
   const fetchElements = async () => {
     try {
-      const [cityList, skillList, languageList, educationList, levelList, majorList, typejobList] = await Promise.all([
+      const [cityList, skillList, languageList, educationList, levelList, majorList, typejobList, expList] = await Promise.all([
         getCityList(),
         getSkillList(),
         getAllLanguages(),
@@ -84,6 +90,7 @@ export default function FormUpdateResume() {
         getLevelList(),
         getListMajorAPI(),
         getTypeJobList(),
+        getExperienceList(),
       ]);
       setCitys(cityList);
       setSkills(skillList);
@@ -92,6 +99,7 @@ export default function FormUpdateResume() {
       setLevels(levelList);
       setMajors(majorList);
       setTypeJobs(typejobList);
+      setExperiences(expList);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin');
     }
@@ -122,8 +130,10 @@ export default function FormUpdateResume() {
       setExpectedSalary(response.expectedSalary || 0);
       setAvatar(response.avatar || '');
       setImagePreview(response.avatar || null);
+      setAbout(response.about || '');
       setDateOfBirth(response.dateOfBirth);
       setSelectTypeJob(response.typeJob || null);
+      setSelectExperience(response.experience || null);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin hồ sơ');
     }
@@ -190,6 +200,7 @@ export default function FormUpdateResume() {
         username,
         gender,
         location,
+        experienceId: selectExperience?.id || 0,
         phone,
         education: selectEducation.id,
         district: selectedDistrictId,
@@ -370,6 +381,13 @@ export default function FormUpdateResume() {
                   />
                 </div>
               </div>
+               <div className='space-y-2'>
+                  <Label>Giới thiệu & Mô tả</Label>
+                  <Editer
+                    text={about}
+                    setText={setAbout}
+                  />
+                </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium text-gray-700">Ngày sinh *</Label>
@@ -525,7 +543,29 @@ export default function FormUpdateResume() {
 
           {/* Job Preferences */}
           <div className="space-y-4">
-
+<div className='space-y-4'>
+            <h3 className='text-sm font-medium text-gray-700'>Kinh nghiệm làm việc</h3>
+              <Select
+              defaultValue={selectExperience?.id?.toString() || ''}
+              value={selectExperience?.id?.toString() || ''}
+              onValueChange={(value) => { 
+                const selected = experiences.find((exp) => exp.id.toString() === value);
+                setSelectExperience(selected || null);
+              } 
+              }
+            >
+              <SelectTrigger className='mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full'>
+                <SelectValue placeholder='Chọn kinh nghiệm làm việc' />
+              </SelectTrigger>
+              <SelectContent>
+                {experiences.map((exp) => (
+                  <SelectItem key={exp.id} value={exp.id.toString()}>
+                    {exp.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
             <div className="space-y-4">
               <div>
                 <Label className="text-sm font-medium text-gray-700">Loại công việc mong muốn</Label>
