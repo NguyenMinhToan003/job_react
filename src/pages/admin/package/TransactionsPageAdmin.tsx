@@ -51,7 +51,7 @@ export default function TransactionsPageAdmin() {
 
   useEffect(() => {
     fetchSubscriptions()
-  }, [page, limit])
+  }, [page, limit, status])
 
   const fetchSubscriptions = async () => {
     try {
@@ -65,8 +65,7 @@ export default function TransactionsPageAdmin() {
       setTransactions(response.items)
       setTotalPages(response.totalPages)
     } catch (error: any) {
-      console.error("Error fetching transaction:", error)
-      toast.error("Có lỗi xảy ra khi tải danh sách đăng ký")
+      toast.error(error?.response?.data?.message || "Lỗi khi tải giao dịch")
     } finally {
       setLoading(false)
     }
@@ -85,13 +84,12 @@ export default function TransactionsPageAdmin() {
           <CardTitle>Danh sách giao dịch</CardTitle>
         </CardHeader>
         <CardContent>
-          
               <>
                 <div className="flex flex-col sm:flex-row gap-4 mb-6">
                             <div className="flex-1 relative">
                               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                               <Input
-                                placeholder="Tìm kiếm theo tên, email..."
+                                placeholder="Tìm theo mã giao dịch"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 className="pl-10"
@@ -121,17 +119,16 @@ export default function TransactionsPageAdmin() {
                 onValueChange={(value) => {
                   setStatus(value as PAYMENT_STATUS)
                   setPage(1)
-                  fetchSubscriptions()
                 }}
               >
-                            <SelectTrigger className="w-32">
-                              <SelectValue placeholder="Trạng thái" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={PAYMENT_STATUS.SUCCESS}>Thành công</SelectItem>
-                              <SelectItem value={PAYMENT_STATUS.PENDING}>Chờ xử lý</SelectItem>
-                              <SelectItem value={PAYMENT_STATUS.FAILED}>Thất bại</SelectItem>
-                            </SelectContent>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Trạng thái" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={PAYMENT_STATUS.SUCCESS}>Thành công</SelectItem>
+                  <SelectItem value={PAYMENT_STATUS.PENDING}>Chờ xử lý</SelectItem>
+                  <SelectItem value={PAYMENT_STATUS.FAILED}>Thất bại</SelectItem>
+                </SelectContent>
               </Select>
                           </div>
             <Table>
@@ -215,7 +212,7 @@ export default function TransactionsPageAdmin() {
                                   item.employerSubscriptions[0].employer.name
                                     ?.charAt(0)
                                     .toUpperCase() || "N"
-                                }
+                                } 
                               </AvatarFallback>
                             </Avatar>
                             <span>
@@ -225,7 +222,13 @@ export default function TransactionsPageAdmin() {
                         )}
                       </TableCell>
                       <TableCell>
-                        {item.employerSubscriptions[0]?.note || "Không có"}
+                        {
+                          item.employerSubscriptions.map(sub => (
+                            <div key={sub.id} className="flex items-center gap-2">
+                              <Package className='text-gray-400 w-4 h-4'/>{sub.package.name} ({sub.package.dayValue} ngày)
+                            </div>
+                          ))
+                        }
                       </TableCell>
                       <TableCell>
                         <span className="font-semibold text-green-700">

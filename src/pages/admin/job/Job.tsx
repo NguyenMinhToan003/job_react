@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import JobListActive from './JobListActive';
 import JobListExpired from './JobListExpired';
 import JobListBlock from './JobListBlock';
-import { adminGetDashboardData, getCountJobDashboard, refreshJobInPackage } from '@/apis/jobAPI';
+import { adminGetDashboardData, refreshJobInPackage } from '@/apis/jobAPI';
 import { toast } from 'sonner';
 import { Activity, AlertTriangle, Clock, Lock } from 'lucide-react';
 import JobListPendding from './JobListPending';
@@ -32,6 +32,7 @@ export default function JobListPage() {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi làm mới danh sách công việc');
     }
   }
+
   const getJobCount =async() => {
     try {
       const response = await adminGetDashboardData();

@@ -31,7 +31,14 @@ export const toggleSkillStatus = async (id: number) => {
   return response.data
 }
 
-export const paginateSkill = async (page: number, limit: number)=> {
-  const response = await axiosInstance.get<SkillPaginateResponse>(`/skill/paginate/${page}/${limit}`)
+export const paginateSkill = async (page: number, limit: number, query: {
+  search?: string
+  majorId?: number
+})=> {
+  const response = await axiosInstance.get<SkillPaginateResponse>(`/skill/paginate/${page}/${limit}`,
+    {
+      params: query
+    }
+  )
   return response.data
 }

@@ -41,7 +41,7 @@ export default function PackagesAdmin() {
     setLoading(true)
     fetchPackages()
     setLoading(false)
-  }, [])
+  }, [typeFilter])
   useEffect(() => {
     if (isChange) {
       fetchPackages()
@@ -51,7 +51,10 @@ export default function PackagesAdmin() {
 
   const fetchPackages = async () => {
     try {
-      const data = await getPackageAdmin()
+      const data = await getPackageAdmin({
+        search,
+        type: typeFilter === 'all' ? undefined : [typeFilter as PackageType],
+      })
       setPackages(data)
     } catch (error) {
       console.error('Lỗi khi lấy danh sách gói:', error)
@@ -122,7 +125,7 @@ export default function PackagesAdmin() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>{totalSubscriptions}</div>
-            <p className='text-xs text-muted-foreground'>Doanh nghiệp đang sử dụng</p>
+            <p className='text-xs text-muted-foreground'>Lượt đăng ký sử dụng các dịch vụ</p>
           </CardContent>
         </Card>
         <Card>
@@ -144,7 +147,9 @@ export default function PackagesAdmin() {
             <div className='text-2xl font-bold'>
               {totalPackages > 0 ? Math.round(totalSubscriptions / totalPackages) : 0}
             </div>
-            <p className='text-xs text-muted-foreground'>Đăng ký trung bình</p>
+            <p className='text-xs text-muted-foreground'>
+              Số lượng đăng ký trung bình mỗi gói
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -170,6 +175,16 @@ export default function PackagesAdmin() {
                 className='pl-10'
               />
             </div>
+            <Button
+              variant='outline'
+              onClick={() => {
+                setSearch('')
+                setTypeFilter('all')
+              }}
+            >
+              <Search className='h-4 w-4 mr-2' />
+              Tìm kiếm
+            </Button>
             <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger className='w-48'>
                 <SelectValue placeholder='Lọc theo loại' />
@@ -194,7 +209,7 @@ export default function PackagesAdmin() {
                   <TableHead>Giá</TableHead>
                   <TableHead>Thời hạn</TableHead>
                   <TableHead>Đăng ký</TableHead>
-                  <TableHead>Doanh thu</TableHead>
+                  <TableHead>Tổng doanh thu</TableHead>
                   <TableHead className='text-right'>Thao tác</TableHead>
                 </TableRow>
               </TableHeader>
@@ -283,7 +298,6 @@ export default function PackagesAdmin() {
                           >
                             <Trash2 className='h-4 w-4' />
                           </Button>
-                          
                         </div>
                       </TableCell>
                     </TableRow>

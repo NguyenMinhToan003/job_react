@@ -46,10 +46,17 @@ export default function SkillPage() {
   const [name, setName] = useState<string>('');
   const [status, setStatus] = useState<number>(1);
   const [allMajor, setAllMajor] = useState<Major[]>([]);
+  const [selectSearchMajor, setSelectSearchMajor] = useState<Major | undefined>(undefined);
+  const [search, setSearch] = useState<string>('');
 
   const fetchSkillList = async () => {
     try {
-      const response = await paginateSkill(page, limit);
+      console.log('check')
+      const response = await paginateSkill(page, limit, {
+        search: search,
+        majorId: selectSearchMajor?.id|| undefined,
+      });
+      console.log(response);
       setTotalPages(response.totalPages || 0);
       setSkillList(response.items);
     } catch (error: any) {
@@ -60,7 +67,7 @@ export default function SkillPage() {
 
   useEffect(() => {
     fetchSkillList();
-  }, [page, limit]);
+  }, [page, limit, selectedMajor]);
 
   const handleSubmit = async () => {
     try {
@@ -176,16 +183,64 @@ export default function SkillPage() {
           <CardTitle>Quản lý Kĩ năng</CardTitle>
 
           <div className='flex items-center gap-2'>
-
             <Button onClick={() => {
               setOpen(true)
               setIsEdit(false)
             }}>+ Thêm kỹ năng</Button>
-           
           </div>
         </CardHeader>
+        
 
         <CardContent className='p-6 space-y-2'>
+          <div className='flex items-center justify-between mb-4 gap-1'>
+            <Input
+              placeholder='Tìm kiếm kỹ năng...'
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Button
+              onClick={() => {
+                setPage(1);
+                fetchSkillList();
+              }}
+            >
+              Tìm kiếm
+            </Button>
+            <Select
+              value={selectSearchMajor?.id?.toString() || ''}
+              onValueChange={(value) => {
+                const major = allMajor.find(m => m.id === Number(value));
+                setSelectSearchMajor(major);
+                setPage(1);
+                fetchSkillList();
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder='Chọn Chuyen nganh' />
+              </SelectTrigger>
+              <SelectContent>
+                {allMajor.map((major) => (
+                  <SelectItem key={major.id} value={major.id.toString()}>
+                    {major.name}
+                  </SelectItem>
+                ))} 
+              </SelectContent>
+            </Select>
+            {
+              selectSearchMajor && (
+                <Button
+                  variant='destructive'
+                  onClick={() => {
+                    setSelectSearchMajor(undefined);
+                    setPage(1);
+                    fetchSkillList();
+                  }}
+                >
+                  Xóa bộ lọc
+                </Button>
+              )
+            }
+          </div>
           <Table className='w-full'>
             <TableHeader>
               <TableRow>

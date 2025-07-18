@@ -47,6 +47,7 @@ export default function JobListBlock() {
           page,
           sortBy,
           sortOrder,
+          search,
         })
         setJobs(response.data);
         setTotalPages(response.totalPages);
@@ -80,9 +81,9 @@ export default function JobListBlock() {
             </div>
             <Button
               onClick={() => {
+                setPage(1);
                 fetchJobs();
               }}
-              className="flex items-center gap-2"
             >Tìm kiếm</Button>
             <Select defaultValue={limit.toString()}
               onValueChange={(value) => {

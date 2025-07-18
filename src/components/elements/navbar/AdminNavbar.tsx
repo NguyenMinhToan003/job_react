@@ -13,6 +13,7 @@ import {
   Package,
   MessageCircle,
   Receipt,
+  Settings,
 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Card, CardContent } from "../../ui/card";
@@ -34,7 +35,7 @@ const userMenuItems = [
   { label: "Quản lý quyền lợi", icon: <HeartHandshake className="w-6 h-6" />, path: 'quyen-loi' },
   { label: "Quản lý lĩnh vực", icon: <Shapes className="w-6 h-6" />, path: 'linh-vuc' },
   { label: "Quốc gia", icon: <BarChart2 className="w-6 h-6" />, path: 'quoc-gia' },
-  { label: 'Blog', icon: <MessageCircle className='w-6 h-6' />, path: 'blog' },
+  { label: 'Cài đặt', icon: <Settings className='w-6 h-6' />, path: 'cai-dat' },
 ];
 
 

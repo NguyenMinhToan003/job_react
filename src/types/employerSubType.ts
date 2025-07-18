@@ -12,6 +12,7 @@ export interface EmployerSubResponse {
   createdAt: string;
   employer: Employer;
   job: JobResponse | null;
+  package: PackageResponse;
 }
 export interface EmployerSub {
   id: number;

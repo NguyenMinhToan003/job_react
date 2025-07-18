@@ -79,9 +79,12 @@ export default function JobListPendding() {
                 }}  
               />
             </div>
+
             <Button
-              onClick={handleSearch}
-              className="flex items-center gap-2"
+              onClick={() => {
+                setPage(1);
+                fetchJobs();
+              }}
             >Tìm kiếm</Button>
             <Select defaultValue={limit.toString()}
               onValueChange={(value) => {

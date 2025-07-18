@@ -82,35 +82,35 @@ export default function DetailCompany() {
                 <Label className="text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
                   Tên công ty *
                 </Label>
-                <Input disabled value={employer.name} placeholder="Nhập tên công ty" />
+                <Input  value={employer.name} placeholder="Nhập tên công ty" />
               </div>
 
               <div>
                 <Label className="text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
                   <Hash className="w-4 h-4 text-[#9277f2]" /> Mã số thuế *
                 </Label>
-                <Input disabled value={employer.taxCode} placeholder="0123456789" />
+                <Input  value={employer.taxCode} placeholder="0123456789" />
               </div>
 
               <div>
                 <Label className="text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
                   <Briefcase className="w-4 h-4 text-[#9277f2]" /> Loại hình doanh nghiệp *
                 </Label>
-                <Input disabled value={employer.businessType?.name} placeholder="Nhập loại hình doanh nghiệp" />
+                <Input  value={employer.businessType?.name} placeholder="Nhập loại hình doanh nghiệp" />
               </div>
 
               <div>
                 <Label className="text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
                   <Users className="w-4 h-4 text-[#9277f2]" /> Quy mô nhân sự *
                 </Label>
-                <Input disabled value={employer.employeeScale?.name} placeholder="Nhập quy mô nhân sự" />
+                <Input  value={employer.employeeScale?.name} placeholder="Nhập quy mô nhân sự" />
               </div>
 
               <div>
                 <Label className="text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
                   <MapPin className="w-4 h-4 text-[#9277f2]" /> Quốc gia *
                 </Label>
-                <Input disabled value={employer.country?.name} placeholder="Nhập quốc gia" />
+                <Input  value={employer.country?.name} placeholder="Nhập quốc gia" />
               </div>
 
               <div className="md:col-span-2">
@@ -146,14 +146,14 @@ export default function DetailCompany() {
                 <Label className="text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
                   <Mail className="w-4 h-4 text-[#9277f2]" /> Email *
                 </Label>
-                <Input disabled type="email" value={employer.email} placeholder="email@company.com" />
+                <Input  type="email" value={employer.account?.email} />
               </div>
 
               <div>
                 <Label className="text-sm font-medium text-[#060607] mb-2 flex gap-2 items-center">
                   <Phone className="w-4 h-4 text-[#9277f2]" /> Số điện thoại *
                 </Label>
-                <Input disabled type="tel" value={employer.phone} placeholder="0123 456 789" />
+                <Input  type="tel" value={employer.phone} placeholder="0123 456 789" />
               </div>
             </div>
           </div>

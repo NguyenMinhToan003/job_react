@@ -28,3 +28,7 @@ export interface FilterPackage {
     type?: PackageType[];
     mini?: boolean;// filter for packages that have not been used
 }
+export interface AdminFilterPackage {
+    search?: string;
+    type?: PackageType[];
+}

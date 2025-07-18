@@ -1,6 +1,6 @@
 import { AdminFilterTransaction, EmployerSubResponse, TransactionDetailResponse, TransactionRequest, TransactionResponse, UseSubscriptionBannerRequest } from "@/types/employerSubType"
 import { axiosInstance } from "."
-import { CreatePackage, FilterPackage, PackageResponse } from "@/types/packageType"
+import { AdminFilterPackage, CreatePackage, FilterPackage, PackageResponse } from "@/types/packageType"
 
 export const getPackageAvailable = async (data: FilterPackage) => {
   const response = await axiosInstance.get<PackageResponse[]>('/packages/available', {
@@ -33,8 +33,10 @@ export const getPackagesBisiness = async (filter?: FilterPackage) => {
   return response.data
 }
 
-export const getPackageAdmin = async () => {
-  const response = await axiosInstance.get<PackageResponse[]>('/packages/all')
+export const getPackageAdmin = async (data: AdminFilterPackage) => {
+  const response = await axiosInstance.get<PackageResponse[]>('/packages/all', {
+    params: data
+  })
   return response.data
 }
 export const updatePackage = async (id: string, data: CreatePackage) => {

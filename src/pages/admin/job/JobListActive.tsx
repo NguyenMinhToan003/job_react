@@ -49,6 +49,7 @@ export default function JobListActive() {
         page,
         sortBy,
         sortOrder,
+        search,
       })
       setJobs(response.data);
       setTotalPages(response.totalPages);
@@ -80,7 +81,12 @@ export default function JobListActive() {
                 }}
               />
             </div>
-            <Button>Tìm kiếm</Button>
+            <Button
+              onClick={() => {
+                setPage(1);
+                fetchJobs();
+              }}
+            >Tìm kiếm</Button>
             <Select 
               defaultValue={limit.toString()}
               onValueChange={(value) => {
