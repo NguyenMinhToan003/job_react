@@ -14,7 +14,7 @@ import { getListMajorAPI } from '@/apis/majorAPI';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { X, User,  Upload, FileText } from 'lucide-react';
+import { X, User,  Upload, FileText, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { City, District } from '@/types/location';
@@ -34,6 +34,7 @@ import dayjs from 'dayjs';
 import { Experience } from '@/types/experienceType';
 import { getExperienceList } from '@/apis/experienceAPI';
 import Editer from '@/components/elements/editer/editer';
+import { useLoading } from '@/providers/LoadingProvider';
 
 export default function FormUpdateResume() {
   const { resumeId } = useParams<{ resumeId: string }>();
@@ -67,18 +68,20 @@ export default function FormUpdateResume() {
   const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
   const [typeJobs, setTypeJobs] = useState<TypeJob[]>([]);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [pdfFileName, setPdfFileName] = useState<string>('');
+  const [pdfFileURL, setPdfFileURL] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectTypeJob, setSelectTypeJob] = useState<TypeJob | null>(null);
   const [expectedSalary, setExpectedSalary] = useState<number>(0);
   const [dateOfBirth, setDateOfBirth] = useState<string | null>(null);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [selectExperience, setSelectExperience] = useState<Experience | null>(null);
+  const {setLoading} = useLoading()
 
 
 
   // Fetch initial data
   const fetchElements = async () => {
+    setLoading(true);
     try {
       const [cityList, skillList, languageList, educationList, levelList, majorList, typejobList, expList] = await Promise.all([
         getCityList(),
@@ -101,11 +104,15 @@ export default function FormUpdateResume() {
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin');
     }
+    finally {
+      setLoading(false);
+    }
   };
 
   // Fetch resume data
   const fetchDataResume = async () => {
     try {
+      setLoading(true);
       const response = await viewResumeAPI(Number(resumeId));
       setResumeVer(response);
       setUsername(response.username || '');
@@ -130,8 +137,12 @@ export default function FormUpdateResume() {
       setDateOfBirth(response.dateOfBirth);
       setSelectTypeJob(response.typeJob || null);
       setSelectExperience(response.experience || null);
+      setPdfFileURL(response.urlPdf || '');
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin hồ sơ');
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -169,25 +180,13 @@ export default function FormUpdateResume() {
         return;
       }
       setPdfFile(file);
-      setPdfFileName(file.name);
+      setPdfFileURL(URL.createObjectURL(file));
     }
-  };
-
-  // Remove image
-  const removeImage = () => {
-    setAvatar(undefined);
-    setImagePreview(null);
-  };
-
-  // Remove PDF
-  const removePdf = () => {
-    setPdfFile(null);
-    setPdfFileName('');
   };
 
   // Handle resume update
   const handleUpdateResume = async () => {
-    setIsLoading(true);
+    setLoading(true);
     try {
       await updateResumeAPI(Number(resumeId), {
         about,
@@ -215,7 +214,7 @@ export default function FormUpdateResume() {
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi cập nhật thông tin hồ sơ');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -247,10 +246,10 @@ export default function FormUpdateResume() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
+    <div className="min-h-screen bg-transparent flex items-start justify-center p-4">
       <Card className="w-3xl border-gray-300 border shadow-none rounded-lg">
         <CardHeader className=" border-gray-200">
-          <CardTitle className="text-lg font-semibold text-gray-900">Tạo Hồ Sơ</CardTitle>
+          <CardTitle className="text-lg font-semibold text-gray-900">Cập nhật Hồ Sơ</CardTitle>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -278,16 +277,6 @@ export default function FormUpdateResume() {
                     <Upload className="w-4 h-4 mr-2 text-gray-500" />
                     {avatar ? "Thay đổi ảnh" : "Tải ảnh lên"}
                   </Label>
-                  {avatar && (
-                    <button
-                      type="button"
-                      onClick={removeImage}
-                      className="ml-2 text-sm text-gray-500 hover:text-red-600"
-                    >
-                      Xóa
-                    </button>
-                  )}
-                
                 </div>
               </div>
             </div>
@@ -297,7 +286,7 @@ export default function FormUpdateResume() {
               <Label className="text-sm font-medium text-gray-700">File CV (PDF)</Label>
               <div className="flex items-center space-x-4">
                 <div className="w-16 h-16 flex items-center justify-center bg-gray-100 border border-gray-200 rounded-md">
-                  {pdfFileName ? (
+                  {pdfFileURL ? (
                     <FileText className="w-6 h-6 text-blue-600" />
                   ) : (
                     <FileText className="w-6 h-6 text-gray-400" />
@@ -316,18 +305,8 @@ export default function FormUpdateResume() {
                     className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
                   >
                     <Upload className="w-4 h-4 mr-2 text-gray-500" />
-                    {pdfFileName ? "Thay đổi PDF" : "Tải PDF lên"}
+                    {pdfFileURL ? "Thay đổi PDF" : "Tải PDF lên"}
                   </Label>
-                  {pdfFileName && (
-                    <button
-                      type="button"
-                      onClick={removePdf}
-                      className="ml-2 text-sm text-gray-500 hover:text-red-600"
-                    >
-                      Xóa
-                    </button>
-                  )}
-                  
                 </div>
               </div>
             </div>
@@ -640,8 +619,23 @@ export default function FormUpdateResume() {
             disabled={isLoading}
             className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
           >
-            {isLoading ? "Đang tạo..." : "Tạo hồ sơ"}
+            {isLoading ? "Đang cập nhật..." : "Cập nhật hồ sơ"}
           </Button>
+        </CardContent>
+      </Card>
+      <Card className="flex-1 min-w-2xl shadow-none bg-white border rounded-lg">
+        <CardHeader className="border-b">
+          <CardTitle className="text-lg font-medium text-gray-900 flex items-center gap-2">
+            <Eye className="w-5 h-5" />
+            Hồ sơ đính kèm
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4">
+          <iframe
+            src={pdfFileURL}
+            className="w-full h-[100vh] border rounded-md"
+            title="Resume PDF"
+          />
         </CardContent>
       </Card>
 

@@ -160,7 +160,7 @@ export default function EmployerJobList() {
             Chưa có công việc nào được đăng tuyển.
           </p>
         ) : (
-          <Table className=' text-sm'>
+          <Table className=' text-sm mb-100'>
             <TableHeader>
                   <TableRow className='col-span-full flex'
                     onClick={() => fetchJobList()}

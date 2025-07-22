@@ -319,22 +319,19 @@ export default function UpdateJob() {
           </div>
           {/* Right side: Add Button */}
           <div className='w-[300px] sticky top-20 h-fit'>
-  <Card className='shadow-md border-dashed border- p-4 flex flex-col items-center relative'>
-
-
-    <div id="update" className='w-full'>
-      <Button
-        className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
-        onClick={handleUpdateJob}
-        disabled={checkField < 7}
-      >
-        <RotateCcw className='mr-2' />
-        CẬP NHẬT
-      </Button>
-    </div>
-  </Card>
-</div>
-
+            <Card className='shadow-md border-dashed border- p-4 flex flex-col items-center relative'>
+              <div id="update" className='w-full'>
+                <Button
+                  className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
+                  onClick={handleUpdateJob}
+                  disabled={checkField < 7}
+                >
+                  <RotateCcw className='mr-2' />
+                  CẬP NHẬT
+                </Button>
+              </div>
+            </Card>
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -62,24 +62,22 @@ export default function ViewJob() {
       jobs.length > 0 && jobs.map((viewjob) => (
         <Card className="rounded-none shadow-none hover:shadow-2xl" key={viewjob.job.id}>
           <CardContent className="flex items-start justify-start gap-2">
-          <div className='bg-white rounded-none w-18 h-18 flex items-center justify-center border border-gray-200'>
-            <img src={viewjob.job.employer?.logo} alt='CBTW Logo' className='w-full h-full' />
+          <div className='bg-white rounded-none w-24 h-24 flex items-center justify-center border border-gray-200'>
+            <img src={viewjob.job.employer?.logo} className='w-full h-full' />
             </div>
             <div className="flex-1 flex-col gap-1">
-              <div className='font-bold text-gray-800 text-lg hover:underline cursor-pointer'
+              <div
                 onClick={() => navigate(`/cong-viec/${viewjob.job.id}`)}
-              >{viewjob.job.name}</div>
-              <div className='text-[12px] text-gray-500 font-semibold'>{viewjob.job.employer?.name}</div>
-
-              <div className="text-green-600 font-semibold text-sm">
-                {viewjob.job?.maxSalary === viewjob.job?.minSalary && viewjob.job?.maxSalary === null ? (
-                  <div className='flex gap-2 items-center justify-start font-semibold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
+                className='font-semibold text-[#451da1] text-lg hover:underline cursor-pointer'>{viewjob.job.name}</div>
+              <div className='text-sm text-gray-500 font-semibold hover:underline'>{viewjob.job.employer?.name}</div>
+              <div className='text-sm text-gray-500 font-semibold hover:underline'>{viewjob?.job?.locations[0]?.district?.city?.name}</div>
+              <div className="text-[#2c95ff] font-semibold text-sm">
+                {viewjob?.job?.maxSalary === viewjob?.job?.minSalary && viewjob?.job?.maxSalary === null ? (
+                  <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
                 ) : (
-                    <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4" />
-                      <span className='font-bold'>
-                        {convertPrice(viewjob.job.minSalary, viewjob.job.maxSalary)}
-                      </span>
-                    </div>
+                    <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4" /> <span>
+                    {convertPrice(viewjob.job.minSalary, viewjob.job.maxSalary)}
+                    </span></div>
                 )}
               </div>
               

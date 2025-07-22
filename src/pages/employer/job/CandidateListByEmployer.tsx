@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getApplyJobByJobId, getApplyJobByTags } from '@/apis/applyJobAPI';
 import { ApplyJobResponse } from '@/types/applyJobType';
@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { convertDateToString } from '@/utils/dateTime';
 import { JobResponse } from '@/types/jobType';
 import JobMenu from '@/components/elements/job/MenuMore';
-import EmployerResumeMenu from '@/components/elements/applyJob/ApplyJobMenu';
+import ApplyJobMenu from '@/components/elements/applyJob/ApplyJobMenu';
 import { buttonAction } from '@/utils/renderButton';
 import { TagResume } from '@/types/tagResumeType';
 import clsx from 'clsx';
@@ -26,6 +26,7 @@ import { APPLY_JOB_STATUS } from '@/types/type';
 import { X } from 'lucide-react';
 
 export default function CandidateListByEmployer() {
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(window.location.search);
   const tagIds = searchParams.get('tagIds')?.split(',') || [];
   const { jobId } = useParams<{ jobId: string }>();
@@ -98,7 +99,7 @@ export default function CandidateListByEmployer() {
           <p className='text-gray-500 text-center py-8'>Đang tải dữ liệu...</p>
         ) : (
               <>
-                <div className='w-full space-x-3 space-y-3'>
+                <div className='w-full space-x-3 space-y-3 '>
                   <div className='flex items-center justify-between'>
                   <Label>
                     <span className='text-gray-700'>Tin đăng:</span>
@@ -150,8 +151,7 @@ export default function CandidateListByEmployer() {
                   </div>
                   </div>
                   {
-                    tagResumes.length > 0 && tagResumes.map(tag => {
-                      return <>
+                    tagResumes.length > 0 && tagResumes.map(tag => (
                         <Button
                           key={tag.id}
                           onClick={() => {
@@ -168,13 +168,11 @@ export default function CandidateListByEmployer() {
                           )}>
                           {tag.name}
                         </Button>
-                      </>
-                    })
+                    ))
                   }
                   </div>
-              <Table className='min-w-[1000px] text-sm'>
+              <Table className='min-w-[1000px] text-sm mb-100'>
                 <TableHeader>
-
               <TableRow>
                 <TableHead className='pl-3 text-left text-xs text-gray-700'>Hồ sơ ứng viên</TableHead>
                 <TableHead className='pl-3 text-left text-xs text-gray-700'>Mức phù hợp</TableHead>
@@ -188,7 +186,9 @@ export default function CandidateListByEmployer() {
               {list.length>0 && list.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className='pl-3 space-y-1'>
-                    <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-2'
+                      onClick={() => navigate(`/danh-cho-nha-tuyen-dung/danh-gia-ho-so-cong-viec/${item.id}`)}
+                    >
                       <Avatar><AvatarImage src={item.resumeVersion.avatar} /></Avatar>
                       <span className='font-semibold text-neutral-700'>{item.resumeVersion.username}</span>
                     </div>
@@ -227,7 +227,10 @@ export default function CandidateListByEmployer() {
                   </TableCell>
 
                   <TableCell>
-                    <Label className='text-neutral-700'>{item.job.name}</Label>
+                    <Button
+                      variant='link'
+                      onClick={() => navigate(`/danh-cho-nha-tuyen-dung/danh-sach-ung-tuyen/${item.job.id}`)}
+                      className='text-neutral-700'>{item.job.name}</Button>
                   </TableCell>
 
                   <TableCell>
@@ -237,7 +240,7 @@ export default function CandidateListByEmployer() {
                   <TableCell>
                     <div className='flex justify-end items-center gap-1'>
                       {buttonAction(item.status)}
-                      <EmployerResumeMenu
+                      <ApplyJobMenu
                         applyJob={item}
                         setIsChange={setIsChange}
                       />

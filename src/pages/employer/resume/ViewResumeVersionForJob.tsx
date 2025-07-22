@@ -18,6 +18,7 @@ import { TagResume } from '@/types/tagResumeType';
 import { getAllTagResumeAPI } from '@/apis/tagResumeAPI';
 import { Textarea } from '@/components/ui/textarea';
 import dayjs from 'dayjs';
+import ApplyJobMenu from '@/components/elements/applyJob/ApplyJobMenu';
 
 export default function ViewResumeVersionForJob() {
   const { applyId } = useParams();
@@ -422,10 +423,22 @@ export default function ViewResumeVersionForJob() {
       <Card className='w-full'>
         <CardHeader>
           <CardTitle className='flex justify-between items-center'>
-            <div className='text-neutral-700 flex items-center gap-2'>
-              <Tag className='w-4 h-4 text-neutral-600' />
+            <Label className='text-[#2c95ff] flex items-center gap-2'>
+              <Settings className='w-4 h-4' />
+              Quản lý ứng viên
+            </Label>
+            
+            <ApplyJobMenu
+              applyJob={apply}
+              setIsChange={fetchElement}
+            />
+          </CardTitle>
+          <hr/>
+          <CardTitle className='flex justify-between items-center'>
+            <Label className='text-[#451da0] flex items-center gap-2'>
+              <Tag className='w-4 h-4 text-[#451da0]' />
               <span>Thẻ ứng viên</span>
-            </div>
+            </Label>
             <Button
               variant='link'
               className='text-[#2c95ff] hover:text-[#2c95ff] flex items-center gap-2'

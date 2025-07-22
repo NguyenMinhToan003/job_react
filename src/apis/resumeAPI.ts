@@ -115,3 +115,7 @@ export const uploadNewCVAPI = async (resumeId: number, file: File) => {
   const response = await axiosInstance.patch<ResumeVersion>(`/resume-version/upload-new-cv/${resumeId}`, formData);
   return response.data;
 }
+export const cronjobDeleteResumeVersionDraftAPI = async () => {
+  const response = await axiosInstance.delete('/resume-version/cron-job/delete-draft');
+  return response.data;
+}

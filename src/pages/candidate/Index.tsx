@@ -7,6 +7,7 @@ export default function Index() {
       <Navigate/>
       <div className="bg-[#f7f7f7] min-h-[calc(100vh-65px)]">
         <Outlet />
+        
       </div>
     </>
   )

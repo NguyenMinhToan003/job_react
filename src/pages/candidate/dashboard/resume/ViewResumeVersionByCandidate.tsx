@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { viewApplyJobByCandidate } from '@/apis/applyJobAPI';
 import { deleteResumeAPI, viewResumeAPI } from '@/apis/resumeAPI';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -9,8 +10,6 @@ import { ResumeVersion } from '@/types/resumeType';
 import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToString } from '@/utils/dateTime';
 import {
-  Mail,
-  Phone,
   Calendar,
   User,
   MapPin,
@@ -30,15 +29,15 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-export default function ViewResumeLastVersion() {
+export default function ViewResumeVersionByCandidate() {
+  const {id} = useParams<{ id: string }>();
   const [resume, setResume] = useState<ResumeVersion>();
-  const { resumeId } = useParams<{ resumeId: string }>();
   const navigate = useNavigate();
   const { showAlert } = useAlertDialog();
 
   const fetchResume = async () => {
     try {
-      const response = await viewResumeAPI(Number(resumeId));
+      const response = await viewApplyJobByCandidate(Number(id));
       setResume(response);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Lỗi khi tải thông tin hồ sơ');
@@ -46,7 +45,7 @@ export default function ViewResumeLastVersion() {
   };
 
   useEffect(() => {
-    if (resumeId) fetchResume();
+    if (id) fetchResume();
   }, []);
 
   const handleDeleteResume = async (resumeId: number) => {

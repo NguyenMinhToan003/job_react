@@ -63,6 +63,7 @@ export default function JobMenu({ job, setIsChange }: {
           <ScanEye className='w-4 h-4 mr-2' />
           Xem chi tiết tin
         </Label>
+        
         <FormExpired
           job={job}
           setIsChange={setIsChange}

@@ -22,8 +22,6 @@ export interface ResumeVersion {
   dateOfBirth: string;
   gender: string;
   location: string;
-  phone: string;
-  email: string;
   about: string;
   experience: Experience;
   expectedSalary: number | null;

@@ -196,14 +196,11 @@ export default function SearchJobInLocation() {
       </div>
 
       {loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2  gap-4 mt-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Card key={i} className="shadow-md p-4 space-y-4">
+            <Card key={i} className="shadow-none p-4 space-y-4">
               <Skeleton className="w-12 h-12 rounded-full" />
               <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-3 w-1/2" />
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-5/6" />
               <Skeleton className="h-3 w-1/2" />
               <Skeleton className="h-6 w-16 rounded" />
             </Card>
@@ -214,18 +211,25 @@ export default function SearchJobInLocation() {
       {error && <p className="text-red-600 text-center mt-4">{error}</p>}
 
       {!loading && !error && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2  gap-5">
           {jobs.map((job) => (
             <Card
               key={job.id}
-              className="shadow-none border-gray-200 border rounded-2xl"
+              className="shadow-none border-gray-200 border rounded-2xl p-2"
             >
-              <CardContent onClick={() => navigate(`/cong-viec/${job.id}`)}>
-                <JobItem
-                  job={job}
-                  selectedJob={job}
-                  setSelectedJob={() => {}}
-                />
+              <CardContent  className='p-2'>
+                <div onClick={() => navigate(`/cong-viec/${job.id}`)}>
+                  <JobItem
+                    job={job}
+                    selectedJob={job}
+                    setSelectedJob={() => {}}
+                  />
+                </div>
+                <Label className="text-sm text-gray-600 mt-2">
+                  {
+                    job.locations[0].name
+                  }
+                </Label>
                 <div className="mt-4 flex justify-between items-center">
                   <Button
                     variant="link"

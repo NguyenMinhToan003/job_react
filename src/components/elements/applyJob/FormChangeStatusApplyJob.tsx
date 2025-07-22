@@ -46,7 +46,7 @@ export const FormChangeStatusApplyJob = ({
     setSendEmail?: (sendEmail: boolean) => void;
     setIsChange?: (isChange: boolean) => void;
 }) => {
-  const [selectedStatus, setSelectedStatus] = useState<APPLY_JOB_STATUS>(applyJob.status);
+  const [selectedStatus, setSelectedStatus] = useState<APPLY_JOB_STATUS>(applyJob?.status);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(isOpenSendEmail);
   const [emailContent, setEmailContent] = useState<string>("");
   const [emailSubject, setEmailSubject] = useState<string>("");
@@ -109,30 +109,30 @@ export const FormChangeStatusApplyJob = ({
           <div className="flex items-start mb-4 gap-3  bg-[#F6F6F6] p-4 rounded-md">
             <Avatar className="w-20 h-20 mx-auto ">
               <AvatarImage
-                src={applyJob.resumeVersion?.avatar}
+                src={applyJob?.resumeVersion?.avatar}
               />
             </Avatar>
             <div className=" flex-1 flex flex-col justify-start items-start gap-2">
               <div>
                 <Label className="font-semibold text-neutral-800">
-                  {applyJob.resumeVersion?.username}
+                  {applyJob?.resumeVersion?.username}
                 </Label>
               </div>
               <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1">
                 <Label className='text-neutral-700'>
                   <LucidePhone className='h-3 w-3 text-neutral-700' /> {
-                    applyJob?.phone==='' ? applyJob?.resumeVersion?.phone : applyJob?.phone
+                    applyJob?.phone
                   }
                 </Label>
                 <Label className='text-sm text-neutral-700'>
                   <Mail className='h-3 w-3 text-neutral-700' /> {
-                    applyJob?.email === '' ? applyJob?.resumeVersion?.email : applyJob?.email 
+                    applyJob?.email
                   }
                 </Label>
               </div>
               <Label className="text-sm text-neutral-700">
                 <Briefcase className="h-3 w-3 text-neutral-700" />{" "}
-                {applyJob.job?.name}
+                {applyJob?.job?.name}
               </Label>
             </div>
           </div>
@@ -142,7 +142,7 @@ export const FormChangeStatusApplyJob = ({
             </div>
             <div className='flex-1'>
               <RadioGroup
-                defaultValue={applyJob.status}
+                defaultValue={applyJob?.status}
                 value={selectedStatus}
                 onValueChange={(value) => setSelectedStatus(value as APPLY_JOB_STATUS)}
                 className="space-y-2 flex "
@@ -188,7 +188,7 @@ export const FormChangeStatusApplyJob = ({
                   <span className="max-w-24 min-w-24">Gửi tới</span>
                   <Input
                     type="email"
-                    value={applyJob.resumeVersion?.email}
+                    value={applyJob.email}
                     readOnly
                     className="mt-1 w-full"
                   />

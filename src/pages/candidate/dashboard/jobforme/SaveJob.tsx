@@ -1,19 +1,12 @@
 import { deleteSaveJobAPI, getRecomendedSaveJobAPI, getSaveJobAPI } from '@/apis/saveJobAPI';
 import JobItem from '@/components/elements/job/job-list/JobItem';
-import JobList from '@/components/elements/job/job-list/JobItem';
 import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from '@/components/ui/pagination';
 import { ApplyJobResponse } from '@/types/applyJobType';
 import { JobFilterResponse } from '@/types/jobType';
 import { convertPrice } from '@/utils/convertPrice';
-import { ChevronLeft, ChevronRight, HandCoins } from 'lucide-react';
+import { HandCoins } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -77,38 +70,28 @@ export default function SaveJob() {
         applyJobs.map((savejob) => (
           <Card className='rounded-none shadow-none hover:shadow-2xl' key={savejob.id}>
             <CardContent className='flex items-start justify-start gap-2'>
-              <div className='bg-white rounded-none w-18 h-18 flex items-center justify-center border border-gray-200'>
-                <img
-                  src={savejob.job.employer?.logo}
-                  alt='Logo'
-                  className='w-full h-full object-contain'
-                />
+
+
+<div className='bg-white rounded-none w-24 h-24 flex items-center justify-center border border-gray-200'>
+            <img src={savejob.job.employer?.logo} className='w-full h-full' />
+            </div>
+            <div className="flex-1 flex-col gap-1">
+              <div
+                onClick={() => navigate(`/cong-viec/${savejob.job.id}`)}
+                className='font-semibold text-[#451da1] text-lg hover:underline cursor-pointer'>{savejob.job.name}</div>
+              <div className='text-sm text-gray-500 font-semibold hover:underline'>{savejob.job.employer?.name}</div>
+              <div className='text-sm text-gray-500 font-semibold hover:underline'>{savejob?.job?.locations[0]?.district?.city?.name}</div>
+              <div className="text-[#2c95ff] font-semibold text-sm">
+                {savejob?.job?.maxSalary === savejob?.job?.minSalary && savejob?.job?.maxSalary === null ? (
+                  <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4"/><span> Thỏa thuận</span></div>
+                ) : (
+                    <div className='flex gap-2 items-center justify-start font-bold'><HandCoins className="w-4 h-4" /> <span>
+                    {convertPrice(savejob.job.minSalary, savejob.job.maxSalary)}
+                    </span></div>
+                )}
               </div>
-
-              <div className='flex-1 flex-col gap-1'>
-                <div
-                  className='font-bold text-gray-800 text-lg hover:underline cursor-pointer'
-                  onClick={() => navigate(`/cong-viec/${savejob.job.id}`)}
-                >
-                  {savejob.job.name}
-                </div>
-
-                <div
-                  className='text-[12px] text-gray-500 font-semibold hover:underline cursor-pointer'
-                  onClick={() => navigate(`/nha-tuyen-dung/${savejob.job.employer?.id}`)}
-                >
-                  {savejob.job.employer?.name}
-                </div>
-
-                <div className='text-[12px] text-gray-500 font-semibold'>
-                  {savejob?.job?.locations?.[0]?.district?.city?.name}
-                </div>
-
-                <div className='flex gap-2 items-center justify-start font-semibold text-green-600 text-sm'>
-                  <HandCoins className='w-4 h-4' />
-                  {convertPrice(savejob.job.minSalary, savejob.job.maxSalary)}
-                </div>
-              </div>
+              
+            </div>
 
               <div className='flex flex-col items-end justify-start gap-2'>
                 <Button

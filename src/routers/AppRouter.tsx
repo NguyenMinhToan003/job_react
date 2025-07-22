@@ -66,6 +66,7 @@ import DetailCompany from '@/pages/admin/company/DetailCompany';
 import Setting from '@/pages/admin/setting/Setting';
 import JobDetailEmployer from '@/pages/employer/job/CandidateListByEmployer';
 import CandidateListByEmployer from '@/pages/employer/job/CandidateListByEmployer';
+import ViewResumeVersionByCandidate from '@/pages/candidate/dashboard/resume/ViewResumeVersionByCandidate';
 
 
 export default function AppRouter() {
@@ -88,6 +89,7 @@ export default function AppRouter() {
         <Route path='tim-kiem-cong-viec' element={<SearchJob />} />
         <Route index element={<Home />} />
         <Route path='map/:lat/:lng' element={<Map />} />
+        <Route path='xem-ho-so-ung-tuyen/:id' element={<ViewResumeVersionByCandidate />} />
         <Route path='ung-tuyen-cong-viec/:jobId' element={<JobApplicationForm />} />
         <Route path='/tong-quat-ho-so' element={<UserDashboard />} >
           <Route path='thong-bao' element={<CandidateNoti />} />

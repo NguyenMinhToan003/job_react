@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { X, User, Upload, FileText } from 'lucide-react';
+import { X, User, Upload, FileText, Eye } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import { vi } from 'date-fns/locale';
 import { toast } from 'sonner';
@@ -57,7 +57,7 @@ export default function FormCreateResume() {
   const [avatar, setAvatar] = useState<File | string>(dataUser?.avatar || '');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [pdfFileName, setPdfFileName] = useState<string>('');
+  const [pdfFileURL, setPdfFileURL] = useState<string>('');
   const [majors, setMajors] = useState<MajorResponse[]>([]);
   const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
   const [typeJobs, setTypeJobs] = useState<TypeJob[]>([]);
@@ -122,21 +122,10 @@ export default function FormCreateResume() {
         return;
       }
       setPdfFile(file);
-      setPdfFileName(file.name);
+      setPdfFileURL(URL.createObjectURL(file));
     }
   };
 
-  // Remove image
-  const removeImage = () => {
-    setAvatar('');
-    setImagePreview(null);
-  };
-
-  // Remove PDF
-  const removePdf = () => {
-    setPdfFile(null);
-    setPdfFileName('');
-  };
 
 
   // Create resume
@@ -199,7 +188,7 @@ export default function FormCreateResume() {
   };
 
   return (
-    <div className='min-h-screen bg-transparent flex items-center justify-center p-4'>
+    <div className='min-h-screen bg-transparent flex items-start justify-center p-4'>
       <Card className='w-3xl border-gray-300 border shadow-none rounded-lg'>
         <CardHeader className=' border-gray-200'>
           <CardTitle className='text-lg font-semibold text-gray-900'>Tạo Hồ Sơ</CardTitle>
@@ -230,15 +219,7 @@ export default function FormCreateResume() {
                     <Upload className='w-4 h-4 mr-2 text-gray-500' />
                     {avatar ? 'Thay đổi ảnh' : 'Tải ảnh lên'}
                   </Label>
-                  {avatar && (
-                    <button
-                      type='button'
-                      onClick={removeImage}
-                      className='ml-2 text-sm text-gray-500 hover:text-red-600'
-                    >
-                      Xóa
-                    </button>
-                  )}
+                  
                 
                 </div>
               </div>
@@ -249,7 +230,7 @@ export default function FormCreateResume() {
               <Label className='text-sm font-medium text-gray-700'>File CV (PDF)</Label>
               <div className='flex items-center space-x-4'>
                 <div className='w-16 h-16 flex items-center justify-center bg-gray-100 border border-gray-200 rounded-md'>
-                  {pdfFileName ? (
+                  {pdfFileURL ? (
                     <FileText className='w-6 h-6 text-blue-600' />
                   ) : (
                     <FileText className='w-6 h-6 text-gray-400' />
@@ -268,18 +249,9 @@ export default function FormCreateResume() {
                     className='inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer'
                   >
                     <Upload className='w-4 h-4 mr-2 text-gray-500' />
-                    {pdfFileName ? 'Thay đổi PDF' : 'Tải PDF lên'}
+                    {pdfFile ? 'Thay đổi file' : 'Tải file CV lên'}
                   </Label>
-                  {pdfFileName && (
-                    <button
-                      type='button'
-                      onClick={removePdf}
-                      className='ml-2 text-sm text-gray-500 hover:text-red-600'
-                    >
-                      Xóa
-                    </button>
-                  )}
-                  
+                 
                 </div>
               </div>
             </div>
@@ -594,6 +566,21 @@ export default function FormCreateResume() {
           >
             Tạo hồ sơ
           </Button>
+        </CardContent>
+      </Card>
+       <Card className="flex-1 min-w-2xl shadow-none bg-white border rounded-lg">
+        <CardHeader className="border-b">
+          <CardTitle className="text-lg font-medium text-gray-900 flex items-center gap-2">
+            <Eye className="w-5 h-5" />
+            Hồ sơ đính kèm
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4">
+          <iframe
+            src={pdfFileURL}
+            className="w-full h-[100vh] border rounded-md"
+            title="Resume PDF"
+          />
         </CardContent>
       </Card>
 

@@ -151,9 +151,8 @@ export default function CompanyPage() {
                 {employer.jobs.map((job) => (
                   <div key={job.id} onClick={()=> navigate(`/cong-viec/${job.id}`)} className='cursor-pointer'>
                     <JobItem
-                      isPrev={true}
-                      key={job.id}
                       job={job}
+                      key={job.id}
                       selectedJob={{} as JobFilterResponse}
                       setSelectedJob={() => {}}
                     />
