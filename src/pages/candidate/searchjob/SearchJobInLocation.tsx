@@ -2,18 +2,26 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getJobByLocation } from '@/apis/jobAPI';
 import { JobFilterResponse } from '@/types/jobType';
-
 import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { MapPinnedIcon } from 'lucide-react';
+import { MapPinnedIcon, Star } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import JobItem from '@/components/elements/job/job-list/JobItem';
+import { Field, MajorResponse } from '@/types/majorType';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Checkbox } from '@/components/ui/checkbox';
+import { getFieldAndAllMajors } from '@/apis/fieldAPI';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function SearchJobInLocation() {
   const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
@@ -23,6 +31,10 @@ export default function SearchJobInLocation() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [majorIds, setMajorIds] = useState<number[]>([]);
+  const [fieldList, setFieldList] = useState<Field[]>([]);
+  const [majorIdsTemp, setMajorIdsTemp] = useState<number[]>([]);
+  const [open, setOpen] = useState(false);
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -47,13 +59,14 @@ export default function SearchJobInLocation() {
     );
   };
 
-  const fetchJobsNearby = async (lat: number, lng: number, radiusKm: number) => {
+  const fetchJobsNearby = async (lat: number, lng: number, radiusKm: number, majorIds: number[]) => {
     try {
       setLoading(true);
       const data = await getJobByLocation({
         latitude: lat,
         longitude: lng,
         radius: radiusKm * 1000,
+        majorIds: majorIds.length > 0 ? majorIds : undefined,
       });
       setJobs(data);
     } catch {
@@ -63,27 +76,108 @@ export default function SearchJobInLocation() {
     }
   };
 
+  const fetchElements = async () => {
+    try {
+      const response = await getFieldAndAllMajors();
+      setFieldList(response);
+    } catch (err) {
+      console.error('Error fetching majors:', err);
+      setError('Không thể tải danh sách chuyên ngành.');
+    }
+  };
+
   useEffect(() => {
+    fetchElements();
     getCurrentLocation();
   }, []);
 
   useEffect(() => {
     if (location) {
-      fetchJobsNearby(location.latitude, location.longitude, radius);
+      fetchJobsNearby(location.latitude, location.longitude, radius, majorIds);
     }
-  }, [location, radius]);
+  }, [location, radius, majorIds]);
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <Card className="rounded-md shadow-sm mb-4">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800">
-            Việc làm gần vị trí của bạn
-          </CardTitle>
-          <p className="text-sm text-gray-500">Dựa trên vị trí hiện tại của bạn</p>
-          <p>
-            Tìm thấy {jobs.length} việc làm trong bán kính {radius} km.
-          </p>
+          <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline"
+                className="w-full mb-4 bg-[#2c95ff] text-white hover:bg-[#2c95ff] hover:text-white rounded-none"
+                
+              >
+                {majorIds.length > 0
+                  ? `Chọn chuyên ngành (${majorIds.length})`
+                  : 'Chọn chuyên ngành'}
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent className="min-w-[800px] p-6">
+              
+
+              <ScrollArea className="max-h-[60vh] pr-2">
+                <div className="space-y-6">
+                  {fieldList.map((field) => (
+                    <div key={field.id}>
+                      <h4 className="flex gap-2 font-semibold items-center text-[#451DA1] mb-2 border-b pb-1">
+                        <Star className='w-4 h-4'/> {field.name}
+                      </h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {field.majors?.map((major: MajorResponse) => (
+                          <div key={major.id} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`major-${major.id}`}
+                              checked={majorIdsTemp.includes(major.id)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setMajorIdsTemp((prev) => [...prev, major.id]);
+                                } else {
+                                  setMajorIdsTemp((prev) =>
+                                    prev.filter((id) => id !== major.id)
+                                  );
+                                }
+                              }}
+                            />
+                            <Label
+                              htmlFor={`major-${major.id}`}
+                              className="text-sm text-gray-700"
+                            >
+                              {major.name}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+
+              <div className="flex justify-end mt-6">
+                <Button
+                  variant="outline"
+                  className="mr-2  rounded-none"
+                  onClick={() => setMajorIdsTemp([])}
+                >
+                  Bỏ chọn tất cả
+                </Button>
+                <Button
+                  variant={'outline'}
+                  className='bg-[#2c95ff] text-white rounded-none hover:text-[#2c95ff]'
+                  onClick={() => {
+                    setMajorIds(majorIdsTemp);
+                    setOpen(false);
+                  }}
+                >
+                  Lưu lựa chọn{
+                    majorIdsTemp.length > 0
+                      ? ` (${majorIdsTemp.length})`
+                      : ''
+                  }
+                </Button>
+              </div>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardHeader>
       </Card>
 
@@ -122,15 +216,15 @@ export default function SearchJobInLocation() {
       {!loading && !error && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {jobs.map((job) => (
-            <Card key={job.id} className="shadow-none border-gray-200 border rounded-2xl">
-              <CardContent
-                onClick={() => navigate(`/cong-viec/${job.id}`)}
-              >
+            <Card
+              key={job.id}
+              className="shadow-none border-gray-200 border rounded-2xl"
+            >
+              <CardContent onClick={() => navigate(`/cong-viec/${job.id}`)}>
                 <JobItem
                   job={job}
                   selectedJob={job}
-                  setSelectedJob={() => { }}
-                  isPrev={false}
+                  setSelectedJob={() => {}}
                 />
                 <div className="mt-4 flex justify-between items-center">
                   <Button
@@ -146,10 +240,10 @@ export default function SearchJobInLocation() {
                         window.open(mapsUrl, '_blank');
                       }
                     }}
-                    >
-                      <MapPinnedIcon className="w-4 h-4 mr-1" />
-                      Xem đường đi
-                    </Button>
+                  >
+                    <MapPinnedIcon className="w-4 h-4 mr-1" />
+                    Xem đường đi
+                  </Button>
 
                   <Button variant="secondary" size="sm" className="text-[#2c95ff]">
                     {job.distanceKm} km

@@ -44,8 +44,6 @@ export default function FormCreateResume() {
   const [gender, setGender] = useState<string>(dataUser?.gender|| '');
   const [dateOfBirth, setDayOfBirth] = useState<string>(dataUser?.birthday || '');
   const [username, setUsername] = useState<string>(dataUser?.name || '');
-  const [phone, setPhone] = useState<string>(dataUser?.phone || '');
-  const [email, setEmail] = useState<string>(dataUser?.account?.email || '');
   const [name, setName] = useState<string>('');
   const [location, setLocation] = useState<string>(dataUser?.location || '');
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -147,14 +145,12 @@ export default function FormCreateResume() {
     try {
       await createResumeAPI({
         username,
-        phone,
         avatar,
         dateOfBirth,
         typeJobId: selectTypeJob?.id || -1,
         expectedSalary,
         district: selectedDistrictId,
         education: selectEducation.id,
-        email,
         gender,
         location,
         about: about,
@@ -311,26 +307,7 @@ export default function FormCreateResume() {
                   placeholder='Vị trí công việc mong muốn'
                 />
               </div>
-              <div className='grid grid-cols-2 gap-4'>
-                <div>
-                  <Label className='text-sm font-medium text-gray-700'>Email *</Label>
-                  <Input
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className='mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-                    placeholder='Nhập email'
-                  />
-                </div>
-                <div>
-                  <Label className='text-sm font-medium text-gray-700'>Số điện thoại *</Label>
-                  <Input
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className='mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-                    placeholder='Nhập số điện thoại'
-                  />
-                </div>
-              </div>
+              
               <div className='space-y-2'>
                 <Label>Giới thiệu & Mô tả</Label>
                 <Editer

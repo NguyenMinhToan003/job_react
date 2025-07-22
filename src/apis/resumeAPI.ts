@@ -17,7 +17,7 @@ export const initResumeAPI = async (dto: CreateResumeVersionDto) => {
 export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersionDto) => {
   const formData = new FormData();
   formData.append('username', dto.username);
-  formData.append('phone', dto.phone);
+
   formData.append('gender', dto.gender);
   formData.append('location', dto.location);
   formData.append('dateOfBirth', dto.dateOfBirth);
@@ -26,7 +26,7 @@ export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersion
   formData.append('education', dto.education?.toString());
   formData.append('level', dto.level?.toString());
   formData.append('district', dto.district);
-  formData.append('email', dto.email);
+
   formData.append('cv', dto.cv ? dto.cv : '');
 
   formData.append('name', dto.name);
@@ -55,7 +55,7 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   const formData = new FormData();
 
   formData.append('username', dto.username);
-  formData.append('phone', dto.phone);
+
   formData.append('gender', dto.gender);
   formData.append('location', dto.location);
   formData.append('dateOfBirth', dto.dateOfBirth);
@@ -63,12 +63,11 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   formData.append('level', dto.level?.toString());
   formData.append('about', dto.about);
   formData.append('district', dto.district);
-  formData.append('email', dto.email);
   formData.append('name', dto.name);
   formData.append('cv', dto.cv ? dto.cv : '');
   formData.append('avatar', dto.avatar as Blob);
-  formData.append('experience', dto.experienceId);
-  formData.append('expectedSalary', dto?.expectedSalary?.toString());
+  formData.append('experience', dto.experienceId.toString());
+  formData.append('expectedSalary', dto.expectedSalary.toString());
   formData.append('typeJobId', dto.typeJobId?.toString());
   if (dto.languageResumes?.length > 0) {
     dto.languageResumes.forEach((lang, index) => {
@@ -107,5 +106,12 @@ export const searchResumeCandidateAPI = async (query: {
     '/resume-version/search',
     query
   );
+  return response.data;
+}
+
+export const uploadNewCVAPI = async (resumeId: number, file: File) => {
+  const formData = new FormData();
+  formData.append('cv', file);
+  const response = await axiosInstance.patch<ResumeVersion>(`/resume-version/upload-new-cv/${resumeId}`, formData);
   return response.data;
 }

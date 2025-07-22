@@ -14,6 +14,8 @@ import { Element } from '@/types/type';
 import { getAllEmployerScales } from '@/apis/employerScalesAPI';
 import { getAllBusinessTypes } from '@/apis/businesTypeAPI';
 import { useNavigate } from 'react-router-dom';
+import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { useLoading } from '@/providers/LoadingProvider';
 
 export default function CompanyRegistration() {
 
@@ -22,7 +24,6 @@ export default function CompanyRegistration() {
   const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [countries, setCountries] = useState<CountryResponse[]>([]);
   const [name, setName] = useState('');
   const [taxCode, setTaxCode] = useState('');
@@ -39,6 +40,7 @@ export default function CompanyRegistration() {
   const [employeeScales, setEmployeeScales] = useState<Element[]>([]);
   const [businessTypes, setBusinessTypes] = useState<Element[]>([]);
   const navigate = useNavigate();
+  const { setLoading } = useLoading();
 
     const fetchElements = async () => {
       try {
@@ -75,8 +77,8 @@ export default function CompanyRegistration() {
     setLogoPreview(null);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    setLoading(true);
     try {
       await registerCompanyAPI({
         name,
@@ -95,7 +97,7 @@ export default function CompanyRegistration() {
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -410,20 +412,10 @@ export default function CompanyRegistration() {
         <div className="space-y-4">
         <Button
             onClick={handleSubmit}
-            disabled={isLoading}
             className=" text-white py-3 px-4 bg-[#451e99] font-medium flex items-center justify-center  rounded-sm w-fit"
           >
-            {isLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Đang đăng ký...
-              </>
-            ) : (
-              <>
                 <Building2 className="w-5 h-5 mr-2" />
                 Đăng ký Nhà tuyển dụng
-              </>
-            )}
           </Button>
           </div>
 

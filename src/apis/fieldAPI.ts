@@ -6,6 +6,11 @@ export const getFieldList = async () => {
   return response.data;
 }
 
+export const getFieldAndAllMajors = async () => {
+  const response = await axiosInstance.get<Field[]>('/field/majors/all');
+  return response.data;
+}
+
 export const getFieldById = async (id: number) => {
   const response = await axiosInstance.get<Field>(`/field/${id}`);
   return response.data;

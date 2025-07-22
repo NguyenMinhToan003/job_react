@@ -12,13 +12,12 @@ import { AvatarImage } from '@radix-ui/react-avatar';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { Eye, User, MapPin, Calendar, Trophy, LucidePhone, Mail, Briefcase, Tag, X, Settings, Send, HandCoins } from 'lucide-react';
+import { Eye, User, MapPin, Calendar, Trophy, LucidePhone, Mail, Briefcase, Tag, X, Settings, Send } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { TagResume } from '@/types/tagResumeType';
 import { getAllTagResumeAPI } from '@/apis/tagResumeAPI';
 import { Textarea } from '@/components/ui/textarea';
 import dayjs from 'dayjs';
-import { convertPrice } from '@/utils/convertPrice';
 
 export default function ViewResumeVersionForJob() {
   const { applyId } = useParams();
@@ -320,10 +319,14 @@ export default function ViewResumeVersionForJob() {
                   </div>
                   <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1">
                     <Label className='text-neutral-700'>
-                      <LucidePhone className='h-3 w-3 text-neutral-700'/> {apply?.resumeVersion?.phone}
+                          <LucidePhone className='h-3 w-3 text-neutral-700' /> {
+                      apply?.phone==='' ? apply?.resumeVersion?.phone : apply?.phone
+                      }
                     </Label>
                     <Label className='text-sm text-neutral-700'>
-                      <Mail className='h-3 w-3 text-neutral-700'/> {apply?.resumeVersion?.email}
+                          <Mail className='h-3 w-3 text-neutral-700' /> {
+                      apply?.email === '' ? apply?.resumeVersion?.email : apply?.email
+                      }
                     </Label>
                   </div>
                   <Label className="text-sm text-neutral-700">

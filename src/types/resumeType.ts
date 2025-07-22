@@ -45,7 +45,6 @@ export interface ResumeVersion {
 
 export interface CreateResumeVersionDto {
   username: string;
-  phone: string;
   gender: string;
   location: string;
   dateOfBirth: string;
@@ -56,13 +55,13 @@ export interface CreateResumeVersionDto {
   level: number;
   district: string;
   experienceId: number;
-  email: string;
   name: string;
   skills: number[];
   avatar?: File | string;
   majors?: number[];
   cv?: File | null;
   about: string;
+  
 }
 export interface EducationResume {
   educationId: number;

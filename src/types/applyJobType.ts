@@ -14,7 +14,7 @@ export interface CreateApplyRequest {
   resumeId : number;
   candidateNote: string;
   feedback: string| null;
-  username: string;
+  email: string;
   phone: string;
 }
 export interface ApplyJob {
@@ -34,6 +34,8 @@ export interface ApplyJobResponse {
   candidateNote: string;
   feedback: string| null;
   status: APPLY_JOB_STATUS;
+  email: string;
+  phone: string;
   replyTime: string;
   interviewTime: string;
   viewStatus: number;
@@ -44,11 +46,14 @@ export interface ApplyJobResponse {
   matchingScore: number;
   tagResumes: TagResume[];
 }
+
 export interface ApplyJobByJobIdResponse {
   id: number;
   applyTime: string;
   status: string;
   candidateNote: string;
+  phone: string;
+  email: string;
   viewStatus: number;
   job: JobResponse;
   feedback: string | null;

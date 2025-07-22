@@ -4,6 +4,7 @@ export interface Language {
 }
 export interface LanguageJob {
   languageId: number;
+  language?: Language;
   level: number;
 }
 export interface LanguageResume {

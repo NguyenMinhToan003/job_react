@@ -162,6 +162,14 @@ export default function EmployerJobList() {
         ) : (
           <Table className=' text-sm'>
             <TableHeader>
+                  <TableRow className='col-span-full flex'
+                    onClick={() => fetchJobList()}
+                  >
+                    <Button>
+                      Làm mới
+                    </Button>
+                  </TableRow>
+                    
               <TableRow >
                 <TableHead className='text-gray-700 text-xs text-left pl-3'>Mã</TableHead>
                 <TableHead className='text-gray-700 text-xs text-left '>Tên công việc</TableHead>

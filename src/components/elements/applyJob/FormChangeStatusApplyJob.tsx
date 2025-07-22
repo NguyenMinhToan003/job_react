@@ -21,12 +21,9 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { AlertTriangle, Briefcase, CheckCircle, LucidePhone, Mail, Mic, RotateCcw, ThumbsDown, ThumbsUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { is } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import Editer from "../editer/editer";
-import { useNavigate } from "react-router-dom";
 
-// Optional: Map trạng thái sang tiếng Việt
 const statusLabels: Record<APPLY_JOB_STATUS, string> = {
   DANG_XU_LY: "Đang xử lý",
   DANG_PHONG_VAN: "Đang phỏng vấn",
@@ -123,10 +120,14 @@ export const FormChangeStatusApplyJob = ({
               </div>
               <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1">
                 <Label className='text-neutral-700'>
-                  <LucidePhone className='h-3 w-3 text-neutral-700'/> {applyJob.resumeVersion?.phone}
+                  <LucidePhone className='h-3 w-3 text-neutral-700' /> {
+                    applyJob?.phone==='' ? applyJob?.resumeVersion?.phone : applyJob?.phone
+                  }
                 </Label>
                 <Label className='text-sm text-neutral-700'>
-                  <Mail className='h-3 w-3 text-neutral-700'/> {applyJob.resumeVersion?.email}
+                  <Mail className='h-3 w-3 text-neutral-700' /> {
+                    applyJob?.email === '' ? applyJob?.resumeVersion?.email : applyJob?.email 
+                  }
                 </Label>
               </div>
               <Label className="text-sm text-neutral-700">

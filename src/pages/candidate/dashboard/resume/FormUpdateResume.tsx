@@ -48,8 +48,6 @@ export default function FormUpdateResume() {
   const [dayOfBirth, setDayOfBirth] = useState<string>('');
   const [districts, setDistricts] = useState<District[]>([]);
   const [username, setUsername] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
   const [about, setAbout] = useState<string>('');
   const [skills, setSkills] = useState<Skill[]>([]);
   const [statusAddSkill, setStatusAddSkill] = useState<boolean>(false);
@@ -111,8 +109,6 @@ export default function FormUpdateResume() {
       const response = await viewResumeAPI(Number(resumeId));
       setResumeVer(response);
       setUsername(response.username || '');
-      setEmail(response.email || '');
-      setPhone(response.phone || '');
       setGender(response.gender || '');
       setDayOfBirth(response.dateOfBirth || '');
       setLocation(response.location || '');
@@ -196,12 +192,10 @@ export default function FormUpdateResume() {
       await updateResumeAPI(Number(resumeId), {
         about,
         dateOfBirth: dayOfBirth,
-        email,
         username,
         gender,
         location,
         experienceId: selectExperience?.id || 0,
-        phone,
         education: selectEducation.id,
         district: selectedDistrictId,
         name,
@@ -361,26 +355,7 @@ export default function FormUpdateResume() {
                   placeholder="Vị trí công việc mong muốn"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm font-medium text-gray-700">Email *</Label>
-                  <Input
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Nhập email"
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium text-gray-700">Số điện thoại *</Label>
-                  <Input
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="mt-1 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Nhập số điện thoại"
-                  />
-                </div>
-              </div>
+              
                <div className='space-y-2'>
                   <Label>Giới thiệu & Mô tả</Label>
                   <Editer

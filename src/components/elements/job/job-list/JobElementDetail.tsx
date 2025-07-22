@@ -51,7 +51,7 @@ export default function JobElementDetail({
           <TimerIcon className="w-5 h-5 text-blue-600 mt-0.5" />
           <div>
             <div className="text-sm font-medium text-[#857876]">Đăng tuyển</div>
-            <div className="text-[#000209] font-semibold">{convertDateToDiffTime(job.createdAt)} trước</div>
+            <div className="text-[#000209] font-semibold">{convertDateToDiffTime(job.createdAt)}</div>
           </div>
         </div>
         <div className="flex items-start gap-3 p-3 bg-[#f5f3ff]">

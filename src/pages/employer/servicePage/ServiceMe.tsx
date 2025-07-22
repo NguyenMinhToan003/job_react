@@ -130,18 +130,17 @@ export default function ServiceMe() {
   }, [])
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full p-6'>
+    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full p-3'>
       {packagesAvailable.map((pkg) => {
         const usagePercentage = pkg.sub_total
           ? ((pkg.sub_used || 0) / pkg.sub_total) * 100
           : 0
-
         return (
           <Card
             key={pkg.id}
-            className='group hover:shadow-lg transition-shadow duration-300 max-h-fit'
+            className='group hover:shadow-lg transition-shadow duration-300 max-h-fit p-2'
           >
-            <CardHeader>
+            <CardHeader className="p-2">
               <div className='space-y-3'>
                 <div className='relative overflow-hidden bg-gray-50 rounded-lg'>
                   <img
@@ -157,7 +156,7 @@ export default function ServiceMe() {
               </div>
             </CardHeader>
 
-            <CardContent className='space-y-4'>
+            <CardContent className='space-y-4 p-2'>
               <div>
                 <div className='flex justify-between text-sm mb-2'>
                   <span>Đã sử dụng</span>

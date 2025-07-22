@@ -18,7 +18,8 @@ import {
   Heart,
   Clock,
   Target,
-  CheckCircle
+  CheckCircle,
+  Coins
 } from 'lucide-react';
 import { dayRemaning } from '@/utils/dateTime';
 import { convertPrice } from '@/utils/convertPrice';
@@ -75,112 +76,113 @@ export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) 
 
 
   return (
-      <Card className='h-[90vh] w-full shadow-2xl rounded-md '>
-        <CardContent className='p-4 space-y-4 overflow-hidden' >
-          <div className=' space-y-4'>
-            <div className='flex items-center gap-3'>
-              <Avatar className='w-25 h-25 shadow-xl border border-gray-400 rounded-sm'>
-                <AvatarImage src={job.employer.logo} />
-              </Avatar>
-              <div className='flex flex-col gap-2'>
-                <div className='text-2xl font-bold text-[#000209'>
-                  <NavLink
-                    to={`/cong-viec/${job.id}`}
-                    className='hover:underline cursor-pointer'
-                  >
-                    {job.name}
-                  </NavLink>
-                </div>
-                <span
-                  onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
-                  className='text-sm font-semibold text-[#000209 cursor-pointer hover:underline flex items-center gap-1'
-                >
-                  <Building2 size={14} />
-                  {job.employer.name}
-                </span>
-                <div className='flex items-center gap-2 text-green-600 font-bold text-xl'>
-                  <HandCoins size={16} />
-                  <span>{convertPrice(job.minSalary,job.maxSalary)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Status badges */}
-            <div className='flex items-center gap-2 flex-wrap'>
-              {job.isApplied && (
-                <Badge className='bg-green-100 text-green-700 border-green-300'>
-                  <CheckCircle size={12} className='mr-1' />
-                  Đã ứng tuyển
-                </Badge>
-              )}
-              {job.isSaved && (
-                <Badge className='bg-red-100 text-red-700 border-red-300'>
-                  <Heart size={12} className='mr-1' />
-                  Đã lưu
-                </Badge>
-              )}
-              {dayRemaning(job.expiredAt) <= 7 && dayRemaning(job.expiredAt) > 0 && (
-                <Badge className='bg-orange-100 text-orange-700 border-orange-300'>
-                  <Clock size={12} className='mr-1' />
-                  Còn {dayRemaning(job.expiredAt)} ngày
-                </Badge>
-              )}
-
-            </div>
+<Card className="h-[90vh] w-full shadow-2xl rounded-md overflow-hidden">
+  <CardContent className="p-4 space-y-4 h-full flex flex-col">
+    {/* Phần trên cố định */}
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <Avatar className="w-25 h-25 shadow-xl border border-gray-400 rounded-sm">
+          <AvatarImage src={job.employer.logo} />
+        </Avatar>
+        <div className="flex flex-col gap-2">
+          <div className="text-2xl font-semibold text-[#451DA1]">
+            <NavLink to={`/cong-viec/${job.id}`} className="hover:underline">
+              {job.name}
+            </NavLink>
           </div>
-
-          <div className='flex items-center gap-2'>
-            {job.isApplied ? (
-              <Button className='bg-orange-100 text-green-700 font-bold flex-1 cursor-pointer rounded-none h-[45px]'
-                variant={'outline'}
-              >
-                <CheckCircle className='w-4 h-4 mr-2' />
-                Bạn đã ứng tuyển  
-              </Button>
-            ) : (
-              <Button
-                className='bg-red-600 hover:bg-red-600 text-white font-bold flex-1 cursor-pointer rounded-none h-[45px]'
-                onClick={() => navigate(`/ung-tuyen-cong-viec/${job.id}`)}
-                disabled={loading}
-              >
-                <Target className='w-4 h-4 mr-2' />
-                Ứng tuyển
-              </Button>
-            )}
-
-            {job.isSaved ? (
-              <Button
-                className='font-bold cursor-pointer rounded-none h-[45px] text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-600'
-                variant={'outline'}
-              >
-                <Heart className='w-4 h-4 mr-2 fill-current' /> Đã lưu
-              </Button>
-            ) : (
-                <Button
-                  className='font-bold cursor-pointer rounded-none h-[45px]'
-                  variant={'outline'}
-                  onClick={() => handleSaveJob(job.id)}
-                >
-                  <Heart className='w-4 h-4 mr-2' />
-                  Lưu công việc
-                </Button>
-            )}
+          <span
+            onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
+            className="text-sm text-neutral-800 cursor-pointer hover:underline flex items-center gap-1"
+          >
+            <Building2 size={14} />
+            {job.employer.name}
+          </span>
+          <div className="flex items-center gap-2 text-[#2c95ff] font-semibold text-xl">
+            <Coins size={16} />
+            <span>{convertPrice(job.minSalary, job.maxSalary)}</span>
           </div>
+        </div>
+      </div>
 
-          <ScrollArea className='space-y-4 h-[60vh] overflow-y-auto'>
-            
-            <JobElementDetail job={job} />
-              <Button
-                variant='outline'
-                className='w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 flex items-center justify-center gap-2 h-12 rounded-xl border-2 border-gray-200 font-medium'
-                onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
-              >
-                <Building2 size={16} />
-                Xem thêm việc làm từ {job.employer.name}
-              </Button>
+      {/* Badges */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {job.isApplied && (
+          <Badge className="bg-green-100 text-green-700 border-green-300">
+            <CheckCircle size={12} className="mr-1" />
+            Đã ứng tuyển
+          </Badge>
+        )}
+        {job.isSaved && (
+          <Badge className="bg-red-100 text-red-700 border-red-300">
+            <Heart size={12} className="mr-1" />
+            Đã lưu
+          </Badge>
+        )}
+        {dayRemaning(job.expiredAt) <= 7 && dayRemaning(job.expiredAt) > 0 && (
+          <Badge className="bg-orange-100 text-orange-700 border-orange-300">
+            <Clock size={12} className="mr-1" />
+            Còn {dayRemaning(job.expiredAt)} ngày
+          </Badge>
+        )}
+      </div>
 
-          </ScrollArea>
-        </CardContent>
-      </Card>
+      {/* Buttons */}
+      <div className="flex items-center gap-2">
+        {job.isApplied ? (
+          <Button
+            className="bg-orange-100 text-green-700 font-bold flex-1 cursor-pointer rounded-none h-[45px]"
+            variant="outline"
+          >
+            <CheckCircle className="w-4 h-4 mr-2" />
+            Bạn đã ứng tuyển
+          </Button>
+        ) : (
+          <Button
+            className="bg-[#451DA1] hover:bg-[#451DA1]/90 text-white font-bold flex-1 cursor-pointer rounded-none h-[45px]"
+            onClick={() => navigate(`/ung-tuyen-cong-viec/${job.id}`)}
+            disabled={loading}
+          >
+            <Target className="w-4 h-4 mr-2" />
+            Ứng tuyển
+          </Button>
+        )}
+
+        {job.isSaved ? (
+          <Button
+            className="font-bold cursor-pointer rounded-none h-[45px] text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-600"
+            variant="outline"
+          >
+            <Heart className="w-4 h-4 mr-2 fill-current" /> Đã lưu
+          </Button>
+        ) : (
+          <Button
+            className="font-bold cursor-pointer rounded-none h-[45px]"
+            variant="outline"
+            onClick={() => handleSaveJob(job.id)}
+          >
+            <Heart className="w-4 h-4 mr-2" />
+            Lưu công việc
+          </Button>
+        )}
+      </div>
+    </div>
+
+    {/* Nội dung scroll được */}
+    <ScrollArea className="flex-1 overflow-y-auto pr-2">
+      <div className="space-y-4">
+        <JobElementDetail job={job} />
+        <Button
+          variant="outline"
+          className="w-full text-gray-700 hover:text-gray-900 hover:bg-gray-50 flex items-center justify-center gap-2 h-12 rounded-xl border-2 border-gray-200 font-medium"
+          onClick={() => navigate(`/nha-tuyen-dung/${job.employer.id}`)}
+        >
+          <Building2 size={16} />
+          Xem thêm việc làm từ {job.employer.name}
+        </Button>
+      </div>
+    </ScrollArea>
+  </CardContent>
+</Card>
+
   );
 }

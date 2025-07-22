@@ -25,7 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/u
 import { APPLY_JOB_STATUS } from '@/types/type';
 import { X } from 'lucide-react';
 
-export default function JobDetailCompany() {
+export default function CandidateListByEmployer() {
   const searchParams = new URLSearchParams(window.location.search);
   const tagIds = searchParams.get('tagIds')?.split(',') || [];
   const { jobId } = useParams<{ jobId: string }>();

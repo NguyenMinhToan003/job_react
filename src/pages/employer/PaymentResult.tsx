@@ -147,9 +147,10 @@ export default function PaymentSuccess() {
         </Card>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
-          <Button className="bg-[#6c43d3] hover:bg-[#5c39ba] text-white font-semibold flex-1" size="lg">
+          <Button className="bg-[#6c43d3] hover:bg-[#5c39ba] text-white font-semibold flex-1" size="lg"
+            onClick={() => navigate(`/danh-cho-nha-tuyen-dung/dich-vu/${orderDetails.id}/receipt`)}>
             <ReceiptIcon className="w-4 h-4 mr-2" />
-            Tải hóa đơn
+            Sử dụng dịch vụ
           </Button>
 
           <Button variant="outline" className="border-[#6c43d3] text-[#6c43d3] hover:bg-[#f2ecfd] font-semibold flex-1" size="lg"

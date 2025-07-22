@@ -252,13 +252,13 @@ export default function ViewResumeLastVersion() {
           <CardHeader className="border-b">
             <CardTitle className="text-lg font-medium text-gray-900 flex items-center gap-2">
               <Eye className="w-5 h-5" />
-              Hồ sơ PDF
+              Hồ sơ đính kèm
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
             <iframe
               src={resume.urlPdf}
-              className="w-full h-[700px] border rounded-md"
+              className="w-full h-[100vh] border rounded-md"
               title="Resume PDF"
             />
           </CardContent>

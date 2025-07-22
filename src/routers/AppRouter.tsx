@@ -22,7 +22,6 @@ import LoginPage from '@/pages/auth/Login';
 import { useAccount } from '@/providers/UserProvider';
 import { useEffect } from 'react';
 import JobForMe from '@/pages/candidate/dashboard/jobforme/JobForMe';
-import JobDetailCompany from '@/pages/employer/job/JobDetail';
 import JobApplicationForm from '@/pages/candidate/JobApplicationForm';
 import Map from '@/pages/candidate/Map';
 import CreateJob from '@/pages/employer/job/CreateJob';
@@ -65,6 +64,8 @@ import DetailTransactionAdmin from '@/pages/admin/package/DetailTransactionAdmin
 import ServiceMe from '@/pages/employer/servicePage/ServiceMe';
 import DetailCompany from '@/pages/admin/company/DetailCompany';
 import Setting from '@/pages/admin/setting/Setting';
+import JobDetailEmployer from '@/pages/employer/job/CandidateListByEmployer';
+import CandidateListByEmployer from '@/pages/employer/job/CandidateListByEmployer';
 
 
 export default function AppRouter() {
@@ -156,8 +157,8 @@ export default function AppRouter() {
         <Route path='quan-ly-thong-tin' element={<InfoEmployer />} />
         <Route path='danh-gia-ho-so-cong-viec/:applyId'
           element={<ViewResumeVersionForJob />} />
-        <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailCompany />} />
-        <Route path='ung-vien' element={<JobDetailCompany />} />
+        <Route path='danh-sach-ung-tuyen/:jobId' element={<JobDetailEmployer />} />
+        <Route path='ung-vien' element={<CandidateListByEmployer />} />
         <Route path='thong-bao' element={<EmployerNotification />} />
         <Route path='*' element={<Dashboard />} />
       </Route>

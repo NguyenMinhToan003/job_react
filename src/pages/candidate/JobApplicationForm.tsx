@@ -5,21 +5,22 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Eye, File, Upload } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { JobFilterResponse } from '@/types/jobType';
 import { filterJob } from '@/apis/jobAPI';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAccount } from '@/providers/UserProvider';
 import { updateInfoCandidate } from '@/apis/candidateAPI';
 import { createEmployerNotiAPI } from '@/apis/notiAccountAPI';
 import { NOTI_TYPE } from '@/types/type';
 import { Resume } from '@/types/resumeType';
-import { getAllResumeAPI } from '@/apis/resumeAPI';
+import { getAllResumeAPI, uploadNewCVAPI } from '@/apis/resumeAPI';
 import { applyJob } from '@/apis/applyJobAPI';
 import { convertDateToString } from '@/utils/dateTime';
+import { useLoading } from '@/providers/LoadingProvider';
 
 export default function JobApplicationForm() {
   const { jobId } = useParams();
@@ -30,6 +31,9 @@ export default function JobApplicationForm() {
   const [phone, setPhone] = useState('');
   const [note, setNote] = useState<string>('');
   const [resumes, setResumes] = useState<Resume[]>([]);
+  const [uploadNewCV, setUploadNewCV] = useState<File | null>(null);
+  const { setLoading } = useLoading()
+  const navigate = useNavigate();
 
   const fetchJob = async () => {
     try {
@@ -42,7 +46,7 @@ export default function JobApplicationForm() {
 
   useEffect(() => {
     if (dataUser) {
-      setName(dataUser.name);
+      setName(dataUser?.account?.email);
       setPhone(dataUser.phone);
     }
   }, [dataUser]);
@@ -53,11 +57,15 @@ export default function JobApplicationForm() {
 
   const fetchResume = async () => {
     try {
+      setLoading(true);
       const response = await getAllResumeAPI()
       setResumes(response);
     }
     catch (error: any){
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi tải thông tin CV');
+    }
+    finally {
+      setLoading(false);
     }
   }
   
@@ -67,10 +75,17 @@ export default function JobApplicationForm() {
 
   const handleApplyJob = async () => {
     try {
+      setLoading(true);
       await updateInfoCandidate({
         name,
         phone
       });
+      if (uploadNewCV) {
+        await uploadNewCVAPI(
+          Number(cvOption),
+          uploadNewCV
+        )
+      }
       updateDataUser();
       await applyJob(
         Number(jobId),
@@ -78,7 +93,7 @@ export default function JobApplicationForm() {
           resumeId: Number(cvOption),
           candidateNote: note,
           feedback: '',
-          username: name,
+          email: name,
           phone,
         }
       )
@@ -97,10 +112,15 @@ export default function JobApplicationForm() {
     } catch (error: any) {
       toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi khi ứng tuyển');
     }
+    finally {
+      setLoading(false);
+    }
   };
   
+  
 
-  return (
+  return <>
+    
     <div className='max-w-4xl mx-auto p-8'>
       <div
         className='my-4 flex items-center text-sm gap-1 w-fit cursor-pointer'
@@ -122,7 +142,10 @@ export default function JobApplicationForm() {
           <div>
             <Label className='text-lg font-bold text-red-600 '>CV ứng tuyển *</Label>
             <RadioGroup value={cvOption} onValueChange={
-              (value) => setCvOption(value.toString())} className='mt-3 space-y-3'>
+              (value) => {
+                setCvOption(value);
+                setUploadNewCV(null);
+              }} className='mt-3 space-y-3'>
               {
                 resumes.length > 0 && resumes.map((resume) => (
                   <Label key={resume.id} htmlFor={`${resume.id}`} className='block'>
@@ -131,14 +154,55 @@ export default function JobApplicationForm() {
                         cvOption === `${resume.id}` ? 'border-red-500 bg-red-50' : 'border-gray-200'
                       }`}
                     >
-                      <CardContent className='flex items-start justify-between'>
-                        <div className='flex items-start'>
+                      <CardContent className='flex items-start justify-between w-full'>
+                        <div className='flex flex-1 items-start'>
                           <RadioGroupItem value={`${resume.id}`} id={`${resume.id}`} className='mr-3'  />
                           <div className='flex flex-col gap-2'>
                             <p className='text-xl font-semibold'>{resume.name}</p>
                             <p className='text-blue-600 font-semibold'>Cập nhật lần cuối {convertDateToString(resume.updatedAt)}</p>
                           </div>
+                          
                         </div>
+                        <div >
+                          {
+                            cvOption === `${resume.id}` && (
+                            <Button
+                              variant='link'
+                              className=' text-red-500'
+                            >
+                              <Label htmlFor='uploadNewCV'>    
+                                {
+                                    !uploadNewCV ? <>
+                                      <Upload className='w-4 h-4' />
+                                      <span className='ml-2'>Tải lên CV mới</span>
+                                    </>   
+                                      : 
+                                      <>
+                                        <File className='w-4 h-4' />
+                                        <span className='ml-2'>{uploadNewCV.name}</span>
+                                      </>
+                                }
+                              </Label>
+                              <input
+                                type='file'
+                                id='uploadNewCV'
+                                className='hidden'
+                                onChange={(e) => {
+                                  if (e.target.files && e.target.files.length > 0) {
+                                    setUploadNewCV(e.target.files[0]);
+                                  }
+                                }}
+                              />
+                              </Button>
+                            )
+                          }
+                          <Button
+                            onClick={() => navigate(`/tong-quat-ho-so/ho-so/${resume.id}`)}
+                            variant='ghost' className='border-blue-200 border'>
+                            <Eye className='w-4 h-4 text-blue-600 ' />
+                            <span className='ml-2'>Xem</span>
+                          </Button>
+                          </div>
                       </CardContent>
                     </Card>
                   </Label>
@@ -152,7 +216,7 @@ export default function JobApplicationForm() {
               <CardTitle className='text-lg font-bold text-red-600 '>Thông tin cơ bản</CardTitle>
             </CardHeader>
             <CardContent className='space-y-4'>
-              <Label className='text-sm font-semibold'>Họ và tên</Label>
+              <Label className='text-sm font-semibold'>Email</Label>
               <Input
                 type='text'
                 placeholder='Họ và tên'
@@ -193,5 +257,6 @@ export default function JobApplicationForm() {
         </CardContent>
       </Card>
     </div>
-  );
+
+  </>
 }
