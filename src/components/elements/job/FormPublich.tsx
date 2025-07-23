@@ -173,11 +173,11 @@ export default function FormPublish({ job, setIsChange }: {
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>{renderButtonAction()}</AlertDialogTrigger>
 
-      <AlertDialogContent className="min-w-7xl max-w-7xl min-h-180 max-h-180 overflow-hidden">
+      <AlertDialogContent className="min-w-7xl max-w-7xl  overflow-hidden">
         <div className="flex h-full">
           {/* LEFT SIDE */}
           <div className="flex-1 overflow-hidden">
-            <AlertDialogHeader className="mb-6 px-6 pt-6">
+            <AlertDialogHeader className="mb-6 ">
               <AlertDialogTitle className="text-xl font-semibold text-neutral-700">
                 Xuất bản tin đăng - <span className="text-gray-600">{jobCustomer.name}</span>
               </AlertDialogTitle>
@@ -331,7 +331,7 @@ export default function FormPublish({ job, setIsChange }: {
           </div>
 
           {/* RIGHT SIDE: Preview + Packages used */}
-          <ScrollArea className="flex-1 bg-gray-50 p-3 border-l overflow-y-auto h-145">
+          <ScrollArea className="flex-1 bg-gray-50 p-3 border-l overflow-y-auto h-[60vh]">
             <div className="sticky top-0 z-[999] bg-gray-50 p-1 mb-3 ">
               <JobItem
                 job={jobCustomer}
@@ -401,7 +401,7 @@ export default function FormPublish({ job, setIsChange }: {
         </div>
 
         {/* Footer */}
-        <AlertDialogFooter className="flex justify-end p-4">
+        <AlertDialogFooter className="flex justify-end p-4 h-fit">
           <Button
             variant="outline"
             className="mr-2 rounded-none h-12"

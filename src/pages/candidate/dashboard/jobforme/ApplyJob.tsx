@@ -95,7 +95,7 @@ export default function ApplyJob() {
               <Button
                 variant="outline"
                 className="text-sm text-gray-600 hover:text-gray-800"
-                onClick={() => navigate(`/xem-ho-so-ung-tuyen/${applyJob.job.id}`)}
+                onClick={() => navigate(`/tong-quat-ho-so/xem-ho-so-ung-tuyen/${applyJob.job.id}`)}
               >
                 Xem hồ sơ ứng tuyển của bạn
               </Button>

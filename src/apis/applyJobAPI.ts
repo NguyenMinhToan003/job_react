@@ -88,6 +88,6 @@ export const getApplyJobByTags = async (data: GetApplyJobByTags) => {
   return response.data;
 }
 export const viewApplyJobByCandidate = async (jobId: number) => {
-  const response = await axiosInstance.get<ResumeVersion>(`/apply-job/view-apply/candidate/${jobId}`);
+  const response = await axiosInstance.get<ResumeVersion|''>(`/apply-job/view-apply/candidate/${jobId}`);
   return response.data;
 }

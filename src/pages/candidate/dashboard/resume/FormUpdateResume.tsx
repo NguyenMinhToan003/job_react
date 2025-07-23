@@ -171,8 +171,8 @@ export default function FormUpdateResume() {
   const handlePdfSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 10 * 1024 * 1024) {
-        toast.error('Kích thước file không được vượt quá 10MB');
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Kích thước file không được vượt quá 5MB');
         return;
       }
       if (file.type !== 'application/pdf') {

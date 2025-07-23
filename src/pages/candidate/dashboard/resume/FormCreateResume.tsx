@@ -117,8 +117,12 @@ export default function FormCreateResume() {
   const handlePdfSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 4 * 1024 * 1024) {
-        toast.error('Kích thước file không được vượt quá 10MB');
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Kích thước file không được vượt quá 5MB');
+        return;
+      }
+      if (file.type !== 'application/pdf') {
+        toast.error('Vui lòng chọn file PDF');
         return;
       }
       setPdfFile(file);

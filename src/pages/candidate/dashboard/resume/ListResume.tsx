@@ -103,7 +103,7 @@ export default function ListResume() {
                           )}
                         </CardTitle>
                         <p className='text-xs text-white/80'>
-                          Cập nhật: {convertDateToString(latestVersion.updatedAt)}
+                          Cập nhật: {convertDateToString(latestVersion.createdAt)}
                         </p>
                       </div>
                     </div>

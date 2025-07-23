@@ -12,7 +12,6 @@ export interface Resume {
   resumeVersions: ResumeVersion[];
   name: string;
   isDefault: boolean;
-  updatedAt: string;
 }
 
 export interface ResumeVersion {
@@ -26,8 +25,7 @@ export interface ResumeVersion {
   experience: Experience;
   expectedSalary: number | null;
   status: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
   resume: Resume;
   skills: Skill[];
   education: Education;

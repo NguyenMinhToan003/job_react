@@ -27,9 +27,9 @@ export default function FormExpired({ job, setIsChange }: {
  }) {
   const [open, setOpen] = useState(false);
   const now = new Date();
-  const startDate = dayjs(job.createdAt).toDate();
+  const startDate = dayjs(job?.createdAt).toDate();
   const [expiredAt, setExpiredAt] = useState<Date | null>(
-    dayjs(job.expiredAt).toDate()
+    dayjs(job?.expiredAt).toDate()
   );
   const handleUpdateExpired = async () => {
     try {

@@ -18,7 +18,7 @@ import { createEmployerNotiAPI } from '@/apis/notiAccountAPI';
 import { NOTI_TYPE } from '@/types/type';
 import { Resume } from '@/types/resumeType';
 import { getAllResumeAPI, uploadNewCVAPI } from '@/apis/resumeAPI';
-import { applyJob } from '@/apis/applyJobAPI';
+import { applyJob, viewApplyJobByCandidate } from '@/apis/applyJobAPI';
 import { convertDateToString } from '@/utils/dateTime';
 import { useLoading } from '@/providers/LoadingProvider';
 
@@ -32,6 +32,7 @@ export default function JobApplicationForm() {
   const [note, setNote] = useState<string>('');
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [uploadNewCV, setUploadNewCV] = useState<File | null>(null);
+  const [checkApplied, setCheckApplied] = useState<boolean>(false);
   const { setLoading } = useLoading()
   const navigate = useNavigate();
 
@@ -68,8 +69,21 @@ export default function JobApplicationForm() {
       setLoading(false);
     }
   }
-  
+  const checkApply = async () => {
+    try {
+      const response = await viewApplyJobByCandidate(Number(jobId));
+      console.log(response);
+      if (response!== '') {
+        navigate(`/cong-viec/${jobId}`);
+        toast.error('Bạn đã ứng tuyển công việc này rồi');
+      }
+    }
+    catch (error) {
+      toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi kiểm tra đơn ứng tuyển');
+    }
+  }
   useEffect(() => {
+    checkApply();
     fetchResume();
   }, []);
 
@@ -116,8 +130,6 @@ export default function JobApplicationForm() {
       setLoading(false);
     }
   };
-  
-  
 
   return <>
     
@@ -159,7 +171,7 @@ export default function JobApplicationForm() {
                           <RadioGroupItem value={`${resume.id}`} id={`${resume.id}`} className='mr-3'  />
                           <div className='flex flex-col gap-2'>
                             <p className='text-xl font-semibold'>{resume.name}</p>
-                            <p className='text-blue-600 font-semibold'>Cập nhật lần cuối {convertDateToString(resume.updatedAt)}</p>
+                            <p className='text-blue-600 font-semibold'>Cập nhật lần cuối {convertDateToString(resume.resumeVersions[resume.resumeVersions.length-1].createdAt)}</p>
                           </div>
                           
                         </div>

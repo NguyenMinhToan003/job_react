@@ -89,7 +89,7 @@ export default function CandidateListByEmployer() {
         <CardTitle className='text-2xl font-bold flex justify-between items-center'>
           <span>Tỉ lệ ứng tuyển công việc</span>
           {
-            job && <JobMenu job={job} />
+            jobId && job && <JobMenu job={job} />
           }
         </CardTitle>
       </CardHeader>
@@ -102,8 +102,11 @@ export default function CandidateListByEmployer() {
                 <div className='w-full space-x-3 space-y-3 '>
                   <div className='flex items-center justify-between'>
                   <Label>
-                    <span className='text-gray-700'>Tin đăng:</span>
-                    <span className='font-semibold text-neutral-800'>{job?.name}</span>
+                    {
+                      jobId && <>
+                       <span className='text-gray-700'>Tin đăng:</span>
+                    <span className='font-semibold text-neutral-800'>{job?.name}</span></>
+                   }
                   </Label>
                   <div className='flex items-center gap-2'>
                     <Select
@@ -187,7 +190,7 @@ export default function CandidateListByEmployer() {
                 <TableRow key={item.id}>
                   <TableCell className='pl-3 space-y-1'>
                     <div className='flex items-center gap-2'
-                      onClick={() => navigate(`/danh-cho-nha-tuyen-dung/danh-gia-ho-so-cong-viec/${item.id}`)}
+                      
                     >
                       <Avatar><AvatarImage src={item.resumeVersion.avatar} /></Avatar>
                       <span className='font-semibold text-neutral-700'>{item.resumeVersion.username}</span>

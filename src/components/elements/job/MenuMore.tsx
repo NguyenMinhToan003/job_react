@@ -69,7 +69,7 @@ export default function JobMenu({ job, setIsChange }: {
           setIsChange={setIsChange}
         />
         {
-          job.isActive === JOB_STATUS.CREATE && <>
+          job?.isActive === JOB_STATUS.CREATE && <>
           <hr className='my-1' />
           <Label
             className='w-full text-left px-3 py-2 text-sm text-red-600 flex items-center cursor-pointer hover:bg-red-50 hover:text-red-600'
@@ -80,14 +80,14 @@ export default function JobMenu({ job, setIsChange }: {
                 <hr className='mt-2' />
               </div>,
               content: <div className='p-3 space-y-3'>
-                <div className='font-semibold text-sm text-black'>{job.name}</div>
+                <div className='font-semibold text-sm text-black'>{job?.name}</div>
                 <span className='font-semibold text-[12px] text-gray-400'>Trạng thái: </span>
-                <span className='font-semibold text-sm text-gray-500'>{job.isActive}</span>
+                <span className='font-semibold text-sm text-gray-500'>{job?.isActive}</span>
               </div>,
               confirmText: 'Xoá công việc',
               cancelText: 'Hủy',
               handleConfirm() {
-                handleDeleteJob(job.id);
+                handleDeleteJob(job?.id);
               },
             })}
           >
