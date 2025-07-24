@@ -13,16 +13,12 @@ import {
   Gift,
   Award,
   RotateCcw,
-  FlameIcon,
-  DollarSignIcon,
-  Heart,
 } from 'lucide-react';
 
 import { getCityList } from '@/apis/cityAPI';
 import { getExperienceList } from '@/apis/experienceAPI';
 import { getLevelList } from '@/apis/levelAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
-import { getJobBanner } from '@/apis/jobAPI';
 import { iconMap } from '@/utils/SetListIcon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,11 +49,8 @@ import { Skill } from '@/types/skillType';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field } from '@/types/majorType';
 import { getFieldList } from '@/apis/fieldAPI';
-import { saveJob } from '@/apis/saveJobAPI';
-import { toast } from 'sonner';
 import BannerEmployer from '@/components/elements/company/BannerEmployer';
 import JobBanner from '@/components/elements/job/job-list/JobBanner';
-import JobRecommendFollows from '@/components/elements/job/job-list/JobRecomendFollows';
 import Footer from '@/components/elements/footer/Footer';
 
 export default function Home() {
@@ -143,15 +136,7 @@ export default function Home() {
     }
   }
 
-  const nextRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      nextRef.current?.click();
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const handleResetFilter = () => {
     setSearch('');

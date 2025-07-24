@@ -10,14 +10,13 @@ import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { saveJob } from '@/apis/saveJobAPI';
 import { toast } from 'sonner';
 import { getJobBanner } from '@/apis/jobAPI';
 
 export default function JobBanner() {
   const navigate = useNavigate();
-  const nextRef = useRef<HTMLButtonElement>(null);
   const [jobsBanner, setJobsBanner] = useState<JobFilterResponse[]>([]);
 
   const fetchJobsBanner = async () => {
@@ -32,17 +31,12 @@ export default function JobBanner() {
   useEffect(() => {
     fetchJobsBanner();
   }, [])
-  useEffect(() => {
-    const interval = setInterval(() => {
-      nextRef.current?.click();
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   const handleSaveJob = async (jobId: number) => {
     try {
       await saveJob(jobId);
       toast.success('Lưu việc làm thành công');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi không xác định');
     }
@@ -138,7 +132,7 @@ export default function JobBanner() {
               ))}
           </CarouselContent>
           <CarouselPrevious />
-          <CarouselNext ref={nextRef} />
+          <CarouselNext  />
         </Carousel>
       </CardContent>
     </Card>
