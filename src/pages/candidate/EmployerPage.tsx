@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Card, CardContent } from '@/components/ui/card';
-import { MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { getCompanyDetailAPI } from '@/apis/companyAPI';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EmployerDetailResponse } from '@/types/companyType';
-import { useEffect, useState } from 'react';
-import { getCompanyDetailAPI } from '@/apis/companyAPI';
-import { useNavigate, useParams } from 'react-router-dom';
 import { JobFilterResponse } from '@/types/jobType';
+import { MapPin } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { toast } from 'sonner';
-import ViewCompany from '@/components/elements/company/ViewCompany';
 import { followEmployerAPI, unfollowEmployerAPI } from '@/apis/followEmployerAPI';
-import JobItem from '@/components/elements/job/job-list/JobItem';
 import BannerEmployer from '@/components/elements/company/BannerEmployer';
+import ViewCompany from '@/components/elements/company/ViewCompany';
+import JobItem from '@/components/elements/job/job-list/JobItem';
+import { toast } from 'sonner';
 
 export default function CompanyPage() {
   const { id = -1 } = useParams();
@@ -71,7 +71,7 @@ export default function CompanyPage() {
 
   useEffect(() => {
     fetchCompanyDetail();
-  }, []);
+  }, [id]);
 
   if (!employer) {
     return <div className='text-center py-16 text-gray-500'>Loading...</div>;

@@ -7,7 +7,7 @@ import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import { Avatar } from '@radix-ui/react-avatar';
 import clsx from 'clsx';
-import {Clock, DollarSignIcon, FlameIcon, Heart, MapPin } from 'lucide-react';
+import { Clock, DollarSignIcon, FlameIcon, Heart, MapPin } from 'lucide-react';
 
 export default function JobItem({
   job,
@@ -47,6 +47,7 @@ export default function JobItem({
                                 <AvatarImage
                                   src={job.employer.logo}
                                   alt={job.employer.name}
+                                  className="w-full h-full object-scale-down rounded-md"
                                 />
                               </Avatar>
                               {/* Thông tin công ty + lương + địa điểm */}

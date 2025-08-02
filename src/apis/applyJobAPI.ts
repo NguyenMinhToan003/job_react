@@ -1,7 +1,7 @@
 import { ApplyJobByJobIdResponse, ApplyJobResponse, CreateApplyRequest, GetApplyJobByTags } from "@/types/applyJobType";
-import { axiosInstance } from "./index";
-import { APPLY_JOB_STATUS } from "@/types/type";
 import { ResumeVersion } from "@/types/resumeType";
+import { APPLY_JOB_STATUS } from "@/types/type";
+import { axiosInstance } from "./index";
 
 export const applyJob = async (jobId: number, data: CreateApplyRequest) => {
   const response = await axiosInstance.post(`/apply-job/${jobId}`, data);
@@ -22,7 +22,7 @@ export const getApplyJobByJobId = async (jobId?: number) => {
 export const applyJobWithNewCv = async (jobId: number, data: CreateApplyRequest, cv: File ) => {
   const formData = new FormData();
   formData.append('cv', cv);
-  formData.append('username', data.username);
+  formData.append('email', data.email);
   formData.append('phone', data.phone);
   formData.append('candidateNode', data.candidateNote);
   const response = await axiosInstance.post(`/apply-job/apply-new-cv/${jobId}`, formData);

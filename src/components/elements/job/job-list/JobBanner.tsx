@@ -1,19 +1,19 @@
 // src/components/home/JobBannerCarousel.tsx
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { getJobBanner } from '@/apis/jobAPI';
+import { saveJob } from '@/apis/saveJobAPI';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Label } from '@/components/ui/label';
-import { DollarSignIcon, FlameIcon, Clock, Heart, MapPin } from 'lucide-react';
 import { JobFilterResponse } from '@/types/jobType';
 import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToDiffTime } from '@/utils/dateTime';
 import clsx from 'clsx';
-import { useNavigate } from 'react-router-dom';
+import { Clock, DollarSignIcon, FlameIcon, Heart, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { saveJob } from '@/apis/saveJobAPI';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { getJobBanner } from '@/apis/jobAPI';
 
 export default function JobBanner() {
   const navigate = useNavigate();
@@ -89,6 +89,7 @@ export default function JobBanner() {
                               <AvatarImage
                                 src={job.employer.logo}
                                 alt={job.employer.name}
+                                className="w-full h-full object-scale-down  rounded-md"
                               />
                             </Avatar>
                             <div className="flex flex-col gap-2">

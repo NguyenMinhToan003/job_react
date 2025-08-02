@@ -1,38 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { filterJob, getDetailJobById } from '@/apis/jobAPI';
+import { saveJob } from '@/apis/saveJobAPI';
+import { addViewJobAPI, getViewJobByIdAPI } from '@/apis/viewJobAPI';
+import BannerEmployer from '@/components/elements/company/BannerEmployer';
+import Footer from '@/components/elements/footer/Footer';
+import JobBanner from '@/components/elements/job/job-list/JobBanner';
+import JobElementDetail from '@/components/elements/job/job-list/JobElementDetail';
+import JobItem from '@/components/elements/job/job-list/JobItem';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import { Label } from '@/components/ui/label';
+import { JobFilterResponse } from '@/types/jobType';
+import { LocationResponse } from '@/types/location';
+import { JOB_STATUS, ROLE_LIST } from '@/types/type';
+import { convertDateToString } from '@/utils/dateTime';
+import clsx from 'clsx';
 import {
-  Heart,
-  TrendingUp,
-  TargetIcon,
   AlertCircleIcon,
+  Heart,
   MapPin,
-  Facebook,
+  TargetIcon,
+  TrendingUp
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { filterJob, getDetailJobById } from '@/apis/jobAPI';
-import { JobFilterResponse } from '@/types/jobType';
-import { saveJob } from '@/apis/saveJobAPI';
-import { JOB_STATUS, ROLE_LIST } from '@/types/type';
-import { addViewJobAPI, getViewJobByIdAPI } from '@/apis/viewJobAPI';
-import JobItem from '@/components/elements/job/job-list/JobItem';
-import { Alert, AlertTitle } from '@/components/ui/alert';
-import BannerEmployer from '@/components/elements/company/BannerEmployer';
-import JobElementDetail from '@/components/elements/job/job-list/JobElementDetail';
 import Map from './Map';
-import { LocationResponse } from '@/types/location';
-import JobBanner from '@/components/elements/job/job-list/JobBanner';
-import clsx from 'clsx';
-import Footer from '@/components/elements/footer/Footer';
-import { convertDateToString } from '@/utils/dateTime';
-import { Label } from '@/components/ui/label';
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -122,9 +122,9 @@ export default function JobDetail() {
 
       <div className='bg-gradient-to-r from-[#121212] to-[#53151c] text-white sticky top-0 z-[99999999]'>
         <div className='max-w-7xl mx-auto py-2 px-4 flex items-center gap-6 shadow-lg'>
-          <div className='bg-white rounded-sm p-1 min-w-25 min-h-25 max-w-25 max-h-25 flex items-start justify-center'>
-            <img src={job.employer.logo} className='w-full h-full rounded-sm' />
-          </div>
+          <Avatar className='bg-white rounded-sm p-1 min-w-25 min-h-25 max-w-25 max-h-25 flex items-start justify-center'>
+            <AvatarImage src={job.employer.logo} className='w-full h-full rounded-sm object-scale-down' />
+          </Avatar>
           <div className='flex-1 space-y-2'>
             <div className='text-2xl font-bold'>{job.name}</div>
             <div

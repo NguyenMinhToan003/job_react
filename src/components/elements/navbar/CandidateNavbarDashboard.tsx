@@ -52,11 +52,7 @@ export default function CandidateNavbarDashboard() {
       icon: <UserCog className='w-6 h-6' />,
       path: '/tong-quat-ho-so/cap-nhat-thong-tin',
     },
-    {
-      label: 'Cài đặt',
-      icon: <Settings className='w-6 h-6' />,
-      path: '/tong-quat-ho-so/cai-dat',
-    },
+    
   ];
 
   const isPathActive = (path?: string) =>

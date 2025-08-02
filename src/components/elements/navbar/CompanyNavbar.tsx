@@ -64,8 +64,7 @@ export default function CompanyNavbar() {
       ],
      },
     { label: 'Bảng giá', icon: <DollarSign className='w-6 h-6' />, path: 'bang-gia' },
-    { label: 'Tìm kiếm ứng viên', icon: <Search className='w-6 h-6' />, path: 'tim-kiem-ung-vien' },
-
+    
     { label: 'Quản lý thông tin', icon: <MessageCircle className='w-6 h-6' />, path: 'quan-ly-thong-tin' },
     {
       label: (
@@ -81,7 +80,7 @@ export default function CompanyNavbar() {
       icon: <Bell className='w-6 h-6' />, // thay vì Mail
       path: 'thong-bao',
     },
-    { label: 'Cài đặt', icon: <Settings className='w-6 h-6' />, path: 'cai-dat' },
+   
   ];
   
 

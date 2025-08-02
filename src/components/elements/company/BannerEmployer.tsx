@@ -1,12 +1,11 @@
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Employer } from "@/types/companyType"
 import { getEmployerBanner } from "@/apis/companyAPI"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { Label } from "@/components/ui/label"
-import PaginationModel1 from "../pagination/PaginationModel1"
+import { Employer } from "@/types/companyType"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 
@@ -74,7 +73,9 @@ export default function BannerEmployer() {
           >
             <CardContent className="flex  items-start text-center gap-3 p-0">
               <Avatar  className="w-16 h-16 rounded-sm">
-                <AvatarImage src={employer.logo} alt={employer.name} />
+                <AvatarImage src={employer.logo} alt={employer.name}
+                  className="w-full h-full object-scale-down  rounded-sm"
+                />
               </Avatar>
               <div className="space-y-2">
                 <Label className="text-start line-clamp-2 text-md">{employer.name}</Label>

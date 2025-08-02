@@ -6,11 +6,13 @@ import { useAccount } from '@/providers/UserProvider';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getMeNotificationAPI } from '@/apis/notiAccountAPI';
+import { useAlertDialog } from '@/providers/AlertDialogProvider';
 
 export default function UserNavbar() {
   const navigate = useNavigate();
   const [countNoti, setCountNoti] = useState(0);
   const { dataUser } = useAccount();
+  const { showAlert } = useAlertDialog();
 
   const navItems = [
     {
@@ -28,15 +30,15 @@ export default function UserNavbar() {
       path: '/tong-quat-ho-so',
       icon: (
         <Avatar className='border border-[#f5f3f4]'>
-          <AvatarImage src={dataUser?.avatar || dataUser?.logo} />
+          <AvatarImage src={dataUser?.avatar || dataUser?.logo} className='object-fill' />
         </Avatar>
       ),
     },
     {
       label: null,
       path: null,
-      icon: <Button variant={'ghost'} className='hover:text-gray-500 hover:bg-black relative' >
-        <Bell className='h-5 w-5 text-[#f5f3f4]' />
+      icon: <Button variant={'ghost'} className='hover:text-gray-500 relative bg-[#2c95ff]' >
+        <Bell className='h-5 w-5 text-[#f5f3f4] ' />
         {countNoti > 0 && (
           <span className='absolute top-2 right-2 inline-flex h-2.5 w-2.5 translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500' />
         )}
@@ -128,8 +130,16 @@ export default function UserNavbar() {
             </Button>
           ))}
             <Button
-            variant={'ghost'} className='hover:text-gray-500 hover:bg-black'
-            onClick={handleLogout}
+            variant={'ghost'} className='
+            hover:bg-[#2c95ff] bg-neutral-500
+            '
+            onClick={() => showAlert({
+              title: 'Đăng xuất',
+              content: 'Bạn có chắc chắn muốn đăng xuất?',
+              confirmText: 'Đăng xuất',
+              cancelText: 'Hủy',
+              handleConfirm: handleLogout,
+            })}
             >
               <LogOut className='h-5 w-5 text-[#f5f3f4]' />
             </Button>
