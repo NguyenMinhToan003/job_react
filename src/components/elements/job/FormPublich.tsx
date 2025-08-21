@@ -34,7 +34,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 export default function FormPublish({ job, setIsChange }: {
   job: JobDetailResponse,
   setIsChange?: (isChange: boolean) => void
- }) {
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const { setLoading } = useLoading()
   const [usedPackage, setUsedPackage] = useState<EmployerSubResponse[]>()
