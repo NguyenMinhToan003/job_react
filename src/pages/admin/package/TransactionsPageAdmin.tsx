@@ -36,7 +36,7 @@ import {
 import { toast } from "sonner"
 import { PAYMENT_STATUS } from "@/types/type"
 import { convertPrice } from "@/utils/convertPrice"
-import PaginationModel1 from "@/components/elements/pagination/PaginationModel1"
+import PaginationModel1 from "@/components/elements/pagination/paginationModel1"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function TransactionsPageAdmin() {

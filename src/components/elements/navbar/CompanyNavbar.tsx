@@ -1,7 +1,6 @@
 import {
   LayoutDashboard,
   MapPin,
-  Settings,
   ChevronDown,
   ChevronRight,
   Package,
@@ -12,21 +11,18 @@ import {
   Bell,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { countUnreadAPI } from '@/apis/notiAccountAPI';
 import clsx from 'clsx';
-import { useAccount } from '@/providers/UserProvider';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 export default function CompanyNavbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { dataUser } = useAccount();
-  const [countNoti, setCountNoti] = useState(0);
+  const [countNoti, setCountNoti] = useState<number>(0);
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
 
   const fetchNotificationCount = async () => {

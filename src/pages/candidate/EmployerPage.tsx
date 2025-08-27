@@ -11,9 +11,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { followEmployerAPI, unfollowEmployerAPI } from '@/apis/followEmployerAPI';
-import BannerEmployer from '@/components/elements/company/BannerEmployer';
-import ViewCompany from '@/components/elements/company/ViewCompany';
-import JobItem from '@/components/elements/job/job-list/JobItem';
+import BannerEmployer from '@/components/elements/company/bannerEmployer';
+import ViewCompany from '@/components/elements/company/viewCompany';
+import JobItem from '@/components/elements/job/job-list/jobItem';
 import { toast } from 'sonner';
 
 export default function CompanyPage() {

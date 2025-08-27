@@ -1,5 +1,6 @@
 import { Account } from "./accountType";
-import { JobResponse } from "./jobType";
+import { CountryResponse } from "./countryType";
+import { JobFilterResponse } from "./jobType";
 import { LocationResponse } from "./location";
 import { Element } from "./type";
 
@@ -10,9 +11,11 @@ export interface Employer {
   logo: string;
   introduction: string;
   taxCode: string;
+  country: CountryResponse;
   website?: string;
-  employeeScale: string;
-  businessType: string;
+  email: string;
+  employeeScale: Element;
+  businessType: Element;
   countryId: number;
   phone: string;
   jobsCount: {
@@ -34,7 +37,7 @@ export interface EmployerDetailResponse {
   countryId: number;
   phone: string;
   countFollows: number;
-  jobs: JobResponse[];
+  jobs: JobFilterResponse[];
   country: {
     id: number;
     name: string;

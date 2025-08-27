@@ -7,7 +7,6 @@ import {
   Book,
   GraduationCap,
   Star,
-  MapPin,
   Trophy,
   Zap,
   CheckCircle,
@@ -151,8 +150,8 @@ export default function JobElementDetail({
                 <TableCell className="font-semibold text-[#857876]">Ngôn ngữ</TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-2">
-                    {job.languageJobs.map((lang) => (
-                      <Badge key={lang.id} variant="secondary" className="px-3 py-1">
+                    {job.languageJobs.map((lang, i) => (
+                      <Badge key={i} variant="secondary" className="px-3 py-1">
                         {lang.language?.name} - {lang.level}
                       </Badge>
                     ))}

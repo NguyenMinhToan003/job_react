@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { subscriptionUseBanner } from "@/apis/paymentAPI";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -17,7 +18,7 @@ export default function FormActiveServiceBanner({ employerSub }: { employerSub: 
       });
       toast.success("Bạn đã sử dụng dịch vụ thành công");
     }
-    catch (error) {
+    catch (error: any) {
       toast.error(error?.response?.data?.message || "Lỗi không xác định");
     }
   }

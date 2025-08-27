@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -12,7 +13,7 @@ import {
   ExternalLink, Phone, Globe
 } from 'lucide-react'
 import { toast } from 'sonner'
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1'
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -39,7 +40,7 @@ export default function CompanyListPage() {
       const data = await allEmployer({ page, limit, search, sortBy, sortOrder })
       setCompanies(data.items)
       setTotalPages(data.totalPage)
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err?.response?.data?.message || 'Lỗi khi tải danh sách công ty')
     } finally {
       setLoading(false)

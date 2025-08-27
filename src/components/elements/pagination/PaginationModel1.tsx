@@ -2,7 +2,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import ReactPaginate from "react-paginate";
 
 export default function PaginationModel1({
-  page,
   setPage,
   totalPages,
 }: {

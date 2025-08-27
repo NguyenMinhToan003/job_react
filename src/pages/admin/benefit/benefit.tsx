@@ -11,8 +11,8 @@ import { Table, TableRow, TableHead, TableBody, TableCell, TableHeader } from "@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import PaginationModel1 from "@/components/elements/pagination/PaginationModel1"
-import BenefitForm from "@/components/elements/benefit/FormAddBenefit"
+import PaginationModel1 from "@/components/elements/pagination/paginationModel1"
+import BenefitForm from "@/components/elements/benefit/formAddBenefit"
 import { toast } from "sonner"
 
 export default function BenefitPage() {

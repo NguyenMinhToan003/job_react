@@ -1,4 +1,4 @@
-import { useAccount } from '@/providers/UserProvider';
+import { useAccount } from '@/providers/userProvider';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

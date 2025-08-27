@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { Check, Pencil, Plus, Ticket, Trash2 } from 'lucide-react';
+import { Pencil, Plus, Ticket, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { createTagResumeAPI, deleteTagResumeAPI, getAllTagResumeAPI, updateTagResumeAPI } from '@/apis/tagResumeAPI';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { useAlertDialog } from '@/providers/alertDialogProvider';
 import { TagResumeResponse } from '@/types/tagResumeType';
 
 import { Button } from '@/components/ui/button';
@@ -22,7 +22,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { TAG_COLORS } from '@/utils/colorArray';
-import { NewTagForm } from '@/components/elements/tag/TagForm';
+import { NewTagForm } from '@/components/elements/tag/tagForm';
 import { useNavigate } from 'react-router-dom';
 
 export default function TagResume() {

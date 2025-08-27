@@ -2,11 +2,11 @@
 import { filterJob, getDetailJobById } from '@/apis/jobAPI';
 import { saveJob } from '@/apis/saveJobAPI';
 import { addViewJobAPI, getViewJobByIdAPI } from '@/apis/viewJobAPI';
-import BannerEmployer from '@/components/elements/company/BannerEmployer';
-import Footer from '@/components/elements/footer/Footer';
-import JobBanner from '@/components/elements/job/job-list/JobBanner';
-import JobElementDetail from '@/components/elements/job/job-list/JobElementDetail';
-import JobItem from '@/components/elements/job/job-list/JobItem';
+import BannerEmployer from '@/components/elements/company/bannerEmployer';
+import Footer from '@/components/elements/footer/footer';
+import JobBanner from '@/components/elements/job/job-list/jobBanner';
+import JobElementDetail from '@/components/elements/job/job-list/jobElementDetail';
+import JobItem from '@/components/elements/job/job-list/jobItem';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import Map from './Map';
+import Map from './map';
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -90,7 +90,7 @@ export default function JobDetail() {
       const ortherJobs = await filterJob({
         benefits: job?.benefits.map((b) => b.id) || [],
         skills: job?.skills.map((s) => s.id) || [],
-        levels: job?.levels.map((l) => l.id) || [],
+        levels: job?.levels.map((l) => l.id.toString()) || [],
         page: 1,
         limit: 5,
       });
@@ -135,7 +135,7 @@ export default function JobDetail() {
             </div>
             <Label className='text-xs font-semibold'>{view} lượt xem</Label>
             <Label className='text-xs font-semibold text-gray-300'>
-              Cập nhật gần nhất : {convertDateToString(job.updatedAt)}
+              Cập nhật gần nhất : {convertDateToString(job?.updatedAt)}
             </Label>
           </div>
           <div className='flex gap-4'>
@@ -205,7 +205,6 @@ export default function JobDetail() {
                     className='cursor-pointer'
                   >
                     <JobItem
-                      isPrev={true}
                       job={jobOrder}
                       selectedJob={{} as JobFilterResponse}
                       setSelectedJob={() => {}}

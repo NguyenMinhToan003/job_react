@@ -13,7 +13,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { JobFilterResponse } from '@/types/jobType';
 import {
-  HandCoins,
   Building2,
   Heart,
   Clock,
@@ -24,7 +23,7 @@ import {
 import { dayRemaning } from '@/utils/dateTime';
 import { convertPrice } from '@/utils/convertPrice';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import JobElementDetail from './JobElementDetail';
+import JobElementDetail from './jobElementDetail';
 
 export default function JobListDetail({ jobDetailId }: { jobDetailId: number }) {
   const navigate = useNavigate();

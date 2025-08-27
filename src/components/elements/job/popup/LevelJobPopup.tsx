@@ -23,9 +23,9 @@ export default function LevelJobPopup({
     if (notEdit) return;
     if (checked) {
       setLevelIds([
-        ...levelIds,level.id]);
+        ...levelIds,level.id.toString()]);
     } else {
-      setLevelIds(levelIds.filter((l) => l !== level.id));
+      setLevelIds(levelIds.filter((l) => l !== level.id.toString()));
     }
   };
 
@@ -42,7 +42,7 @@ export default function LevelJobPopup({
       <CardContent className="p-6">
         <div className="grid grid-cols-4 gap-4">
           {levelList.length >0 &&levelList.map((level) => {
-            const isChecked = levelIds.some((i)=> i === level.id);
+            const isChecked = levelIds.some((i)=> i === level.id.toString());
             return (
               <div key={level.id} className="flex items-center gap-2">
                 <Checkbox

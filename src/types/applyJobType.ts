@@ -1,12 +1,12 @@
 import { CvResponse } from "./cvType";
 import { Education } from "./educationType";
-import { JobResponse } from "./jobType";
-import { LanguageResume } from "./LanguageType";
+import { JobFilterResponse, JobResponse } from "./jobType";
+import { LanguageResume } from "./languageType";
 import { Level } from "./levelType";
 import { City } from "./location";
 import { Major } from "./majorType";
 import { ResumeVersion } from "./resumeType";
-import { Skill } from "./SkillType";
+import { Skill } from "./skillType";
 import { TagResume } from "./tagResumeType";
 import { APPLY_JOB_STATUS } from "./type";
 
@@ -39,18 +39,28 @@ export interface ApplyJobResponse {
   replyTime: string;
   interviewTime: string;
   viewStatus: number;
-  job: JobResponse;
+  job: JobFilterResponse;
   cv: CvResponse;
   time: string;
   resumeVersion: ResumeVersion;
   matchingScore: number;
   tagResumes: TagResume[];
+  rank: number;
+  score: {
+    skillScore: number;
+    educationScore: number;
+    levelScore: number;
+    majorScore: number;
+    locationScore: number;
+    total: number;
+    languageScore: number;
+  }
 }
 
 export interface ApplyJobByJobIdResponse {
   id: number;
   applyTime: string;
-  status: string;
+  status: APPLY_JOB_STATUS;
   candidateNote: string;
   phone: string;
   email: string;

@@ -1,4 +1,5 @@
-import AdminNavbar from '@/components/elements/navbar/AdminNavbar';
+
+import AdminNavbar from '@/components/elements/navbar/adminNavbar';
 import { Outlet } from 'react-router-dom';
 
 export default function IndexAdmin() {

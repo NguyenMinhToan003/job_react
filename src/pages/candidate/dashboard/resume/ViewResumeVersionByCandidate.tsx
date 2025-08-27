@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { viewApplyJobByCandidate } from '@/apis/applyJobAPI';
-import { deleteResumeAPI, viewResumeAPI } from '@/apis/resumeAPI';
+import { deleteResumeAPI } from '@/apis/resumeAPI';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { useAlertDialog } from '@/providers/alertDialogProvider';
 import { ResumeVersion } from '@/types/resumeType';
 import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToString } from '@/utils/dateTime';

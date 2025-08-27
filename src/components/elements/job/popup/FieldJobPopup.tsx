@@ -23,7 +23,7 @@ export default function FieldJobPopup({
   setSelectMajors = () => {},
   notEdit,
 }: {
-  selectField?: Field | null;
+  selectField: Field | null;
   setSelectField: (field: Field) => void;
   fields: Field[];
   selectMajors?: number[];

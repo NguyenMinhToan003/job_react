@@ -22,7 +22,7 @@ import {
 } from 'lucide-react'
 import { JobDetailResponse } from '@/types/jobType'
 import { convertDateToString, convertRemainingTime } from '@/utils/dateTime'
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1'
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { filterJobAdmin } from '@/apis/jobAPI'

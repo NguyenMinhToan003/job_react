@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@/components/ui/button';
-import { Bell, Building2, CheckCircle, ChevronDown, ChevronRight, Clipboard, LayoutDashboard, MessageSquare, Settings, UserCog } from 'lucide-react';
+import { Bell, Building2, CheckCircle, ChevronDown, ChevronRight, Clipboard, LayoutDashboard, MessageSquare, UserCog } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import clsx from 'clsx';

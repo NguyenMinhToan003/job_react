@@ -1,4 +1,4 @@
-import { ApplyJobByJobIdResponse, ApplyJobResponse, CreateApplyRequest, GetApplyJobByTags } from "@/types/applyJobType";
+import { ApplyJobResponse, CreateApplyRequest, GetApplyJobByTags } from "@/types/applyJobType";
 import { ResumeVersion } from "@/types/resumeType";
 import { APPLY_JOB_STATUS } from "@/types/type";
 import { axiosInstance } from "./index";
@@ -40,7 +40,7 @@ export const markViewed = async (applyId: number) => {
 }
 
 export const analysResumeVersion = async (applyId: number) => {
-  const response = await axiosInstance.get<ApplyJobByJobIdResponse>(`/apply-job/employer/analys/${applyId}`);
+  const response = await axiosInstance.get<ApplyJobResponse>(`/apply-job/employer/analys/${applyId}`);
   return response.data;
 }
 
@@ -88,6 +88,6 @@ export const getApplyJobByTags = async (data: GetApplyJobByTags) => {
   return response.data;
 }
 export const viewApplyJobByCandidate = async (jobId: number) => {
-  const response = await axiosInstance.get<ResumeVersion|''>(`/apply-job/view-apply/candidate/${jobId}`);
+  const response = await axiosInstance.get<ResumeVersion>(`/apply-job/view-apply/candidate/${jobId}`);
   return response.data;
 }

@@ -1,4 +1,4 @@
-import { Language } from "@/types/LanguageType";
+import { Language } from "@/types/languageType";
 import { axiosInstance } from "./index";
 
 export const getAllLanguages = async () => {

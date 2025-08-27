@@ -11,7 +11,7 @@ import { X, User, Upload, FileText, Eye } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import { vi } from 'date-fns/locale';
 import { toast } from 'sonner';
-import { useAccount } from '@/providers/UserProvider';
+import { useAccount } from '@/providers/userProvider';
 import { getCityList } from '@/apis/cityAPI';
 import { getAllLanguages } from '@/apis/languageAPI';
 import { getSkillList } from '@/apis/skillAPI';
@@ -20,18 +20,19 @@ import { getListMajorAPI } from '@/apis/majorAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import { createResumeAPI } from '@/apis/resumeAPI';
 import { City, District } from '@/types/location';
-import { Language, LanguageResume } from '@/types/LanguageType';
-import { Skill } from '@/types/SkillType';
+
+import { Skill } from '@/types/skillType';
 import { Education } from '@/types/educationType';
-import { Major, MajorResponse } from '@/types/majorType';
-import { TypeJob } from '@/types/TypeJobType';
+import { MajorResponse } from '@/types/majorType';
+import { TypeJob } from '@/types/typeJobType';
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader } from '@/components/ui/alert-dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import dayjs from 'dayjs';
 import { Experience } from '@/types/experienceType';
 import { getExperienceList } from '@/apis/experienceAPI';
-import { useLoading } from '@/providers/LoadingProvider';
+import { useLoading } from '@/providers/loadingProvider';
 import Editer from '@/components/elements/editer/editer';
+import { Language, LanguageResume } from '@/types/languageType';
 
 export default function FormCreateResume() {
   const { dataUser } = useAccount();
@@ -59,7 +60,7 @@ export default function FormCreateResume() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [pdfFileURL, setPdfFileURL] = useState<string>('');
   const [majors, setMajors] = useState<MajorResponse[]>([]);
-  const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
+  const [selectedMajors, setSelectedMajors] = useState<MajorResponse[]>([]);
   const [typeJobs, setTypeJobs] = useState<TypeJob[]>([]);
   const [selectTypeJob, setSelectTypeJob] = useState<TypeJob | null>(null);
   const [expectedSalary, setExpectedSalary] = useState<number | null>(null);

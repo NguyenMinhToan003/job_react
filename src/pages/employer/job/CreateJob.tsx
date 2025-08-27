@@ -9,40 +9,40 @@ import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
-import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
-import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
-import EducationJobPopup from '@/components/elements/job/popup/EducationJobPopup';
-import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
-import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
-import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
-import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
-import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
-import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
-import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
-import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
-import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
-import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
-import SalaryJonPopup from '@/components/elements/job/popup/SalaryJobPopup';
-import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
-import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
+import DetailJobPopup from '@/components/elements/job/popup/detailJobPopup';
+import EducationJobPopup from '@/components/elements/job/popup/educationJobPopup';
+import ExperienceJonPopup from '@/components/elements/job/popup/experienceJobPopup';
+import ExpiredJobPopup from '@/components/elements/job/popup/expiredJobPopup';
+import FieldJobPopup from '@/components/elements/job/popup/fieldJobPopup';
+import LanguageJobPopup from '@/components/elements/job/popup/languageJobPopup';
+import LevelJobPopup from '@/components/elements/job/popup/levelJobPopup';
+import LocationJobPopup from '@/components/elements/job/popup/locationPopup';
+import MatchingJobPopup from '@/components/elements/job/popup/matchingJobPopup';
+import NameJobPopup from '@/components/elements/job/popup/nameJobPopup copy';
+import QuantityJobPopup from '@/components/elements/job/popup/quantityJobPopup';
+import RequirementPopup from '@/components/elements/job/popup/requirementPopup';
+import SalaryJonPopup from '@/components/elements/job/popup/salaryJobPopup';
+import SkillJobPopup from '@/components/elements/job/popup/skillJobPopup';
+import TypeJobPopup from '@/components/elements/job/popup/typeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Benefit } from '@/types/benefitType';
 import { Education } from '@/types/educationType';
 import { Experience } from '@/types/experienceType';
-import { Language, LanguageJob } from '@/types/LanguageType';
+import { Language, LanguageJob } from '@/types/languageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
 import { Field } from '@/types/majorType';
-import { Skill } from '@/types/SkillType';
-import { TypeJob } from '@/types/TypeJobType';
+import { Skill } from '@/types/skillType';
+import { TypeJob } from '@/types/typeJobType';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useLoading } from '@/providers/LoadingProvider';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { useLoading } from '@/providers/loadingProvider';
+import { useAlertDialog } from '@/providers/alertDialogProvider';
 import { Plus } from 'lucide-react';
+import BenefitJobPopup from '@/components/elements/job/popup/benefitJobPopup';
 
 export default function CreateJob() {
 
@@ -62,7 +62,6 @@ export default function CreateJob() {
   const [benefitIds, setBenefitIds] = useState<string[]>([])
   const [salaryMin, setSalaryMin] = useState<number | null>(null)
   const [salaryMax, setSalaryMax] = useState<number | null>(null)
-  const [checkField, setCheckField] = useState(0)
   const [typeJobList, setTypeJobList] = useState<TypeJob[]>([])
   const [typeJobId, setTypeJobId] = useState<number[]>([])
   const [locationIds, setLocationIds] = useState<number[]>([])
@@ -179,8 +178,9 @@ export default function CreateJob() {
       salaryMin,
       salaryMax
     ].filter(Boolean).length;
-    setCheckField(filledFields);
+    console.log(filledFields);
   }
+  
   , [nameJob, description, requirement, levelIds, experienceId, benefitIds, salaryMin, salaryMax]);
   return <>
     <Card className='w-full bg-transparent border-none shadow-none p-0 mt-10'>

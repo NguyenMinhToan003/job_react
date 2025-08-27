@@ -21,7 +21,7 @@ import { ArrowUpDown, Briefcase, Building2, Calendar, CheckCircle, Clock, Eye, P
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1';
 import { useEffect, useState } from 'react';
 import { filterJobAdmin } from '@/apis/jobAPI';
 import { toast } from 'sonner';
@@ -51,6 +51,8 @@ export default function JobListBlock() {
         })
         setJobs(response.data);
         setTotalPages(response.totalPages);
+        setSortBy('createdAt');
+        setSortOrder('desc');
       }
       catch (error: any) {
         toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');

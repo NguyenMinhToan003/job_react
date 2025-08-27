@@ -18,7 +18,7 @@ import { getCountJobDashboard } from '@/apis/jobAPI'
 import { getApplyJobDashboard } from '@/apis/applyJobAPI'
 import type { PackageResponse } from '@/types/packageType'
 import { Skeleton } from '@/components/ui/skeleton'
-import BarChartCompo from '@/components/elements/charts/BarChartCompo'
+import BarChartCompo from '@/components/elements/charts/barChartCompo'
 import { getMeNotificationAPI } from '@/apis/notiAccountAPI'
 import { Label } from '@/components/ui/label'
 

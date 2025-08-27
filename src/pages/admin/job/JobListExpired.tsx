@@ -19,7 +19,7 @@ import { ArrowUpDown, Badge, Briefcase, Building2, Calendar, CheckCircle, Clock,
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1';
 import { useEffect, useState } from 'react';
 import { filterJobAdmin } from '@/apis/jobAPI';
 import { JOB_STATUS } from '@/types/type';

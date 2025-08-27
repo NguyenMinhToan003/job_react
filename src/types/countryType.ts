@@ -6,6 +6,7 @@ export interface CountryResponse {
   flag: string;
   publicId: string;
   employees?: Employer[];
+  hideAt?: string;
 }
 export interface CountryRequest {
   id?: number;

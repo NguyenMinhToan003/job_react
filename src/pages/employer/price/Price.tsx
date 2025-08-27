@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createPaymentUrl, getPackagesBisiness } from '@/apis/paymentAPI';
-import DialogCart, { CartItem } from '@/components/elements/cart/DialogCart';
-import TagPackage from '@/components/elements/packageCompo/TagPackage';
+import DialogCart, { CartItem } from '@/components/elements/cart/dialogCart';
+import TagPackage from '@/components/elements/packageCompo/tagPackage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

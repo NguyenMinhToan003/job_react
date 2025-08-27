@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -52,7 +53,7 @@ export default function BenefitForm({ benefit, setIsChange }: { benefit?: Benefi
       setIsChange?.(true)
       toast.success(benefit ? "Cập nhật quyền lợi thành công" : "Thêm quyền lợi thành công")
     }
-    catch (error) {
+    catch (error: any) {
       toast.error(error?.response?.data?.message || "Đã có lỗi xảy ra, vui lòng thử lại sau")
     }
   }

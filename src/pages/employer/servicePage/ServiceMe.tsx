@@ -169,7 +169,7 @@ export default function ServiceMe() {
 
               <ServiceTimeDisplay
                 subUsing={pkg.sub_using || []}
-                subPending={pkg.sub_pending || []}
+                subPending={pkg?.sub_pending || []}
               />
             </CardContent>
           </Card>

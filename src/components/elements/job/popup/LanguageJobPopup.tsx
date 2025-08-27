@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Language, LanguageJob } from "@/types/LanguageType";
+import { Language, LanguageJob } from "@/types/languageType";
 
 export default function LanguageJobPopup({
   languageList,

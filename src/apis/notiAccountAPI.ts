@@ -22,7 +22,7 @@ export const markAllAsReadAPI = async () => {
   return response.data;
 }
 export const countUnreadAPI = async () => {
-  const response = await axiosInstance.get<NotiAccount[]>('/noti-account/count-unread');
+  const response = await axiosInstance.get<number>('/noti-account/count-unread');
   return response.data;
 }
 export const markAsReadAPI = async (id: number) => {

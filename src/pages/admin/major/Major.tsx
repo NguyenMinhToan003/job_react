@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 
 export default function Major() {
   const { majorId } = useParams<{ majorId: string }>();
-  const [major, setMajor] = useState<MajorResponse>();
+  const [major, setMajor] = useState<MajorResponse>({} as MajorResponse);
   const handleFetchMajor = async () => {
     try {
       const response = await getMajorByIdAPI(Number(majorId));
@@ -46,14 +46,12 @@ export default function Major() {
               <TableCell className='font-medium'>Tên kĩ năng</TableCell>
             </TableRow>
             {
-              major?.skills?.length > 0 && major.skills.map((skill) => <>
+              major?.skills?.length > 0 && major?.skills?.map((skill) => (
                 <TableRow key={skill.id}>
                   <TableCell className='font-medium'>{skill.id}</TableCell>
                   <TableCell className='font-medium'>{skill.name}</TableCell>
-
-              </TableRow>
-              
-              </>)
+                </TableRow>
+              ))
             }
           </TableBody>
         </Table>

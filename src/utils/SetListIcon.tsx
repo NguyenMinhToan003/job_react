@@ -130,6 +130,7 @@ import {
   HardHatIcon as Hat,
   ChefHatIcon,
 } from "lucide-react"
+import { JSX } from "react"
 
 export const iconMap: Record<string, JSX.Element> = {
   // Original icons

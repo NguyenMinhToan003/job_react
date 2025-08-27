@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getJobByCompanyId } from "@/apis/jobAPI";
-import { JobResponse } from "@/types/jobType";
+import { JobFilterResponse } from "@/types/jobType";
 import {
   Table,
   TableBody,
@@ -18,14 +18,14 @@ import { JOB_STATUS } from "@/types/type";
 
 export default function BlockJobsList() {
   
-  const [jobList, setJobList] = useState<JobResponse[]>([]);
+  const [jobList, setJobList] = useState<JobFilterResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const fetchJobList = async () => {
     try {
       const response = await getJobByCompanyId({
-        isActive: JOB_STATUS.BLOCK,
+        isActive: [JOB_STATUS.ACTIVE],
       });
       setJobList(response);
     } catch (error) {

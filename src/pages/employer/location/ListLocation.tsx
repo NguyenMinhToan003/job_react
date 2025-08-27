@@ -14,8 +14,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useAlertDialog } from "@/providers/AlertDialogProvider";
-import FormUpdateLocation from "@/components/elements/location/FormUpdateLocation";
+import { useAlertDialog } from "@/providers/alertDialogProvider";
+import FormUpdateLocation from "@/components/elements/location/formUpdateLocation";
 
 export default function ListLocation() {
   const [locationList, setLocationList] = useState<LocationResponse[]>([]);

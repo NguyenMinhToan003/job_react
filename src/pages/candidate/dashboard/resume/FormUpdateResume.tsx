@@ -9,8 +9,6 @@ import { getAllLanguages } from '@/apis/languageAPI';
 import { updateResumeAPI, viewResumeAPI } from '@/apis/resumeAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getAllEducations } from '@/apis/educationAPI';
-import { getLevelList } from '@/apis/levelAPI';
-import { getListMajorAPI } from '@/apis/majorAPI';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,13 +16,13 @@ import { X, User,  Upload, FileText, Eye } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { City, District } from '@/types/location';
-import { Skill } from '@/types/SkillType';
-import { Language, LanguageResume } from '@/types/LanguageType';
+import { Skill } from '@/types/skillType';
+import { Language, LanguageResume } from '@/types/languageType';
 import { Education } from '@/types/educationType';
 import { Level } from '@/types/levelType';
-import { Major, MajorResponse } from '@/types/majorType';
+import { MajorResponse } from '@/types/majorType';
 import { ResumeVersion } from '@/types/resumeType';
-import { TypeJob } from '@/types/TypeJobType';
+import { TypeJob } from '@/types/typeJobType';
 import { getTypeJobList } from '@/apis/typeJobAPI';
 import DatePicker from 'react-datepicker';
 import { vi } from 'date-fns/locale';
@@ -34,7 +32,8 @@ import dayjs from 'dayjs';
 import { Experience } from '@/types/experienceType';
 import { getExperienceList } from '@/apis/experienceAPI';
 import Editer from '@/components/elements/editer/editer';
-import { useLoading } from '@/providers/LoadingProvider';
+import { useLoading } from '@/providers/loadingProvider';
+import { getListMajorAPI } from '@/apis/majorAPI';
 
 export default function FormUpdateResume() {
   const { resumeId } = useParams<{ resumeId: string }>();
@@ -62,20 +61,18 @@ export default function FormUpdateResume() {
   const [avatar, setAvatar] = useState<File | string | undefined>(undefined);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
-  const [levels, setLevels] = useState<Level[]>([]);
   const [selectedLevel, setSelectedLevel] = useState<Level>({} as Level);
   const [majors, setMajors] = useState<MajorResponse[]>([]);
-  const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
+  const [selectedMajors, setSelectedMajors] = useState<MajorResponse[]>([]);
   const [typeJobs, setTypeJobs] = useState<TypeJob[]>([]);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [pdfFileURL, setPdfFileURL] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectTypeJob, setSelectTypeJob] = useState<TypeJob | null>(null);
   const [expectedSalary, setExpectedSalary] = useState<number>(0);
   const [dateOfBirth, setDateOfBirth] = useState<string | null>(null);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [selectExperience, setSelectExperience] = useState<Experience | null>(null);
-  const {setLoading} = useLoading()
+  const { setLoading } = useLoading();
 
 
 
@@ -83,23 +80,21 @@ export default function FormUpdateResume() {
   const fetchElements = async () => {
     setLoading(true);
     try {
-      const [cityList, skillList, languageList, educationList, levelList, majorList, typejobList, expList] = await Promise.all([
+      const [cityList, skillList, languageList, educationList, typejobList, expList, majorList] = await Promise.all([
         getCityList(),
         getSkillList(),
         getAllLanguages(),
         getAllEducations(),
-        getLevelList(),
-        getListMajorAPI(),
         getTypeJobList(),
         getExperienceList(),
+        getListMajorAPI(),
       ]);
       setCitys(cityList);
       setSkills(skillList);
       setLanguages(languageList);
       setEducations(educationList);
-      setLevels(levelList);
-      setMajors(majorList);
       setTypeJobs(typejobList);
+      setMajors(majorList);
       setExperiences(expList);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Lỗi khi tải thông tin');
@@ -128,7 +123,6 @@ export default function FormUpdateResume() {
       setSelectEducation(response.education || {});
       setName(response.resume?.name || '');
       setSelectedLevel(response.level || {});
-      setSelectedMajors(response.majors || []);
       setSelectTypeJob(response.typeJob || null);
       setExpectedSalary(response.expectedSalary || 0);
       setAvatar(response.avatar || '');
@@ -335,13 +329,13 @@ export default function FormUpdateResume() {
                 />
               </div>
               
-               <div className='space-y-2'>
-                  <Label>Giới thiệu & Mô tả</Label>
-                  <Editer
-                    text={about}
-                    setText={setAbout}
-                  />
-                </div>
+                <div className='space-y-2'>
+                    <Label>Giới thiệu & Mô tả</Label>
+                    <Editer
+                      text={about}
+                      setText={setAbout}
+                    />
+                  </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label className="text-sm font-medium text-gray-700">Ngày sinh *</Label>
@@ -426,7 +420,6 @@ export default function FormUpdateResume() {
 
           {/* Education and Majors */}
           <div className="space-y-4">
-           
             <div className="space-y-4">
               <div>
                 <Label className="text-sm font-medium text-gray-700">Trình độ học vấn *</Label>
@@ -548,7 +541,7 @@ export default function FormUpdateResume() {
                   <Input
                     type="number"
                     value={expectedSalary || ""}
-                    onChange={(e) => setExpectedSalary(e.target.value ? +e.target.value : null)}
+                    onChange={(e) => setExpectedSalary(isNaN(Number(e.target.value)) ? 0 : Number(e.target.value))}
                     className="mt-1 w-50 text-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                     placeholder="Nhập mức lương"
                   />
@@ -616,10 +609,9 @@ export default function FormUpdateResume() {
           {/* Submit Button */}
           <Button
             onClick={handleUpdateResume}
-            disabled={isLoading}
             className='bg-[#451e99] hover:bg-[#391a7f] text-white font-semibold w-full rounded-none h-12'
           >
-            {isLoading ? "Đang cập nhật..." : "Cập nhật hồ sơ"}
+            Cập nhật hồ sơ
           </Button>
         </CardContent>
       </Card>

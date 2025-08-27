@@ -17,7 +17,7 @@ export const mapJobResponseToDisplayJob = (job: JobResponse): DisplayJob => {
     location: job.locations?.[0]?.name || "Không xác định",
     tags: job.skills?.map((s) => s.name) || [],
     description: [
-      `Mức lương: ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()} VNĐ`,
+      `Mức lương: ${job.minSalary?.toLocaleString()} - ${job.maxSalary?.toLocaleString()} VNĐ`,
       `Số lượng tuyển: ${job.quantity}`,
       `Hạn nộp: ${new Date(job.expiredAt).toLocaleDateString("vi-VN")}`,
     ],

@@ -12,8 +12,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { CandidateResponse } from "@/types/accountType"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { Search, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
-import PaginationModel1 from "@/components/elements/pagination/PaginationModel1"
+import { Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
+import PaginationModel1 from "@/components/elements/pagination/paginationModel1"
 import { ACCOUNT_STATUS } from "@/types/type"
 import { changeStatus } from "@/apis/authAPI"
 
@@ -25,7 +25,6 @@ export default function CandidateList() {
   const [sortBy, setSortBy] = useState<string>("id")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const [totalPages, setTotalPages] = useState<number>(0)
-  const [total, setTotal] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
 
   const fetchListCandidate = async () => {
@@ -40,7 +39,6 @@ export default function CandidateList() {
       })
       setCandidates(response.items)
       setTotalPages(response.totalPage)
-      setTotal(response.total)
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi tải danh sách ứng viên")
     } finally {
@@ -96,22 +94,6 @@ export default function CandidateList() {
     }
   }
 
-  const getStatusBadge = (status: ACCOUNT_STATUS) => {
-    switch (status) {
-      case ACCOUNT_STATUS.ACTIVE:
-        return (
-          <Badge variant="default" className="bg-green-500">
-            Đã xét duyêt
-          </Badge>
-        )
-      case ACCOUNT_STATUS.CREATED:
-        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
-          Chưa xét duyệt
-        </Badge>
-      case ACCOUNT_STATUS.BLOCKED:
-        return <Badge variant="secondary">Bị khóa</Badge>
-    }
-  }
 
   const getSortIcon = (column: string) => {
     if (sortBy !== column) return <ArrowUpDown className="h-4 w-4" />

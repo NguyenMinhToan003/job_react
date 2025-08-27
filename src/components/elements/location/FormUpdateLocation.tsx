@@ -46,7 +46,7 @@ export default function FormUpdateLocation({
   const [cities, setCities] = useState<City[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedCityId, setSelectedCityId] = useState('');
-  const [selectedDistrictId, setSelectedDistrictId] = useState('');
+  const [selectedDistrictId, setSelectedDistrictId] = useState<string>('');
   const [address, setAddress] = useState('');
   const [suggestions, setSuggestions] = useState<LocationAutoComplate[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -134,9 +134,10 @@ export default function FormUpdateLocation({
         name: map?.name || address,
         placeId: map?.placeId || location.placeId || '',
         city: { id: selectedCityId } as City,
-        district: { id: selectedDistrictId },
+        district: { id: selectedDistrictId } as District,
         lat: map?.location?.lat || location.lat,
         lng: map?.location?.lng || location.lng,
+        enabled: 0
       });
       toast.success('Cập nhật địa điểm thành công');
       setIsChanged(true);

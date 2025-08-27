@@ -1,4 +1,4 @@
-import CandidateNavbarDashboard from "@/components/elements/navbar/CandidateNavbarDashboard";
+import CandidateNavbarDashboard from "@/components/elements/navbar/candidateNavbarDashboard";
 import { Outlet } from "react-router-dom";
 
 export default function CandidateSidebar() {

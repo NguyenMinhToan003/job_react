@@ -1,4 +1,4 @@
-import { Skill, SkillCreateRequest, SkillPaginateResponse, SkillResponse, SkillUpdateRequest } from "@/types/skillType"
+import { Skill, SkillCreateRequest, SkillPaginateResponse, SkillUpdateRequest } from "@/types/skillType"
 import { axiosInstance } from "./index"
 
 export const getSkillList = async () => {

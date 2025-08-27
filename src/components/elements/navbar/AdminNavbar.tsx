@@ -11,7 +11,6 @@ import {
   HeartHandshake,
   Shapes,
   Package,
-  MessageCircle,
   Receipt,
   Settings,
 } from "lucide-react";
