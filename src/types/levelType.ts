@@ -3,9 +3,9 @@ export interface Level {
   name: string;
   status?: number;
 
-}
+  }
 export interface CreateLevelRequest {
-  name: number;
+  name: string;
   status?: number;
 }
 

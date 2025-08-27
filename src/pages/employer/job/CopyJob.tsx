@@ -10,37 +10,36 @@ import { getLevelList } from '@/apis/levelAPI';
 import { getLocationByCompanyAPI } from '@/apis/locationAPI';
 import { getSkillList } from '@/apis/skillAPI';
 import { getTypeJobList } from '@/apis/typeJobAPI';
-import BenefitJobPopup from '@/components/elements/job/popup/BenefitJobPopup';
-import DetailJobPopup from '@/components/elements/job/popup/DetailJobPopup';
-import EducationJonPopup from '@/components/elements/job/popup/EducationJobPopup';
-import ExperienceJonPopup from '@/components/elements/job/popup/ExperienceJobPopup';
-import ExpiredJobPopup from '@/components/elements/job/popup/ExpiredJobPopup';
-import FieldJobPopup from '@/components/elements/job/popup/FieldJobPopup';
-import LanguageJobPopup from '@/components/elements/job/popup/LanguageJobPopup';
-import LevelJobPopup from '@/components/elements/job/popup/LevelJobPopup';
-import LocationJobPopup from '@/components/elements/job/popup/LocationPopup';
-import MatchingJobPopup from '@/components/elements/job/popup/MatchingJobPopup';
-import NameJobPopup from '@/components/elements/job/popup/NameJobPopup copy';
-import QuantityJobPopup from '@/components/elements/job/popup/QuantityJobPopup';
-import RequirementPopup from '@/components/elements/job/popup/RequirementPopup';
-import SalaryJonPopup from '@/components/elements/job/popup/SalaryJobPopup';
-import SelectServiceJobPopup from '@/components/elements/job/popup/SelectServiceJobPopup';
-import SkillJobPopup from '@/components/elements/job/popup/SkillJobPopup';
-import TypeJobPopup from '@/components/elements/job/popup/TypeJobPopup';
+import BenefitJobPopup from '@/components/elements/job/popup/benefitJobPopup';
+import DetailJobPopup from '@/components/elements/job/popup/detailJobPopup';
+import EducationJonPopup from '@/components/elements/job/popup/educationJobPopup';
+import ExperienceJonPopup from '@/components/elements/job/popup/experienceJobPopup';
+import ExpiredJobPopup from '@/components/elements/job/popup/expiredJobPopup';
+import FieldJobPopup from '@/components/elements/job/popup/fieldJobPopup';
+import LanguageJobPopup from '@/components/elements/job/popup/languageJobPopup';
+import LevelJobPopup from '@/components/elements/job/popup/levelJobPopup';
+import LocationJobPopup from '@/components/elements/job/popup/locationPopup';
+import MatchingJobPopup from '@/components/elements/job/popup/matchingJobPopup';
+import NameJobPopup from '@/components/elements/job/popup/nameJobPopup copy';
+import QuantityJobPopup from '@/components/elements/job/popup/quantityJobPopup';
+import RequirementPopup from '@/components/elements/job/popup/requirementPopup';
+import SalaryJonPopup from '@/components/elements/job/popup/salaryJobPopup';
+import SkillJobPopup from '@/components/elements/job/popup/skillJobPopup';
+import TypeJobPopup from '@/components/elements/job/popup/typeJobPopup';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { useAlertDialog } from '@/providers/alertDialogProvider';
 import { Benefit } from '@/types/benefitType';
 import { Education } from '@/types/educationType';
 import { Experience } from '@/types/experienceType';
-import { Language, LanguageJob } from '@/types/LanguageType';
+import { Language, LanguageJob } from '@/types/languageType';
 
 import { Level } from '@/types/levelType';
 import { LocationResponse } from '@/types/location';
 import { Field } from '@/types/majorType';
-import { Skill } from '@/types/SkillType';
-import { TypeJob } from '@/types/TypeJobType';
-import { Plus, RotateCcw } from 'lucide-react';
+import { Skill } from '@/types/skillType';
+import { TypeJob } from '@/types/typeJobType';
+import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -81,7 +80,7 @@ export default function CopyJob() {
   const [educationWeight, setEducationWeight] = useState(0);
   const [levelWeight, setLevelWeight] = useState(0);
   const [fields, setFields] = useState<Field[]>([]);
-  const [selectField, setSelectField] = useState<Field[]>([]);
+  const [selectField, setSelectField] = useState<Field | null>(null);
   const [selectMajors, setSelectMajors] = useState<number[]>([]);
 
   const handleUpdateJob = async () => {
@@ -169,7 +168,7 @@ export default function CopyJob() {
       setRequirement(response.requirement);
       setSalaryMin(response.minSalary);
       setSalaryMax(response.maxSalary);
-      setLevelIds(response.levels.map((level) => level.id));
+      setLevelIds(response.levels.map((level) => level.id.toString()));
       setLocationIds(response.locations.map((location) => location.id));
       setExperienceId(response.experience?.id);
       setBenefitIds(response.benefits.map((benefit) => benefit.id));
@@ -185,7 +184,7 @@ export default function CopyJob() {
       setLanguageWeight(response.matchingWeights?.languageWeight);
       setEducationWeight(response.matchingWeights?.educationWeight);
       setLevelWeight(response.matchingWeights?.levelWeight);
-      setSelectField(response?.majors.field);
+      setSelectField(response.majors.length > 0 ? fields.find((field) => field.id === response.majors[0].field.id) || null : null);
       setSelectMajors(response?.majors.map((major) => major.id) || []);
     }
     catch(error) {

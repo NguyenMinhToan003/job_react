@@ -1,4 +1,4 @@
-import Navigate from "@/components/elements/navbar/UserNavbar";
+import Navigate from "@/components/elements/navbar/userNavbar";
 import { Outlet } from "react-router-dom";
 
 export default function Index() {

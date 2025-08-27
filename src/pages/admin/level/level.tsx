@@ -40,7 +40,7 @@ export default function LevelPage() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Level | null>(null);
   const [formData, setFormData] = useState<UpdateLevelRequest>({
-    id: '',
+    id: -1,
     name: '',
     status: 1,
   });
@@ -63,7 +63,10 @@ export default function LevelPage() {
           status: formData.status,
         } as UpdateLevelRequest);
       } else {
-        await createLevel(formData);
+        await createLevel({
+          name: formData.name || '',
+          status: formData.status,
+        });
       }
       setOpen(false);
       resetForm();
@@ -76,7 +79,7 @@ export default function LevelPage() {
 
   const resetForm = () => {
     setEditing(null);
-    setFormData({ id: '', name: '', status: 1 });
+    setFormData({ id: -1, name: '', status: 1 });
   };
 
   const handleEdit = (level: Level) => {
@@ -89,7 +92,7 @@ export default function LevelPage() {
     setOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm('Bạn có chắc muốn xóa?')) return;
     try {
       await deleteLevel(id);

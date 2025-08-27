@@ -1,6 +1,6 @@
 import type React from "react"
 
-import { createPackage, updatePackage, updatePackageAPI } from "@/apis/paymentAPI"
+import { createPackage, updatePackageAPI } from "@/apis/paymentAPI"
 import {
   AlertDialog,
   AlertDialogContent,

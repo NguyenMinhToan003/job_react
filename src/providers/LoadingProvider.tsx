@@ -9,7 +9,7 @@ interface LoadingContextProps {
 
 const LoadingContext = createContext<LoadingContextProps>({
   isLoading: false,
-  setLoading: () => {},
+  setLoading: (loading: boolean) => {console.log(loading)},
 });
 
 export const LoadingProvider = ({ children }: { children: ReactNode }) => {
@@ -32,6 +32,5 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
 
 export const useLoading = () => {
   const context = useContext(LoadingContext);
-  if (context)
-    return context;
+  return context;
 };

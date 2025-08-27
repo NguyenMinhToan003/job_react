@@ -4,18 +4,15 @@ import { deleteResumeAPI, viewResumeAPI } from '@/apis/resumeAPI';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { useAlertDialog } from '@/providers/alertDialogProvider';
 import { ResumeVersion } from '@/types/resumeType';
 import { convertPrice } from '@/utils/convertPrice';
 import { convertDateToString } from '@/utils/dateTime';
 import {
-  Mail,
-  Phone,
   Calendar,
   User,
   MapPin,
   Globe,
-  Edit,
   Eye,
   Trash2,
   ArrowLeft,
@@ -25,6 +22,7 @@ import {
   BookOpen,
   Briefcase,
   BookA,
+  Edit,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

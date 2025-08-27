@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ApplyJobByJobIdResponse } from '@/types/applyJobType';
+import { ApplyJobResponse } from '@/types/applyJobType';
 import { convertDateToString } from '@/utils/dateTime';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import { useEffect, useState } from 'react';
@@ -18,11 +18,11 @@ import { TagResume } from '@/types/tagResumeType';
 import { getAllTagResumeAPI } from '@/apis/tagResumeAPI';
 import { Textarea } from '@/components/ui/textarea';
 import dayjs from 'dayjs';
-import ApplyJobMenu from '@/components/elements/applyJob/ApplyJobMenu';
+import ApplyJobMenu from '@/components/elements/applyJob/applyJobMenu';
 
 export default function ViewResumeVersionForJob() {
   const { applyId } = useParams();
-  const [apply, setApply] = useState<ApplyJobByJobIdResponse>();
+  const [apply, setApply] = useState<ApplyJobResponse>();
   const [tagsMe, setTagsMe] = useState<TagResume[]>([]);
   const [selectTags, setSelectTags] = useState<TagResume[]>([]);
   const [feedback, setFeedback] = useState<string>('');
@@ -265,7 +265,7 @@ export default function ViewResumeVersionForJob() {
                                   <div className="flex flex-wrap gap-1">
                                     {apply?.job.languageJobs.map((l, i) => (
                                       <Badge key={i} variant="secondary" className="text-xs">
-                                        {l.language.name}
+                                        {l?.language?.name}
                                       </Badge>
                                     ))}
                                   </div>
@@ -352,8 +352,8 @@ export default function ViewResumeVersionForJob() {
                       {
                         label: 'Ngày sinh',
                         icon: <Calendar className="w-4 h-4 text-gray-500" />,
-                        value: `${convertDateToString(apply?.resumeVersion.dateOfBirth)}
-                         (${dayjs().year()- dayjs(apply?.resumeVersion.dateOfBirth).year()} tuổi)`
+                        value: `${convertDateToString(apply?.resumeVersion?.dateOfBirth||'')}
+                        (${dayjs().year()- dayjs(apply?.resumeVersion?.dateOfBirth).year()} tuổi)`
                       },
                       {
                         label: 'Giới tính',
@@ -392,14 +392,7 @@ export default function ViewResumeVersionForJob() {
                   <div className="text-sm font-medium text-gray-600 mb-2">Tổng điểm</div>
                   <div className="w-full h-2 bg-gray-200 rounded">
                     <div
-                      className={`h-2 rounded ${
-                        apply?.score.total >= 8
-                          ? 'bg-green-500'
-                          : apply?.score.total >= 6
-                          ? 'bg-orange-500'
-                          : 'bg-red-500'
-                      }`}
-                      style={{ width: `${Math.min(100, (apply?.score.total || 0) * 10)}%` }}
+                      style={{ width: `${Math.min(100, (apply?.score?.total || 0) * 10)}%` }}
                     ></div>
                   </div>
                 </div>
@@ -428,10 +421,10 @@ export default function ViewResumeVersionForJob() {
               Quản lý ứng viên
             </Label>
             
-            <ApplyJobMenu
-              applyJob={apply}
-              setIsChange={fetchElement}
-            />
+              <ApplyJobMenu
+                applyJob={apply}
+                setIsChange={fetchElement}
+              />
           </CardTitle>
           <hr/>
           <CardTitle className='flex justify-between items-center'>

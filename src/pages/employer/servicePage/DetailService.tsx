@@ -13,7 +13,7 @@ import type { TransactionDetailResponse } from "@/types/employerSubType"
 import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { toast } from "sonner"
-import FormActiveServiceBanner from "@/components/elements/servicePage/FormActiveServiceBanner"
+import FormActiveServiceBanner from "@/components/elements/servicePage/formActiveServiceBanner"
 import { PackageType } from "@/types/type"
 import { Label } from "@/components/ui/label"
 import {

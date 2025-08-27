@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -23,7 +24,7 @@ export default function ViewCompany() {
         if (data.locations.length > 0) {
           setSelectLocation(data.locations[0]);
         }
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response?.data?.message || 'Lỗi khi tải dữ liệu công ty');
       } finally {
         setLoading(false);

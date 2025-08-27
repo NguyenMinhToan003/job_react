@@ -1,9 +1,10 @@
-import { Skill } from "./SkillType";
+import { Skill } from "./skillType";
 
 export interface MajorResponse {
   id: number;
   name: string;
   skills: Skill[];
+  field: Field;
 }
 export interface Major{
   id: number;
@@ -13,7 +14,7 @@ export interface Major{
 export interface Field {
   id: number;
   name: string;
-  majors?: MajorResponse[];
+  majors: MajorResponse[];
 }
 export interface MajorRequest {
   name: string;

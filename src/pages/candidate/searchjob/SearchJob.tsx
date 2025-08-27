@@ -8,7 +8,7 @@ import { getLevelList } from "@/apis/levelAPI";
 import { getListMajorAPI } from "@/apis/majorAPI";
 import { getSkillList } from "@/apis/skillAPI";
 import { getTypeJobList } from "@/apis/typeJobAPI";
-import JobList from "@/components/elements/job/job-list/Index";
+import JobList from "@/components/elements/job/job-list";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -20,9 +20,9 @@ import { Experience } from "@/types/experienceType";
 import { JobFilterRequest, JobFilterResponse } from "@/types/jobType";
 import { Level } from "@/types/levelType";
 import { City } from "@/types/location";
-import { Field, Major, MajorResponse } from "@/types/majorType";
-import { Skill } from "@/types/SkillType";
-import { TypeJob } from "@/types/TypeJobType";
+import { Field, MajorResponse } from "@/types/majorType";
+import { Skill } from "@/types/skillType";
+import { TypeJob } from "@/types/typeJobType";
 import { parseNumberArray, parseStringArray } from "@/utils/convertArray";
 import { iconMap } from "@/utils/SetListIcon";
 import { Award, Briefcase, Clock, Flashlight, Gift, Layers3, MapPin, RotateCcw, Search, SearchIcon, TrendingUp } from "lucide-react";
@@ -205,11 +205,11 @@ export default function SearchJob() {
     }
   }
 
-  const toggleLevel = (id: string) => {
-    if (selectLevels.includes(id)) {
-      setSelectLevel(selectLevels.filter(levelId => levelId !== id));
+  const toggleLevel = (id: number) => {
+    if (selectLevels.includes(id.toString())) {
+      setSelectLevel(selectLevels.filter(levelId => levelId !== id.toString()));
     } else {
-      setSelectLevel([...selectLevels, id]);
+      setSelectLevel([...selectLevels, id.toString()]);
     }
   }
 
@@ -349,7 +349,7 @@ export default function SearchJob() {
                     className='p-1'
                   >
                     <Checkbox
-                      checked={selectLevels.includes(level.id)}
+                      checked={selectLevels.includes(level.id?.toString())}
                       onCheckedChange={() =>
                         toggleLevel(level.id)
                       }

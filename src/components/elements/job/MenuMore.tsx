@@ -3,16 +3,16 @@ import { deleteJob } from "@/apis/jobAPI";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useAlertDialog } from "@/providers/AlertDialogProvider";
-import { JobDetailResponse } from "@/types/jobType";
+import { useAlertDialog } from "@/providers/alertDialogProvider";
+import { JobFilterResponse } from "@/types/jobType";
 import { JOB_STATUS } from "@/types/type";
 import { Copy, Edit, Eye, MoreHorizontal, ScanEye, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import FormExpired from "./FormExpired";
+import FormExpired from "./formExpired";
 
 export default function JobMenu({ job, setIsChange }: {
-  job: JobDetailResponse,
+  job: JobFilterResponse | undefined;
   setIsChange?: (isChange: boolean) => void;
 }) {
   const { showAlert } = useAlertDialog();
@@ -37,28 +37,28 @@ export default function JobMenu({ job, setIsChange }: {
       <PopoverContent className='w-48 border border-[#2C95FF] shadow-lg rounded-md p-2'>
         <Label
           className='w-full text-left px-3 py-2 text-sm text-gray-700 flex items-center cursor-pointer hover:bg-[#EDECFF] hover:text-[#2C95FF]'
-          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/nhan-ban/${job.id}`)}
+          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/nhan-ban/${job?.id}`)}
         >
           <Copy className='w-4 h-4 mr-2' />
           Sao chép tin
         </Label>
         <Label
           className='w-full text-left px-3 py-2 text-sm text-gray-700 flex items-center cursor-pointer hover:bg-[#EDECFF] hover:text-[#2C95FF]'
-          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${job.id}`)}
+          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/cap-nhat-tuyen-dung/${job?.id}`)}
         >
           <Edit className='w-4 h-4 mr-2' />
           Chỉnh sửa tin
         </Label>
         <Label
           className='w-full text-left px-3 py-2 text-sm text-gray-700 flex items-center cursor-pointer hover:bg-[#EDECFF] hover:text-[#2C95FF]'
-          onClick={() => navigate(`/cong-viec/${job.id}`)}
+          onClick={() => navigate(`/cong-viec/${job?.id}`)}
         >
           <Eye className='w-4 h-4 mr-2' />
           Xem trên website
         </Label>
         <Label
           className='w-full text-left px-3 py-2 text-sm text-gray-700 flex items-center cursor-pointer hover:bg-[#EDECFF] hover:text-[#2C95FF]'
-          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/thong-tin-tuyen-dung/${job.id}`)}
+          onClick={() => navigate(`/danh-cho-nha-tuyen-dung/thong-tin-tuyen-dung/${job?.id}`)}
         >
           <ScanEye className='w-4 h-4 mr-2' />
           Xem chi tiết tin

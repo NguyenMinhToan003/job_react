@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { getJobByCompanyId, toggleJobStatus } from "@/apis/jobAPI";
-import { CompanyFilterJob, JobResponse } from "@/types/jobType";
+import { getJobByCompanyId } from "@/apis/jobAPI";
+import { CompanyFilterJob, JobFilterResponse } from "@/types/jobType";
 import {
   Table,
   TableBody,
@@ -12,19 +12,16 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Telescope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import dayjs from "dayjs";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { convertDateToString } from "@/utils/dateTime";
-import { JOB_STATUS } from "@/types/type";
-import JobMenu from "@/components/elements/job/MenuMore";
+import JobMenu from "@/components/elements/job/menuMore";
 
 export default function ExpiredJobs() {
   
-  const [jobList, setJobList] = useState<JobResponse[]>([]);
+  const [jobList, setJobList] = useState<JobFilterResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -46,20 +43,6 @@ export default function ExpiredJobs() {
   useEffect(() => {
     fetchJobList();
   }, []);
-
-  const handleToggleJobStatus = async (jobId: number, isShow: number) => {
-    try {
-      
-      await toggleJobStatus(jobId);
-      setJobList((prevJobList) =>
-        prevJobList.map((job) =>
-          job.id === jobId ? { ...job, isShow: isShow === 1 ? 0 : 1 } : job
-        )
-      );
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra');
-    }
-  };
   const buttonAction = () => {
     return (
       <Button

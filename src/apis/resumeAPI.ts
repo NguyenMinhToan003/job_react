@@ -36,7 +36,7 @@ export const updateResumeAPI = async (resumeId: number, dto: CreateResumeVersion
       formData.append(`languageResumes[${index}][languageId]`, lang.languageId.toString());
     });
   }
-  formData.append('expectedSalary', dto?.expectedSalary?.toString());
+  formData.append('expectedSalary', dto?.expectedSalary ? dto?.expectedSalary.toString() : '');
   formData.append('typeJobId', dto.typeJobId?.toString());
   dto.skills.forEach((skill, idx) => {
     formData.append(`skills[${idx}]`, skill?.toString());
@@ -67,7 +67,7 @@ export const createResumeAPI = async (dto: CreateResumeVersionDto) => {
   formData.append('cv', dto.cv ? dto.cv : '');
   formData.append('avatar', dto.avatar as Blob);
   formData.append('experience', dto.experienceId.toString());
-  formData.append('expectedSalary', dto.expectedSalary.toString());
+  formData.append('expectedSalary', dto.expectedSalary ? dto.expectedSalary.toString() : '');
   formData.append('typeJobId', dto.typeJobId?.toString());
   if (dto.languageResumes?.length > 0) {
     dto.languageResumes.forEach((lang, index) => {

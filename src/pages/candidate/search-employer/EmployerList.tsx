@@ -1,23 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { filterEmployer } from "@/apis/companyAPI";
-import BannerEmployer from "@/components/elements/company/BannerEmployer";
+import BannerEmployer from "@/components/elements/company/bannerEmployer";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Label } from "@/components/ui/label";
-import { EmployerResponse } from "@/types/accountType";
+import { EmployerDetailResponse } from "@/types/companyType";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function EmployerList() {
-  const [employerList, setEmployerList] = useState<EmployerResponse[]>([]);
+  const [employerList, setEmployerList] = useState<EmployerDetailResponse[]>([]);
   const navigate = useNavigate();
   const fetchEmployers = async () => {
     try {
       const response = await filterEmployer({});
       setEmployerList(response.items);
     }
-    catch (error) {
+    catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch employers");
     }
   }
@@ -53,7 +53,7 @@ export default function EmployerList() {
                     <span className="text-xs text-gray-500 flex items-center gap-1">
                       {employer.employeeScale.name} | {employer.businessType.name }
                     </span>
-                 </div>
+                </div>
                 </CardContent>
               </Card>
             ))

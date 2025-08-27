@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Flashlight, 
   MapPin, 
@@ -49,9 +49,9 @@ import { Skill } from '@/types/skillType';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field } from '@/types/majorType';
 import { getFieldList } from '@/apis/fieldAPI';
-import BannerEmployer from '@/components/elements/company/BannerEmployer';
-import JobBanner from '@/components/elements/job/job-list/JobBanner';
-import Footer from '@/components/elements/footer/Footer';
+import BannerEmployer from '@/components/elements/company/bannerEmployer';
+import JobBanner from '@/components/elements/job/job-list/jobBanner';
+import Footer from '@/components/elements/footer/footer';
 
 export default function Home() {
 
@@ -59,7 +59,7 @@ export default function Home() {
   const [citySelected, setSelectedCity] = useState<City>();
 
   const [levelOptions, setLevelOptions] = useState<Level[]>([]);
-  const [selectLevels, setSelectLevel] = useState<string[]>([]);
+  const [selectLevels, setSelectLevel] = useState<number[]>([]);
 
   const [experienceOptions, setExperienceOptions] = useState<Experience[]>([]);
   const [selectExperience, setSelectExperience] = useState<number[]>([]);
@@ -120,7 +120,7 @@ export default function Home() {
     }
   }
 
-  const toggleLevel = (id: string) => {
+  const toggleLevel = (id: number) => {
     if (selectLevels.includes(id)) {
       setSelectLevel(selectLevels.filter(levelId => levelId !== id));
     } else {

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { refreshJobInPackage } from "@/apis/jobAPI";
 import { cronjobDeleteResumeVersionDraftAPI } from "@/apis/resumeAPI";
 import { Button } from "@/components/ui/button";
-import { useAlertDialog } from "@/providers/AlertDialogProvider";
+import { useAlertDialog } from "@/providers/alertDialogProvider";
 import { toast } from "sonner";
 
 export default function Setting() {
@@ -10,7 +11,7 @@ export default function Setting() {
     try {
       await refreshJobInPackage();
     }
-    catch (error) {
+    catch (error: any) {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi làm mới danh sách công việc');
     }
   }
@@ -19,7 +20,7 @@ export default function Setting() {
       await cronjobDeleteResumeVersionDraftAPI();
       toast.success('Đã xóa các bản nháp CV thành công');
     }
-    catch (error) {
+    catch (error: any) {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi xóa các bản nháp CV');
     }
   }

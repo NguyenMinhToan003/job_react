@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -15,8 +16,6 @@ import { Card } from '@/components/ui/card';
 export default function SearchCandidate() {
   const [resumeVersions, setResumeVersions] = useState<ResumeVersion[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [page] = useState(1);
-  const limit = 10;
 
   const fetchResumeVersions = async () => {
     try {
@@ -204,7 +203,7 @@ export default function SearchCandidate() {
                     <div>
                       <div className="text-sm font-medium text-gray-700">Mức lương mong muốn</div>
                       <div className="text-gray-900 font-medium">
-                        {formatSalary(selectedResume.expectedSalaryMin, selectedResume.expectedSalaryMax)}
+                        {formatSalary(selectedResume?.expectedSalaryMin || 0, selectedResume?.expectedSalaryMax || 0)}
                       </div>
                     </div>
                   </div>

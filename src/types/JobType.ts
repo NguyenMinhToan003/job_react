@@ -1,17 +1,18 @@
 import { EmployerResponse } from "./accountType";
+import { ApplyJobResponse } from "./applyJobType";
 import { Benefit } from "./benefitType";
 import { Employer } from "./companyType";
 import { Cv } from "./cvType";
 import { Education } from "./educationType";
 import { EmployerSubResponse } from "./employerSubType";
 import { Experience } from "./experienceType";
-import { LanguageJob } from "./LanguageType";
+import { LanguageJob } from "./languageType";
 import { Level } from "./levelType";
 import { LocationResponse } from "./location";
 import { Major } from "./majorType";
-import { Skill } from "./SkillType";
+import { Skill } from "./skillType";
 import { JOB_STATUS } from "./type";
-import { TypeJob } from "./TypeJobType";
+import { TypeJob } from "./typeJobType";
 
 export interface Job {
   id: number;
@@ -60,7 +61,6 @@ export interface JobResponse {
   maxSalary: number | null;
   isShow: number;
   createdAt: string;
-  updatedAt: string;
   isActive: JOB_STATUS;
   expiredAt: string;
   benefits: Benefit[];
@@ -75,6 +75,7 @@ export interface JobResponse {
   languageJobs: LanguageJob[];
   matchingWeights: MatchingWeightResponse;
   majors: Major[];
+  updatedAt?: string;
 }
 export interface JobFilterRequest {
   id?: number;
@@ -119,7 +120,9 @@ export interface JobFilterResponse {
   requirement: string;
   minSalary: number | null;
   maxSalary: number | null;
+  isShow: number;
   createdAt: string;
+  updatedAt: string;
   isActive: JOB_STATUS;
   expiredAt: string;
   benefits: Benefit[];
@@ -127,16 +130,18 @@ export interface JobFilterResponse {
   experience: Experience;
   skills: Skill[];
   levels: Level[];
+  applyJobs: ApplyJobResponse[];
   typeJobs: TypeJob[];
-  employer: Employer;
+  employer: EmployerResponse;
   isApplied: boolean;
   isSaved: boolean;
   languageJobs: LanguageJob[];
   education: Education;
-  matchingWeights: MatchingWeightResponse | null;
+  matchingWeights: MatchingWeightResponse;
   distanceKm?: number | null;
   majors: Major[];
   isActiveSubscription?: boolean;
+  employerSubscription: EmployerSubResponse[];
 }
 
 export interface JobDetailResponse {
@@ -166,6 +171,7 @@ export interface JobDetailResponse {
   distanceKm?: number | null;
   majors: Major[];
   employerSubscription: EmployerSubResponse[];
+  applyJobs: ApplyJobResponse[];
 }
 
 export interface UpdateJobAdminRequest {

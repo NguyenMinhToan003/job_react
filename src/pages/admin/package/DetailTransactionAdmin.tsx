@@ -8,7 +8,6 @@ import {
   CheckCircle,
   Activity,
   Briefcase,
-  Building2,
   Search,
   Package,
   CalendarDays,
@@ -65,7 +64,7 @@ export default function DetailTransactionAdmin() {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case "success":
-        return <Badge variant="success">Thành công</Badge>
+        return <Badge variant="secondary">Thành công</Badge>
       case "pending":
         return <Badge variant="secondary">Chờ xử lý</Badge>
       default:

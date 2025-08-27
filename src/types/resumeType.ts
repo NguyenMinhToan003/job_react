@@ -1,11 +1,11 @@
 import { Education } from "./educationType";
 import { Experience } from "./experienceType";
-import { LanguageResume } from "./LanguageType";
+import { LanguageResume } from "./languageType";
 import { Level } from "./levelType";
 import { DistrictResponse } from "./location";
 import { Major } from "./majorType";
-import { Skill } from "./SkillType";
-import { TypeJob } from "./TypeJobType";
+import { Skill } from "./skillType";
+import { TypeJob } from "./typeJobType";
 
 export interface Resume {
   id: number;
@@ -25,6 +25,8 @@ export interface ResumeVersion {
   experience: Experience;
   expectedSalary: number | null;
   status: number;
+  expectedSalaryMin: number | null;
+  expectedSalaryMax: number | null;
   createdAt: string;
   resume: Resume;
   skills: Skill[];
@@ -37,6 +39,8 @@ export interface ResumeVersion {
   majors: Major[];
   urlPdf: string;
   publicIdPdf: string;
+  phone: string;
+  email: string;
 }
 
 export interface CreateResumeVersionDto {
@@ -45,8 +49,8 @@ export interface CreateResumeVersionDto {
   location: string;
   dateOfBirth: string;
   typeJobId: number;
-  expectedSalary?: number| null;
-  languageResumes: { languageId: number}[];
+  expectedSalary: number | null;
+  languageResumes: { languageId: number }[];
   education: number;
   level: number;
   district: string;

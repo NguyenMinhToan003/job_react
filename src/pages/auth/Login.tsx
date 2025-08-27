@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, LogIn, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { login } from '@/apis/authAPI';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { ROLE_LIST } from '@/types/type';
 import { Label } from '@/components/ui/label';
-import { useAccount } from '@/providers/UserProvider';
+import { useAccount } from '@/providers/userProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 

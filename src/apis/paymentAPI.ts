@@ -39,8 +39,7 @@ export const getPackageAdmin = async (data: AdminFilterPackage) => {
   })
   return response.data
 }
-export const updatePackage = async (id: string, data: CreatePackage) => {
-}
+
 export const deletePackage = async (id: string) => {
   const response = await axiosInstance.delete<PackageResponse>(`/packages/${id}`)
   return response.data

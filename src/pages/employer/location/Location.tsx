@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AddMap from './AddMap';
-import ListLocation from './ListLocation';
+import AddMap from './addMap';
+import ListLocation from './listLocation';
 export default function LocationCompany() {
   
   return (

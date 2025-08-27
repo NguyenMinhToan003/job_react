@@ -6,7 +6,7 @@ import {
   deleteSkill,
   paginateSkill,
 } from '@/apis/skillAPI';
-import { Skill, SkillResponse } from '@/types/SkillType';
+import { Skill, SkillResponse } from '@/types/skillType';
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
@@ -29,7 +29,7 @@ import { PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MoreVertical } from 'lucide-react';
 import { getListMajorAPI } from '@/apis/majorAPI';
 import { useNavigate } from 'react-router-dom';
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1';
 
 export default function SkillPage() {
   const [skillList, setSkillList] = useState<SkillResponse[]>([]);

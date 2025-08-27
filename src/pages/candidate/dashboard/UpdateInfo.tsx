@@ -3,7 +3,7 @@ import { updateInfoCandidate } from "@/apis/candidateAPI";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAccount } from "@/providers/UserProvider";
+import { useAccount } from "@/providers/userProvider";
 import { useState } from "react";
 import { toast } from "sonner";
 

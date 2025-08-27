@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { MinusIcon, PlusIcon, ShoppingCartIcon, Trash2, Package, CreditCard, X, Clock, AlertCircle } from 'lucide-react'
+import { MinusIcon, PlusIcon, ShoppingCartIcon, Trash2, Package, CreditCard, Clock, AlertCircle } from 'lucide-react'
 import { createPaymentUrl, getPackagesBisiness } from '@/apis/paymentAPI'
 import { toast } from 'sonner'
 import type { PackageResponse } from '@/types/packageType'

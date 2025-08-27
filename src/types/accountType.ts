@@ -18,6 +18,7 @@ export interface CandidateResponse {
   phone: string;
   birthday: string;
   location: string;
+  logo: string;
 }
 export interface EmployerResponse {
   id: number;
@@ -32,6 +33,10 @@ export interface EmployerResponse {
   countryId: number;
   phone: string;
   account: Account;
+  gender: string;
+  location: string;
+  birthday: string;
+  avatar: string;
 }
 
 export interface Candidate {

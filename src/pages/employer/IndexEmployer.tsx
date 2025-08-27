@@ -1,6 +1,6 @@
 
-import CompanyNavbar from "@/components/elements/navbar/CompanyNavbar";
-import UserNavbar from "@/components/elements/navbar/UserNavbar";
+import CompanyNavbar from "@/components/elements/navbar/companyNavbar";
+import UserNavbar from "@/components/elements/navbar/userNavbar";
 import { Outlet } from "react-router-dom";
 
 export default function IndexEmployer() {

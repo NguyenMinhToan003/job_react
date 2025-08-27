@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import BarChartCompo from '@/components/elements/charts/BarChartCompo';
+import BarChartCompo from '@/components/elements/charts/barChartCompo';
 import { adminGetAccountDashboardData } from '@/apis/authAPI';
 
 

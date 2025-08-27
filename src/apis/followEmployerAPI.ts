@@ -1,4 +1,4 @@
-import { FollowResponse, RecommendedJobsFollowResponse } from "@/types/followType";
+import { FollowResponse } from "@/types/followType";
 import { axiosInstance } from "."
 import { JobFilterResponse } from "@/types/jobType";
 
@@ -27,6 +27,7 @@ export const getRecommendedFollowsAPI = async (page:number) => {
     items: JobFilterResponse[];
     totalPage: number;
     page: number;
+    total: number;
   }>(`/job/recommended/followed-employers?page=${page}`);
   return response.data;
 }

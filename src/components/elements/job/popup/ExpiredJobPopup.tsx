@@ -11,11 +11,10 @@ export default function ExpiredJobPopup({
   expiredAt: Date | null;
   setExpiredAt: (date: Date | null) => void;
   isEdit?: boolean;
-  }) {
-  
+}) {
   const now = new Date();
   const maxDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
-  
+
   return (
     <Card className="w-full mb-3">
       <CardHeader>
@@ -24,15 +23,15 @@ export default function ExpiredJobPopup({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <DatePicker 
+        <DatePicker
           selectsRange={true}
           startDate={now}
           endDate={expiredAt}
           minDate={now}
           maxDate={maxDate}
           selected={expiredAt}
-          onChange={(date: Date | null) => {
-            const [start, end] = date;
+          onChange={(date: [Date | null, Date | null]) => {
+            const [, end] = date;
             setExpiredAt(end);
           }}
           dateFormat="dd/MM/yyyy"

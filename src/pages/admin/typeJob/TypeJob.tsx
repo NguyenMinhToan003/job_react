@@ -6,7 +6,7 @@ import {
   updateTypeJob,
   deleteTypeJob,
 } from '@/apis/typeJobAPI';
-import { TypeJob, UpdateTypeJobRequest } from '@/types/TypeJobType';
+import { TypeJob, UpdateTypeJobRequest } from '@/types/typeJobType';
 
 import {
   Card,

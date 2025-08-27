@@ -9,7 +9,7 @@ export const createJob = async (data: CreateJobRequest) => {
 }
 
 export const getJobByCompanyId = async (data: CompanyFilterJob) => {
-  const response = await axiosInstance.post<JobDetailResponse[]>('/job/employer', data);
+  const response = await axiosInstance.post<JobFilterResponse[]>('/job/employer', data);
   return response.data;
 }
 
@@ -73,7 +73,7 @@ export const toggleJobStatus = async (jobId: number) => {
 }
 
 export const viewJobAPI = async (jobId: number) => {
-  const response = await axiosInstance.get<JobResponse>(`/job/view-all-element-job/${jobId}`);
+  const response = await axiosInstance.get<JobFilterResponse>(`/job/view-all-element-job/${jobId}`);
   return response.data;
 }
 
@@ -100,6 +100,7 @@ export const getJobByLocation = async (map: {
   latitude: number;
   longitude: number;
   radius: number;
+  majorIds: number[] | undefined;
 }) => {
   const response = await axiosInstance.post<JobFilterResponse[]>(`/job/job-map`, map);
   return response.data;

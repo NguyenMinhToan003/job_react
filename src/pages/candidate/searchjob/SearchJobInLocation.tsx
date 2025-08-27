@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { MapPinnedIcon, Star } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import JobItem from '@/components/elements/job/job-list/JobItem';
+import JobItem from '@/components/elements/job/job-list/jobItem';
 import { Field, MajorResponse } from '@/types/majorType';
 import {
   AlertDialog,

@@ -12,7 +12,7 @@ import { JobFilterResponse } from '@/types/jobType';
 import { filterJob } from '@/apis/jobAPI';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import { useAccount } from '@/providers/UserProvider';
+import { useAccount } from '@/providers/userProvider';
 import { updateInfoCandidate } from '@/apis/candidateAPI';
 import { createEmployerNotiAPI } from '@/apis/notiAccountAPI';
 import { NOTI_TYPE } from '@/types/type';
@@ -20,7 +20,7 @@ import { Resume } from '@/types/resumeType';
 import { getAllResumeAPI, uploadNewCVAPI } from '@/apis/resumeAPI';
 import { applyJob, viewApplyJobByCandidate } from '@/apis/applyJobAPI';
 import { convertDateToString } from '@/utils/dateTime';
-import { useLoading } from '@/providers/LoadingProvider';
+import { useLoading } from '@/providers/loadingProvider';
 
 export default function JobApplicationForm() {
   const { jobId } = useParams();
@@ -32,7 +32,6 @@ export default function JobApplicationForm() {
   const [note, setNote] = useState<string>('');
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [uploadNewCV, setUploadNewCV] = useState<File | null>(null);
-  const [checkApplied, setCheckApplied] = useState<boolean>(false);
   const { setLoading } = useLoading()
   const navigate = useNavigate();
 
@@ -73,12 +72,12 @@ export default function JobApplicationForm() {
     try {
       const response = await viewApplyJobByCandidate(Number(jobId));
       console.log(response);
-      if (response!== '') {
+      if (response) {
         navigate(`/cong-viec/${jobId}`);
         toast.error('Bạn đã ứng tuyển công việc này rồi');
       }
     }
-    catch (error) {
+    catch (error : any) {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi kiểm tra đơn ứng tuyển');
     }
   }

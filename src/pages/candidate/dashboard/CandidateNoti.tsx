@@ -10,7 +10,7 @@ import { NotiAccount } from '@/types/eployerNotiType';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1';
 
 
 function NotificationItem({ noti }: { noti: NotiAccount }) {
@@ -72,7 +72,6 @@ export default function CandidateNoti() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 6;
 
   const fetchNotifications = async () => {
     setLoading(true);

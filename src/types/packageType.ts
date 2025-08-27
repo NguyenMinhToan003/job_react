@@ -2,19 +2,19 @@ import { EmployerSub, EmployerSubResponse } from "./employerSubType";
 import { PackageType } from "./type";
 
 export interface PackageResponse {
-  id: string;
-  name: string;
-  features: string;
-  price: number;
-  image: string;
-  dayValue: number;
-  type: PackageType;
-  employerSubscriptions: EmployerSub[]
-  sub_total?: number;
-  sub_used?: number;
-  sub_pending?: EmployerSubResponse;
-  sub_using?: EmployerSubResponse[];
-  status: boolean;
+    id: string;
+    name: string;
+    features: string;
+    price: number;
+    image: string;
+    dayValue: number;
+    type: PackageType;
+    employerSubscriptions: EmployerSub[]
+    sub_total: number;
+    sub_used: number;
+    sub_pending?: EmployerSubResponse[];
+    sub_using?: EmployerSubResponse[];
+    status: boolean;
 }
 export interface CreatePackage {
     name: string;

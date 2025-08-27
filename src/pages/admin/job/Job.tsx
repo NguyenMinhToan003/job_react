@@ -28,7 +28,7 @@ export default function JobListPage() {
     try {
       await refreshJobInPackage();
     }
-    catch (error) {
+    catch (error:any) {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi làm mới danh sách công việc');
     }
   }
@@ -43,7 +43,7 @@ export default function JobListPage() {
         blocked: response.blockedJobs,
       });
     }
-    catch (error) {
+    catch (error:any) {
       toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi lấy số lượng công việc');
     }
   }

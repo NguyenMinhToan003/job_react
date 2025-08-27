@@ -1,6 +1,6 @@
 import { deleteSaveJobAPI, getRecomendedSaveJobAPI, getSaveJobAPI } from '@/apis/saveJobAPI';
-import JobItem from '@/components/elements/job/job-list/JobItem';
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import JobItem from '@/components/elements/job/job-list/jobItem';
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ApplyJobResponse } from '@/types/applyJobType';
@@ -51,8 +51,9 @@ export default function SaveJob() {
       await deleteSaveJobAPI(jobId);
       toast.success('Xoá công việc lưu thành công');
     }
-    catch (error) {
-      toast.error(error.response?.data?.message || 'Xoá công việc lưu thất bại');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error : any) {
+      toast.error(error?.response?.data?.message || 'Xoá công việc lưu thất bại');
     }
   };
     

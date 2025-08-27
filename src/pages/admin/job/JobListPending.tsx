@@ -21,7 +21,7 @@ import { ArrowUpDown, Briefcase, Building2, Calendar, Clock, Eye, Package, Searc
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import PaginationModel1 from '@/components/elements/pagination/PaginationModel1';
+import PaginationModel1 from '@/components/elements/pagination/paginationModel1';
 import { useEffect, useState } from 'react';
 import { filterJobAdmin } from '@/apis/jobAPI';
 import { JOB_STATUS } from '@/types/type';
@@ -46,8 +46,9 @@ export default function JobListPendding() {
           sortBy,
           sortOrder,
           search,
-         })
-       setJobs(response.data);
+        })
+      setJobs(response.data);
+      setTotalPages(response.totalPages);
       }
       catch (error: any) {
         toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải danh sách công việc');
@@ -56,11 +57,7 @@ export default function JobListPendding() {
     useEffect(() => {
       fetchJobs();
     }, [page, limit, sortBy, sortOrder]);
-  
-  const handleSearch = async() => {
-    setPage(1);
-    fetchJobs();
-  }
+
 
   return <>
     <div className="space-y-6">

@@ -3,19 +3,15 @@ import { getRecommendedFollowsAPI } from "@/apis/followEmployerAPI";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
 import { JobFilterResponse } from "@/types/jobType";
-import JobItem from "@/components/elements/job/job-list/JobItem";
-import { Pagination } from "@/components/ui/pagination";
-import PaginationModel1 from "@/components/elements/pagination/PaginationModel1";
+import JobItem from "@/components/elements/job/job-list/jobItem";
+import PaginationModel1 from "@/components/elements/pagination/paginationModel1";
 
 export default function RecommentFollow() {
   const [jobsRecommend, setJobsRecommend] = useState<JobFilterResponse[]>([]);
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  
-  const navigate = useNavigate();
   const fetchRecommented = async () => {
     try {
       const response = await getRecommendedFollowsAPI(page);
@@ -58,6 +54,9 @@ export default function RecommentFollow() {
         {jobsRecommend.map((employer) => (
           <JobItem
             job={employer}
+            selectedJob={{} as JobFilterResponse}
+            setSelectedJob={() => {}}
+            key={employer.id}
           />
         ))}
       </div>

@@ -17,22 +17,22 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useEffect, useState } from 'react'
 import { DollarSign, TrendingUp } from 'lucide-react'
-import type { JobDetailResponse } from '@/types/jobType'
+import type { JobFilterResponse } from '@/types/jobType'
 import { PackageResponse } from '@/types/packageType'
 import { getPackageAvailable } from '@/apis/paymentAPI'
 import { Label } from '@/components/ui/label'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import dayjs from 'dayjs'
-import { useLoading } from '@/providers/LoadingProvider'
+import { useLoading } from '@/providers/loadingProvider'
 import { toast } from 'sonner'
 import { JOB_STATUS, PackageType } from '@/types/type'
 import { jobUseSubscription, publishJob } from '@/apis/jobAPI'
 import { EmployerSubResponse } from '@/types/employerSubType'
-import JobItem from './job-list/JobItem'
+import JobItem from './job-list/jobItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function FormPublish({ job, setIsChange }: {
-  job: JobDetailResponse,
+  job: JobFilterResponse,
   setIsChange?: (isChange: boolean) => void
 }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -42,7 +42,7 @@ export default function FormPublish({ job, setIsChange }: {
   const [selectedJobPackage, setSelectedJobPackage] = useState<PackageResponse>()
   const [packagesJobAvailable, setPackagesJobAvailable] = useState<PackageResponse[]>([])
   const [packagesBannerAvailable, setPackagesBannerAvailable] = useState<PackageResponse[]>([])
-  const [jobCustomer, setJobCustomer] = useState<JobDetailResponse>(job)
+  const [jobCustomer, setJobCustomer] = useState<JobFilterResponse>(job)
   const [packagesRefreshAvailable, setPackagesRefreshAvailable] = useState<PackageResponse[]>([])
   const [selectedRefreshPackage, setSelectedRefreshPackage] = useState<PackageResponse>()
 
@@ -262,7 +262,7 @@ export default function FormPublish({ job, setIsChange }: {
                             <Label className="text-sm font-semibold">
                                   {pkg.name}{' '}
                                   <span className="text-xs text-red-500">
-                                    x {pkg.sub_total - pkg.sub_used}
+                                    x {pkg?.sub_total - pkg?.sub_used}
                                   </span>
                                 </Label>
                               <p className="text-xs text-gray-500">{pkg.features}</p>
@@ -335,7 +335,7 @@ export default function FormPublish({ job, setIsChange }: {
             <div className="sticky top-0 z-[999] bg-gray-50 p-1 mb-3 ">
               <JobItem
                 job={jobCustomer}
-                selectedJob={{} as JobDetailResponse}
+                selectedJob={{} as JobFilterResponse}
                 setSelectedJob={() => {}}
               />
             </div>

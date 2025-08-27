@@ -91,7 +91,7 @@ export default function BannerEmployer() {
                 <span className="text-xs text-gray-500 flex items-center gap-1">
                   {employer.employeeScale.name} | {employer.businessType.name }
                 </span>
-             </div>
+            </div>
             </CardContent>
           </Card>
         ))

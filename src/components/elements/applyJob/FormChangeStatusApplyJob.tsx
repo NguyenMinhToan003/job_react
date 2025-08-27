@@ -41,19 +41,19 @@ export const FormChangeStatusApplyJob = ({
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
-    applyJob: ApplyJobResponse;
+    applyJob: ApplyJobResponse | undefined;
     isOpenSendEmail: boolean;
     setSendEmail?: (sendEmail: boolean) => void;
     setIsChange?: (isChange: boolean) => void;
 }) => {
-  const [selectedStatus, setSelectedStatus] = useState<APPLY_JOB_STATUS>(applyJob?.status);
+  const [selectedStatus, setSelectedStatus] = useState<APPLY_JOB_STATUS>(applyJob?.status || APPLY_JOB_STATUS.PROCESSING);
   const [isSendEmail, setIsSendEmail] = useState<boolean>(isOpenSendEmail);
   const [emailContent, setEmailContent] = useState<string>("");
   const [emailSubject, setEmailSubject] = useState<string>("");
 
   useEffect(() => {
     if (open) {
-      setSelectedStatus(applyJob.status);
+      setSelectedStatus(applyJob?.status || APPLY_JOB_STATUS.PROCESSING);
       setEmailContent("");
       setEmailSubject("");
       setIsSendEmail(isOpenSendEmail);
@@ -67,10 +67,10 @@ export const FormChangeStatusApplyJob = ({
           toast.error("Vui lòng nhập tiêu đề và nội dung email");
           return;
         }
-        await sendEmailToCandidate(applyJob.id, emailSubject, emailContent);
+        await sendEmailToCandidate(applyJob?.id|| -1, emailSubject, emailContent);
       }
-      if (selectedStatus === applyJob.status) return;
-      await updateApplyJobStatus(applyJob.id, selectedStatus);
+      if (selectedStatus === applyJob?.status) return;
+      await updateApplyJobStatus(applyJob?.id|| -1, selectedStatus);
       toast.success("Cập nhật trạng thái thành công");
       setOpen(false);
       setIsChange?.(true);
@@ -188,7 +188,7 @@ export const FormChangeStatusApplyJob = ({
                   <span className="max-w-24 min-w-24">Gửi tới</span>
                   <Input
                     type="email"
-                    value={applyJob.email}
+                    value={applyJob?.email}
                     readOnly
                     className="mt-1 w-full"
                   />

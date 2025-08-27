@@ -2,11 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Bell, ChevronDown, LogOut, MapIcon, Menu } from 'lucide-react';
-import { useAccount } from '@/providers/UserProvider';
+import { useAccount } from '@/providers/userProvider';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getMeNotificationAPI } from '@/apis/notiAccountAPI';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
+import { useAlertDialog } from '@/providers/alertDialogProvider';
 
 export default function UserNavbar() {
   const navigate = useNavigate();

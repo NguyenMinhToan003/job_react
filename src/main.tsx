@@ -4,8 +4,8 @@ import App from '@/App'
 import "tailwindcss";
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from './components/ui/sonner';
-import { LoadingProvider } from './providers/LoadingProvider';
-import { AlertDialogProvider } from './providers/AlertDialogProvider';
+import { LoadingProvider } from './providers/loadingProvider';
+import { AlertDialogProvider } from './providers/alertDialogProvider';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>

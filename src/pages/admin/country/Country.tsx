@@ -51,7 +51,7 @@ export default function CountryTable() {
       setLoading(true)
 
       if (selectedCountry) {
-        await updateCountry(selectedCountry.id, name, flag, isToggle ? 0 : 1)
+        await updateCountry(selectedCountry.id, name, flag)
         toast.success("Cập nhật quốc gia thành công")
       } else {
         await createCountry(name, flag)
@@ -224,7 +224,7 @@ export default function CountryTable() {
                     </TableRow>
                   ) : (
                     filteredCountries.map((country, index) => (
-                      <TableRow key={country.id} className="hover:bg-gray-50/50 transition-colors duration-200">
+                      <TableRow key={index} className="hover:bg-gray-50/50 transition-colors duration-200">
                         <TableCell className="text-center">
                           <div className="flex justify-center">
                             <img

@@ -1,8 +1,7 @@
 import { getPaginatedFollowsAPI } from "@/apis/followEmployerAPI";
-import PaginationModel1 from "@/components/elements/pagination/PaginationModel1";
+import PaginationModel1 from "@/components/elements/pagination/paginationModel1";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { FollowResponse } from "@/types/followType";
 import { convertDateToString } from "@/utils/dateTime";
 import { useEffect, useState } from "react";

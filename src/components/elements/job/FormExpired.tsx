@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { extendJob, updateJob } from "@/apis/jobAPI";
+import { extendJob } from "@/apis/jobAPI";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
-import { JobDetailResponse } from "@/types/jobType";
+import { JobFilterResponse } from "@/types/jobType";
 import { vi } from "date-fns/locale";
 import dayjs from "dayjs";
 import { RotateCcw, CalendarDays, Clock } from "lucide-react";
@@ -22,9 +22,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "sonner";
 
 export default function FormExpired({ job, setIsChange }: {
-  job: JobDetailResponse,
+  job: JobFilterResponse | undefined;
   setIsChange?: (isChange: boolean) => void;
- }) {
+}) {
   const [open, setOpen] = useState(false);
   const now = new Date();
   const startDate = dayjs(job?.createdAt).toDate();
@@ -37,7 +37,7 @@ export default function FormExpired({ job, setIsChange }: {
         toast.error('Vui lòng chọn thời hạn nộp');
         return;
       }
-      await extendJob(job.id, expiredAt);
+      await extendJob(job?.id|| -1, expiredAt);
       setIsChange?.(true);
       toast.success('Gia hạn thời gian nộp thành công');
     }

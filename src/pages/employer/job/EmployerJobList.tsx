@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { getJobByCompanyId, toggleJobStatus } from '@/apis/jobAPI';
-import { CompanyFilterJob, JobDetailResponse } from '@/types/jobType';
+import { CompanyFilterJob, JobFilterResponse } from '@/types/jobType';
 import {
   Table,
   TableBody,
@@ -17,14 +17,14 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { JOB_STATUS } from '@/types/type';
 import { Label } from '@/components/ui/label';
-import JobMenu from '@/components/elements/job/MenuMore';
+import JobMenu from '@/components/elements/job/menuMore';
 import { convertDateToString } from '@/utils/dateTime';
-import FormPublish from '@/components/elements/job/FormPublich';
+import FormPublish from '@/components/elements/job/formPublich';
 import { getViewJobByIdAPI } from '@/apis/viewJobAPI';
 
 export default function EmployerJobList() {
   
-  const [jobList, setJobList] = useState<JobDetailResponse[]>([]);
+  const [jobList, setJobList] = useState<JobFilterResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [isChange, setIsChange] = useState(false);
   const [viewCounts, setViewCounts] = useState<Record<number, number>>({});
@@ -83,8 +83,8 @@ export default function EmployerJobList() {
   };
 
 
-  const buttonAction = (job: JobDetailResponse) => {
- if (job.isActive === JOB_STATUS.BLOCK) {
+  const buttonAction = (job: JobFilterResponse) => {
+    if (job.isActive === JOB_STATUS.BLOCK) {
       return (
         <Button
           className='text-red-500 hover:text-red-500 bg-red-50 hover:bg-red-50 rounded-none w-24'
@@ -92,11 +92,10 @@ export default function EmployerJobList() {
           Bị khóa
         </Button>
       );
-    }
- else return <FormPublish
-   job={job}
-  setIsChange={setIsChange}
- />
+    } else return <FormPublish
+      job={job}
+      setIsChange={setIsChange}
+    />
   }
 
   const switchPublicJob = (jobId: number, isShow: number, status: JOB_STATUS) => {

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  deleteResumeAPI,
   getAllResumeAPI,
   toggleDefaultResumeAPI,
 } from '@/apis/resumeAPI';
@@ -17,15 +16,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
   User,
-  Phone,
-  Mail,
   MapPin,
-  Calendar,
   Eye,
-  Trash2,
   Plus,
   FileText,
-  Edit,
   Star,
   BookOpen,
   GraduationCap,

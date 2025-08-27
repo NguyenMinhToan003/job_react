@@ -14,8 +14,7 @@ import { Element } from '@/types/type';
 import { getAllEmployerScales } from '@/apis/employerScalesAPI';
 import { getAllBusinessTypes } from '@/apis/businesTypeAPI';
 import { useNavigate } from 'react-router-dom';
-import { useAlertDialog } from '@/providers/AlertDialogProvider';
-import { useLoading } from '@/providers/LoadingProvider';
+import { useLoading } from '@/providers/loadingProvider';
 
 export default function CompanyRegistration() {
 

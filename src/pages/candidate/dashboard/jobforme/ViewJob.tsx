@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getAllViewJobsAPI, getRecomendedViewJobAPI } from "@/apis/viewJobAPI";
-import JobItem from "@/components/elements/job/job-list/JobItem";
-import JobList from "@/components/elements/job/job-list/JobItem";
-import PaginationModel1 from "@/components/elements/pagination/PaginationModel1";
+import JobItem from "@/components/elements/job/job-list/jobItem";
+import PaginationModel1 from "@/components/elements/pagination/paginationModel1";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { JobFilterResponse, ViewJobResponse } from "@/types/jobType";
 import { convertPrice } from "@/utils/convertPrice";
 import { convertDateToString } from "@/utils/dateTime";
-import { ChevronLeft, ChevronRight, HandCoins } from "lucide-react";
+import { HandCoins } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";

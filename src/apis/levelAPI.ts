@@ -15,15 +15,15 @@ export const createLevel = async (level: CreateLevelRequest) => {
   const response = await axiosInstance.post<Level>('/level', level)
   return response.data
 }
-export const updateLevel = async (id: string, level: UpdateLevelRequest) => {
+export const updateLevel = async (id: number, level: UpdateLevelRequest) => {
   const response = await axiosInstance.patch<Level>(`/level/${id}`, level)
   return response.data
 }
-export const deleteLevel = async (id: string) => {
+export const deleteLevel = async (id: number) => {
   const response = await axiosInstance.delete(`/level/${id}`)
   return response.data
 }
-export const toggleLevelStatus = async (id: string) => {
+export const toggleLevelStatus = async (id: number) => {
   const response = await axiosInstance.patch<Level>(`/level/toggle-status/${id}`)
   return response.data
 }
