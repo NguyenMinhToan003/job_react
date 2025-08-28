@@ -1,7 +1,9 @@
-import { CompanyFilterJob, CreateJobRequest, JobDetailResponse, JobFilterAdminRequest, JobFilterRequest, JobFilterResponse, JobResponse, MatchingWeightRequest, UpdateJobAdminRequest } from '@/types/jobType';
+
+
 import { axiosInstance } from './index';
 import { toast } from 'sonner';
 import { UseSubscriptionRequest } from '@/types/employerSubType';
+import { CompanyFilterJob, CreateJobRequest, JobDetailResponse, JobFilterAdminRequest, JobFilterRequest, JobFilterResponse, JobResponse, MatchingWeightRequest, UpdateJobAdminRequest } from '@/types/jobType';
 
 export const createJob = async (data: CreateJobRequest) => {
   const response = await axiosInstance.post('/job', data);

@@ -1,8 +1,8 @@
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import ApplyJob from './ApplyJob';
-import SaveJob from './SaveJob';
-import ViewJob from './ViewJob';
+import ApplyJob from './applyJob';
+import SaveJob from './saveJob';
+import ViewJob from './viewJob';
 
 export default function JobForMe() {
   return <>

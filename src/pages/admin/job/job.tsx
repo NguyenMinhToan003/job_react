@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import JobListActive from './JobListActive';
-import JobListExpired from './JobListExpired';
-import JobListBlock from './JobListBlock';
+import JobListActive from './jobListActive';
+import JobListExpired from './jobListExpired';
+import JobListBlock from './jobListBlock';
 import { adminGetDashboardData, refreshJobInPackage } from '@/apis/jobAPI';
 import { toast } from 'sonner';
 import { Activity, AlertTriangle, Clock, Lock } from 'lucide-react';
-import JobListPendding from './JobListPending';
+import JobListPendding from './jobListPending';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 
